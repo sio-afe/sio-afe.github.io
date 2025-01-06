@@ -1,6 +1,7 @@
 ---
 layout: page
-icon: fas fa-compass
+icon: fas fa-users
 order: 1
-title: South unit
+title: SIO AFE Unit
+redirect_to: /sio-south/
 ---
