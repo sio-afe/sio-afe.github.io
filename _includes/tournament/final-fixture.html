@@ -1,0 +1,112 @@
+<section id="final-fixture" class="tournament-section">
+  <h2>Final Match</h2>
+  <div class="final-match">
+    <div class="team home">
+      <div class="team-info">
+        <img src="" alt="Home Team Crest" class="team-crest" id="final-home-crest">
+        <span class="team-name" id="final-home-team">TBD</span>
+      </div>
+      <span class="score" id="final-home-score">-</span>
+    </div>
+    
+    <div class="match-details">
+      <span class="vs">VS</span>
+      <div class="match-info">
+        <div class="date" id="final-date">Date: TBD</div>
+        <div class="time" id="final-time">Time: TBD</div>
+        <div class="venue">Venue: Milli Model Ground</div>
+      </div>
+    </div>
+    
+    <div class="team away">
+      <div class="team-info">
+        <img src="" alt="Away Team Crest" class="team-crest" id="final-away-crest">
+        <span class="team-name" id="final-away-team">TBD</span>
+      </div>
+      <span class="score" id="final-away-score">-</span>
+    </div>
+  </div>
+</section>
+
+<style>
+.tournament-section {
+  margin: 2rem 0;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.final-match {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.team-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.team-crest {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.team-name {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.score {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.match-details {
+  text-align: center;
+  padding: 0 2rem;
+}
+
+.vs {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.match-info {
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .final-match {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem;
+  }
+
+  .match-details {
+    padding: 1rem 0;
+  }
+}
+</style>
