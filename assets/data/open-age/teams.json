@@ -1,26 +1,34 @@
 {
     "teams": [
         {
+            "id": "tt-1",
             "name": "Tehreeki Titans",
-            "crest": "",
+            "crest": "default-team-logo.png",
+            "captain": "Captain Name",
             "played": 0,
             "won": 0,
             "drawn": 0,
             "lost": 0,
             "gf": 0,
             "ga": 0,
-            "group": "A"
+            "group": "A",
+            "goalDifference": 0,
+            "points": 0
         },
         {
+            "id": "hfc-2",
             "name": "Haikyu FC",
-            "crest": "",
+            "crest": "haikyu.jpeg",
+            "captain": "Captain Name",
             "played": 0,
             "won": 0,
             "drawn": 0,
             "lost": 0,
             "gf": 0,
             "ga": 0,
-            "group": "A"
+            "group": "A",
+            "goalDifference": 0,
+            "points": 0
         },
         {
             "name": "Eagle Gang",

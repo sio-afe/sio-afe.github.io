@@ -1,0 +1,191 @@
+<!-- Team Popup Component -->
+<div class="team-popup" id="team-popup">
+  <div class="popup-content">
+    <button class="close-popup">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="team-header">
+      <img src="" alt="Team Logo" class="team-popup-logo">
+      <h3 class="team-popup-name"></h3>
+    </div>
+    <div class="team-details">
+      <div class="detail-row">
+        <span class="detail-label">Captain</span>
+        <span class="detail-value captain-name"></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Matches Played</span>
+        <span class="detail-value matches-played"></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Won</span>
+        <span class="detail-value matches-won"></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Lost</span>
+        <span class="detail-value matches-lost"></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Drawn</span>
+        <span class="detail-value matches-drawn"></span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Points</span>
+        <span class="detail-value points"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Popup Styles */
+.team-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.team-popup.active {
+  display: flex;
+}
+
+.popup-content {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.close-popup {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #666;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.close-popup:hover {
+  color: #1d3557;
+}
+
+.team-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  width: 100%;
+  background: white;
+  padding: 1rem;
+  border-radius: 12px;
+}
+
+.team-popup-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: block;
+  border: 2px solid #e63946;
+  min-width: 100px;
+  min-height: 100px;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.team-popup-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1d3557;
+  margin: 0;
+}
+
+.team-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.detail-label {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.detail-value {
+  font-weight: 600;
+  color: #1d3557;
+}
+
+/* Make team names in table clickable */
+.league-table td.team-name-cell {
+  cursor: pointer;
+  color: #1d3557;
+  transition: color 0.2s;
+}
+
+.league-table td.team-name-cell:hover {
+  color: #e63946;
+}
+
+@media (max-width: 480px) {
+  .popup-content {
+    padding: 1.5rem;
+  }
+
+  .team-popup-logo {
+    width: 80px;
+    height: 80px;
+  }
+
+  .team-popup-name {
+    font-size: 1.25rem;
+  }
+
+  .detail-row {
+    padding: 0.5rem;
+  }
+
+  .detail-label,
+  .detail-value {
+    font-size: 0.85rem;
+  }
+}
+</style> 
