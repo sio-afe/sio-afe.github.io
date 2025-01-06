@@ -1,0 +1,98 @@
+{
+    "topScorers": [
+        {
+            "name": "Adnan Khan",
+            "team": "Tehreeki Titans",
+            "goals": 5,
+            "matches": 3
+        },
+        {
+            "name": "Mohammad Ali",
+            "team": "Eagle Gang",
+            "goals": 4,
+            "matches": 3
+        },
+        {
+            "name": "Suhail Ahmed",
+            "team": "Young Boys",
+            "goals": 3,
+            "matches": 2
+        },
+        {
+            "name": "Zaid Khan",
+            "team": "Legends FC",
+            "goals": 3,
+            "matches": 3
+        },
+        {
+            "name": "Hamza Sheikh",
+            "team": "Team SIO",
+            "goals": 2,
+            "matches": 2
+        }
+    ],
+    "topAssists": [
+        {
+            "name": "Faiz Ahmed",
+            "team": "Haikyu FC",
+            "assists": 4,
+            "matches": 3
+        },
+        {
+            "name": "Ibrahim Khan",
+            "team": "Uncommon FC",
+            "assists": 3,
+            "matches": 2
+        },
+        {
+            "name": "Saad Ali",
+            "team": "Guncha FC",
+            "assists": 3,
+            "matches": 3
+        },
+        {
+            "name": "Omar Sheikh",
+            "team": "Real Ace FC",
+            "assists": 2,
+            "matches": 2
+        },
+        {
+            "name": "Bilal Ahmed",
+            "team": "Shine Star FC",
+            "assists": 2,
+            "matches": 3
+        }
+    ],
+    "cleanSheets": [
+        {
+            "name": "Raheem Khan",
+            "team": "Tehreeki Titans",
+            "cleanSheets": 2,
+            "matches": 3
+        },
+        {
+            "name": "Hassan Ali",
+            "team": "Young Boys",
+            "cleanSheets": 2,
+            "matches": 3
+        },
+        {
+            "name": "Umar Farooq",
+            "team": "Legends FC",
+            "cleanSheets": 1,
+            "matches": 2
+        },
+        {
+            "name": "Abdul Rahman",
+            "team": "Team SIO",
+            "cleanSheets": 1,
+            "matches": 2
+        },
+        {
+            "name": "Yusuf Ahmed",
+            "team": "Ekka FC",
+            "cleanSheets": 1,
+            "matches": 3
+        }
+    ]
+} 

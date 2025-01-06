@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Muqawamah Open Age Tournament 2024"
+title: "Muqawamah Open Age Tournament 2025"
 permalink: /muqawamah/open-age/
 category: open-age
 scripts:

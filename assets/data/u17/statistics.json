@@ -1,0 +1,98 @@
+{
+    "topScorers": [
+        {
+            "name": "Ahmed Khan",
+            "team": "Ummah Stars",
+            "goals": 4,
+            "matches": 2
+        },
+        {
+            "name": "Zubair Ali",
+            "team": "Metro United",
+            "goals": 3,
+            "matches": 2
+        },
+        {
+            "name": "Faisal Ahmed",
+            "team": "Okhla Madrid",
+            "goals": 3,
+            "matches": 2
+        },
+        {
+            "name": "Kabir Singh",
+            "team": "Tikona FC",
+            "goals": 2,
+            "matches": 2
+        },
+        {
+            "name": "Aryan Shah",
+            "team": "Pirates FC",
+            "goals": 2,
+            "matches": 2
+        }
+    ],
+    "topAssists": [
+        {
+            "name": "Rehan Khan",
+            "team": "Imperial Titans",
+            "assists": 3,
+            "matches": 2
+        },
+        {
+            "name": "Sahil Patel",
+            "team": "Young Warriors",
+            "assists": 2,
+            "matches": 2
+        },
+        {
+            "name": "Arif Mohammed",
+            "team": "Fusion FC",
+            "assists": 2,
+            "matches": 2
+        },
+        {
+            "name": "Karim Ali",
+            "team": "Rising Stars",
+            "assists": 2,
+            "matches": 2
+        },
+        {
+            "name": "Danish Sheikh",
+            "team": "Jaipur Thunders",
+            "assists": 1,
+            "matches": 2
+        }
+    ],
+    "cleanSheets": [
+        {
+            "name": "Aamir Khan",
+            "team": "Ummah Stars",
+            "cleanSheets": 1,
+            "matches": 2
+        },
+        {
+            "name": "Salman Ali",
+            "team": "Tikona FC",
+            "cleanSheets": 1,
+            "matches": 2
+        },
+        {
+            "name": "Imran Shah",
+            "team": "Metro United",
+            "cleanSheets": 1,
+            "matches": 2
+        },
+        {
+            "name": "Wasim Ahmed",
+            "team": "Pirates FC",
+            "cleanSheets": 1,
+            "matches": 2
+        },
+        {
+            "name": "Junaid Khan",
+            "team": "Rising Stars",
+            "cleanSheets": 1,
+            "matches": 2
+        }
+    ]
+} 

@@ -8,7 +8,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "A"
         },
         {
             "name": "Haikyu FC",
@@ -18,7 +19,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "A"
         },
         {
             "name": "Eagle Gang",
@@ -28,7 +30,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "A"
         },
         {
             "name": "Young Boys",
@@ -38,7 +41,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "B"
         },
         {
             "name": "Uncommon FC",
@@ -48,7 +52,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "B"
         },
         {
             "name": "Tikona FC",
@@ -58,7 +63,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "B"
         },
         {
             "name": "Legends FC",
@@ -68,7 +74,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "C"
         },
         {
             "name": "Guncha FC",
@@ -78,7 +85,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "C"
         },
         {
             "name": "Shine Star FC",
@@ -88,7 +96,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "C"
         },
         {
             "name": "Team SIO",
@@ -98,7 +107,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "D"
         },
         {
             "name": "Real Ace FC",
@@ -108,7 +118,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "D"
         },
         {
             "name": "Ekka FC",
@@ -118,7 +129,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "D"
         }
     ]
 }

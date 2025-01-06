@@ -8,7 +8,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "A"
         },
         {
             "name": "Metro United",
@@ -18,7 +19,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "A"
         },
         {
             "name": "Okhla Madrid",
@@ -28,7 +30,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "A"
         },
         {
             "name": "Jaipur Thunders",
@@ -38,7 +41,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "A"
         },
         {
             "name": "Imperial Titans",
@@ -48,7 +52,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "A"
         },
         {
             "name": "Tikona FC",
@@ -58,7 +63,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "B"
         },
         {
             "name": "Fusion FC",
@@ -68,7 +74,8 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "B"
         },
         {
             "name": "Pirates FC",
@@ -78,7 +85,30 @@
             "drawn": 0,
             "lost": 0,
             "gf": 0,
-            "ga": 0
+            "ga": 0,
+            "group": "B"
+        },
+        {
+            "name": "Young Warriors",
+            "crest": "",
+            "played": 0,
+            "won": 0,
+            "drawn": 0,
+            "lost": 0,
+            "gf": 0,
+            "ga": 0,
+            "group": "B"
+        },
+        {
+            "name": "Rising Stars",
+            "crest": "",
+            "played": 0,
+            "won": 0,
+            "drawn": 0,
+            "lost": 0,
+            "gf": 0,
+            "ga": 0,
+            "group": "B"
         }
     ]
 }
