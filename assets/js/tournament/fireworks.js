@@ -1,39 +1,79 @@
 class Fireworks {
     constructor() {
+        console.log('Fireworks constructor called');
         this.canvas = document.getElementById('fireworksCanvas');
+        if (!this.canvas) {
+            console.error('Canvas element not found!');
+            return;
+        }
+        
+        console.log('Canvas found, initializing...');
         this.ctx = this.canvas.getContext('2d');
         this.particles = [];
         this.fireworks = [];
         this.isRunning = false;
+        this.isMobile = window.innerWidth <= 768;
         
         this.init();
     }
 
     init() {
         this.resizeCanvas();
-        window.addEventListener('resize', () => this.resizeCanvas());
         this.setupEventListeners();
+        console.log('Fireworks initialized');
     }
 
     resizeCanvas() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
+        // Handle device pixel ratio for sharper rendering on mobile
+        const dpr = window.devicePixelRatio || 1;
+        const rect = document.body.getBoundingClientRect();
+        
+        this.canvas.width = rect.width * dpr;
+        this.canvas.height = rect.height * dpr;
+        
+        this.canvas.style.width = `${rect.width}px`;
+        this.canvas.style.height = `${rect.height}px`;
+        
+        this.ctx.scale(dpr, dpr);
+        
+        // Update mobile check on resize
+        this.isMobile = window.innerWidth <= 768;
     }
 
     setupEventListeners() {
-        // Listen for goal celebrations or match end events
-        document.addEventListener('goalScored', () => this.celebrate());
-        document.addEventListener('matchEnd', () => this.celebrate(true));
+        window.addEventListener('resize', () => this.resizeCanvas());
+        document.addEventListener('goalScored', () => {
+            console.log('Goal scored event received');
+            this.celebrate();
+        });
+        document.addEventListener('matchEnd', () => {
+            console.log('Match end event received');
+            this.celebrate(true);
+        });
+        
+        // Handle visibility change to stop animations when tab is hidden
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.isRunning = false;
+            }
+        });
     }
 
     celebrate(isMatchEnd = false) {
+        console.log(`Celebrating ${isMatchEnd ? 'match end' : 'goal'}`);
         this.isRunning = true;
-        const duration = isMatchEnd ? 10000 : 3000; // Longer celebration for match end
         
-        // Launch multiple fireworks
-        const count = isMatchEnd ? 10 : 3;
+        // Adjust duration and count for mobile
+        const duration = this.isMobile ? 
+            (isMatchEnd ? 5000 : 2000) : 
+            (isMatchEnd ? 10000 : 3000);
+        
+        const count = this.isMobile ? 
+            (isMatchEnd ? 5 : 2) : 
+            (isMatchEnd ? 10 : 3);
+
         for (let i = 0; i < count; i++) {
-            setTimeout(() => this.launchFirework(), i * 300);
+            setTimeout(() => this.launchFirework(), i * (this.isMobile ? 400 : 300));
         }
 
         setTimeout(() => {
@@ -61,7 +101,14 @@ class Fireworks {
     }
 
     getRandomColor() {
-        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+        const colors = [
+            '#ff4444', // red
+            '#44ff44', // green
+            '#4444ff', // blue
+            '#ffff44', // yellow
+            '#ff44ff', // magenta
+            '#44ffff'  // cyan
+        ];
         return colors[Math.floor(Math.random() * colors.length)];
     }
 
@@ -92,7 +139,8 @@ class Fireworks {
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Update and draw fireworks
-        this.fireworks.forEach((firework, index) => {
+        for (let i = this.fireworks.length - 1; i >= 0; i--) {
+            const firework = this.fireworks[i];
             firework.y -= firework.speed;
             
             this.ctx.beginPath();
@@ -102,12 +150,13 @@ class Fireworks {
 
             if (firework.y <= firework.targetY) {
                 this.createParticles(firework.x, firework.y, firework.color);
-                this.fireworks.splice(index, 1);
+                this.fireworks.splice(i, 1);
             }
-        });
+        }
 
         // Update and draw particles
-        this.particles.forEach((particle, index) => {
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+            const particle = this.particles[i];
             particle.x += particle.velocity.x;
             particle.y += particle.velocity.y;
             particle.velocity.y += 0.1; // Gravity
@@ -116,17 +165,24 @@ class Fireworks {
 
             this.ctx.beginPath();
             this.ctx.arc(particle.x, particle.y, 1, 0, Math.PI * 2);
-            this.ctx.fillStyle = `rgba(${particle.color}, ${particle.alpha})`;
+            this.ctx.fillStyle = `${particle.color}${Math.floor(particle.alpha * 255).toString(16).padStart(2, '0')}`;
             this.ctx.fill();
 
             if (particle.life <= 0) {
-                this.particles.splice(index, 1);
+                this.particles.splice(i, 1);
             }
-        });
+        }
 
         this.animationFrame = requestAnimationFrame(() => this.animate());
     }
 }
 
-// Initialize
-document.addEventListener('DOMContentLoaded', () => new Fireworks());
+// Initialize with error handling
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, creating Fireworks');
+    try {
+        new Fireworks();
+    } catch (error) {
+        console.error('Error initializing Fireworks:', error);
+    }
+});
