@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "Muqawamah Football Tournament 2024"
-permalink: /sio/muqawamah/
+permalink: /muqawamah/
 ---
 
 # Muqawamah Football Tournament 2024
