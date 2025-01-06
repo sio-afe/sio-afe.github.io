@@ -7,7 +7,7 @@ permalink: /muqawamah/open-age/
 <div class="tournament-container">
     <header>
         <h1>Muqawamah Open Age Football Tournament 2024</h1>
-        <a href="/muqawamah" class="back-button">←  Tournaments</a>
+        <a href="{{ '/muqawamah/' | relative_url }}" class="back-button">←  Tournaments</a>
     </header>
     
     <section id="final-fixture">
