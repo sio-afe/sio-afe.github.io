@@ -2,193 +2,68 @@
 layout: page
 title: "Muqawamah Open Age Tournament 2024"
 permalink: /muqawamah/open-age/
+category: open-age
+scripts:
+  - /assets/js/tournament/table.js
+  - /assets/js/tournament/fixtures.js
+  - /assets/js/tournament/stats.js
+  - /assets/js/tournament/fireworks.js
+styles:
+  - /assets/css/tournament.css
 ---
 
-<div class="tournament-container">
-    <header>
-        <h1>Muqawamah Open Age Football Tournament 2024</h1>
-        <a href="{{ '/muqawamah/' | relative_url }}" class="back-button">←  Tournaments</a>
-    </header>
-    
-    <section id="final-fixture">
-        <!-- Inserted by JavaScript -->
-    </section>
+# Muqawamah Open Age Football Tournament 2024
 
-    <section id="league-table">
-        <h2>League Table</h2>
-        <div class="table-controls">
-            <button onclick="sortTable('points')" class="sort-btn">Sort by Points</button>
-            <button onclick="sortTable('gd')" class="sort-btn">Sort by Goal Difference</button>
-            <button onclick="sortTable('goals')" class="sort-btn">Sort by Goals For</button>
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Position</th>
-                    <th>Team</th>
-                    <th>Played</th>
-                    <th>Won</th>
-                    <th>Drawn</th>
-                    <th>Lost</th>
-                    <th>Points</th>
-                    <th>GD</th>
-                    <th>GF</th>
-                    <th>GA</th>
-                </tr>
-            </thead>
-            <tbody id="table-body">
-                <!-- Teams will be inserted here by JavaScript -->
-            </tbody>
-        </table>
-    </section>
+[←  Tournaments]({{ '/muqawamah/' | relative_url }})
+{: .back-button}
 
-    <section id="fixtures">
-        <h2>Fixture List</h2>
-        <div class="fixture-filters">
-            <button onclick="filterFixtures('all')" class="filter-btn active">All</button>
-            <button onclick="filterFixtures('upcoming')" class="filter-btn">Upcoming</button>
-            <button onclick="filterFixtures('live')" class="filter-btn">Live</button>
-            <button onclick="filterFixtures('completed')" class="filter-btn">Completed</button>
-        </div>
-        <ul id="fixtures-grouped">
-            <!-- Grouped fixtures will be inserted here by JavaScript -->
-        </ul>
-    </section>
+{% include tournament/final-fixture.html %}
 
-    <div class="stats-container">
-        <section id="top-scorers">
-            <h2>Top Scorers</h2>
-            <ul id="scorers-list">
-                <!-- Top scorers will be inserted here by JavaScript -->
-            </ul>
-        </section>
-        
-        <section id="top-assisters">
-            <h2>Top Assists</h2>
-            <ul id="assisters-list">
-                <!-- Top assisters will be inserted here by JavaScript -->
-            </ul>
-        </section>
+## League Table
+{: #league-table}
 
-        <section id="top-clean-sheets">
-            <h2>Top Clean Sheets</h2>
-            <ul id="clean-sheets-list">
-                <!-- clean sheets will be inserted here by JavaScript -->
-            </ul>
-        </section>
-    </div>
+<div class="table-controls">
+  <button data-sort="points">Sort by Points</button>
+  <button data-sort="gd">Sort by Goal Difference</button>
+  <button data-sort="goals">Sort by Goals For</button>
+</div>
+
+| Position | Team | Played | Won | Drawn | Lost | Points | GD | GF | GA |
+|:---------|:-----|:-------|:----|:------|:-----|:-------|:---|:---|:---|
+{: .league-table-header}
+
+<div id="table-body"></div>
+
+## Fixture List
+{: #fixtures}
+
+<div class="fixture-filters">
+  <button data-filter="all" class="active">All</button>
+  <button data-filter="upcoming">Upcoming</button>
+  <button data-filter="live">Live</button>
+  <button data-filter="completed">Completed</button>
+</div>
+
+<div id="fixtures-grouped"></div>
+
+## Statistics
+{: #stats}
+
+<div class="stats-grid">
+  <div class="stat-section">
+    <h3>Top Scorers</h3>
+    <div id="scorers-list"></div>
+  </div>
+
+  <div class="stat-section">
+    <h3>Top Assists</h3>
+    <div id="assisters-list"></div>
+  </div>
+
+  <div class="stat-section">
+    <h3>Top Clean Sheets</h3>
+    <div id="clean-sheets-list"></div>
+  </div>
 </div>
 
 <canvas id="fireworksCanvas"></canvas>
-
-<style>
-.tournament-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.back-button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #333;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    margin-bottom: 20px;
-}
-
-.stats-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin-top: 30px;
-}
-
-.table-controls, .fixture-filters {
-    margin-bottom: 15px;
-}
-
-.sort-btn, .filter-btn {
-    padding: 8px 15px;
-    margin-right: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: #f5f5f5;
-    cursor: pointer;
-}
-
-.filter-btn.active {
-    background: #333;
-    color: white;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-}
-
-th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-th {
-    background-color: #f5f5f5;
-}
-
-#fireworksCanvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 999;
-}
-
-section {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-}
-
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-ul li {
-    padding: 8px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.fixture-item {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #eee;
-    border-radius: 4px;
-}
-
-.fixture-status {
-    padding: 4px 8px;
-    border-radius: 3px;
-    margin-right: 10px;
-    font-size: 0.8em;
-}
-
-.status-upcoming { background: #e3f2fd; color: #1565c0; }
-.status-live { background: #f9fbe7; color: #827717; }
-.status-completed { background: #e8f5e9; color: #2e7d32; }
-
-.fixture-time {
-    color: #666;
-    margin-right: 10px;
-}
-</style>
-
-<script src="{{ '/assets/js/open-age-script.js' | relative_url }}"></script>

@@ -1,0 +1,30 @@
+{
+    "fixtures": [
+        {
+            "id": "U17-1",
+            "date": "2024-03-21",
+            "time": "14:00",
+            "homeTeam": "Ummah Stars",
+            "awayTeam": "Metro United",
+            "homeCrest": "/assets/images/crests/u17/ummah-stars.png",
+            "awayCrest": "/assets/images/crests/u17/metro-united.png",
+            "venue": "Community Ground",
+            "status": "upcoming",
+            "homeScore": null,
+            "awayScore": null
+        },
+        {
+            "id": "U17-2",
+            "date": "2024-03-21",
+            "time": "15:30",
+            "homeTeam": "Okhla Madrid",
+            "awayTeam": "Jaipur Thunders",
+            "homeCrest": "/assets/images/crests/u17/okhla-madrid.png",
+            "awayCrest": "/assets/images/crests/u17/jaipur-thunders.png",
+            "venue": "Community Ground",
+            "status": "upcoming",
+            "homeScore": null,
+            "awayScore": null
+        }
+    ]
+}

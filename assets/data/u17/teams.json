@@ -1,0 +1,84 @@
+{
+    "teams": [
+        {
+            "name": "Ummah Stars",
+            "crest": "",
+            "played": 0,
+            "won": 0,
+            "drawn": 0,
+            "lost": 0,
+            "gf": 0,
+            "ga": 0
+        },
+        {
+            "name": "Metro United",
+            "crest": "",
+            "played": 0,
+            "won": 0,
+            "drawn": 0,
+            "lost": 0,
+            "gf": 0,
+            "ga": 0
+        },
+        {
+            "name": "Okhla Madrid",
+            "crest": "",
+            "played": 0,
+            "won": 0,
+            "drawn": 0,
+            "lost": 0,
+            "gf": 0,
+            "ga": 0
+        },
+        {
+            "name": "Jaipur Thunders",
+            "crest": "",
+            "played": 0,
+            "won": 0,
+            "drawn": 0,
+            "lost": 0,
+            "gf": 0,
+            "ga": 0
+        },
+        {
+            "name": "Imperial Titans",
+            "crest": "",
+            "played": 0,
+            "won": 0,
+            "drawn": 0,
+            "lost": 0,
+            "gf": 0,
+            "ga": 0
+        },
+        {
+            "name": "Tikona FC",
+            "crest": "",
+            "played": 0,
+            "won": 0,
+            "drawn": 0,
+            "lost": 0,
+            "gf": 0,
+            "ga": 0
+        },
+        {
+            "name": "Fusion FC",
+            "crest": "",
+            "played": 0,
+            "won": 0,
+            "drawn": 0,
+            "lost": 0,
+            "gf": 0,
+            "ga": 0
+        },
+        {
+            "name": "Pirates FC",
+            "crest": "",
+            "played": 0,
+            "won": 0,
+            "drawn": 0,
+            "lost": 0,
+            "gf": 0,
+            "ga": 0
+        }
+    ]
+}
