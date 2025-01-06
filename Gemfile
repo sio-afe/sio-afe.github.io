@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "html-proofer", "~> 5.0", group: :test
+gem 'html-proofer', '~> 4.4', group: :test
 gem "csv"  
 gem "base64"  
 
