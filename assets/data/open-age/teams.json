@@ -4,7 +4,7 @@
             "id": "tt-1",
             "name": "Tehreeki Titans",
             "crest": "default-team-logo.png",
-            "captain": "Captain Name",
+            "captain": "Sabir",
             "played": 0,
             "won": 0,
             "drawn": 0,
@@ -19,7 +19,7 @@
             "id": "hfc-2",
             "name": "Haikyu FC",
             "crest": "haikyu.jpeg",
-            "captain": "Captain Name",
+            "captain": "Ahad",
             "played": 0,
             "won": 0,
             "drawn": 0,
@@ -32,7 +32,8 @@
         },
         {
             "name": "Eagle Gang",
-            "crest": "",
+            "crest": "eagle.jpeg",
+            "captain": "Md Rayyan",
             "played": 0,
             "won": 0,
             "drawn": 0,
@@ -43,7 +44,8 @@
         },
         {
             "name": "Young Boys",
-            "crest": "",
+            "crest": "young-boys.jpeg",
+            "captain": "",
             "played": 0,
             "won": 0,
             "drawn": 0,
@@ -54,7 +56,8 @@
         },
         {
             "name": "Uncommon FC",
-            "crest": "",
+            "crest": "uncommon.jpeg",
+            "captain": "Md Saad",
             "played": 0,
             "won": 0,
             "drawn": 0,
@@ -65,7 +68,8 @@
         },
         {
             "name": "Tikona FC",
-            "crest": "",
+            "crest": "tikona.jpeg",
+            "captain": "Md Daim",
             "played": 0,
             "won": 0,
             "drawn": 0,
@@ -76,6 +80,7 @@
         },
         {
             "name": "Legends FC",
+            "captain": "Adnan",
             "crest": "",
             "played": 0,
             "won": 0,
@@ -88,6 +93,7 @@
         {
             "name": "Guncha FC",
             "crest": "",
+            "captain": "Anas Rafique",
             "played": 0,
             "won": 0,
             "drawn": 0,
@@ -98,7 +104,8 @@
         },
         {
             "name": "Shine Star FC",
-            "crest": "",
+            "crest": "shine.jpeg",
+            "captain": "Md Yunus",
             "played": 0,
             "won": 0,
             "drawn": 0,
@@ -120,7 +127,8 @@
         },
         {
             "name": "Real Ace FC",
-            "crest": "",
+            "crest": "real-ace.jpeg",
+            "captain": "Imad",
             "played": 0,
             "won": 0,
             "drawn": 0,
@@ -131,7 +139,8 @@
         },
         {
             "name": "Ekka FC",
-            "crest": "",
+            "crest": "ekka.jpeg",
+            "captain": "Anmol Ekka",
             "played": 0,
             "won": 0,
             "drawn": 0,
