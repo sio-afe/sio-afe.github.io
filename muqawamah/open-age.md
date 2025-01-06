@@ -7,7 +7,7 @@ permalink: /muqawamah/open-age/
 <div class="tournament-container">
     <header>
         <h1>Muqawamah Open Age Football Tournament 2024</h1>
-        <a href="/muqawamah" class="back-button">← Back to Tournaments</a>
+        <a href="/muqawamah" class="back-button">←  Tournaments</a>
     </header>
     
     <section id="final-fixture">
@@ -16,6 +16,11 @@ permalink: /muqawamah/open-age/
 
     <section id="league-table">
         <h2>League Table</h2>
+        <div class="table-controls">
+            <button onclick="sortTable('points')" class="sort-btn">Sort by Points</button>
+            <button onclick="sortTable('gd')" class="sort-btn">Sort by Goal Difference</button>
+            <button onclick="sortTable('goals')" class="sort-btn">Sort by Goals For</button>
+        </div>
         <table>
             <thead>
                 <tr>
@@ -39,6 +44,12 @@ permalink: /muqawamah/open-age/
 
     <section id="fixtures">
         <h2>Fixture List</h2>
+        <div class="fixture-filters">
+            <button onclick="filterFixtures('all')" class="filter-btn active">All</button>
+            <button onclick="filterFixtures('upcoming')" class="filter-btn">Upcoming</button>
+            <button onclick="filterFixtures('live')" class="filter-btn">Live</button>
+            <button onclick="filterFixtures('completed')" class="filter-btn">Completed</button>
+        </div>
         <ul id="fixtures-grouped">
             <!-- Grouped fixtures will be inserted here by JavaScript -->
         </ul>
@@ -71,7 +82,6 @@ permalink: /muqawamah/open-age/
 <canvas id="fireworksCanvas"></canvas>
 
 <style>
-/* Same CSS as U17 page */
 .tournament-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -93,6 +103,24 @@ permalink: /muqawamah/open-age/
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
     margin-top: 30px;
+}
+
+.table-controls, .fixture-filters {
+    margin-bottom: 15px;
+}
+
+.sort-btn, .filter-btn {
+    padding: 8px 15px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #f5f5f5;
+    cursor: pointer;
+}
+
+.filter-btn.active {
+    background: #333;
+    color: white;
 }
 
 table {
@@ -136,6 +164,31 @@ ul li {
     padding: 8px 0;
     border-bottom: 1px solid #eee;
 }
+
+.fixture-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+}
+
+.fixture-status {
+    padding: 4px 8px;
+    border-radius: 3px;
+    margin-right: 10px;
+    font-size: 0.8em;
+}
+
+.status-upcoming { background: #e3f2fd; color: #1565c0; }
+.status-live { background: #f9fbe7; color: #827717; }
+.status-completed { background: #e8f5e9; color: #2e7d32; }
+
+.fixture-time {
+    color: #666;
+    margin-right: 10px;
+}
 </style>
 
-<script src="/muqawamah/open-age-script.js"></script>
+<script src="{{ '/assets/js/open-age-script.js' | relative_url }}"></script>
