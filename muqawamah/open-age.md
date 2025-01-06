@@ -4,12 +4,12 @@ title: "Muqawamah Open Age Tournament 2024"
 permalink: /muqawamah/open-age/
 category: open-age
 scripts:
-  - /assets/js/tournament/table.js
-  - /assets/js/tournament/fixtures.js
-  - /assets/js/tournament/stats.js
-  - /assets/js/tournament/fireworks.js
+  - assets/js/tournament/table.js
+  - assets/js/tournament/fixtures.js
+  - assets/js/tournament/stats.js
+  - assets/js/tournament/fireworks.js
 styles:
-  - /assets/css/tournament.css
+  - assets/css/tournament.css
 ---
 
 # Muqawamah Open Age Football Tournament 2024
