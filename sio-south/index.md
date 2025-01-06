@@ -23,7 +23,7 @@ Join us at AFE campus:
 - **Unit President**: [Ahmed Naeem]
 
 ## Upcoming Events
-1. **[Muqawamah - Football Championship](/sio-south/muqawamah)**
+1. **[Muqawamah - Football Championship](muqawamah/index.md)**
    - Date: 11 - 12th January 2025
    - Venue: Milli Model Ground
 
