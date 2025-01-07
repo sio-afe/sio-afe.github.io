@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: default
 permalink: /muqawamah/
 ---
 
@@ -12,14 +12,28 @@ permalink: /muqawamah/
 
 .hero-section {
     text-align: center;
-    padding: 60px 20px;
-    background: linear-gradient(135deg, #1a237e, #0d47a1);
-    color: white;
+    padding: 0;
+    margin: 40px auto;
+    width: 100%;
+    max-width: 1200px;
+    height: auto;
     border-radius: 15px;
-    margin-bottom: 40px;
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.8s ease forwards;
+}
+
+.hero-section picture {
+    display: block;
+    width: 100%;
+}
+
+.hero-section img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .hero-section h1 {
@@ -425,32 +439,32 @@ permalink: /muqawamah/
         padding: 0 15px;
     }
 
-    .objectives-grid, .rules-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
+.objectives-grid, .rules-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
 
-    .objective-card, .rule-card {
-        padding: 15px;
-    }
+.objective-card, .rule-card {
+    padding: 15px;
+}
 
-    .objective-card h3, .rule-card h3 {
-        font-size: 1.1em;
-        margin-bottom: 10px;
-        padding-bottom: 6px;
-    }
+.objective-card h3, .rule-card h3 {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+}
 
-    .objective-card p {
-        font-size: 0.9em;
-        line-height: 1.4;
-    }
+.objective-card p {
+    font-size: 0.9em;
+    line-height: 1.4;
+}
 
-    .rule-card li {
-        font-size: 0.9em;
-        padding-left: 12px;
-        margin-bottom: 8px;
-        line-height: 1.4;
-    }
+.rule-card li {
+    font-size: 0.9em;
+    padding-left: 12px;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
 }
 
 @media (max-width: 480px) {
@@ -461,10 +475,6 @@ permalink: /muqawamah/
     .tournament-button {
         max-width: 250px;
         min-width: unset;
-    }
-
-    .sponsors-grid {
-        grid-template-columns: repeat(2, 1fr);
     }
 
     .objectives-grid, .rules-grid {
@@ -628,12 +638,28 @@ permalink: /muqawamah/
         padding: 15px;
     }
 }
+
+@media (min-width: 768px) {
+    .hero-section {
+        padding: 30px;
+    }
+    .hero-section img {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        display: block;
+    }
+}
 </style>
 
 <div class="tournament-container">
     <div class="hero-section">
-        <h1>Welcome to Muqawamah Football Tournament 2025</h1>
-        <p>Join us for an exciting football tournament that brings together teams from across the community in a celebration of sport, unity, and competition.</p>
+        <picture>
+            <!-- Wide image for desktop -->
+            <source media="(min-width: 768px)" srcset="/assets/img/front_page_wide.png">
+            <!-- Default/mobile image -->
+            <img src="/assets/img/front_page.png" alt="Muqawamah Football Tournament">
+        </picture>
     </div>
 
     <div class="info-section">
@@ -653,40 +679,40 @@ permalink: /muqawamah/
             <div class="rule-card">
                 <h3>Registration & Participation</h3>
                 <ul>
-                    <li>Teams must submit complete player list with passport photos, full names, and DOB before tournament day</li>
-                    <li>Players can only participate in one team per tournament category (U-17 and Open Age are separate)</li>
-                    <li> Entry fee must be paid before tournament day</li>
-                    <li>Registration fees are non-refundable under any circumstances</li>
+                    <li>• Teams must submit complete player list with passport photos, full names, and DOB before tournament day</li>
+                    <li>• Players can only participate in one team per tournament category (U-17 and Open Age are separate)</li>
+                    <li>• Entry fee must be paid before tournament day</li>
+                    <li>• Registration fees are non-refundable under any circumstances</li>
                 </ul>
             </div>
 
             <div class="rule-card">
                 <h3>Match Day Requirements</h3>
                 <ul>
-                    <li>Teams must arrive 15 minutes before scheduled match time</li>
-                    <li>All team players must be present at arrival time</li>
-                    <li>Teams must wear matching jerseys for clear identification</li>
-                    <li>Teams are not allowed to bring their own footballs</li>
+                    <li>• Teams must arrive 15 minutes before scheduled match time</li>
+                    <li>• All team players must be present at arrival time</li>
+                    <li>• Teams must wear matching jerseys for clear identification</li>
+                    <li>• Teams are not allowed to bring their own footballs</li>
                 </ul>
             </div>
 
             <div class="rule-card">
                 <h3>Conduct & Discipline</h3>
                 <ul>
-                    <li>Abusive language or misconduct will result in immediate action</li>
-                    <li>Players must respect referee's decisions - no arguments allowed</li>
-                    <li>Smoking, gutka, and other such items are strictly prohibited</li>
-                    <li>Any damage to ground property will face severe action</li>
+                    <li>• Abusive language or misconduct will result in immediate action</li>
+                    <li>• Players must respect referee's decisions - no arguments allowed</li>
+                    <li>• Smoking, gutka, and other such items are strictly prohibited</li>
+                    <li>• Any damage to ground property will face severe action</li>
                 </ul>
             </div>
 
             <div class="rule-card">
                 <h3>Tournament Authority</h3>
                 <ul>
-                    <li>Management team's decisions are final and cannot be challenged</li>
-                    <li>Right to disqualify teams for incomplete player attendance</li>
-                    <li>Violations may result in player bans or team elimination</li>
-                    <li>Only listed players are allowed to participate</li>
+                    <li>• Management team's decisions are final and cannot be challenged</li>
+                    <li>• Right to disqualify teams for incomplete player attendance</li>
+                    <li>• Violations may result in player bans or team elimination</li>
+                    <li>• Only listed players are allowed to participate</li>
                 </ul>
             </div>
         </div>
@@ -769,14 +795,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Observe all info sections
     document.querySelectorAll('.info-section').forEach(section => {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(20px)';
-        section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-        observer.observe(section);
-    });
-
-    // Add scroll reveal animation for sponsors section
-    document.querySelectorAll('.sponsors-section').forEach(section => {
         section.style.opacity = '0';
         section.style.transform = 'translateY(20px)';
         section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';

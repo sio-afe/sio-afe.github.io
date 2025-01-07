@@ -1,6 +1,5 @@
 ---
-layout: page
-title: "Muqawamah Open Age Tournament 2025"
+layout: default
 permalink: /muqawamah/open-age/
 category: open-age
 scripts:
