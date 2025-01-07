@@ -1,0 +1,29 @@
+{
+    "sponsors": [
+        {
+            "name": "Al Barkaat",
+            "logo": "/assets/data/sponsors/default.png",
+            "type": "main"
+        },
+        {
+            "name": "Falcon Sports",
+            "logo": "/assets/data/sponsors/default.png",
+            "type": "gold"
+        },
+        {
+            "name": "Jamia Sports",
+            "logo": "/assets/data/sponsors/default.png",
+            "type": "silver"
+        },
+        {
+            "name": "AFE Sports Club",
+            "logo": "/assets/data/sponsors/default.png",
+            "type": "silver"
+        },
+        {
+            "name": "Sports Hub",
+            "logo": "/assets/data/sponsors/default.png",
+            "type": "bronze"
+        }
+    ]
+}

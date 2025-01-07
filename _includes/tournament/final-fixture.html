@@ -89,6 +89,31 @@
 
   <!-- Tournament Stats -->
   <div class="tournament-stats">
+    <!-- Add sponsors section before other stats -->
+    <div class="stats-card sponsors-section">
+        <div class="card-header">
+            <h2>Tournament Sponsors</h2>
+        </div>
+        <div class="sponsors-grid">
+            <div class="sponsor-tier main-sponsors">
+                <h3>Main Sponsor</h3>
+                <div class="sponsor-list" data-type="main"></div>
+            </div>
+            <div class="sponsor-tier gold-sponsors">
+                <h3>Gold Sponsors</h3>
+                <div class="sponsor-list" data-type="gold"></div>
+            </div>
+            <div class="sponsor-tier silver-sponsors">
+                <h3>Silver Sponsors</h3>
+                <div class="sponsor-list" data-type="silver"></div>
+            </div>
+            <div class="sponsor-tier bronze-sponsors">
+                <h3>Bronze Sponsors</h3>
+                <div class="sponsor-list" data-type="bronze"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- League Table Section -->
    <div class="stats-card">
   <div class="card-header">
@@ -1405,4 +1430,191 @@
     gap: 0.4rem;
   }
 }
+
+.sponsors-section {
+    margin-bottom: 2rem;
+}
+
+.sponsors-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem 0;
+}
+
+.sponsor-tier {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.sponsor-tier h3 {
+    color: #1d3557;
+    font-size: 1.1rem;
+    margin: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e63946;
+}
+
+.sponsor-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.sponsor-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+    width: 150px;
+}
+
+.sponsor-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.sponsor-logo {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border-radius: 8px;
+    padding: 0.5rem;
+    background: #f8f9fa;
+}
+
+.sponsor-name {
+    font-size: 0.9rem;
+    color: #1d3557;
+    font-weight: 500;
+    text-align: center;
+}
+
+.main-sponsors .sponsor-item {
+    width: 200px;
+    background: linear-gradient(135deg, #f8f9fa, #ffffff);
+    border: 1px solid rgba(230, 57, 70, 0.1);
+}
+
+.main-sponsors .sponsor-logo {
+    width: 150px;
+    height: 150px;
+}
+
+.gold-sponsors .sponsor-item {
+    background: linear-gradient(135deg, #fff9c4, #ffffff);
+}
+
+.silver-sponsors .sponsor-item {
+    background: linear-gradient(135deg, #f5f5f5, #ffffff);
+}
+
+.bronze-sponsors .sponsor-item {
+    background: linear-gradient(135deg, #ffe0b2, #ffffff);
+}
+
+@media (max-width: 768px) {
+    .sponsor-item {
+        width: 130px;
+    }
+
+    .sponsor-logo {
+        width: 80px;
+        height: 80px;
+    }
+
+    .main-sponsors .sponsor-item {
+        width: 180px;
+    }
+
+    .main-sponsors .sponsor-logo {
+        width: 120px;
+        height: 120px;
+    }
+
+    .sponsor-name {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .sponsor-item {
+        width: 120px;
+    }
+
+    .sponsor-logo {
+        width: 70px;
+        height: 70px;
+    }
+
+    .main-sponsors .sponsor-item {
+        width: 160px;
+    }
+
+    .main-sponsors .sponsor-logo {
+        width: 100px;
+        height: 100px;
+    }
+
+    .sponsor-name {
+        font-size: 0.8rem;
+    }
+}
 </style>
+
+<script>
+// Add this to your existing JavaScript
+async function loadSponsors() {
+    try {
+        const response = await fetch('/assets/data/sponsors/sponsors.json');
+        const data = await response.json();
+        
+        const sponsorsByType = {
+            main: [],
+            gold: [],
+            silver: [],
+            bronze: []
+        };
+
+        // Group sponsors by type
+        data.sponsors.forEach(sponsor => {
+            if (sponsorsByType[sponsor.type]) {
+                sponsorsByType[sponsor.type].push(sponsor);
+            }
+        });
+
+        // Populate each sponsor section
+        Object.keys(sponsorsByType).forEach(type => {
+            const container = document.querySelector(`.sponsor-list[data-type="${type}"]`);
+            if (container) {
+                sponsorsByType[type].forEach(sponsor => {
+                    const sponsorElement = document.createElement('div');
+                    sponsorElement.className = 'sponsor-item';
+                    sponsorElement.innerHTML = `
+                        <img src="${sponsor.logo}" alt="${sponsor.name}" class="sponsor-logo" loading="lazy">
+                        <div class="sponsor-name">${sponsor.name}</div>
+                    `;
+                    container.appendChild(sponsorElement);
+                });
+            }
+        });
+    } catch (error) {
+        console.error('Error loading sponsors:', error);
+    }
+}
+
+// Call loadSponsors after DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    loadSponsors();
+    // ... your existing DOM ready code ...
+});
+</script>

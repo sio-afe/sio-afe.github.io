@@ -1,5 +1,3 @@
-import Toast from 'bootstrap/js/src/toast';
-
 if ('serviceWorker' in navigator) {
   // Get Jekyll config from URL parameters
   const src = new URL(document.currentScript.src);
@@ -8,31 +6,17 @@ if ('serviceWorker' in navigator) {
 
   if (register) {
     const swUrl = `${baseUrl}/sw.min.js`;
-    const notification = document.getElementById('notification');
-    const btnRefresh = notification.querySelector('.toast-body>button');
-    const popupWindow = Toast.getOrCreateInstance(notification);
 
     navigator.serviceWorker.register(swUrl).then((registration) => {
-      // Restore the update window that was last manually closed by the user
-      if (registration.waiting) {
-        popupWindow.show();
-      }
-
       registration.addEventListener('updatefound', () => {
         registration.installing.addEventListener('statechange', () => {
           if (registration.waiting) {
             if (navigator.serviceWorker.controller) {
-              popupWindow.show();
+              // Instead of showing notification, trigger update immediately
+              registration.waiting.postMessage('SKIP_WAITING');
             }
           }
         });
-      });
-
-      btnRefresh.addEventListener('click', () => {
-        if (registration.waiting) {
-          registration.waiting.postMessage('SKIP_WAITING');
-        }
-        popupWindow.hide();
       });
     });
 

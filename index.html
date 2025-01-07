@@ -1,13 +1,625 @@
 ---
 layout: page
+title: Welcome to SIO Abul Fazal Enclave
 ---
 
+<style>
+.hero-section {
+    text-align: center;
+    padding: 30px 20px;
+    margin-bottom: 30px;
+}
+
+.hero-card {
+    background: white;
+    border-radius: 15px;
+    padding: 40px;
+    max-width: 800px;
+    margin: 0 auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 100, 0, 0.1);
+}
+
+.logo-container {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 25px;
+    border-radius: 50%;
+    padding: 5px;
+    background: linear-gradient(135deg, rgba(0, 100, 0, 0.05), rgba(0, 128, 0, 0.05));
+    border: 2px solid rgba(0, 100, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.hero-logo {
+    width: 107%;
+    height: 107%;
+    border-radius: 50%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.logo-container:hover .hero-logo {
+    transform: scale(1.05);
+}
+
+.hero-title {
+    font-size: 1.2em;
+    color: #000000;
+    margin-bottom: 20px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.mission-divider {
+    width: 50px;
+    height: 2px;
+    background: rgba(0, 0, 0, 0.1);
+    margin: 25px auto;
+}
+
+.mission-title {
+    font-size: 1.3em;
+    color: #000000;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.hero-slogan {
+    font-size: 1.2em;
+    color: #333333;
+    line-height: 1.6;
+    margin: 0;
+    font-style: italic;
+    font-weight: 500;
+    padding: 0 20px;
+}
+
+.slogan-section {
+    text-align: center;
+    padding: 30px 20px;
+    background: linear-gradient(135deg, rgba(0, 100, 0, 0.05), rgba(0, 128, 0, 0.05));
+    border-radius: 15px;
+    margin: 0 auto 40px;
+    max-width: 800px;
+    border: 1px solid rgba(0, 100, 0, 0.1);
+}
+
+.slogan-section h1 {
+    font-size: 2em;
+    color: #006400;
+    margin-bottom: 15px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.slogan-section p {
+    font-size: 1.2em;
+    color: #2e7d32;
+    line-height: 1.6;
+    margin: 0;
+    font-style: italic;
+}
+
+.mission-section {
+    text-align: center;
+    padding: 40px 20px;
+    background: #f5f7fa;
+    border-radius: 15px;
+    margin: 30px 0;
+}
+
+.mission-section h2 {
+    color: #1a237e;
+    margin-bottom: 20px;
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin: 40px auto;
+    max-width: 1200px;
+    padding: 0 20px;
+}
+
+.value-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    text-align: left;
+}
+
+.value-card h3 {
+    color: #1a237e;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.value-card p {
+    color: #455a64;
+    line-height: 1.6;
+}
+
+.units-section {
+    padding: 40px 20px;
+}
+
+.units-section h2 {
+    text-align: center;
+    color: #1a237e;
+    margin-bottom: 30px;
+}
+
+.units-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.unit-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.unit-card:hover {
+    transform: translateY(-5px);
+}
+
+.unit-card h3 {
+    color: #1a237e;
+    margin-bottom: 15px;
+}
+
+.unit-card p {
+    color: #455a64;
+    margin-bottom: 20px;
+}
+
+.unit-button {
+    display: inline-block;
+    padding: 12px 25px;
+    background: linear-gradient(135deg, #1a237e, #0d47a1);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.unit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(26, 35, 126, 0.2);
+}
+
+.values-section {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    max-width: 800px;
+    margin: 40px auto;
+    text-align: center;
+    position: relative;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.values-section h2 {
+    color: #000000;
+    margin-bottom: 25px;
+    font-size: 1.4em;
+    text-align: center;
+}
+
+.carousel-container {
+    position: relative;
+    overflow: hidden;
+    min-height: 250px;
+    background: linear-gradient(to bottom, #ffffff, #fafafa);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.value-item {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.8s ease;
+    padding: 20px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.value-item.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.value-item.prev {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+.value-item h3 {
+    color: #000000;
+    margin-bottom: 20px;
+    font-size: 1.3em;
+    font-weight: 600;
+    width: 100%;
+}
+
+.value-item p {
+    color: #333333;
+    line-height: 1.6;
+    font-size: 1.1em;
+    margin: 0 auto;
+    max-width: 450px;
+}
+
+.carousel-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    gap: 15px;
+}
+
+.carousel-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.carousel-dot.active {
+    background: #000000;
+    transform: scale(1.2);
+}
+
+.carousel-button {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: #000000;
+    cursor: pointer;
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+
+.carousel-button:hover {
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    .hero-card {
+        padding: 25px 15px;
+    }
+
+    .logo-container {
+        width: 150px;
+        height: 150px;
+        margin-bottom: 20px;
+    }
+
+    .hero-title {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+    }
+
+    .mission-title {
+        font-size: 1.1em;
+        margin-bottom: 12px;
+    }
+
+    .hero-slogan {
+        font-size: 1em;
+        padding: 0 10px;
+    }
+
+    .mission-divider {
+        margin: 20px auto;
+    }
+
+    .slogan-section {
+        padding: 25px 15px;
+        margin-bottom: 30px;
+    }
+
+    .slogan-section h1 {
+        font-size: 1.6em;
+    }
+
+    .slogan-section p {
+        font-size: 1.1em;
+    }
+
+    .hero-section {
+        padding: 40px 15px;
+    }
+
+    .hero-section h1 {
+        font-size: 2em;
+    }
+
+    .values-grid, .units-grid {
+        grid-template-columns: 1fr;
+        padding: 0 15px;
+    }
+
+    .value-card, .unit-card {
+        padding: 20px;
+    }
+
+    .values-section {
+        padding: 25px 15px;
+        margin: 30px 15px;
+    }
+
+    .values-section h2 {
+        font-size: 1.3em;
+        margin-bottom: 20px;
+    }
+
+    .carousel-container {
+        min-height: 300px;
+        padding: 25px;
+    }
+
+    .value-item {
+        padding: 15px 35px;
+    }
+
+    .value-item h3 {
+        font-size: 1.2em;
+        margin-bottom: 12px;
+    }
+
+    .value-item p {
+        font-size: 1em;
+        line-height: 1.5;
+    }
+}
+
+.updates-section {
+    max-width: 800px;
+    margin: 0 auto 40px;
+    padding: 0 20px;
+}
+
+.updates-container {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.updates-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.updates-title {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.updates-title::before {
+    content: "🔔";
+    font-size: 1.1em;
+    animation: gentleRing 2s ease infinite;
+}
+
+@keyframes gentleRing {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(-5deg); }
+    75% { transform: rotate(5deg); }
+}
+
+.updates-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.update-item {
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.update-item:hover {
+    background: #f1f3f5;
+    border-left-color: #2ecc71;
+    transform: translateX(3px);
+}
+
+.update-date {
+    font-size: 0.85em;
+    color: #6c757d;
+    margin-bottom: 4px;
+}
+
+.update-content {
+    font-size: 1em;
+    color: #2c3e50;
+    line-height: 1.4;
+}
+
+.new-badge {
+    display: inline-block;
+    background: #2ecc71;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    margin-left: 8px;
+    animation: subtle-pulse 2s infinite;
+}
+
+@keyframes subtle-pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+    .updates-section {
+        padding: 0 15px;
+    }
+    
+    .updates-container {
+        padding: 15px;
+    }
+    
+    .update-item {
+        padding: 10px 12px;
+    }
+    
+    .update-content {
+        font-size: 0.95em;
+    }
+}
+</style>
+
 <script>
-  window.location.href = '/sio-south';
+document.addEventListener('DOMContentLoaded', function() {
+    const values = document.querySelectorAll('.value-item');
+    let currentIndex = 0;
+
+    // Initialize first item as active
+    values[currentIndex].classList.add('active');
+
+    function updateCarousel() {
+        values[currentIndex].classList.remove('active');
+        values[currentIndex].classList.add('prev');
+        
+        currentIndex = (currentIndex + 1) % values.length;
+
+        values.forEach((value, index) => {
+            value.classList.remove('active', 'prev');
+            if (index === currentIndex) {
+                value.classList.add('active');
+            }
+        });
+    }
+
+    // Auto advance carousel
+    setInterval(updateCarousel, 7000);
+});
 </script>
 
-<noscript>
-  <meta http-equiv="refresh" content="0; url=/sio-south">
-</noscript>
+<div class="hero-section">
+    <div class="hero-card">
+        <div class="logo-container">
+            <img src="/assets/img/images.jpeg" alt="SIO Logo" class="hero-logo">
+        </div>
+        <h1 class="hero-title">Students Islamic Organisation of India</h1>
+        <div class="mission-divider"></div>
+        <h2 class="mission-title">Our Mission</h2>
+        <p class="hero-slogan">Preparing students and youth for the reconstruction of society in the light of Divine Guidance</p>
+    </div>
+</div>
 
-<p>Redirecting to <a href="/sio-south">South Unit</a>...</p>
+<div class="updates-section">
+    <div class="updates-container">
+        <div class="updates-header">
+            <h2 class="updates-title">Latest Updates</h2>
+        </div>
+        <ul class="updates-list">
+            <li class="update-item">
+                <div class="update-date">December 15, 2023</div>
+                <div class="update-content">
+                    Annual Sports Tournament Registration Now Open! <span class="new-badge">New</span>
+                </div>
+            </li>
+            <li class="update-item">
+                <div class="update-date">December 10, 2023</div>
+                <div class="update-content">
+                    Winter Leadership Camp - Join us for an enriching experience
+                </div>
+            </li>
+            <li class="update-item">
+                <div class="update-date">December 5, 2023</div>
+                <div class="update-content">
+                    Academic Excellence Workshop Series Starting Next Week
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="values-section">
+    <h2>Our Core Values</h2>
+    <div class="carousel-container">
+        <div class="value-item">
+            <h3>Igniting Change</h3>
+            <p>SIO kindles revolution in hearts by the virtues of faith. Islam is at the core of the organization, inspiring our vision, mission, and activities.</p>
+        </div>
+        <div class="value-item">
+            <h3>Advancing Social Justice</h3>
+            <p>We empower youth to be champions for justice by standing with the marginalized and working towards a society where dignity reigns supreme.</p>
+        </div>
+        <div class="value-item">
+            <h3>Fostering Academic Excellence</h3>
+            <p>Education is key to unlocking potential. We offer academic guidance, workshops, and mentorship programs to help students excel.</p>
+        </div>
+        <div class="value-item">
+            <h3>Inspiring the Youth</h3>
+            <p>We ignite the flame of leadership among youth, training them to take initiatives, lead campaigns, and inspire others for a better society.</p>
+        </div>
+    </div>
+</div>
+
+<div class="units-section">
+    <h2>SIO Abul Fazal Enclave Units</h2>
+    <div class="units-grid">
+        <div class="unit-card">
+            <h3>AFE South Unit</h3>
+            <p>Serving the southern region of Abul Fazal Enclave with dedication and commitment to our community's growth.</p>
+            <a href="/sio-south" class="unit-button">Visit South Unit</a>
+        </div>
+        <div class="unit-card">
+            <h3>AFE Central Unit</h3>
+            <p>Operating in the central area of Abul Fazal Enclave, fostering unity and development at the heart of our community.</p>
+            <a href="/sio-central" class="unit-button">Visit Central Unit</a>
+        </div>
+        <div class="unit-card">
+            <h3>AFE North Unit</h3>
+            <p>Dedicated to serving the northern region of Abul Fazal Enclave, building stronger community bonds.</p>
+            <a href="/sio-north" class="unit-button">Visit North Unit</a>
+        </div>
+    </div>
+</div>

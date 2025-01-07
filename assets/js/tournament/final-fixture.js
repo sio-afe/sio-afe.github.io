@@ -8,12 +8,15 @@ document.addEventListener('DOMContentLoaded', async function() {
         const fixturesResponse = await fetch(`/assets/data/${category}/fixtures.json`);
         const teamsResponse = await fetch(`/assets/data/${category}/teams.json`);
         const statisticsResponse = await fetch(`/assets/data/${category}/statistics.json`);
+        const sponsorsResponse = await fetch('/assets/data/sponsors/sponsors.json');
         
         const fixturesData = await fixturesResponse.json();
         const teamsData = await teamsResponse.json();
         const statisticsData = await statisticsResponse.json();
+        const sponsorsData = await sponsorsResponse.json();
 
         console.log('Teams data:', teamsData);
+        console.log('Sponsors data:', sponsorsData);
 
         // Create a map of team names to their crests
         const teamCrestMap = {};
@@ -39,13 +42,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.log('Fixtures with crests:', fixturesWithCrests);
 
         // Initialize the page with the data
-        initializePage(fixturesWithCrests, teamsData.teams, statisticsData);
+        initializePage(fixturesWithCrests, teamsData.teams, statisticsData, sponsorsData);
     } catch (error) {
         console.error('Error loading data:', error);
     }
 });
 
-function initializePage(fixtures, teams, statistics) {
+function initializePage(fixtures, teams, statistics, sponsors) {
     // Initialize popup first
     initTeamPopup();
     
@@ -65,6 +68,9 @@ function initializePage(fixtures, teams, statistics) {
     
     // Render statistics
     renderStatistics(statistics);
+
+    // Render sponsors
+    renderSponsors(sponsors);
 }
 
 function initializeViewButtons(fixtures) {
@@ -469,4 +475,34 @@ function showTeamPopup(teamData) {
 function handleTeamClick(teamData) {
   if (!teamData) return;
   showTeamPopup(teamData);
+}
+
+// Add new function to render sponsors
+function renderSponsors(sponsorsData) {
+    const sponsorsByType = {
+        main: [],
+        gold: [],
+        silver: [],
+        bronze: []
+    };
+
+    // Group sponsors by type
+    sponsorsData.sponsors.forEach(sponsor => {
+        if (sponsorsByType[sponsor.type]) {
+            sponsorsByType[sponsor.type].push(sponsor);
+        }
+    });
+
+    // Populate each sponsor section
+    Object.keys(sponsorsByType).forEach(type => {
+        const container = document.querySelector(`.sponsor-list[data-type="${type}"]`);
+        if (container) {
+            container.innerHTML = sponsorsByType[type].map(sponsor => `
+                <div class="sponsor-item">
+                    <img src="${sponsor.logo}" alt="${sponsor.name}" class="sponsor-logo" loading="lazy">
+                    <div class="sponsor-name">${sponsor.name}</div>
+                </div>
+            `).join('');
+        }
+    });
 } 

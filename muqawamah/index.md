@@ -1,39 +1,189 @@
 ---
 layout: page
-title: "Muqawamah Football Tournament 2025"
 permalink: /muqawamah/
 ---
 
 <style>
+.tournament-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.hero-section {
+    text-align: center;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #1a237e, #0d47a1);
+    color: white;
+    border-radius: 15px;
+    margin-bottom: 40px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+.hero-section h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.hero-section p {
+    font-size: 1.2em;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
 .tournament-links {
     text-align: center;
     margin: 40px 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 20px;
+    gap: 30px;
 }
 
 .tournament-button {
-    display: inline-block;
-    padding: 15px 30px;
-    background-color: #4CAF50;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #4CAF50, #43A047);
     color: white;
     text-decoration: none;
-    border-radius: 10px;
+    border-radius: 12px;
     font-size: 18px;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    min-width: 200px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+    min-width: 220px;
+    border: none;
+    position: relative;
+    overflow: hidden;
 }
 
 .tournament-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+    background: linear-gradient(135deg, #43A047, #388E3C);
 }
 
 .tournament-button.u17 {
-    background-color: #2196F3;
+    background: linear-gradient(135deg, #2196F3, #1976D2);
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+    animation-delay: 0.2s;
+}
+
+.tournament-button.u17:hover {
+    box-shadow: 0 6px 20px rgba(33, 150, 243, 0.3);
+    background: linear-gradient(135deg, #1976D2, #1565C0);
+}
+
+.cta-section {
+    text-align: center;
+    margin: 40px 0;
+    padding: 40px;
+    background: linear-gradient(135deg, #f5f7fa, #e4e7eb);
+    border-radius: 15px;
+    color: #1a237e;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.cta-section h2 {
+    margin-bottom: 20px;
+    font-size: 2em;
+    color: #1a237e;
+    font-weight: 600;
+}
+
+.cta-section p {
+    margin-bottom: 30px;
+    font-size: 1.1em;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #424242;
+    line-height: 1.6;
+}
+
+.info-section {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin: 30px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease forwards;
+    overflow: hidden;
+}
+
+.info-section h2 {
+    color: #1a237e;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+.info-section p {
+    margin-bottom: 20px;
+    line-height: 1.6;
+    word-wrap: break-word;
+}
+
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.rule-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s;
+    word-wrap: break-word;
+    overflow: hidden;
+}
+
+.rule-card:hover {
+    transform: translateY(-5px);
+}
+
+.rule-card h3 {
+    color: #1a237e;
+    margin-bottom: 12px;
+    font-size: 1.2em;
+    border-bottom: 2px solid #2196F3;
+    padding-bottom: 8px;
+}
+
+.rule-card ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.rule-card li {
+    margin-bottom: 10px;
+    padding-left: 15px;
+    position: relative;
+    word-wrap: break-word;
+    line-height: 1.4;
+    font-size: 0.95em;
+}
+
+.rule-card li:last-child {
+    margin-bottom: 0;
+}
+
+.important-note {
+    background: #fff3e0;
+    padding: 15px;
+    border-left: 4px solid #ff9800;
+    margin-top: 20px;
+    border-radius: 4px;
 }
 
 .contact-section {
@@ -42,6 +192,9 @@ permalink: /muqawamah/
     background: #f8f9fa;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+    animation-delay: 0.4s;
 }
 
 .last-updated {
@@ -52,39 +205,582 @@ permalink: /muqawamah/
     font-style: italic;
 }
 
+.sponsors-section {
+    padding: 40px 20px;
+    margin: 40px 0;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.sponsors-section h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 1.8em;
+}
+
+.sponsors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 30px;
+    justify-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.sponsor-item {
+    text-align: center;
+    padding: 15px;
+    transition: transform 0.2s ease;
+}
+
+.sponsor-item:hover {
+    transform: translateY(-5px);
+}
+
+.sponsor-item img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.sponsor-item p {
+    color: #555;
+    font-size: 1rem;
+    margin: 0;
+}
+
 @media (max-width: 768px) {
+    .sponsors-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+    }
+
+    .sponsor-item img {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sponsors-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .sponsor-item img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .sponsor-item p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .tournament-container {
+        padding: 15px;
+    }
+
+    .hero-section {
+        padding: 30px 15px;
+        margin-bottom: 30px;
+    }
+
+    .hero-section h1 {
+        font-size: 1.8em;
+        margin-bottom: 15px;
+    }
+
+    .hero-section p {
+        font-size: 1.1em;
+        padding: 0 10px;
+    }
+
+    .info-section {
+        padding: 20px;
+        margin: 15px 0;
+    }
+
+    .info-section h2 {
+        font-size: 1.6em;
+        margin-bottom: 15px;
+    }
+
+    .objectives-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .objective-card {
+        padding: 15px;
+    }
+
+    .objective-card h3 {
+        font-size: 1.2em;
+    }
+
+    .rules-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .rule-card {
+        padding: 15px;
+    }
+
+    .rule-card h3 {
+        font-size: 1.2em;
+    }
+
+    .rule-card li {
+        padding-left: 15px;
+        font-size: 0.95em;
+    }
+
+    .important-note {
+        margin: 20px 5px;
+        padding: 12px;
+        font-size: 0.95em;
+    }
+
+    .cta-section {
+        padding: 25px 15px;
+        margin: 30px 0;
+    }
+
+    .cta-section h2 {
+        font-size: 1.6em;
+        margin-bottom: 15px;
+    }
+
+    .cta-section p {
+        font-size: 1em;
+        padding: 0 10px;
+        margin-bottom: 20px;
+    }
+
     .tournament-links {
         flex-direction: column;
         align-items: center;
+        gap: 15px;
         margin: 20px 0;
     }
 
     .tournament-button {
-        width: 90%;
-        max-width: 300px;
-        margin: 0;
-        padding: 12px 20px;
-        font-size: 16px;
+        width: 100%;
+        max-width: 280px;
+        padding: 14px 20px;
+        font-size: 1em;
+    }
+
+    .sponsors-section {
+        padding: 25px 15px;
+        margin: 30px 0;
+    }
+
+    .sponsors-section h2 {
+        font-size: 1.6em;
+        margin-bottom: 20px;
+    }
+
+    .sponsors-grid {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 15px;
+        padding: 0 10px;
+    }
+
+    .sponsor-item {
+        padding: 10px;
+        max-width: 130px;
+    }
+
+    .sponsor-item p {
+        font-size: 0.9em;
+        margin-top: 8px;
     }
 
     .contact-section {
-        margin: 20px 10px;
+        margin: 30px 5px;
+        padding: 20px 15px;
+    }
+
+    .contact-section h2 {
+        font-size: 1.6em;
+        margin-bottom: 15px;
+    }
+
+    .contact-section p {
+        font-size: 0.95em;
+        margin-bottom: 10px;
+    }
+
+    .last-updated {
+        font-size: 0.85rem;
+        margin-top: 30px;
+        padding: 0 15px;
+    }
+
+    .objectives-grid, .rules-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .objective-card, .rule-card {
+        padding: 15px;
+    }
+
+    .objective-card h3, .rule-card h3 {
+        font-size: 1.1em;
+        margin-bottom: 10px;
+        padding-bottom: 6px;
+    }
+
+    .objective-card p {
+        font-size: 0.9em;
+        line-height: 1.4;
+    }
+
+    .rule-card li {
+        font-size: 0.9em;
+        padding-left: 12px;
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section h1 {
+        font-size: 1.6em;
+    }
+
+    .tournament-button {
+        max-width: 250px;
+        min-width: unset;
+    }
+
+    .sponsors-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .objectives-grid, .rules-grid {
+        gap: 12px;
+    }
+
+    .objective-card, .rule-card {
+        padding: 12px;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.info-section .highlight {
+    color: #4CAF50;
+    font-weight: 600;
+}
+
+.objectives-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.objective-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s;
+    word-wrap: break-word;
+    overflow: hidden;
+}
+
+.objective-card:hover {
+    transform: translateY(-5px);
+}
+
+.objective-card h3 {
+    color: #1a237e;
+    margin-bottom: 12px;
+    font-size: 1.2em;
+    border-bottom: 2px solid #2196F3;
+    padding-bottom: 8px;
+}
+
+.objective-card p {
+    color: #333;
+    line-height: 1.5;
+    font-size: 0.95em;
+    margin: 0;
+    word-wrap: break-word;
+}
+
+.values-intro {
+    text-align: center;
+    margin: 30px 0;
+    padding: 25px;
+    background: linear-gradient(135deg, rgba(96, 125, 139, 0.05), rgba(144, 164, 174, 0.05));
+    border-radius: 12px;
+}
+
+.values-intro p {
+    font-size: 1.1em;
+    color: #455a64;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin: 30px auto;
+    max-width: 1000px;
+    padding: 0 15px;
+}
+
+.value-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+    border: 1px solid rgba(144, 164, 174, 0.2);
+    margin: 0 auto;
+    width: 100%;
+    max-width: 400px;
+}
+
+.value-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.value-card h3 {
+    color: #455a64;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.value-card h3::before {
+    content: "•";
+    color: #4CAF50;
+    font-size: 1.5em;
+    line-height: 1;
+}
+
+.value-card p {
+    color: #546e7a;
+    line-height: 1.6;
+    margin: 0;
+    font-size: 0.95em;
+}
+
+@media (max-width: 768px) {
+    .values-intro {
+        padding: 20px;
+        margin: 20px 0;
+    }
+
+    .values-intro p {
+        font-size: 1em;
+    }
+
+    .value-card {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .values-grid {
+        padding: 0 5px;
+        gap: 15px;
+    }
+
+    .value-card {
         padding: 15px;
     }
 }
 </style>
 
-<div class="tournament-links">
-    <a href="/muqawamah/open-age" class="tournament-button">Open Age Tournament</a>
-    <a href="/muqawamah/u17" class="tournament-button u17">Under 17 Tournament</a>
+<div class="tournament-container">
+    <div class="hero-section">
+        <h1>Welcome to Muqawamah Football Tournament 2025</h1>
+        <p>Join us for an exciting football tournament that brings together teams from across the community in a celebration of sport, unity, and competition.</p>
+    </div>
+
+    <div class="info-section">
+        <h2>About MUQAWAMAH Football Tournament</h2>
+        <p>The SIO Abul Fazal Enclave Area is proud to organize a two-day football tournament under the theme "<span class="highlight">MUQAWAMAH</span>" (Resistance).</p>
+        
+        <div class="values-intro">
+            <p>Our tournament transcends the boundaries of sport, embodying core values that strengthen our community and nurture the development of our youth.</p>
+        </div>
+
+       
+    </div>
+
+    <div class="info-section">
+        <h2>Tournament Rules and Regulations</h2>
+        <div class="rules-grid">
+            <div class="rule-card">
+                <h3>Registration & Participation</h3>
+                <ul>
+                    <li>Teams must submit complete player list with passport photos, full names, and DOB before tournament day</li>
+                    <li>Players can only participate in one team per tournament category (U-17 and Open Age are separate)</li>
+                    <li> Entry fee must be paid before tournament day</li>
+                    <li>Registration fees are non-refundable under any circumstances</li>
+                </ul>
+            </div>
+
+            <div class="rule-card">
+                <h3>Match Day Requirements</h3>
+                <ul>
+                    <li>Teams must arrive 15 minutes before scheduled match time</li>
+                    <li>All team players must be present at arrival time</li>
+                    <li>Teams must wear matching jerseys for clear identification</li>
+                    <li>Teams are not allowed to bring their own footballs</li>
+                </ul>
+            </div>
+
+            <div class="rule-card">
+                <h3>Conduct & Discipline</h3>
+                <ul>
+                    <li>Abusive language or misconduct will result in immediate action</li>
+                    <li>Players must respect referee's decisions - no arguments allowed</li>
+                    <li>Smoking, gutka, and other such items are strictly prohibited</li>
+                    <li>Any damage to ground property will face severe action</li>
+                </ul>
+            </div>
+
+            <div class="rule-card">
+                <h3>Tournament Authority</h3>
+                <ul>
+                    <li>Management team's decisions are final and cannot be challenged</li>
+                    <li>Right to disqualify teams for incomplete player attendance</li>
+                    <li>Violations may result in player bans or team elimination</li>
+                    <li>Only listed players are allowed to participate</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="important-note">
+            <strong>Important Note:</strong> Team captains are responsible for communicating all rules to their players. By participating in the tournament, all teams agree to abide by these rules and regulations.
+        </div>
+    </div>
+
+    <div class="cta-section">
+        <h2>View Tournament Details</h2>
+        <p>Check out the fixtures, team standings, match schedules, and all other tournament details for your category below.</p>
+        <div class="tournament-links">
+            <a href="/muqawamah/open-age" class="tournament-button">Open Age Tournament</a>
+            <a href="/muqawamah/u17" class="tournament-button u17">Under 17 Tournament</a>
+        </div>
+    </div>
+
+    <div class="sponsors-section">
+        <h2>Our Sponsors</h2>
+        <div class="sponsors-grid">
+            <div class="sponsor-item">
+                <img src="/assets/data/sponsors/shaheen-academy.png" alt="Shaheen Academy">
+                <p>Shaheen Academy</p>
+            </div>
+            <div class="sponsor-item">
+                <img src="/assets/data/sponsors/shaheen-academy.png" alt="Al Barkaat">
+                <p>Al Barkaat</p>
+            </div>
+            <div class="sponsor-item">
+                <img src="/assets/data/sponsors/shaheen-academy.png" alt="Falcon Sports">
+                <p>Falcon Sports</p>
+            </div>
+            <div class="sponsor-item">
+                <img src="/assets/data/sponsors/shaheen-academy.png" alt="Jamia Sports">
+                <p>Jamia Sports</p>
+            </div>
+            <div class="sponsor-item">
+                <img src="/assets/data/sponsors/shaheen-academy.png" alt="AFE Sports Club">
+                <p>AFE Sports Club</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-section">
+        <h2>Contact</h2>
+        <p><strong>Tournament Director:</strong> [Name]</p>
+        <p><strong>For queries:</strong> [Contact Information]</p>
+    </div>
+
+    <div class="last-updated">
+        *Last updated: <span id="lastUpdated"></span>*
+    </div>
 </div>
 
-<div class="contact-section">
-    <h2>Contact</h2>
-    <p><strong>Tournament Director:</strong></p>
-    <p><strong>For queries:</strong></p>
-</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Update last updated date
+    const lastUpdated = document.getElementById('lastUpdated');
+    lastUpdated.textContent = new Date().toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    });
 
-<div class="last-updated">
-    *Last updated: [Date]*
-</div>
+    // Add scroll reveal animation for sections
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    // Observe all info sections
+    document.querySelectorAll('.info-section').forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(20px)';
+        section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        observer.observe(section);
+    });
+
+    // Add scroll reveal animation for sponsors section
+    document.querySelectorAll('.sponsors-section').forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(20px)';
+        section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        observer.observe(section);
+    });
+});
+</script>
