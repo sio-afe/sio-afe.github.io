@@ -663,7 +663,7 @@ permalink: /muqawamah/
     </div>
 
     <div class="info-section">
-        <h2>About MUQAWAMAH Football Tournament</h2>
+        <h2>About MUQAWAMA Football Tournament</h2>
         <p>The SIO Abul Fazal Enclave Area is proud to organize a two-day football tournament under the theme "<span class="highlight">MUQAWAMAH</span>" (Resistance).</p>
         
         <div class="values-intro">

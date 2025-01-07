@@ -15,31 +15,23 @@ document.addEventListener('DOMContentLoaded', async function() {
         const statisticsData = await statisticsResponse.json();
         const sponsorsData = await sponsorsResponse.json();
 
-        console.log('Teams data:', teamsData);
-        console.log('Sponsors data:', sponsorsData);
-
         // Create a map of team names to their crests
         const teamCrestMap = {};
         teamsData.teams.forEach(team => {
-            console.log('Mapping team:', team.name, 'Crest:', team.crest);
             teamCrestMap[team.name] = team.crest;
         });
 
-        console.log('Team crest map:', teamCrestMap);
 
         // Add team crests to fixtures
         const fixturesWithCrests = fixturesData.fixtures.map(fixture => {
-            console.log('Processing fixture:', fixture.homeTeam, 'vs', fixture.awayTeam);
             const mappedFixture = {
                 ...fixture,
                 homeTeamCrest: teamCrestMap[fixture.homeTeam],
                 awayTeamCrest: teamCrestMap[fixture.awayTeam]
             };
-            console.log('Mapped crests:', mappedFixture.homeTeamCrest, mappedFixture.awayTeamCrest);
             return mappedFixture;
         });
 
-        console.log('Fixtures with crests:', fixturesWithCrests);
 
         // Initialize the page with the data
         initializePage(fixturesWithCrests, teamsData.teams, statisticsData, sponsorsData);
