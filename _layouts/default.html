@@ -96,7 +96,8 @@ layout: compress
         const scripts = [
           '/assets/js/supabase-client.js',
           '/assets/js/admin/admin-ui.js',
-          '/assets/js/tournament/final-fixture.js'
+          '/assets/js/tournament/final-fixture.js',
+          '/assets/js/test-dynamic.js'
         ];
 
         function loadScript(src) {
@@ -115,6 +116,18 @@ layout: compress
           return promise.then(() => loadScript(script));
         }, Promise.resolve());
       }).catch(console.error);
+    </script>
+
+    <!-- Add dynamic functionality -->
+    <script src="{{ '/assets/js/dynamic-router.js' | relative_url }}"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Initialize dynamic functionality
+        if (window.dynamicClient) {
+          // Subscribe to real-time updates
+          window.dynamicClient.subscribeToChannel('page_updates');
+        }
+      });
     </script>
   </body>
 </html>

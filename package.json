@@ -20,7 +20,7 @@
     "watch:js": "rollup -c --bundleConfigAsCjs -w",
     "lint:scss": "stylelint _sass/**/*.scss",
     "lint:fix:scss": "npm run lint:scss -- --fix",
-    "test": "npm run lint:scss",
+    "test": "npm run lint:scss && jest",
     "prepare": "husky"
   },
   "dependencies": {
@@ -45,6 +45,9 @@
     "concurrently": "^9.1.0",
     "conventional-changelog-conventionalcommits": "^8.0.0",
     "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jsdom": "^26.0.0",
     "purgecss": "^7.0.2",
     "rollup": "^4.27.4",
     "semantic-release": "^24.2.0",

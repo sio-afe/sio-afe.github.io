@@ -118,4 +118,41 @@ export async function signOut() {
     return client.auth.signOut();
 }
 
+// State management
+const state = {
+    currentData: null,
+    subscribers: new Set(),
+};
+
+// Subscribe to real-time changes
+function subscribeToChannel(channel, callback) {
+    const subscription = window.supabaseClient
+        .channel(channel)
+        .on('postgres_changes', { event: '*', schema: 'public' }, payload => {
+            state.currentData = payload.new;
+            notifySubscribers();
+            if (callback) callback(payload);
+        })
+        .subscribe();
+    
+    return subscription;
+}
+
+// State management methods
+function notifySubscribers() {
+    state.subscribers.forEach(callback => callback(state.currentData));
+}
+
+function subscribe(callback) {
+    state.subscribers.add(callback);
+    return () => state.subscribers.delete(callback);
+}
+
+// Export methods
+window.dynamicClient = {
+    subscribeToChannel,
+    subscribe,
+    state
+};
+
 export default supabaseClient;
