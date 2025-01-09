@@ -1,45 +1,34 @@
 export let supabaseClient = null;
+let initializationPromise = null;
 
-// Modify the initialization function
+
 async function initSupabase(maxRetries = 20, retryDelay = 100) {
-    // First, wait for the supabase library to be available
-    for (let i = 0; i < maxRetries; i++) {
-        if (window.supabase) {
-            break;
-        }
-        await new Promise(resolve => setTimeout(resolve, retryDelay));
+    if (initializationPromise) {
+        return initializationPromise;
     }
 
-    if (!window.supabase) {
-        throw new Error('Supabase library not loaded');
-    }
+    initializationPromise = new Promise(async (resolve, reject) => {
+        for (let i = 0; i < maxRetries; i++) {
+            if (window.supabaseClient) {
+                supabaseClient = window.supabaseClient;
+                console.log('Supabase client initialized successfully');
+                resolve(supabaseClient);
+                return;
+            }
+            await new Promise(r => setTimeout(r, retryDelay));
+        }
+        reject(new Error(`Supabase client not initialized after ${maxRetries} attempts`));
+    });
 
-    // Then wait for the client to be initialized
-    for (let i = 0; i < maxRetries; i++) {
-        if (window.supabaseClient) {
-            console.log('Supabase client found in window');
-            supabaseClient = window.supabaseClient;
-            return window.supabaseClient;
-        }
-        
-        // Try to initialize if possible
-        if (typeof window.initSupabaseClient === 'function') {
-            window.initSupabaseClient();
-        }
-        
-        await new Promise(resolve => setTimeout(resolve, retryDelay));
-    }
-    
-    throw new Error(`Supabase client not initialized after ${maxRetries} attempts`);
+    return initializationPromise;
 }
 
-
-// Get the initialized client
-let supabaseClientPromise = initSupabase();
-
-// Export the functions that will wait for initialization
+// Export the async getter function
 export async function getClient() {
-    return await supabaseClientPromise;
+    if (supabaseClient) {
+        return supabaseClient;
+    }
+    return await initSupabase();
 }
 
 // Function to ensure client is initialized
@@ -60,17 +49,16 @@ export async function isAdmin() {
             .eq('email', user.email)
             .maybeSingle();
 
-        if (error) {
-            console.error('Error checking admin status:', error);
-            return false;
-        }
-
+        if (error) throw error;
         return data?.role === 'admin' || data?.role === 'super_admin';
     } catch (error) {
         console.error('Error checking admin status:', error);
         return false;
     }
 }
+
+// Initialize immediately
+initSupabase().catch(console.error);
 
 // Function to get teams
 export async function getTeams(category) {
@@ -145,38 +133,13 @@ export async function getTopScorers(category) {
     }
 }
 
-// Auth functions
+// Export auth-related functions
 export async function signIn(email, password) {
-    try {
-        const client = await getClient();
-        
-        if (!email || !password) {
-            throw new Error('Email and password are required');
-        }
-
-        const { data, error } = await client.auth.signInWithPassword({
-            email,
-            password
-        });
-        
-        if (error) throw error;
-        if (!data?.user) throw new Error('No user data returned');
-        
-        return { data, error: null };
-    } catch (error) {
-        console.error('Error signing in:', error);
-        return { data: null, error };
-    }
+    const client = await getClient();
+    return client.auth.signInWithPassword({ email, password });
 }
 
 export async function signOut() {
-    try {
-        const client = await getClient();
-        const { error } = await client.auth.signOut();
-        if (error) throw error;
-        return { error: null };
-    } catch (error) {
-        console.error('Error signing out:', error);
-        return { error };
-    }
+    const client = await getClient();
+    return client.auth.signOut();
 }

@@ -1,5 +1,7 @@
 import { supabaseClient } from '../supabase-client.js';
 import { getMatchDetails, getMatchEvents } from './match-api.js';
+import { getClient } from '../supabase-client.js';
+
 
 // Default team logo path
 const DEFAULT_TEAM_LOGO = '/assets/data/open-age/team-logos/default.png';
@@ -7,11 +9,22 @@ const DEFAULT_TEAM_LOGO = '/assets/data/open-age/team-logos/default.png';
 // Live Match Handler Component
 export class LiveMatchHandler {
     constructor() {
-        this.supabase = window.supabaseClient;
+        this.supabase = null;
         this.currentMatch = null;
         this.matchSubscription = null;
         this.goalsSubscription = null;
-        this.initialize();
+        this.init();
+    }
+
+    async init() {
+        try {
+            // Wait for Supabase client to be initialized
+            this.supabase = await getClient();
+            await this.initialize();
+        } catch (error) {
+            console.error('Error initializing LiveMatchHandler:', error);
+            this.showNotification('Error initializing live match handler', 'error');
+        }
     }
 
     // Match type mapping
@@ -46,7 +59,10 @@ export class LiveMatchHandler {
 
     async fetchLastInProgressMatch() {
         try {
-            // Get the tournament category from the page data attribute
+            if (!this.supabase) {
+                throw new Error('Supabase client not initialized');
+            }
+
             const tournamentContainer = document.querySelector('.tournament-container');
             const category = tournamentContainer?.dataset.category;
 
@@ -70,7 +86,6 @@ export class LiveMatchHandler {
             
             if (error) {
                 if (error.code === 'PGRST116') {
-                    // No matches found
                     this.showNotification('No live matches at the moment', 'info');
                     return;
                 }
@@ -260,6 +275,10 @@ export class LiveMatchHandler {
 
     setupRealtimeSubscription() {
         try {
+            if (!this.supabase) {
+                throw new Error('Supabase client not initialized');
+            }
+
             // Clean up existing subscriptions
             this.cleanupSubscriptions();
 
@@ -334,9 +353,11 @@ export class LiveMatchHandler {
 }
 
 // Initialize the live match handler when the document is ready
-document.addEventListener('DOMContentLoaded', () => {
-    const liveMatchHandler = new LiveMatchHandler();
-    
-    // Store the instance in window for potential future access
-    window.liveMatchHandler = liveMatchHandler;
-}); 
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const liveMatchHandler = new LiveMatchHandler();
+        window.liveMatchHandler = liveMatchHandler;
+    } catch (error) {
+        console.error('Error creating LiveMatchHandler:', error);
+    }
+});

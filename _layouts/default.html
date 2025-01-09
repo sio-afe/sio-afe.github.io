@@ -73,22 +73,25 @@ layout: compress
     
     <script>
       // Initialize Supabase client
-      window.initSupabaseClient = function() {
-        const supabaseUrl = "https://efirvmzdioizosdcnasg.supabase.co";
-        const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmaXJ2bXpkaW9pem9zZGNuYXNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYzNTk4MTAsImV4cCI6MjA1MTkzNTgxMH0.uckyGkQeUm6e5SvOu3BC_zdrzUVcLr2e9ItlaUuKFCg";
+      const supabaseUrl = "https://efirvmzdioizosdcnasg.supabase.co";
+      const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmaXJ2bXpkaW9pem9zZGNuYXNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYzNTk4MTAsImV4cCI6MjA1MTkzNTgxMH0.uckyGkQeUm6e5SvOu3BC_zdrzUVcLr2e9ItlaUuKFCg";
           
-        
-        window.supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
-        console.log('Supabase client initialized');
+      // Create client immediately when supabase is available
+      function createSupabaseClient() {
+        if (typeof supabase !== 'undefined') {
+          // Use the correct variable names here
+          window.supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
+          console.log('Supabase client initialized');
+        } else {
+          console.error('Supabase library not loaded');
+        }
       }
 
-      // Try to initialize immediately
-      if (typeof supabase !== 'undefined') {
-        window.initSupabaseClient();
-      } else {
-        // If supabase isn't loaded yet, wait for it
-        window.addEventListener('load', window.initSupabaseClient);
-      }
+      // Try to create client immediately
+      createSupabaseClient();
+      
+      // Fallback: also try on window load
+      window.addEventListener('load', createSupabaseClient);
     </script>
 
     <!-- Application scripts as modules -->
