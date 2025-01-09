@@ -1,0 +1,267 @@
+{% include admin/admin-login.html %}
+
+<!-- Admin Panel Modal -->
+<div class="admin-panel-modal" id="adminPanelModal" style="display: none;">
+    <div class="admin-panel-content">
+        <div class="admin-panel-header">
+            <h2>Admin Panel</h2>
+            <button class="close-panel">&times;</button>
+        </div>
+        <div class="admin-panel-body">
+            <!-- Match Management -->
+            <div class="admin-section">
+                <h3>Match Management</h3>
+                <div class="match-list">
+                    <!-- Matches will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Match Edit Form -->
+            <div class="match-edit-form" style="display: none;">
+                <h3>Edit Match</h3>
+                <form id="matchEditForm">
+                    <div class="form-group">
+                        <label>Home Team Score</label>
+                        <input type="number" id="homeScore" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Away Team Score</label>
+                        <input type="number" id="awayScore" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="matchStatus" required>
+                            <option value="scheduled">Scheduled</option>
+                            <option value="live">Live</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Match</button>
+                </form>
+            </div>
+
+            <!-- Goal Recording Form -->
+            <div class="goal-form" style="display: none;">
+                <h3>Record Goal</h3>
+                <form id="goalForm">
+                    <div class="form-group">
+                        <label>Team</label>
+                        <select id="goalTeam" required>
+                            <option value="" disabled selected>Select Team</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Scorer</label>
+                        <input type="text" id="scorerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Assist (Optional)</label>
+                        <input type="text" id="assistName">
+                    </div>
+                    <div class="form-group">
+                        <label>Minute</label>
+                        <input type="number" id="goalMinute" min="1" max="90" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Goal</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.admin-panel-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.admin-panel-content {
+    background: white;
+    margin: 5% auto;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.admin-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.close-panel {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.admin-section {
+    margin-bottom: 2rem;
+}
+
+.match-list {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 1rem;
+}
+
+.match-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.match-item:hover {
+    background-color: #f5f5f5;
+}
+
+.match-item.selected {
+    background-color: #e3f2fd;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.btn-primary {
+    background: #1a237e;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #283593;
+}
+</style>
+
+<script type="module">
+import { supabase, getMatches, isAdmin } from '/assets/js/supabase-client.js';
+
+let selectedMatch = null;
+
+// Show admin panel
+export function showAdminPanel() {
+    const adminPanelModal = document.getElementById('adminPanelModal');
+    adminPanelModal.style.display = 'block';
+    loadMatches();
+}
+
+// Close admin panel
+document.querySelector('.close-panel').addEventListener('click', () => {
+    document.getElementById('adminPanelModal').style.display = 'none';
+});
+
+// Load matches
+async function loadMatches() {
+    const { data: matches } = await getMatches();
+    const matchList = document.querySelector('.match-list');
+    
+    matchList.innerHTML = matches.map(match => `
+        <div class="match-item" data-match-id="${match.id}">
+            <div class="match-teams">
+                ${match.home_team.name} vs ${match.away_team.name}
+            </div>
+            <div class="match-score">
+                ${match.home_score} - ${match.away_score}
+            </div>
+            <div class="match-status">
+                ${match.status}
+            </div>
+        </div>
+    `).join('');
+
+    // Add click handlers
+    document.querySelectorAll('.match-item').forEach(item => {
+        item.addEventListener('click', () => selectMatch(item.dataset.matchId));
+    });
+}
+
+// Select match
+function selectMatch(matchId) {
+    selectedMatch = matchId;
+    document.querySelectorAll('.match-item').forEach(item => {
+        item.classList.toggle('selected', item.dataset.matchId === matchId);
+    });
+    document.querySelector('.match-edit-form').style.display = 'block';
+    loadMatchDetails(matchId);
+}
+
+// Load match details
+async function loadMatchDetails(matchId) {
+    const { data: match } = await supabase
+        .from('matches')
+        .select('*')
+        .eq('id', matchId)
+        .single();
+
+    document.getElementById('homeScore').value = match.home_score;
+    document.getElementById('awayScore').value = match.away_score;
+    document.getElementById('matchStatus').value = match.status;
+}
+
+// Update match
+document.getElementById('matchEditForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!selectedMatch) return;
+
+    const updates = {
+        home_score: parseInt(document.getElementById('homeScore').value),
+        away_score: parseInt(document.getElementById('awayScore').value),
+        status: document.getElementById('matchStatus').value
+    };
+
+    const { error } = await supabase
+        .from('matches')
+        .update(updates)
+        .eq('id', selectedMatch);
+
+    if (error) {
+        alert('Error updating match: ' + error.message);
+    } else {
+        alert('Match updated successfully!');
+        loadMatches();
+    }
+});
+
+// Initialize
+document.addEventListener('DOMContentLoaded', async () => {
+    if (await isAdmin()) {
+        loadMatches();
+    }
+});
+</script> 

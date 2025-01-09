@@ -8,6 +8,8 @@ layout: compress
 
 {% include lang.html %}
 
+{% include admin/admin-panel.html %}
+
 {% if site.theme_mode %}
   {% capture prefer_mode %}data-mode="{{ site.theme_mode }}"{% endcapture %}
 {% endif %}
@@ -58,10 +60,35 @@ layout: compress
     {% endif %}
 
     <!-- Embedded scripts -->
-
     {% for _include in layout.script_includes %}
       {% assign _include_path = _include | append: '.html' %}
       {% include {{ _include_path }} %}
     {% endfor %}
+
+    <!-- Third-party libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Load Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Initialize Supabase -->
+    <script type="module">
+      // Initialize Supabase client
+      const supabaseUrl = "https://efirvmzdioizosdcnasg.supabase.co";
+      const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmaXJ2bXpkaW9pem9zZGNuYXNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYzNTk4MTAsImV4cCI6MjA1MTkzNTgxMH0.uckyGkQeUm6e5SvOu3BC_zdrzUVcLr2e9ItlaUuKFCg";
+      
+      try {
+        // Initialize the client
+        window.supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
+        console.log('Supabase client initialized successfully');
+      } catch (error) {
+        console.error('Error initializing Supabase client:', error);
+      }
+    </script>
+
+    <!-- Application scripts as modules -->
+    <script type="module" src="/assets/js/supabase-client.js"></script>
+    <script type="module" src="/assets/js/admin/admin-ui.js"></script>
+    <script type="module" src="/assets/js/tournament/final-fixture.js"></script>
   </body>
 </html>

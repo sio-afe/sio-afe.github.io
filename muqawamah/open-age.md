@@ -2,6 +2,7 @@
 layout: default
 permalink: /muqawamah/open-age/
 category: open-age
+show_back_button: true
 scripts:
   - /assets/js/tournament/fireworks.js
   - /assets/js/tournament/final-fixture.js

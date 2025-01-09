@@ -3,7 +3,7 @@
         {
             "id": "U17-1",
             "date": "2025-01-11",
-            "time": "08:00",
+            "time": "8:00 AM",
             "homeTeam": "Ummah Stars",
             "awayTeam": "Metro United",
             "homeCrest": "",
@@ -17,7 +17,7 @@
         {
             "id": "U17-2",
             "date": "2025-01-11",
-            "time": "08:25",
+            "time": "8:25 AM",
             "homeTeam": "Okhla Madrid",
             "awayTeam": "Jaipur Thunders",
             "homeCrest": "",
@@ -31,7 +31,7 @@
         {
             "id": "U17-3",
             "date": "2025-01-11",
-            "time": "08:50",
+            "time": "8:50 AM",
             "homeTeam": "Imperial Titans",
             "awayTeam": "Ummah Stars",
             "homeCrest": "",
@@ -45,7 +45,7 @@
         {
             "id": "U17-4",
             "date": "2025-01-11",
-            "time": "09:15",
+            "time": "9:15 AM",
             "homeTeam": "Metro United",
             "awayTeam": "Okhla Madrid",
             "homeCrest": "",
@@ -59,7 +59,7 @@
         {
             "id": "U17-5",
             "date": "2025-01-11",
-            "time": "09:40",
+            "time": "9:40 AM",
             "homeTeam": "Jaipur Thunders",
             "awayTeam": "Imperial Titans",
             "homeCrest": "",
@@ -73,7 +73,7 @@
         {
             "id": "U17-6",
             "date": "2025-01-11",
-            "time": "10:05",
+            "time": "10:05 AM",
             "homeTeam": "Tikona FC",
             "awayTeam": "Fusion FC",
             "homeCrest": "",
@@ -87,7 +87,7 @@
         {
             "id": "U17-7",
             "date": "2025-01-11",
-            "time": "10:30",
+            "time": "10:30 AM",
             "homeTeam": "Pirates FC",
             "awayTeam": "Young Warriors",
             "homeCrest": "",
@@ -101,7 +101,7 @@
         {
             "id": "U17-8",
             "date": "2025-01-11",
-            "time": "10:55",
+            "time": "10:55 AM",
             "homeTeam": "Rising Stars",
             "awayTeam": "Tikona FC",
             "homeCrest": "",
@@ -115,7 +115,7 @@
         {
             "id": "U17-9",
             "date": "2025-01-11",
-            "time": "11:20",
+            "time": "11:20 AM",
             "homeTeam": "Fusion FC",
             "awayTeam": "Pirates FC",
             "homeCrest": "",
@@ -129,7 +129,7 @@
         {
             "id": "U17-10",
             "date": "2025-01-11",
-            "time": "11:45",
+            "time": "11:45 AM",
             "homeTeam": "Young Warriors",
             "awayTeam": "Rising Stars",
             "homeCrest": "",
@@ -143,7 +143,7 @@
         {
             "id": "U17-QF1",
             "date": "2025-01-11",
-            "time": "12:10",
+            "time": "12:10 PM",
             "homeTeam": "TBD",
             "awayTeam": "TBD",
             "homeCrest": "",
@@ -157,7 +157,7 @@
         {
             "id": "U17-QF2",
             "date": "2025-01-11",
-            "time": "12:35",
+            "time": "12:35 PM",
             "homeTeam": "TBD",
             "awayTeam": "TBD",
             "homeCrest": "",
@@ -171,7 +171,7 @@
         {
             "id": "U17-QF3",
             "date": "2025-01-11",
-            "time": "13:30",
+            "time": "1:30 PM",
             "homeTeam": "TBD",
             "awayTeam": "TBD",
             "homeCrest": "",
@@ -185,7 +185,7 @@
         {
             "id": "U17-QF4",
             "date": "2025-01-11",
-            "time": "13:55",
+            "time": "1:55 PM",
             "homeTeam": "TBD",
             "awayTeam": "TBD",
             "homeCrest": "",
@@ -199,7 +199,7 @@
         {
             "id": "U17-SF1",
             "date": "2025-01-11",
-            "time": "14:20",
+            "time": "2:20 PM",
             "homeTeam": "TBD",
             "awayTeam": "TBD",
             "homeCrest": "",
@@ -213,7 +213,7 @@
         {
             "id": "U17-SF2",
             "date": "2025-01-11",
-            "time": "14:45",
+            "time": "2:45 PM",
             "homeTeam": "TBD",
             "awayTeam": "TBD",
             "homeCrest": "",
@@ -227,7 +227,7 @@
         {
             "id": "U17-3P",
             "date": "2025-01-11",
-            "time": "15:10",
+            "time": "3:10 PM",
             "homeTeam": "TBD",
             "awayTeam": "TBD",
             "homeCrest": "",
@@ -241,7 +241,7 @@
         {
             "id": "U17-F",
             "date": "2025-01-11",
-            "time": "15:35",
+            "time": "3:35 PM",
             "homeTeam": "TBD",
             "awayTeam": "TBD",
             "homeCrest": "",

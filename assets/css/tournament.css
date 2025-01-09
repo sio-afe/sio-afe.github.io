@@ -159,3 +159,67 @@
 .goal-scored {
     animation: goalCelebration 0.5s ease;
 }
+
+.admin-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.admin-controls button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.start-match-btn {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.start-match-btn:hover {
+    background-color: #27ae60;
+}
+
+.add-stats-btn {
+    background-color: #3498db;
+    color: white;
+}
+
+.add-stats-btn:hover {
+    background-color: #2980b9;
+}
+
+.update-status-btn {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.update-status-btn:hover {
+    background-color: #c0392b;
+}
+
+.update-status-btn.completed {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+/* Hide buttons based on match status */
+.start-match-btn,
+.add-stats-btn,
+.update-status-btn {
+    display: none;
+}
+
+/* Show/hide buttons based on match status via JS */
+
+.admin-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}

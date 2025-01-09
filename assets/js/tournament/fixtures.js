@@ -9,17 +9,29 @@ class FixtureManager {
         this.init();
     }
 
+    async init() {
+        try {
+            await this.fetchFixtures();
+            this.setupEventListeners();
+            this.startLiveUpdates();
+            this.renderFixtures();
+        } catch (error) {
+            console.error('Initialization failed:', error);
+            this.handleError();
+        }
+    }
+
     async fetchFixtures() {
         try {
             const response = await fetch(`/assets/data/${this.category}/fixtures.json`);
             if (!response.ok) throw new Error('Failed to fetch fixtures');
-            this.fixtures = await response.json();
+            const data = await response.json();
+            this.fixtures = data.fixtures;
         } catch (error) {
             console.error('Failed to load fixtures:', error);
             throw error;
         }
     }
-
 
     setupEventListeners() {
         this.filterButtons.forEach(button => {
@@ -82,7 +94,8 @@ class FixtureManager {
 
     groupFixturesByDate(fixtures) {
         return fixtures.reduce((groups, fixture) => {
-            const date = new Date(fixture.date).toLocaleDateString('en-GB', {
+            const matchDate = new Date(fixture.match_date);
+            const date = matchDate.toLocaleDateString('en-GB', {
                 weekday: 'long',
                 day: 'numeric',
                 month: 'long',
@@ -106,14 +119,29 @@ class FixtureManager {
 
     renderFixtureScore(fixture) {
         if (fixture.status === 'upcoming') {
-            return `<div class="fixture-time">${fixture.time}</div>`;
+            // First try to use the time field from fixtures.json
+            if (fixture.time) {
+                return `<div class="fixture-time">${fixture.time}</div>`;
+            }
+            // Then try scheduled_time from database
+            if (fixture.scheduled_time) {
+                return `<div class="fixture-time">${fixture.scheduled_time}</div>`;
+            }
+            // Finally fallback to match_date
+            const matchDate = new Date(fixture.match_date);
+            const timeToShow = matchDate.toLocaleTimeString('en-GB', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            });
+            return `<div class="fixture-time">${timeToShow}</div>`;
         }
 
         return `
             <div class="fixture-score ${fixture.status === 'live' ? 'live' : ''}">
-                <span>${fixture.homeScore}</span>
+                <span>${fixture.home_score || 0}</span>
                 <span>-</span>
-                <span>${fixture.awayScore}</span>
+                <span>${fixture.away_score || 0}</span>
                 ${fixture.status === 'live' ? `<span class="match-minute">${fixture.minute}'</span>` : ''}
             </div>
         `;
@@ -131,13 +159,13 @@ class FixtureManager {
                         <div class="fixture-item ${this.getFixtureStatusClass(fixture.status)}">
                             <div class="fixture-teams">
                                 <div class="team home">
-                                    <img src="${fixture.homeCrest}" alt="${fixture.homeTeam} crest">
-                                    <span>${fixture.homeTeam}</span>
+                                    <img src="${fixture.home_team?.crest_url || '/assets/data/open-age/team-logos/default.png'}" alt="${fixture.home_team?.name || 'Home Team'} crest">
+                                    <span>${fixture.home_team?.name || 'TBD'}</span>
                                 </div>
                                 ${this.renderFixtureScore(fixture)}
                                 <div class="team away">
-                                    <img src="${fixture.awayCrest}" alt="${fixture.awayTeam} crest">
-                                    <span>${fixture.awayTeam}</span>
+                                    <img src="${fixture.away_team?.crest_url || '/assets/data/open-age/team-logos/default.png'}" alt="${fixture.away_team?.name || 'Away Team'} crest">
+                                    <span>${fixture.away_team?.name || 'TBD'}</span>
                                 </div>
                             </div>
                             ${fixture.venue ? `<div class="fixture-venue">${fixture.venue}</div>` : ''}
