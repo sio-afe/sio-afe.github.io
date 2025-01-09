@@ -1,8 +1,11 @@
-// Initialize Supabase client with retries
+export let supabaseClient = null;
+
+// Modify the initialization function
 async function initSupabase(maxRetries = 20, retryDelay = 100) {
     for (let i = 0; i < maxRetries; i++) {
         if (window.supabaseClient) {
             console.log('Supabase client found in window');
+            supabaseClient = window.supabaseClient; // Set the exported client
             return window.supabaseClient;
         }
         await new Promise(resolve => setTimeout(resolve, retryDelay));
