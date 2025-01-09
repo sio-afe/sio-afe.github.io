@@ -78,38 +78,27 @@ layout: compress
       const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmaXJ2bXpkaW9pem9zZGNuYXNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYzNTk4MTAsImV4cCI6MjA1MTkzNTgxMH0.uckyGkQeUm6e5SvOu3BC_zdrzUVcLr2e9ItlaUuKFCg";
       
       // Initialize the client
-      window.supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
-      console.log('Supabase client initialized successfully');
+      const initSupabase = () => {
+        try {
+          window.supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
+          console.log('Supabase client initialized successfully');
+          return true;
+        } catch (error) {
+          console.error('Error initializing Supabase client:', error);
+          return false;
+        }
+      };
+
+      // Try to initialize immediately
+      if (!initSupabase()) {
+        // If failed, wait for DOM content loaded
+        document.addEventListener('DOMContentLoaded', initSupabase);
+      }
     </script>
 
     <!-- Application scripts as modules -->
-    <script defer type="module">
-      // Wait for Supabase to be ready
-      function waitForSupabase() {
-        return new Promise((resolve) => {
-          if (window.supabaseClient) {
-            resolve();
-          } else {
-            setTimeout(() => waitForSupabase().then(resolve), 50);
-          }
-        });
-      }
-
-      // Load application modules after Supabase is ready
-      waitForSupabase().then(() => {
-        const scripts = [
-          '/assets/js/supabase-client.js',
-          '/assets/js/admin/admin-ui.js',
-          '/assets/js/tournament/final-fixture.js'
-        ];
-
-        scripts.forEach(src => {
-          const script = document.createElement('script');
-          script.type = 'module';
-          script.src = src;
-          document.body.appendChild(script);
-        });
-      });
-    </script>
+    <script type="module" src="/assets/js/supabase-client.js"></script>
+    <script type="module" src="/assets/js/admin/admin-ui.js"></script>
+    <script type="module" src="/assets/js/tournament/final-fixture.js"></script>
   </body>
 </html>

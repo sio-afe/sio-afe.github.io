@@ -1,55 +1,36 @@
-// Get the initialized Supabase client
-let supabaseClient = window.supabaseClient;
-
 // Initialize Supabase client with retries
-async function initSupabase(maxRetries = 10, retryDelay = 100) {
-    let retries = 0;
-    
-    while (retries < maxRetries) {
+async function initSupabase(maxRetries = 20, retryDelay = 100) {
+    for (let i = 0; i < maxRetries; i++) {
         if (window.supabaseClient) {
-            supabaseClient = window.supabaseClient;
-            console.log('Supabase client initialized from window');
-            return true;
+            console.log('Supabase client found in window');
+            return window.supabaseClient;
         }
-        
         await new Promise(resolve => setTimeout(resolve, retryDelay));
-        retries++;
     }
-    
-    console.error(`Supabase client not initialized after ${maxRetries} attempts`);
-    return false;
+    throw new Error(`Supabase client not initialized after ${maxRetries} attempts`);
 }
 
-// Initialize when the script loads
-await initSupabase();
+// Get the initialized client
+let supabaseClientPromise = initSupabase();
 
-// Export the initialized client and functions
-export { supabaseClient };
+// Export the functions that will wait for initialization
+export async function getClient() {
+    return await supabaseClientPromise;
+}
 
 // Function to ensure client is initialized
 export async function ensureInitialized() {
-    if (supabaseClient) return Promise.resolve();
-    
-    return new Promise((resolve) => {
-        const check = async () => {
-            if (await initSupabase()) {
-                resolve();
-            } else {
-                setTimeout(check, 100);
-            }
-        };
-        check();
-    });
+    await supabaseClientPromise;
 }
 
 // Function to check if user is admin
 export async function isAdmin() {
     try {
-        await ensureInitialized();
-        const { data: { user } } = await supabaseClient.auth.getUser();
+        const client = await getClient();
+        const { data: { user } } = await client.auth.getUser();
         if (!user) return false;
 
-        const { data, error } = await supabaseClient
+        const { data, error } = await client
             .from('admin_users')
             .select('role')
             .eq('email', user.email)
@@ -60,7 +41,6 @@ export async function isAdmin() {
             return false;
         }
 
-        // Return true for both admin and super_admin roles
         return data?.role === 'admin' || data?.role === 'super_admin';
     } catch (error) {
         console.error('Error checking admin status:', error);
@@ -71,26 +51,26 @@ export async function isAdmin() {
 // Function to get teams
 export async function getTeams(category) {
     try {
-        await ensureInitialized();
-        const { data, error } = await supabaseClient
+        const client = await getClient();
+        const { data, error } = await client
             .from('teams')
             .select('*')
             .eq('category', category)
             .order('points', { ascending: false });
         
         if (error) throw error;
-        return { data, error };
+        return { data, error: null };
     } catch (error) {
         console.error('Error fetching teams:', error);
-        throw error;
+        return { data: null, error };
     }
 }
 
 // Function to get matches
 export async function getMatches(category) {
     try {
-        await ensureInitialized();
-        const { data, error } = await supabaseClient
+        const client = await getClient();
+        const { data, error } = await client
             .from('matches')
             .select(`
                 *,
@@ -101,84 +81,78 @@ export async function getMatches(category) {
             .order('match_date', { ascending: true });
         
         if (error) throw error;
-        return { data, error };
+        return { data, error: null };
     } catch (error) {
         console.error('Error fetching matches:', error);
-        throw error;
+        return { data: null, error };
     }
 }
 
 // Function to get match goals
 export async function getMatchGoals(matchId) {
     try {
-        await ensureInitialized();
-        const { data, error } = await supabaseClient
+        const client = await getClient();
+        const { data, error } = await client
             .from('goals')
             .select('*')
             .eq('match_id', matchId)
             .order('minute', { ascending: true });
         
         if (error) throw error;
-        return { data, error };
+        return { data, error: null };
     } catch (error) {
         console.error('Error fetching goals:', error);
-        throw error;
+        return { data: null, error };
     }
 }
 
 // Function to get top scorers
 export async function getTopScorers(category) {
     try {
-        await ensureInitialized();
-        const { data, error } = await supabaseClient
+        const client = await getClient();
+        const { data, error } = await client
             .rpc('get_top_scorers', { category_param: category });
         
         if (error) throw error;
-        return { data, error };
+        return { data, error: null };
     } catch (error) {
         console.error('Error fetching top scorers:', error);
-        throw error;
+        return { data: null, error };
     }
 }
 
 // Auth functions
 export async function signIn(email, password) {
     try {
-        await ensureInitialized();
+        const client = await getClient();
         
         if (!email || !password) {
             throw new Error('Email and password are required');
         }
 
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
+        const { data, error } = await client.auth.signInWithPassword({
             email,
             password
         });
         
-        if (error) {
-            throw new Error(error.message || 'Failed to sign in');
-        }
-
-        if (!data?.user) {
-            throw new Error('No user data returned');
-        }
-        console.log('Sign in successful:', data);
-        return data;
+        if (error) throw error;
+        if (!data?.user) throw new Error('No user data returned');
+        
+        return { data, error: null };
     } catch (error) {
-        throw error;
+        console.error('Error signing in:', error);
+        return { data: null, error };
     }
 }
 
 export async function signOut() {
     try {
-        await ensureInitialized();
-        const { error } = await supabaseClient.auth.signOut();
-        if (error) {
-            console.error('Sign out error:', error);
-            throw new Error(error.message || 'Failed to sign out');
-        }
+        const client = await getClient();
+        const { error } = await client.auth.signOut();
+        if (error) throw error;
+        return { error: null };
     } catch (error) {
         console.error('Error signing out:', error);
-        throw error;
+        return { error };
     }
 }
