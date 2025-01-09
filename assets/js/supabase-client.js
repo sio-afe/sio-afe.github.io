@@ -18,7 +18,7 @@ initSupabase();
 // Also try to initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', initSupabase);
 
-// Export the initialized client
+// Export the initialized client and functions
 export { supabaseClient };
 
 // Function to ensure client is initialized
