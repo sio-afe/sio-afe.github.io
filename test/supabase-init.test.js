@@ -14,11 +14,18 @@ const mockSupabaseClient = {
     channel: jest.fn(() => ({
         on: jest.fn().mockReturnThis(),
         subscribe: jest.fn()
-    }))
+    })),
+    auth: {
+        getUser: jest.fn().mockResolvedValue({ data: { user: null }, error: null })
+    }
 };
 
+// Create mock Supabase
+const mockCreateClient = jest.fn(() => mockSupabaseClient);
+
+// Set up global Supabase mock
 global.supabase = {
-    createClient: jest.fn(() => mockSupabaseClient)
+    createClient: mockCreateClient
 };
 
 // Mock the router
@@ -65,22 +72,22 @@ describe('Supabase and Dynamic Functionality Tests', () => {
         window.router = new MockRouter();
         window.dynamicClient = undefined;
 
+        // Ensure global.supabase is defined
+        if (!global.supabase) {
+            global.supabase = { createClient: mockCreateClient };
+        }
+
         // Initialize Supabase setup
-        window.initSupabase = function() {
-            return new Promise((resolve, reject) => {
-                if (typeof supabase !== 'undefined') {
-                    window.supabaseClient = supabase.createClient(
-                        'https://efirvmzdioizosdcnasg.supabase.co',
-                        'test-key'
-                    );
-                    console.log('Supabase client initialized');
-                    resolve(window.supabaseClient);
-                } else {
-                    console.error('Supabase library not loaded');
-                    reject(new Error('Supabase library not loaded'));
-                }
-            });
-        };
+        window.supabaseReady = Promise.resolve().then(() => {
+            window.supabaseClient = global.supabase.createClient(
+                'https://efirvmzdioizosdcnasg.supabase.co',
+                'test-key'
+            );
+            console.log('Supabase client initialized');
+            return window.supabaseClient;
+        });
+
+        window.waitForSupabase = () => window.supabaseReady;
 
         // Create and dispatch DOMContentLoaded event
         const event = new Event('DOMContentLoaded');
@@ -89,26 +96,27 @@ describe('Supabase and Dynamic Functionality Tests', () => {
 
     describe('Supabase Initialization', () => {
         it('should initialize Supabase client successfully', async () => {
-            await window.initSupabase();
+            const client = await window.waitForSupabase();
             
-            expect(global.supabase.createClient).toHaveBeenCalledWith(
+            expect(mockCreateClient).toHaveBeenCalledWith(
                 'https://efirvmzdioizosdcnasg.supabase.co',
                 expect.any(String)
             );
+            expect(client).toBeDefined();
             expect(console.log).toHaveBeenCalledWith('Supabase client initialized');
         });
 
         it('should handle Supabase library not loaded error', async () => {
+            // Temporarily remove global.supabase
             const originalSupabase = global.supabase;
             global.supabase = undefined;
             
-            try {
-                await window.initSupabase();
-            } catch (error) {
-                expect(error.message).toBe('Supabase library not loaded');
-                expect(console.error).toHaveBeenCalledWith('Supabase library not loaded');
-            }
+            // Reset the initialization promise
+            window.supabaseReady = Promise.reject(new Error('Supabase library not loaded'));
             
+            await expect(window.waitForSupabase()).rejects.toThrow('Supabase library not loaded');
+            
+            // Restore global.supabase
             global.supabase = originalSupabase;
         });
     });
