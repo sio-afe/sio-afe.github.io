@@ -71,28 +71,23 @@ layout: compress
     <!-- Load Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <!-- Initialize Supabase -->
     <script>
       // Initialize Supabase client
-      const supabaseUrl = "https://efirvmzdioizosdcnasg.supabase.co";
-      const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmaXJ2bXpkaW9pem9zZGNuYXNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYzNTk4MTAsImV4cCI6MjA1MTkzNTgxMH0.uckyGkQeUm6e5SvOu3BC_zdrzUVcLr2e9ItlaUuKFCg";
-      
-      // Initialize the client
-      const initSupabase = () => {
-        try {
-          window.supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
-          console.log('Supabase client initialized successfully');
-          return true;
-        } catch (error) {
-          console.error('Error initializing Supabase client:', error);
-          return false;
-        }
-      };
+      window.initSupabaseClient = function() {
+        const supabaseUrl = "https://efirvmzdioizosdcnasg.supabase.co";
+        const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmaXJ2bXpkaW9pem9zZGNuYXNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYzNTk4MTAsImV4cCI6MjA1MTkzNTgxMH0.uckyGkQeUm6e5SvOu3BC_zdrzUVcLr2e9ItlaUuKFCg";
+          
+        
+        window.supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
+        console.log('Supabase client initialized');
+      }
 
       // Try to initialize immediately
-      if (!initSupabase()) {
-        // If failed, wait for DOM content loaded
-        document.addEventListener('DOMContentLoaded', initSupabase);
+      if (typeof supabase !== 'undefined') {
+        window.initSupabaseClient();
+      } else {
+        // If supabase isn't loaded yet, wait for it
+        window.addEventListener('load', window.initSupabaseClient);
       }
     </script>
 
@@ -102,3 +97,5 @@ layout: compress
     <script type="module" src="/assets/js/tournament/final-fixture.js"></script>
   </body>
 </html>
+
+      

@@ -1,8 +1,11 @@
-import { supabaseClient } from '../supabase-client.js';
+import { getClient } from '../supabase-client.js';
+
 
 // Start a match
 export async function startMatch(matchId) {
     try {
+        const supabaseClient = await getClient();
+
         const { data, error } = await supabaseClient
             .from('matches')
             .update({ status: 'in_progress' })
@@ -25,6 +28,8 @@ export async function startMatch(matchId) {
 // Complete a match
 export async function completeMatch(matchId) {
     try {
+        const supabaseClient = await getClient();
+
         const { data, error } = await supabaseClient
             .from('matches')
             .update({ status: 'completed' })
@@ -47,6 +52,8 @@ export async function completeMatch(matchId) {
 // Add a match event (goal)
 export async function addMatchEvent(matchId, eventData) {
     try {
+        const supabaseClient = await getClient();
+
         // Add goal record
         const { error: goalError } = await supabaseClient
             .from('goals')
@@ -81,6 +88,8 @@ export async function addMatchEvent(matchId, eventData) {
 // Get match details
 export async function getMatchDetails(matchId) {
     try {
+        const supabaseClient = await getClient();
+
         const { data, error } = await supabaseClient
             .from('matches')
             .select(`
@@ -102,6 +111,8 @@ export async function getMatchDetails(matchId) {
 // Get match events (goals)
 export async function getMatchEvents(matchId) {
     try {
+        const supabaseClient = await getClient();
+
         const { data, error } = await supabaseClient
             .from('goals')
             .select(`
@@ -120,7 +131,9 @@ export async function getMatchEvents(matchId) {
 }
 
 // Subscribe to match updates
-export function subscribeToMatch(matchId, onUpdate) {
+export async function subscribeToMatch(matchId, onUpdate) {
+    const supabaseClient = await getClient();
+
     return supabaseClient
         .channel(`match:${matchId}`)
         .on('postgres_changes', 
@@ -136,7 +149,9 @@ export function subscribeToMatch(matchId, onUpdate) {
 }
 
 // Subscribe to match events
-export function subscribeToMatchEvents(matchId, onUpdate) {
+export async function subscribeToMatchEvents(matchId, onUpdate) {
+    const supabaseClient = await getClient();
+
     return supabaseClient
         .channel(`match_events:${matchId}`)
         .on('postgres_changes', 
@@ -154,6 +169,8 @@ export function subscribeToMatchEvents(matchId, onUpdate) {
 // Add match event (goal)
 export async function addMatchEventToDb(matchId, eventData) {
     try {
+        const supabaseClient = await getClient();
+
         // First add the goal
         const { error: goalError } = await supabaseClient
             .from('goals')

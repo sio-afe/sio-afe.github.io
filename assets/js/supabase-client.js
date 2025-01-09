@@ -2,16 +2,37 @@ export let supabaseClient = null;
 
 // Modify the initialization function
 async function initSupabase(maxRetries = 20, retryDelay = 100) {
+    // First, wait for the supabase library to be available
     for (let i = 0; i < maxRetries; i++) {
-        if (window.supabaseClient) {
-            console.log('Supabase client found in window');
-            supabaseClient = window.supabaseClient; // Set the exported client
-            return window.supabaseClient;
+        if (window.supabase) {
+            break;
         }
         await new Promise(resolve => setTimeout(resolve, retryDelay));
     }
+
+    if (!window.supabase) {
+        throw new Error('Supabase library not loaded');
+    }
+
+    // Then wait for the client to be initialized
+    for (let i = 0; i < maxRetries; i++) {
+        if (window.supabaseClient) {
+            console.log('Supabase client found in window');
+            supabaseClient = window.supabaseClient;
+            return window.supabaseClient;
+        }
+        
+        // Try to initialize if possible
+        if (typeof window.initSupabaseClient === 'function') {
+            window.initSupabaseClient();
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, retryDelay));
+    }
+    
     throw new Error(`Supabase client not initialized after ${maxRetries} attempts`);
 }
+
 
 // Get the initialized client
 let supabaseClientPromise = initSupabase();
