@@ -1,14 +1,22 @@
 // Get the initialized Supabase client
 let supabaseClient = null;
 
-// Initialize Supabase client
-function initSupabase() {
-    if (window.supabaseClient) {
-        supabaseClient = window.supabaseClient;
-        console.log('Supabase client initialized from window');
-        return true;
+// Initialize Supabase client with retries
+async function initSupabase(maxRetries = 10, retryDelay = 100) {
+    let retries = 0;
+    
+    while (retries < maxRetries) {
+        if (window.supabaseClient) {
+            supabaseClient = window.supabaseClient;
+            console.log('Supabase client initialized from window');
+            return true;
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, retryDelay));
+        retries++;
     }
-    console.error('Supabase client not initialized');
+    
+    console.error(`Supabase client not initialized after ${maxRetries} attempts`);
     return false;
 }
 
@@ -16,7 +24,7 @@ function initSupabase() {
 initSupabase();
 
 // Also try to initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', initSupabase);
+document.addEventListener('DOMContentLoaded', () => initSupabase());
 
 // Export the initialized client and functions
 export { supabaseClient };
@@ -24,8 +32,8 @@ export { supabaseClient };
 // Function to ensure client is initialized
 export async function ensureInitialized() {
     return new Promise((resolve) => {
-        const check = () => {
-            if (initSupabase()) {
+        const check = async () => {
+            if (await initSupabase()) {
                 resolve();
             } else {
                 setTimeout(check, 100);
