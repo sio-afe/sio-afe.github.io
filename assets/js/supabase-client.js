@@ -1,39 +1,16 @@
 export let supabaseClient = null;
-let initializationPromise = null;
-
-
-async function initSupabase(maxRetries = 20, retryDelay = 100) {
-    if (initializationPromise) {
-        return initializationPromise;
-    }
-
-    initializationPromise = new Promise(async (resolve, reject) => {
-        for (let i = 0; i < maxRetries; i++) {
-            if (window.supabaseClient) {
-                supabaseClient = window.supabaseClient;
-                console.log('Supabase client initialized successfully');
-                resolve(supabaseClient);
-                return;
-            }
-            await new Promise(r => setTimeout(r, retryDelay));
-        }
-        reject(new Error(`Supabase client not initialized after ${maxRetries} attempts`));
-    });
-
-    return initializationPromise;
-}
 
 // Export the async getter function
 export async function getClient() {
-    if (supabaseClient) {
-        return supabaseClient;
+    if (window.supabaseClient) {
+        return window.supabaseClient;
     }
-    return await initSupabase();
+    throw new Error('Supabase client not initialized');
 }
 
 // Function to ensure client is initialized
 export async function ensureInitialized() {
-    return await initSupabase();
+    return await getClient();
 }
 
 // Function to check if user is admin
@@ -56,9 +33,6 @@ export async function isAdmin() {
         return false;
     }
 }
-
-// Initialize immediately
-initSupabase().catch(console.error);
 
 // Function to get teams
 export async function getTeams(category) {

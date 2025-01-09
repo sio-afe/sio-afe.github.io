@@ -77,27 +77,45 @@ layout: compress
       const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmaXJ2bXpkaW9pem9zZGNuYXNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYzNTk4MTAsImV4cCI6MjA1MTkzNTgxMH0.uckyGkQeUm6e5SvOu3BC_zdrzUVcLr2e9ItlaUuKFCg";
           
       // Create client immediately when supabase is available
-      function createSupabaseClient() {
-        if (typeof supabase !== 'undefined') {
-          // Use the correct variable names here
-          window.supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
-          console.log('Supabase client initialized');
-        } else {
-          console.error('Supabase library not loaded');
-        }
+      function initSupabase() {
+        return new Promise((resolve, reject) => {
+          if (typeof supabase !== 'undefined') {
+            window.supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
+            console.log('Supabase client initialized');
+            resolve(window.supabaseClient);
+          } else {
+            console.error('Supabase library not loaded');
+            reject(new Error('Supabase library not loaded'));
+          }
+        });
       }
 
-      // Try to create client immediately
-      createSupabaseClient();
-      
-      // Fallback: also try on window load
-      window.addEventListener('load', createSupabaseClient);
-    </script>
+      // Initialize Supabase and then load application scripts
+      initSupabase().then(() => {
+        // Load application scripts in order
+        const scripts = [
+          '/assets/js/supabase-client.js',
+          '/assets/js/admin/admin-ui.js',
+          '/assets/js/tournament/final-fixture.js'
+        ];
 
-    <!-- Application scripts as modules -->
-    <script type="module" src="/assets/js/supabase-client.js"></script>
-    <script type="module" src="/assets/js/admin/admin-ui.js"></script>
-    <script type="module" src="/assets/js/tournament/final-fixture.js"></script>
+        function loadScript(src) {
+          return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.type = 'module';
+            script.src = src;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.body.appendChild(script);
+          });
+        }
+
+        // Load scripts sequentially
+        scripts.reduce((promise, script) => {
+          return promise.then(() => loadScript(script));
+        }, Promise.resolve());
+      }).catch(console.error);
+    </script>
   </body>
 </html>
 

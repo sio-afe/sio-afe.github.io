@@ -193,6 +193,8 @@ defaults:
       path: ""
     values:
       scripts:
+        - https://unpkg.com/@supabase/supabase-js@2
+        - /assets/js/supabase-init.js
         - /assets/js/tournament/fireworks.js
         - /assets/js/tournament/final-fixture.js
 
