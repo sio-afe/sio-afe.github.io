@@ -1,500 +1,280 @@
-document.addEventListener('DOMContentLoaded', async function() {
-    // Get the current page category (open-age or u17)
-    const category = document.querySelector('.tournament-container').dataset.category;
-    console.log('Category:', category);
-    
-    // Fetch data from JSON files
-    try {
-        const fixturesResponse = await fetch(`/assets/data/${category}/fixtures.json`);
-        const teamsResponse = await fetch(`/assets/data/${category}/teams.json`);
-        const statisticsResponse = await fetch(`/assets/data/${category}/statistics.json`);
-        const sponsorsResponse = await fetch('/assets/data/sponsors/sponsors.json');
-        
-        const fixturesData = await fixturesResponse.json();
-        const teamsData = await teamsResponse.json();
-        const statisticsData = await statisticsResponse.json();
-        const sponsorsData = await sponsorsResponse.json();
+// Import only what we need
+import { supabaseClient, getTeams, getMatches, getTopScorers } from '../supabase-client.js'
 
-        // Create a map of team names to their crests
-        const teamCrestMap = {};
-        teamsData.teams.forEach(team => {
-            teamCrestMap[team.name] = team.crest;
-        });
-
-
-        // Add team crests to fixtures
-        const fixturesWithCrests = fixturesData.fixtures.map(fixture => {
-            const mappedFixture = {
-                ...fixture,
-                homeTeamCrest: teamCrestMap[fixture.homeTeam],
-                awayTeamCrest: teamCrestMap[fixture.awayTeam]
-            };
-            return mappedFixture;
-        });
-
-
-        // Initialize the page with the data
-        initializePage(fixturesWithCrests, teamsData.teams, statisticsData, sponsorsData);
-    } catch (error) {
-        console.error('Error loading data:', error);
-    }
-});
-
-function initializePage(fixtures, teams, statistics, sponsors) {
-    // Initialize popup first
-    initTeamPopup();
-    
-    // Initialize sorting buttons
-    initializeSortButtons(teams);
-    
-    // Initialize filter buttons
-    initializeFilterButtons(fixtures);
-    
-    // Initialize view buttons
-    initializeViewButtons(fixtures);
-    
-    // Initial render of table and fixtures
-    renderLeagueTable(teams);
-    renderFixtures(fixtures);
-    renderBracket(fixtures);
-    
-    // Render statistics
-    renderStatistics(statistics);
-
-    // Render sponsors
-    renderSponsors(sponsors);
-}
-
-function initializeViewButtons(fixtures) {
-    const viewButtons = document.querySelectorAll('.view-btn');
-    viewButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            viewButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            
-            const viewType = this.dataset.view;
-            switchView(viewType);
-        });
+// Wait for DOM and Supabase initialization
+async function waitForInit() {
+    return new Promise((resolve) => {
+        const check = () => {
+            if (window.supabaseClient) {
+                resolve();
+            } else {
+                setTimeout(check, 100);
+            }
+        };
+        check();
     });
 }
 
-function switchView(viewType) {
-    const viewContents = document.querySelectorAll('.view-content');
-    viewContents.forEach(content => {
-        content.classList.remove('active');
-    });
-    
-    const activeView = viewType === 'list' ? 
-        document.getElementById('fixtures-list') : 
-        document.getElementById('bracket-view');
-    
-    if (activeView) {
-        activeView.classList.add('active');
-    }
-}
+// Get the tournament category from the page data attribute
+const tournamentContainer = document.querySelector('.tournament-container')
+const category = tournamentContainer?.dataset.category
 
-function initializeSortButtons(teams) {
-    const sortButtons = document.querySelectorAll('.sort-btn');
-    sortButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            sortButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            
-            const sortBy = this.dataset.sort;
-            sortTable(teams, sortBy);
-        });
-    });
-}
+// Default team logo path
+const DEFAULT_TEAM_LOGO = '/assets/img/default-team-logo.png'
 
-function initializeFilterButtons(fixtures) {
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            
-            const filterBy = this.dataset.filter;
-            filterFixtures(fixtures, filterBy);
-        });
-    });
-}
-
-function sortTable(teams, sortBy) {
-    const sortedTeams = [...teams].sort((a, b) => {
-        switch(sortBy) {
-            case 'points':
-                return b.points - a.points;
-            case 'gd':
-                return (b.gf - b.ga) - (a.gf - a.ga);
-            case 'goals':
-                return b.gf - a.gf;
-            default:
-                return b.points - a.points;
-        }
-    });
-    
-    renderLeagueTable(sortedTeams);
-}
-
-function filterFixtures(fixtures, filterBy) {
-    const filteredFixtures = filterBy === 'all' 
-        ? fixtures 
-        : fixtures.filter(fixture => fixture.status === filterBy);
-    
-    renderFixtures(filteredFixtures);
-}
-
-function renderLeagueTable(teams) {
-    const tableBody = document.getElementById('table-body');
-    if (!tableBody) return;
-
-    const defaultLogo = '/assets/data/open-age/team-logos/default.png';
-
-    tableBody.innerHTML = teams.map((team, index) => {
-        // Handle team logo path
-        const logoPath = team.crest ? 
-            (team.crest.startsWith('/') ? team.crest : `/assets/data/open-age/team-logos/${team.crest}`) : 
-            defaultLogo;
-            
-        return `
-        <tr>
-            <td>${index + 1}</td>
-            <td class="team-name-cell" data-team='${JSON.stringify(team)}'>
-                <div class="team-info">
-                    <img src="${logoPath}" 
-                         class="team-crest" 
-                         alt="${team.name}"
-                         onerror="this.src='${defaultLogo}'">
-                    ${team.name}
-                </div>
-            </td>
-            <td>${team.group}</td>
-            <td>${team.played || 0}</td>
-            <td>${team.won || 0}</td>
-            <td>${team.drawn || 0}</td>
-            <td>${team.lost || 0}</td>
-            <td>${team.points || 0}</td>
-            <td>${(team.gf || 0) - (team.ga || 0)}</td>
-            <td>${team.gf || 0}</td>
-            <td>${team.ga || 0}</td>
-        </tr>
-    `}).join('');
-
-    // Add click event listeners to team cells
-    const teamCells = tableBody.querySelectorAll('.team-name-cell');
-    teamCells.forEach(cell => {
-        cell.addEventListener('click', () => {
-            const teamData = JSON.parse(cell.dataset.team);
-            showTeamPopup(teamData);
-        });
-    });
-}
-
-function renderFixtures(fixtures) {
-    const fixturesList = document.getElementById('fixtures-list');
-    if (!fixturesList) return;
-
-    const defaultLogo = '/assets/data/open-age/team-logos/default.png';
-    const category = document.querySelector('.tournament-container').dataset.category;
-
-    // Function to get team logo path
-    function getTeamLogoPath(crest) {
-        if (!crest) return defaultLogo;
-        return crest.startsWith('/') ? crest : `/assets/data/${category}/team-logos/${crest}`;
-    }
-
-    fixturesList.innerHTML = fixtures.map(fixture => `
-        <div class="fixture" data-status="${fixture.status}">
-            <div class="fixture-teams">
-                <span class="home-team">
-                    <img src="${getTeamLogoPath(fixture.homeTeamCrest)}" 
-                         class="team-crest" 
-                         alt="${fixture.homeTeam}"
-                         onerror="this.src='${defaultLogo}'">
-                    ${fixture.homeTeam}
-                </span>
-                <span class="score">
-                    ${fixture.status === 'upcoming' ? 'vs' : 
-                      `${fixture.homeScore || 0} - ${fixture.awayScore || 0}`}
-                </span>
-                <span class="away-team">
-                    <img src="${getTeamLogoPath(fixture.awayTeamCrest)}" 
-                         class="team-crest" 
-                         alt="${fixture.awayTeam}"
-                         onerror="this.src='${defaultLogo}'">
-                    ${fixture.awayTeam}
-                </span>
-            </div>
-            <div class="fixture-meta">
-                ${fixture.status === 'live' ? 
-                    `<span class="live-badge">LIVE</span>` : 
-                  fixture.status === 'completed' ? 
-                    `<span class="completed-badge">FT</span>` :
-                    `<span class="date-badge">${fixture.date} ${fixture.time}</span>`}
-                <span class="venue">${fixture.venue}</span>
-                <span class="stage">${fixture.stage}</span>
-            </div>
-        </div>
-    `).join('');
-}
-
-function renderBracket(fixtures) {
-    // Get unique groups from fixtures
-    const groups = [...new Set(fixtures
-        .filter(f => f.stage.startsWith('Group '))
-        .map(f => f.stage.replace('Group ', '')))];
-    
-    // Render group stage matches
-    renderGroupMatches(fixtures, groups);
-    
-    // Render knockout stages
-    renderKnockoutMatches(fixtures);
-}
-
-function renderGroupMatches(fixtures, groups) {
-    const defaultLogo = '/assets/data/open-age/team-logos/default.png';
-    const category = document.querySelector('.tournament-container').dataset.category;
-
-    // Function to get team logo path
-    function getTeamLogoPath(crest) {
-        if (!crest) return defaultLogo;
-        return crest.startsWith('/') ? crest : `/assets/data/${category}/team-logos/${crest}`;
-    }
-    
-    // Remove any existing group containers that aren't needed
-    const groupsContainer = document.querySelector('.groups-container');
-    if (groupsContainer) {
-        // Clear existing groups
-        groupsContainer.innerHTML = groups.map(group => `
-            <div class="group" data-group="${group}">
-                <h4>Group ${group}</h4>
-                <div class="group-matches"></div>
-            </div>
-        `).join('');
-    }
-    
-    // Render matches for each existing group
-    groups.forEach(group => {
-        const groupMatches = fixtures.filter(f => f.stage === `Group ${group}`);
-        const groupContainer = document.querySelector(`.group[data-group="${group}"] .group-matches`);
-        
-        if (groupContainer) {
-            groupContainer.innerHTML = groupMatches.map(match => `
-                <div class="bracket-match">
-                    <div class="team-bracket">
-                        <img src="${getTeamLogoPath(match.homeTeamCrest)}" 
-                             class="team-crest" 
-                             alt="${match.homeTeam}"
-                             onerror="this.src='${defaultLogo}'">
-                        <span class="team-name">${match.homeTeam}</span>
-                        <span class="team-score">${match.status === 'upcoming' ? '-' : match.homeScore || 0}</span>
-                    </div>
-                    <div class="team-bracket">
-                        <img src="${getTeamLogoPath(match.awayTeamCrest)}" 
-                             class="team-crest" 
-                             alt="${match.awayTeam}"
-                             onerror="this.src='${defaultLogo}'">
-                        <span class="team-name">${match.awayTeam}</span>
-                        <span class="team-score">${match.status === 'upcoming' ? '-' : match.awayScore || 0}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-    });
-}
-
-function renderKnockoutMatches(fixtures) {
-    // Render Quarter Finals
-    const quarterFinals = fixtures.filter(f => f.stage === 'Quarter Final');
-    renderKnockoutRound(quarterFinals, '.quarter-finals .bracket-matches');
-    
-    // Render Semi Finals
-    const semiFinals = fixtures.filter(f => f.stage === 'Semi Final');
-    renderKnockoutRound(semiFinals, '.semi-finals .bracket-matches');
-    
-    // Render Finals
-    const finals = fixtures.filter(f => f.stage === 'Final');
-    renderKnockoutRound(finals, '.finals .bracket-matches');
-}
-
-function renderKnockoutRound(matches, containerSelector) {
-    const container = document.querySelector(containerSelector);
-    if (!container) return;
-    
-    container.innerHTML = matches.map(match => `
-        <div class="bracket-match">
-            <div class="team-bracket">
-                <span class="team-name">${match.homeTeam}</span>
-                <span class="team-score">${match.status === 'upcoming' ? '-' : match.homeScore || 0}</span>
-            </div>
-            <div class="team-bracket">
-                <span class="team-name">${match.awayTeam}</span>
-                <span class="team-score">${match.status === 'upcoming' ? '-' : match.awayScore || 0}</span>
-            </div>
-        </div>
-    `).join('');
-}
-
-function renderStatistics(statistics) {
-    // Render top scorers
-    const scorersList = document.getElementById('scorers-list');
-    if (scorersList && statistics.topScorers) {
-        scorersList.innerHTML = statistics.topScorers.map(scorer => `
-            <div class="stats-list-item">
-                <div class="player-info">
-                    <span class="player-name">${scorer.name}</span>
-                    <span class="player-team">${scorer.team}</span>
-                </div>
-                <div class="stats-info">
-                    <span class="stat-value">${scorer.goals}</span>
-                    <span class="stat-label">Goals (${scorer.matches} matches)</span>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    // Render top assists
-    const assistsList = document.getElementById('assists-list');
-    if (assistsList && statistics.topAssists) {
-        assistsList.innerHTML = statistics.topAssists.map(player => `
-            <div class="stats-list-item">
-                <div class="player-info">
-                    <span class="player-name">${player.name}</span>
-                    <span class="player-team">${player.team}</span>
-                </div>
-                <div class="stats-info">
-                    <span class="stat-value">${player.assists}</span>
-                    <span class="stat-label">Assists (${player.matches} matches)</span>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    // Render clean sheets
-    const cleanSheetsList = document.getElementById('clean-sheets-list');
-    if (cleanSheetsList && statistics.cleanSheets) {
-        cleanSheetsList.innerHTML = statistics.cleanSheets.map(player => `
-            <div class="stats-list-item">
-                <div class="player-info">
-                    <span class="player-name">${player.name}</span>
-                    <span class="player-team">${player.team}</span>
-                </div>
-                <div class="stats-info">
-                    <span class="stat-value">${player.cleanSheets}</span>
-                    <span class="stat-label">Clean Sheets (${player.matches} matches)</span>
-                </div>
-            </div>
-        `).join('');
-    }
-}
-
-// Team Popup Functionality
-function initTeamPopup() {
-  const popup = document.getElementById('team-popup');
-  if (!popup) return;
-
-  const closeBtn = popup.querySelector('.close-popup');
-  if (closeBtn) {
-    // Close popup when clicking the close button
-    closeBtn.addEventListener('click', () => {
-      popup.classList.remove('active');
-    });
+// Load and display tournament data
+async function loadTournamentData() {
+  if (!category) {
+    console.error('Tournament category not found')
+    return
   }
 
-  // Close popup when clicking outside
-  popup.addEventListener('click', (e) => {
-    if (e.target === popup) {
-      popup.classList.remove('active');
-    }
-  });
-
-  // Close popup when pressing Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && popup.classList.contains('active')) {
-      popup.classList.remove('active');
-    }
-  });
+  try {
+    await Promise.all([
+      loadTeams(),
+      loadMatches(),
+      loadTopScorers()
+    ])
+  } catch (error) {
+    console.error('Error loading tournament data:', error)
+  }
 }
 
-function showTeamPopup(teamData) {
-    const popup = document.getElementById('team-popup');
-    if (!popup) return;
-    
-    const defaultLogo = '/assets/data/open-age/team-logos/default.png';
-    
-    // Update popup content with team data
-    const logo = popup.querySelector('.team-popup-logo');
-    if (logo) {
-        // Handle team logo path
-        const logoPath = teamData.crest ? 
-            (teamData.crest.startsWith('/') ? teamData.crest : `/assets/data/open-age/team-logos/${teamData.crest}`) : 
-            defaultLogo;
+// Load teams and update league table
+async function loadTeams() {
+  try {
+    const { data: teams, error } = await getTeams(category)
+    if (error) throw error
+
+    // Sort teams by points, then goal difference, then goals scored
+    teams.sort((a, b) => {
+      if (b.points !== a.points) return b.points - a.points
+      const bGD = b.goals_for - b.goals_against
+      const aGD = a.goals_for - a.goals_against
+      if (bGD !== aGD) return bGD - aGD
+      return b.goals_for - a.goals_for
+    })
+
+    // Update league table
+    const tableBody = document.getElementById('table-body')
+    if (!tableBody) return
+
+    tableBody.innerHTML = teams.map((team, index) => `
+      <tr>
+        <td>${index + 1}</td>
+        <td class="team-name-cell">
+          <div class="team-info">
+            <img src="${team.crest_url || DEFAULT_TEAM_LOGO}" 
+                 alt="${team.name}" class="team-crest" loading="lazy">
+            ${team.name}
+          </div>
+        </td>
+        <td>${team.group_name || '-'}</td>
+        <td>${team.matches_played || 0}</td>
+        <td>${team.matches_won || 0}</td>
+        <td>${team.matches_drawn || 0}</td>
+        <td>${team.matches_lost || 0}</td>
+        <td>${team.points || 0}</td>
+        <td>${(team.goals_for || 0) - (team.goals_against || 0)}</td>
+        <td>${team.goals_for || 0}</td>
+        <td>${team.goals_against || 0}</td>
+      </tr>
+    `).join('')
+
+    // Also update the bracket view to use the same default logo
+    const bracketMatches = document.querySelectorAll('.bracket-match')
+    bracketMatches.forEach(match => {
+      const images = match.querySelectorAll('img[src*="default.png"]')
+      images.forEach(img => {
+        if (img.src.includes('default.png')) {
+          img.src = DEFAULT_TEAM_LOGO
+        }
+      })
+    })
+  } catch (error) {
+    console.error('Error loading teams:', error)
+  }
+}
+
+// Load matches and update fixtures
+async function loadMatches() {
+  try {
+    const { data: matches, error } = await getMatches(category)
+    if (error) throw error
+
+    // Update fixtures list
+    const fixturesList = document.getElementById('fixtures-list')
+    if (!fixturesList) return
+
+    fixturesList.innerHTML = matches.map(match => {
+      const matchDate = new Date(match.match_date)
+      const formattedDate = matchDate.toLocaleDateString('en-GB', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      })
+      const formattedTime = matchDate.toLocaleTimeString('en-GB', {
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+
+      return `
+        <div class="fixture" data-match-id="${match.id}">
+          <div class="fixture-teams">
+            <div class="team home">
+              <img src="${match.home_team?.crest_url || '/assets/data/open-age/team-logos/default.png'}" 
+                   alt="${match.home_team?.name}" class="team-crest" loading="lazy">
+              <span class="team-name">${match.home_team?.name || 'TBD'}</span>
+              <span class="score">${match.home_score || 0}</span>
+            </div>
+            <div class="vs">VS</div>
+            <div class="team away">
+              <img src="${match.away_team?.crest_url || '/assets/data/open-age/team-logos/default.png'}" 
+                   alt="${match.away_team?.name}" class="team-crest" loading="lazy">
+              <span class="team-name">${match.away_team?.name || 'TBD'}</span>
+              <span class="score">${match.away_score || 0}</span>
+            </div>
+          </div>
+          <div class="fixture-meta">
+            <div class="meta-row">
+              <div class="meta-item">
+                <i class="fas fa-calendar"></i>
+                <span class="date">${formattedDate}</span>
+              </div>
+              <div class="meta-item">
+                <i class="fas fa-clock"></i>
+                <span class="time">${formattedTime}</span>
+              </div>
+              <div class="meta-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span class="venue">${match.venue || 'TBD'}</span>
+              </div>
+            </div>
+            ${match.status !== 'scheduled' ? 
+              `<span class="match-status ${match.status.toLowerCase()}">${match.status}</span>` : ''}
+          </div>
+        </div>
+      `
+    }).join('')
+
+    // Update bracket view
+    updateBracketView(matches)
+  } catch (error) {
+    console.error('Error loading matches:', error)
+  }
+}
+
+// Load top scorers
+async function loadTopScorers() {
+  try {
+    const { data: scorers, error } = await getTopScorers(category)
+    if (error) throw error
+
+    // Update top scorers list if it exists
+    const scorersList = document.querySelector('.top-scorers-list')
+    if (!scorersList) return
+
+    scorersList.innerHTML = scorers.map(scorer => `
+      <div class="scorer-item">
+        <div class="scorer-info">
+          <span class="scorer-name">${scorer.player_name}</span>
+          <span class="scorer-team">${scorer.team_name}</span>
+        </div>
+        <div class="scorer-goals">${scorer.goals}</div>
+      </div>
+    `).join('')
+  } catch (error) {
+    console.error('Error loading top scorers:', error)
+  }
+}
+
+// Update the bracket view with match data
+function updateBracketView(matches) {
+  try {
+    const bracketMatches = {
+      'quarter-final': document.querySelector('.quarter-finals .bracket-matches'),
+      'semi-final': document.querySelector('.semi-finals .bracket-matches'),
+      'final': document.querySelector('.finals .bracket-matches')
+    }
+
+    // Group matches by type
+    const matchesByType = matches.reduce((acc, match) => {
+      if (match.match_type && match.match_type !== 'group') {
+        if (!acc[match.match_type]) {
+          acc[match.match_type] = []
+        }
+        acc[match.match_type].push(match)
+      }
+      return acc
+    }, {})
+
+    // Update each bracket section
+    Object.entries(matchesByType).forEach(([type, typeMatches]) => {
+      const bracketSection = bracketMatches[type]
+      if (bracketSection) {
+        bracketSection.innerHTML = typeMatches.map(match => `
+          <div class="bracket-match">
+            <div class="team-bracket">
+              <img src="${match.home_team?.crest_url || '/assets/data/open-age/team-logos/default.png'}" 
+                   alt="${match.home_team?.name}" class="team-crest" loading="lazy">
+              <span class="team-name">${match.home_team?.name || 'TBD'}</span>
+              <span class="team-score">${match.home_score || 0}</span>
+            </div>
+            <div class="team-bracket">
+              <img src="${match.away_team?.crest_url || '/assets/data/open-age/team-logos/default.png'}" 
+                   alt="${match.away_team?.name}" class="team-crest" loading="lazy">
+              <span class="team-name">${match.away_team?.name || 'TBD'}</span>
+              <span class="team-score">${match.away_score || 0}</span>
+            </div>
+          </div>
+        `).join('')
+      }
+    })
+  } catch (error) {
+    console.error('Error updating bracket view:', error)
+  }
+}
+
+// Initialize
+async function init() {
+    try {
+        // Wait for Supabase to initialize
+        await waitForInit();
         
-        logo.src = logoPath;
-        logo.alt = `${teamData.name} Logo`;
-        
-        // Set up error handler for fallback to default logo
-        logo.onerror = function() {
-            this.src = defaultLogo;
-        };
-    }
-    
-    const elements = {
-        '.team-popup-name': teamData.name,
-        '.captain-name': teamData.captain || 'N/A',
-        '.matches-played': teamData.played || '0',
-        '.matches-won': teamData.won || '0',
-        '.matches-lost': teamData.lost || '0',
-        '.matches-drawn': teamData.drawn || '0',
-        '.goals-for': teamData.gf || '0',
-        '.goals-against': teamData.ga || '0',
-        '.goal-difference': (teamData.gf || 0) - (teamData.ga || 0),
-        '.points': teamData.points || '0'
-    };
-
-    for (const [selector, value] of Object.entries(elements)) {
-        const element = popup.querySelector(selector);
-        if (element) {
-            element.textContent = value;
+        if (!category) {
+            console.error('Tournament category not found');
+            return;
         }
-    }
 
-    // Show popup
-    popup.classList.add('active');
+        await loadTournamentData();
+
+        // Set up real-time subscriptions
+        const matchesChannel = supabaseClient
+            .channel('public:matches')
+            .on('postgres_changes', 
+                { event: '*', schema: 'public', table: 'matches' }, 
+                () => loadMatches()
+            )
+            .subscribe();
+
+        const teamsChannel = supabaseClient
+            .channel('public:teams')
+            .on('postgres_changes', 
+                { event: '*', schema: 'public', table: 'teams' }, 
+                () => loadTeams()
+            )
+            .subscribe();
+
+        // Clean up subscriptions
+        window.addEventListener('beforeunload', () => {
+            matchesChannel.unsubscribe();
+            teamsChannel.unsubscribe();
+        });
+    } catch (error) {
+        console.error('Error initializing:', error);
+    }
 }
 
-// Function to handle team name click in the table
-function handleTeamClick(teamData) {
-  if (!teamData) return;
-  showTeamPopup(teamData);
-}
-
-// Add new function to render sponsors
-function renderSponsors(sponsorsData) {
-    const sponsorsByType = {
-        main: [],
-        gold: [],
-        silver: [],
-        bronze: []
-    };
-
-    // Group sponsors by type
-    sponsorsData.sponsors.forEach(sponsor => {
-        if (sponsorsByType[sponsor.type]) {
-            sponsorsByType[sponsor.type].push(sponsor);
-        }
-    });
-
-    // Populate each sponsor section
-    Object.keys(sponsorsByType).forEach(type => {
-        const container = document.querySelector(`.sponsor-list[data-type="${type}"]`);
-        if (container) {
-            container.innerHTML = sponsorsByType[type].map(sponsor => `
-                <div class="sponsor-item">
-                    <img src="${sponsor.logo}" alt="${sponsor.name}" class="sponsor-logo" loading="lazy">
-                    <div class="sponsor-name">${sponsor.name}</div>
-                </div>
-            `).join('');
-        }
-    });
-} 
+// Start initialization when DOM is ready
+document.addEventListener('DOMContentLoaded', init) 

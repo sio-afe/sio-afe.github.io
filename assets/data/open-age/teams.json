@@ -3,7 +3,7 @@
         {
             "id": "tt-1",
             "name": "Tehreeki Titans",
-            "crest": "default-team-logo.png",
+            "crest": "tehreeki.jpeg",
             "captain": "Sabir",
             "played": 0,
             "won": 0,
@@ -115,8 +115,8 @@
             "group": "C"
         },
         {
-            "name": "Team SIO",
-            "crest": "",
+            "name": "Al Hamd",
+            "crest": "al-hamd.jpeg",
             "played": 0,
             "won": 0,
             "drawn": 0,

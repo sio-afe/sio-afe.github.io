@@ -1,21 +1,46 @@
 <!-- The Top Bar -->
-
 <header id="topbar-wrapper" aria-label="Top Bar">
-  <div
-    id="topbar"
-    class="d-flex align-items-center justify-content-center px-lg-3 h-100"
-  >
+  <div id="topbar" class="d-flex align-items-center justify-content-between px-lg-3 h-100">
     <div id="topbar-title" class="text-center">
       <img src="/assets/img/title.png" alt="SIO x Muqawama" class="title-image">
     </div>
+    <div class="admin-section">
+      <button class="admin-btn" id="adminBtn">
+        <i class="fas fa-user-shield" id="adminIcon"></i>
+      </button>
+    </div>
   </div>
 </header>
+
+<!-- Admin Login Modal -->
+<div class="modal" id="adminLoginModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Admin Login</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
 
 <style>
 #topbar {
   background-color: white;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   min-height: 70px;
+  position: relative;
 }
 
 #topbar-title {
@@ -35,6 +60,91 @@
 
 .title-image:hover {
   transform: scale(1.02);
+}
+
+.admin-section {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+}
+
+.admin-btn {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #1a237e;
+  transition: color 0.3s ease;
+}
+
+.admin-btn:hover {
+  color: #3949ab;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    margin: 15% auto;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.btn-primary {
+    background: #1a237e;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
 }
 
 @media (min-width: 992px) {
