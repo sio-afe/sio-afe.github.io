@@ -1,21 +1,165 @@
 <section class="tournament-container" data-category="{{ page.category }}">
   <!-- Back Navigation -->
-<div class="back-nav">
-  <a href="/muqawamah/" class="back-button">
-    <i class="fas fa-arrow-left"></i>
-  </a>
-</div>
+  <div class="back-nav">
+    <a href="/muqawamah/" class="back-button">
+      <i class="fas fa-arrow-left"></i>
+    </a>
+  </div>
 
   <!-- Final Match Card -->
   <div class="final-match-card">
-    <h2 class="section-title" style="text-align: center; margin: 1rem auto;">Match</h2>
-    <div class="match-container">
+    <style>
+      .final-match-card {
+        position: relative;
+        transition: all 0.3s ease;
+      }
+
+      .final-match-card h2 {
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1d3557;
+        margin-bottom: 1.5rem;
+      }
+
+      .final-match-card .match-status-badge {
+        text-align: center;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        font-weight: 500;
+        font-size: 0.7rem;
+        margin: 0 0 1rem 1rem;
+        width: fit-content;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+      }
+
+      .final-match-card .match-status-badge.live {
+        background: linear-gradient(45deg, rgba(230, 57, 70, 0.85), rgba(255, 107, 107, 0.85));
+        color: white;
+        animation: pulse 2s infinite;
+      }
+
+      .final-match-card .match-status-badge.completed {
+        background: linear-gradient(45deg, rgba(46, 204, 113, 0.85), rgba(39, 174, 96, 0.85));
+        color: white;
+      }
+
+      .final-match-card .match-status-badge.upcoming {
+        background: linear-gradient(45deg, rgba(52, 152, 219, 0.85), rgba(41, 128, 185, 0.85));
+        color: white;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          opacity: 0.85;
+        }
+        50% {
+          transform: scale(1.02);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0.85;
+        }
+      }
+
+      /* Enhanced Celebration Styles */
+      .celebration-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1000;
+        display: none;
+      }
+
+      .celebration-overlay.active {
+        display: block;
+      }
+
+      .firework {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        animation: explode 1.5s ease-out forwards;
+        mix-blend-mode: screen;
+      }
+
+      .firework:nth-child(1) {
+        top: 20%;
+        left: 20%;
+        background: #ffd700;
+      }
+
+      .firework:nth-child(2) {
+        top: 40%;
+        right: 20%;
+        background: #e63946;
+      }
+
+      .firework:nth-child(3) {
+        bottom: 30%;
+        left: 50%;
+        background: #2ecc71;
+      }
+
+      .firework:nth-child(4) {
+        top: 50%;
+        right: 40%;
+        background: #3498db;
+      }
+
+      .firework:nth-child(5) {
+        bottom: 40%;
+        left: 30%;
+        background: #9b59b6;
+      }
+
+      @keyframes explode {
+        0% {
+          transform: scale(1);
+          opacity: 1;
+          box-shadow: 0 0 20px 5px currentColor;
+        }
+        40% {
+          opacity: 0.8;
+        }
+        100% {
+          transform: scale(40);
+          opacity: 0;
+          box-shadow: 0 0 40px 10px currentColor;
+        }
+      }
+    </style>
+
+    <h2 class="match-title">Match</h2>
+
+    <!-- Normal User View - Active by default -->
+    <div class="match-container user-view active" data-match-status="">
+      <!-- Match Status Badge -->
+      <div class="match-status-badge"></div>
+
+      <!-- Celebration Overlay -->
+      <div class="celebration-overlay">
+        <div class="firework"></div>
+        <div class="firework"></div>
+        <div class="firework"></div>
+        <div class="firework"></div>
+        <div class="firework"></div>
+      </div>
+
       <div class="teams-row">
         <div class="team home">
           <div class="team-info">
             <img src="/assets/data/open-age/team-logos/default.png" alt="Home Team" class="team-logo" loading="lazy">
-            <h3 class="team-name">TBD</h3>
-            <div class="score">-</div>
+            <h3 class="team-name"></h3>
+            <div class="score">0</div>
           </div>
         </div>
 
@@ -26,8 +170,8 @@
         <div class="team away">
           <div class="team-info">
             <img src="/assets/data/open-age/team-logos/default.png" alt="Away Team" class="team-logo" loading="lazy">
-            <h3 class="team-name">TBD</h3>
-            <div class="score">-</div>
+            <h3 class="team-name"></h3>
+            <div class="score">0</div>
           </div>
         </div>
       </div>
@@ -36,15 +180,15 @@
         <div class="match-meta">
           <div class="meta-item">
             <i class="fas fa-calendar"></i>
-            <span class="date">TBD</span>
+            <span class="date"></span>
           </div>
           <div class="meta-item">
             <i class="fas fa-clock"></i>
-            <span class="time">TBD</span>
+            <span class="time"></span>
           </div>
           <div class="meta-item">
             <i class="fas fa-map-marker-alt"></i>
-            <span class="venue">Milli Model Ground</span>
+            <span class="venue"></span>
           </div>
         </div>
         
@@ -52,36 +196,119 @@
         <div class="match-stats">
           <div class="stats-row">
             <div class="team-stats home">
-              <div class="stat-item">
-                <span class="stat-player">Player Name</span>
-                <span class="stat-icon goal">
-                  <i class="fas fa-futbol"></i>
-                </span>
-                <span class="stat-minute">45'</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-player">Assist Player</span>
-                <span class="stat-icon assist">
-                  <i class="fas fa-hands-helping"></i>
-                </span>
+              <!-- Home team stats will be populated by JS -->
+            </div>
+            <div class="team-stats away">
+              <!-- Away team stats will be populated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin View -->
+    <div class="match-container admin-view">
+      <!-- Add match selection dropdown -->
+      <div class="match-select-container">
+        <select class="match-dropdown">
+          <option value="">Select Match</option>
+        </select>
+      </div>
+
+      <div class="teams-row">
+        <div class="team home">
+          <div class="team-info">
+            <img src="/assets/data/open-age/team-logos/default.png" alt="Home Team" class="team-logo" loading="lazy">
+            <div class="team-name"></div>
+            <div class="score" contenteditable="true" data-field="home-score">-</div>
+          </div>
+        </div>
+
+        <div class="vs-container">
+          <div class="vs-badge">VS</div>
+        </div>
+
+        <div class="team away">
+          <div class="team-info">
+            <img src="/assets/data/open-age/team-logos/default.png" alt="Away Team" class="team-logo" loading="lazy">
+            <div class="team-name"></div>
+            <div class="score" contenteditable="true" data-field="away-score">-</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="match-details">
+        <div class="match-meta">
+          <div class="meta-item">
+            <i class="fas fa-calendar"></i>
+            <span class="date"></span>
+          </div>
+          <div class="meta-item">
+            <i class="fas fa-clock"></i>
+            <span class="time"></span>
+          </div>
+          <div class="meta-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span class="venue"></span>
+          </div>
+        </div>
+
+        <!-- Match Stats Section -->
+        <div class="match-stats">
+          <h3>Match Statistics</h3>
+          <div class="stats-row">
+            <div class="team-stats home">
+              <div class="stats-header">Home Team Stats</div>
+              <div class="stats-content">
+                <!-- Home team stats will be populated by JS -->
               </div>
             </div>
             <div class="team-stats away">
-              <div class="stat-item">
-                <span class="stat-minute">67'</span>
-                <span class="stat-icon goal">
-                  <i class="fas fa-futbol"></i>
-                </span>
-                <span class="stat-player">Player Name</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-icon assist">
-                  <i class="fas fa-hands-helping"></i>
-                </span>
-                <span class="stat-player">Assist Player</span>
+              <div class="stats-header">Away Team Stats</div>
+              <div class="stats-content">
+                <!-- Away team stats will be populated by JS -->
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- Event Modal -->
+        <div class="event-modal">
+          <div class="modal-content">
+            <h3>Add Match Event</h3>
+            <form id="eventForm">
+              <div class="form-group">
+                <label>Team</label>
+                <select name="team" required>
+                  <option value="home">Home Team</option>
+                  <option value="away">Away Team</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Player Name</label>
+                <input type="text" name="playerName" placeholder="Enter player name" required>
+              </div>
+              <div class="form-group">
+                <label>Assist By (Optional)</label>
+                <input type="text" name="assistName" placeholder="Enter assist player name">
+              </div>
+              <div class="form-group">
+                <label>Minute</label>
+                <input type="number" name="minute" min="1" max="90" required>
+              </div>
+              <div class="modal-buttons">
+                <button type="submit" class="save-btn">Save Event</button>
+                <button type="button" class="cancel-btn">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Admin Controls -->
+        <div class="admin-controls">
+          <button class="start-match-btn">Start Match</button>
+          <button class="add-stats-btn">Add Stats</button>
+          <button class="update-status-btn">Mark as Completed</button>
         </div>
       </div>
     </div>
@@ -129,7 +356,6 @@
         <h2>Fixtures</h2>
         <div class="view-controls">
           <button class="view-btn active" data-view="list"><i class="fas fa-list"></i> List View</button>
-          <button class="view-btn" data-view="bracket"><i class="fas fa-sitemap"></i> Bracket View</button>
         </div>
         <div class="fixture-filters">
           <button class="filter-btn active" data-filter="all">All</button>
@@ -181,12 +407,7 @@
         </div>
       </div>
 
-      <div class="stats-card">
-        <h3>Clean Sheets</h3>
-        <div id="clean-sheets-list" class="stats-list">
-          <!-- Content populated by JS -->
-        </div>
-      </div>
+     
     </div>
   </div>
 </section>
@@ -230,7 +451,46 @@
   </div>
 </div>
 
-<script src="/assets/js/tournament/final-fixture.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async function() {
+    // Check if user is admin
+    const supabase = window.supabaseClient;
+    const toggleView = document.querySelector('.view-toggle');
+    const userView = document.querySelector('.user-view');
+    const adminView = document.querySelector('.admin-view');
+
+    async function checkAdminStatus() {
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return false;
+
+            const { data: adminUser } = await supabase
+                .from('admin_users')
+                .select('role')
+                .eq('email', user.email)
+                .single();
+
+            return !!adminUser;
+        } catch (error) {
+            console.error('Error checking admin status:', error);
+            return false;
+        }
+    }
+
+    // Initialize views based on admin status
+    const isAdmin = await checkAdminStatus();
+    if (isAdmin) {
+        adminView.style.display = 'block';
+        userView.style.display = 'none';
+    } else {
+        userView.style.display = 'block';
+        adminView.style.display = 'none';
+    }
+});
+</script>
+
+<script src="/assets/js/tournament/final-fixture.js" type="module"></script>
+<script src="/assets/js/tournament/live-match.js" type="module"></script>
 
 <style>
 /* Base container styles */
@@ -1451,11 +1711,676 @@
     height: 36px;
   }
 }
-</style>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Remove sponsors loading
-    // ... rest of the JavaScript ...
-});
-</script>
+/* Admin View Styles */
+.admin-view .team-select {
+  width: 100%;
+  margin: 0.5rem 0;
+}
+
+.admin-view .team-dropdown {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #1d3557;
+  background: white;
+}
+
+.admin-view .score[contenteditable="true"] {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  min-width: 2ch;
+  cursor: text;
+}
+
+.admin-view .score[contenteditable="true"]:focus {
+  border-color: #457b9d;
+  outline: none;
+  background: #f8f9fa;
+}
+
+.admin-view .date-input,
+.admin-view .time-input,
+.admin-view .venue-input {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #1d3557;
+  background: white;
+}
+
+.admin-view .date-input:focus,
+.admin-view .time-input:focus,
+.admin-view .venue-input:focus {
+  border-color: #457b9d;
+  outline: none;
+}
+
+.admin-controls {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  justify-content: flex-end;
+}
+
+.save-changes-btn,
+.reset-changes-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.save-changes-btn {
+  background: #457b9d;
+  color: white;
+}
+
+.save-changes-btn:hover {
+  background: #385f7a;
+}
+
+.reset-changes-btn {
+  background: #e9ecef;
+  color: #666;
+}
+
+.reset-changes-btn:hover {
+  background: #dee2e6;
+}
+
+.add-event-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background: #457b9d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  margin-top: 1rem;
+}
+
+.add-event-btn:hover {
+  background: #385f7a;
+}
+
+/* Event Modal Styles */
+.event-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.event-modal .modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.event-modal h3 {
+  color: #1d3557;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e63946;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #1d3557;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #1d3557;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #457b9d;
+  outline: none;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .admin-view .team-select {
+    margin: 0.375rem 0;
+  }
+
+  .admin-view .team-dropdown,
+  .admin-view .date-input,
+  .admin-view .time-input,
+  .admin-view .venue-input {
+    padding: 0.375rem;
+    font-size: 0.85rem;
+  }
+
+  .admin-controls {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .save-changes-btn,
+  .reset-changes-btn {
+    width: 100%;
+    padding: 0.625rem 1.25rem;
+  }
+
+  .event-modal .modal-content {
+    padding: 1.5rem;
+    width: 95%;
+  }
+}
+
+/* View Toggle Styles */
+.view-toggle {
+  display: none;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.toggle-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #e9ecef;
+  color: #495057;
+}
+
+.toggle-btn.active {
+  background: #457b9d;
+  color: white;
+}
+
+.match-container {
+  display: none;
+}
+
+.match-container.active {
+  display: block;
+}
+
+/* Admin Controls */
+.admin-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.admin-controls button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.start-match-btn {
+  background: #2ecc71;
+  color: white;
+}
+
+.start-match-btn:hover {
+  background: #27ae60;
+}
+
+.add-stats-btn {
+  background: #3498db;
+  color: white;
+}
+
+.add-stats-btn:hover {
+  background: #2980b9;
+}
+
+.update-status-btn {
+  background: #e74c3c;
+  color: white;
+}
+
+.update-status-btn:hover {
+  background: #c0392b;
+}
+
+.update-status-btn.completed {
+  background: #95a5a6;
+  cursor: not-allowed;
+}
+
+/* Event Modal */
+.event-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.save-btn {
+  background: #2ecc71;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background: #e74c3c;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .admin-controls {
+    flex-direction: column;
+  }
+
+  .admin-controls button {
+    width: 100%;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+  }
+}
+
+/* Enhanced Celebration Overlay */
+.celebration-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+    display: none;
+}
+
+.celebration-overlay.active {
+    display: block;
+}
+
+.firework {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    animation: explode 1.5s ease-out forwards;
+    mix-blend-mode: screen;
+}
+
+/* Multiple fireworks with different colors and positions */
+.firework:nth-child(1) {
+    top: 20%;
+    left: 20%;
+    background: #ffd700;
+    animation-delay: 0s;
+}
+
+.firework:nth-child(2) {
+    top: 40%;
+    right: 20%;
+    background: #e63946;
+    animation-delay: 0.3s;
+}
+
+.firework:nth-child(3) {
+    bottom: 30%;
+    left: 50%;
+    background: #2ecc71;
+    animation-delay: 0.6s;
+}
+
+.firework:nth-child(4) {
+    top: 50%;
+    right: 40%;
+    background: #3498db;
+    animation-delay: 0.9s;
+}
+
+.firework:nth-child(5) {
+    bottom: 40%;
+    left: 30%;
+    background: #9b59b6;
+    animation-delay: 1.2s;
+}
+
+@keyframes explode {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 20px 5px currentColor;
+    }
+    40% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(40);
+        opacity: 0;
+        box-shadow: 0 0 40px 10px currentColor;
+    }
+}
+
+/* Enhanced Status Badge */
+.status-badge {
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.status-badge.in-progress {
+    background: linear-gradient(45deg, #e63946, #ff6b6b);
+    color: white;
+    animation: pulse 2s infinite;
+}
+
+.status-badge.completed {
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    color: white;
+    animation: none;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.7);
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+        box-shadow: 0 0 0 10px rgba(230, 57, 70, 0);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(230, 57, 70, 0);
+    }
+}
+
+/* Enhanced Admin Controls */
+.admin-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(to right, #f8f9fa, #e9ecef);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.admin-controls button {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.start-match-btn {
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    color: white;
+}
+
+.start-match-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.2);
+}
+
+.add-stats-btn {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    color: white;
+}
+
+.add-stats-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.2);
+}
+
+.update-status-btn {
+    background: linear-gradient(45deg, #e74c3c, #c0392b);
+    color: white;
+}
+
+.update-status-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.2);
+}
+
+.update-status-btn.completed {
+    background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+    transform: none;
+    box-shadow: none;
+}
+
+/* ... existing styles ... */
+
+.match-select-container {
+  width: 100%;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.match-dropdown {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #1d3557;
+  background: white;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231d3557' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.match-dropdown:hover {
+  border-color: #457b9d;
+}
+
+.match-dropdown:focus {
+  outline: none;
+  border-color: #457b9d;
+  box-shadow: 0 0 0 3px rgba(69, 123, 157, 0.1);
+}
+
+@media (max-width: 480px) {
+  .match-dropdown {
+    font-size: 0.9rem;
+    padding: 0.625rem 0.875rem;
+  }
+  
+  .match-dropdown option {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+}
+
+/* Add styles for goal scorers in fixtures */
+.fixture-stats {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed #eee;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.fixture-stats .team-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.fixture-stats .home-stats {
+  text-align: right;
+}
+
+.fixture-stats .away-stats {
+  text-align: left;
+}
+
+.fixture-stats .scorer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #1d3557;
+  font-size: 0.8rem;
+}
+
+.fixture-stats .home-stats .scorer {
+  justify-content: flex-end;
+}
+
+.fixture-stats .away-stats .scorer {
+  justify-content: flex-start;
+}
+
+.fixture-stats .scorer-name {
+  font-weight: 500;
+}
+
+.fixture-stats .goal-minute {
+  color: #666;
+  font-size: 0.75rem;
+}
+
+.fixture-stats .goal-icon {
+  color: #e63946;
+  font-size: 0.7rem;
+}
+
+@media (max-width: 768px) {
+  .fixture-stats {
+    font-size: 0.8rem;
+  }
+  
+  .fixture-stats .scorer {
+    font-size: 0.75rem;
+  }
+  
+  .fixture-stats .goal-minute {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .fixture-stats {
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+  }
+  
+  .fixture-stats .scorer {
+    font-size: 0.7rem;
+  }
+  
+  .fixture-stats .goal-minute {
+    font-size: 0.65rem;
+  }
+}
+</style>

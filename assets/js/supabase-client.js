@@ -1,17 +1,44 @@
 // Get the initialized Supabase client
-const supabaseClient = window.supabaseClient;
+let supabaseClient = null;
 
-// Ensure client is initialized
-if (!supabaseClient) {
+// Initialize Supabase client
+function initSupabase() {
+    if (window.supabaseClient) {
+        supabaseClient = window.supabaseClient;
+        console.log('Supabase client initialized from window');
+        return true;
+    }
     console.error('Supabase client not initialized');
+    return false;
 }
 
-// Export the initialized client and functions
+// Initialize when the script loads
+initSupabase();
+
+// Also try to initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', initSupabase);
+
+// Export the initialized client
 export { supabaseClient };
+
+// Function to ensure client is initialized
+export async function ensureInitialized() {
+    return new Promise((resolve) => {
+        const check = () => {
+            if (initSupabase()) {
+                resolve();
+            } else {
+                setTimeout(check, 100);
+            }
+        };
+        check();
+    });
+}
 
 // Function to check if user is admin
 export async function isAdmin() {
     try {
+        await ensureInitialized();
         const { data: { user } } = await supabaseClient.auth.getUser();
         if (!user) return false;
 
@@ -34,49 +61,28 @@ export async function isAdmin() {
     }
 }
 
-// New function to check if user is super admin
-export async function isSuperAdmin() {
-    try {
-        const { data: { user } } = await supabaseClient.auth.getUser();
-        if (!user) return false;
-
-        const { data, error } = await supabaseClient
-            .from('admin_users')
-            .select('role')
-            .eq('email', user.email)
-            .maybeSingle();
-
-        if (error) {
-            console.error('Error checking super admin status:', error);
-            return false;
-        }
-
-        return data?.role === 'super_admin';
-    } catch (error) {
-        console.error('Error checking super admin status:', error);
-        return false;
-    }
-}
 // Function to get teams
 export async function getTeams(category) {
     try {
+        await ensureInitialized();
         const { data, error } = await supabaseClient
             .from('teams')
             .select('*')
             .eq('category', category)
-            .order('points', { ascending: false })
+            .order('points', { ascending: false });
         
-        if (error) throw error
-        return { data, error }
+        if (error) throw error;
+        return { data, error };
     } catch (error) {
-        console.error('Error fetching teams:', error)
-        throw error
+        console.error('Error fetching teams:', error);
+        throw error;
     }
 }
 
 // Function to get matches
 export async function getMatches(category) {
     try {
+        await ensureInitialized();
         const { data, error } = await supabaseClient
             .from('matches')
             .select(`
@@ -85,50 +91,53 @@ export async function getMatches(category) {
                 away_team:teams!matches_away_team_id_fkey(*)
             `)
             .eq('category', category)
-            .order('match_date', { ascending: true })
+            .order('match_date', { ascending: true });
         
-        if (error) throw error
-        return { data, error }
+        if (error) throw error;
+        return { data, error };
     } catch (error) {
-        console.error('Error fetching matches:', error)
-        throw error
+        console.error('Error fetching matches:', error);
+        throw error;
     }
 }
 
 // Function to get match goals
 export async function getMatchGoals(matchId) {
     try {
+        await ensureInitialized();
         const { data, error } = await supabaseClient
             .from('goals')
             .select('*')
             .eq('match_id', matchId)
-            .order('minute', { ascending: true })
+            .order('minute', { ascending: true });
         
-        if (error) throw error
-        return { data, error }
+        if (error) throw error;
+        return { data, error };
     } catch (error) {
-        console.error('Error fetching goals:', error)
-        throw error
+        console.error('Error fetching goals:', error);
+        throw error;
     }
 }
 
 // Function to get top scorers
 export async function getTopScorers(category) {
     try {
+        await ensureInitialized();
         const { data, error } = await supabaseClient
-            .rpc('get_top_scorers', { category_param: category })
+            .rpc('get_top_scorers', { category_param: category });
         
-        if (error) throw error
-        return { data, error }
+        if (error) throw error;
+        return { data, error };
     } catch (error) {
-        console.error('Error fetching top scorers:', error)
-        throw error
+        console.error('Error fetching top scorers:', error);
+        throw error;
     }
 }
 
 // Auth functions
 export async function signIn(email, password) {
     try {
+        await ensureInitialized();
         
         if (!email || !password) {
             throw new Error('Email and password are required');
@@ -155,6 +164,7 @@ export async function signIn(email, password) {
 
 export async function signOut() {
     try {
+        await ensureInitialized();
         const { error } = await supabaseClient.auth.signOut();
         if (error) {
             console.error('Sign out error:', error);
@@ -164,4 +174,4 @@ export async function signOut() {
         console.error('Error signing out:', error);
         throw error;
     }
-} 
+}

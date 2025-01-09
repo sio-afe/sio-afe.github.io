@@ -222,75 +222,193 @@ permalink: /muqawamah/
 .sponsors-section {
     padding: 40px 20px;
     margin: 40px 0;
-    background: #fff;
+    background: linear-gradient(to bottom, #ffffff, #f8f9fa);
     border-radius: 15px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .sponsors-section h2 {
     text-align: center;
-    color: #333;
+    color: #1a237e;
     margin-bottom: 30px;
-    font-size: 1.8em;
+    font-size: 2em;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 12px;
+}
+
+.sponsors-section h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #4CAF50, #2196F3);
+    border-radius: 2px;
 }
 
 .sponsors-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 30px;
     justify-items: center;
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
+    padding: 15px;
 }
 
 .sponsor-item {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
     text-align: center;
-    padding: 15px;
-    transition: transform 0.2s ease;
+    width: 100%;
+    max-width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.sponsor-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #4CAF50, #2196F3);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .sponsor-item:hover {
     transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.sponsor-item:hover::before {
+    opacity: 1;
 }
 
 .sponsor-item img {
     width: 120px;
     height: 120px;
     object-fit: contain;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    transition: transform 0.3s ease;
+}
+
+.sponsor-item:hover img {
+    transform: scale(1.05);
 }
 
 .sponsor-item p {
-    color: #555;
+    color: #1a237e;
     font-size: 1rem;
+    font-weight: 500;
     margin: 0;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+    width: 100%;
 }
 
 @media (max-width: 768px) {
-    .sponsors-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 20px;
+    .sponsors-section {
+        padding: 25px 12px;
+        margin: 25px 0;
     }
 
-    .sponsor-item img {
-        width: 100px;
-        height: 100px;
+    .sponsors-section h2 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
     }
-}
 
-@media (max-width: 480px) {
     .sponsors-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        padding: 0 8px;
+    }
+
+    .sponsor-item {
+        padding: 12px 8px;
+        max-width: none;
+        width: 100%;
+        border-radius: 8px;
     }
 
     .sponsor-item img {
         width: 80px;
         height: 80px;
+        margin-bottom: 8px;
     }
 
     .sponsor-item p {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
+        padding-top: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sponsors-section {
+        padding: 20px 10px;
+        margin: 20px 0;
+        border-radius: 12px;
+    }
+
+    .sponsors-section h2 {
+        font-size: 1.4em;
+        margin-bottom: 15px;
+    }
+
+    .sponsors-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 0 5px;
+    }
+
+    .sponsor-item {
+        padding: 10px 6px;
+    }
+
+    .sponsor-item img {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 6px;
+    }
+
+    .sponsor-item p {
+        font-size: 0.8rem;
+        padding-top: 5px;
+    }
+
+    .sponsor-item:hover {
+        transform: translateY(-3px);
+    }
+}
+
+@media (max-width: 360px) {
+    .sponsors-grid {
+        gap: 8px;
+    }
+
+    .sponsor-item {
+        padding: 8px 5px;
+    }
+
+    .sponsor-item img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .sponsor-item p {
+        font-size: 0.75rem;
     }
 }
 
@@ -439,32 +557,32 @@ permalink: /muqawamah/
         padding: 0 15px;
     }
 
-.objectives-grid, .rules-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
-}
+    .objectives-grid, .rules-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
 
-.objective-card, .rule-card {
-    padding: 15px;
-}
+    .objective-card, .rule-card {
+        padding: 15px;
+    }
 
-.objective-card h3, .rule-card h3 {
-    font-size: 1.1em;
-    margin-bottom: 10px;
-    padding-bottom: 6px;
-}
+    .objective-card h3, .rule-card h3 {
+        font-size: 1.1em;
+        margin-bottom: 10px;
+        padding-bottom: 6px;
+    }
 
-.objective-card p {
-    font-size: 0.9em;
-    line-height: 1.4;
-}
+    .objective-card p {
+        font-size: 0.9em;
+        line-height: 1.4;
+    }
 
-.rule-card li {
-    font-size: 0.9em;
-    padding-left: 12px;
-    margin-bottom: 8px;
-    line-height: 1.4;
-}
+    .rule-card li {
+        font-size: 0.9em;
+        padding-left: 12px;
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
 }
 
 @media (max-width: 480px) {
@@ -732,27 +850,35 @@ permalink: /muqawamah/
     </div>
 
     <div class="sponsors-section">
-        <h2>Our Sponsors</h2>
+        <h2>Our Valued Partners</h2>
         <div class="sponsors-grid">
             <div class="sponsor-item">
                 <img src="/assets/data/sponsors/shaheen-academy.png" alt="Shaheen Academy">
                 <p>Shaheen Academy</p>
             </div>
             <div class="sponsor-item">
-                <img src="/assets/data/sponsors/shaheen-academy.png" alt="Al Barkaat">
-                <p>Al Barkaat</p>
+                <img src="/assets/data/sponsors/hidayat.png" alt="Hidayat Publishers">
+                <p>Hidayat Publishers</p>
             </div>
             <div class="sponsor-item">
-                <img src="/assets/data/sponsors/shaheen-academy.png" alt="Falcon Sports">
-                <p>Falcon Sports</p>
+                <img src="/assets/data/sponsors/bazmi.jpeg" alt="Bazmi PG">
+                <p>Bazmi PG</p>
             </div>
             <div class="sponsor-item">
-                <img src="/assets/data/sponsors/shaheen-academy.png" alt="Jamia Sports">
-                <p>Jamia Sports</p>
+                <img src="/assets/data/sponsors/motilal.png" alt="Dr Lal Hospital">
+                <p>Dr Lal Hospital</p>
             </div>
             <div class="sponsor-item">
-                <img src="/assets/data/sponsors/shaheen-academy.png" alt="AFE Sports Club">
-                <p>AFE Sports Club</p>
+                <img src="/assets/data/sponsors/nadeem.jpeg" alt="Nadeem Contactor">
+                <p>Nadeem Contactor</p>
+            </div>
+            <div class="sponsor-item">
+                <img src="/assets/data/sponsors/jabbar.png" alt="Jabbar Contactor">
+                <p>Jabbar Contactor</p>
+            </div>
+            <div class="sponsor-item">
+                <img src="/assets/data/sponsors/zavia.png" alt="Zavia Prints">
+                <p>Zavia Prints</p>
             </div>
         </div>
     </div>
@@ -763,9 +889,6 @@ permalink: /muqawamah/
         <p><strong>For queries:</strong> [Contact Information]</p>
     </div>
 
-    <div class="last-updated">
-        *Last updated: <span id="lastUpdated"></span>*
-    </div>
 </div>
 
 <script>

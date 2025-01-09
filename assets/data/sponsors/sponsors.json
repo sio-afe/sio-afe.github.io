@@ -1,29 +1,32 @@
 {
     "sponsors": [
         {
-            "name": "Al Barkaat",
-            "logo": "/assets/data/sponsors/default.png",
-            "type": "main"
+            "name": "Shaheen Academy",
+            "logo": "/assets/data/sponsors/shaheen-academy.png"
         },
         {
-            "name": "Falcon Sports",
-            "logo": "/assets/data/sponsors/default.png",
-            "type": "gold"
+            "name": "Hidayat Publishers",
+            "logo": "/assets/data/sponsors/hidayat.png"
         },
         {
-            "name": "Jamia Sports",
-            "logo": "/assets/data/sponsors/default.png",
-            "type": "silver"
+            "name": "Bazmi PG",
+            "logo": "/assets/data/sponsors/bazmi.jpeg"
         },
         {
-            "name": "AFE Sports Club",
-            "logo": "/assets/data/sponsors/default.png",
-            "type": "silver"
+            "name": "Dr Lal Hospital",
+            "logo": "/assets/data/sponsors/motilal.png"
         },
         {
-            "name": "Sports Hub",
-            "logo": "/assets/data/sponsors/default.png",
-            "type": "bronze"
+            "name": "Nadeem Contactor",
+            "logo": "/assets/data/sponsors/nadeem.jpeg"
+        },
+        {
+            "name": "Jabbar Contactor",
+            "logo": "/assets/data/sponsors/jabbar.png"
+        },
+        {
+            "name": "Zavia Prints",
+            "logo": "/assets/data/sponsors/zavia.png"
         }
     ]
 }

@@ -17,6 +17,21 @@ function readJsonFile(filePath) {
     return JSON.parse(data)
 }
 
+// Helper function to convert 12-hour time to 24-hour format
+function convertTo24Hour(time) {
+    const [timeStr, period] = time.split(' ');
+    let [hours, minutes] = timeStr.split(':');
+    hours = parseInt(hours);
+    
+    if (period === 'PM' && hours !== 12) {
+        hours += 12;
+    } else if (period === 'AM' && hours === 12) {
+        hours = 0;
+    }
+    
+    return `${hours.toString().padStart(2, '0')}:${minutes}`;
+}
+
 // Function to migrate teams
 async function migrateTeams() {
     console.log('Migrating teams...')
@@ -37,8 +52,8 @@ async function migrateTeams() {
         return defaultLogo
     }
 
-    // Delete all existing data first
-    console.log('Wiping all tables...')
+    // Delete existing tournament data (but keep admin_users)
+    console.log('Wiping tournament tables...')
     try {
         // Delete in correct order to maintain referential integrity
         const { error: goalsError } = await supabase
@@ -71,7 +86,7 @@ async function migrateTeams() {
             return null
         }
 
-        console.log('Successfully wiped all tables')
+        console.log('Successfully wiped tournament tables')
     } catch (error) {
         console.error('Error wiping tables:', error)
         return null
@@ -161,7 +176,7 @@ async function migrateMatches(teams) {
             away_team_id: getTeamId(fixture.awayTeam, 'u17'),
             home_score: fixture.homeScore || 0,
             away_score: fixture.awayScore || 0,
-            match_date: `${fixture.date}T${fixture.time}:00Z`,
+            match_date: `${fixture.date}T${convertTo24Hour(fixture.time)}:00Z`,
             venue: fixture.venue,
             status: fixture.status === 'upcoming' ? 'scheduled' : fixture.status,
             category: 'u17',
@@ -172,7 +187,7 @@ async function migrateMatches(teams) {
             away_team_id: getTeamId(fixture.awayTeam, 'open-age'),
             home_score: fixture.homeScore || 0,
             away_score: fixture.awayScore || 0,
-            match_date: `${fixture.date}T${fixture.time.split(' - ')[0]}:00Z`,
+            match_date: `${fixture.date}T${convertTo24Hour(fixture.time)}:00Z`,
             venue: fixture.venue,
             status: fixture.status === 'upcoming' ? 'scheduled' : fixture.status,
             category: 'open-age',
