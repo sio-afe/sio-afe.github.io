@@ -33,7 +33,7 @@ export async function getClient() {
 
 // Function to ensure client is initialized
 export async function ensureInitialized() {
-    await supabaseClientPromise;
+    return await initSupabase();
 }
 
 // Function to check if user is admin
@@ -143,3 +143,5 @@ export async function signOut() {
     const client = await getClient();
     return client.auth.signOut();
 }
+
+export default supabaseClient;

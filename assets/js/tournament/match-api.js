@@ -210,9 +210,10 @@ export async function addMatchEventToDb(matchId, eventData) {
         if (matchError) throw matchError;
 
         // Get updated team stats
-        await Promise.all([
-            supabaseClient.rpc('get_top_scorers', { category_param: match.category }),
-            supabaseClient.rpc('get_top_assists', { category_param: match.category })
+        const client = await getClient();
+        const [scorersResult, assistsResult] = await Promise.all([
+            client.rpc('get_top_scorers', { category_param: match.category }),
+            client.rpc('get_top_assists', { category_param: match.category })
         ]);
 
         return { data: match, error: null };

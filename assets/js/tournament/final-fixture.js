@@ -1,5 +1,5 @@
 // Import only what we need
-import { supabaseClient, getTeams, getMatches, getTopScorers } from '../supabase-client.js'
+import { getClient, getTeams, getMatches, getTopScorers } from '../supabase-client.js'
 import { 
     startMatch, 
     completeMatch, 
@@ -13,16 +13,14 @@ import { handleMatchCompletion } from './team-progression.js'
 
 // Wait for DOM and Supabase initialization
 async function waitForInit() {
-    return new Promise((resolve) => {
-        const check = () => {
-            if (window.supabaseClient && window.supabaseClient.from) {
-                resolve();
-            } else {
-                setTimeout(check, 100);
-            }
-        };
-        check();
-    });
+    try {
+        const client = await getClient();
+        window.supabaseClient = client;
+        return client;
+    } catch (error) {
+        console.error('Error initializing Supabase:', error);
+        throw error;
+    }
 }
 
 // Get the tournament category from the page data attribute
@@ -958,7 +956,8 @@ async function loadMatches() {
         console.log('Loading matches for category:', category);
         
         // First fetch matches with team information
-        const { data: matches, error } = await supabaseClient
+        const client = await getClient();
+        const { data: matches, error } = await client
             .from('matches')
             .select(`
                 id,
@@ -980,7 +979,7 @@ async function loadMatches() {
         }
 
         // Then fetch goals separately
-        const { data: allGoals, error: goalsError } = await supabaseClient
+        const { data: allGoals, error: goalsError } = await client
             .from('goals')
             .select('*')
             .in('match_id', matches.map(m => m.id));
@@ -1149,9 +1148,10 @@ async function loadMatches() {
 async function loadTopScorers() {
   try {
         // Fetch both top scorers and assists in parallel
+        const client = await getClient();
         const [scorersResult, assistsResult] = await Promise.all([
-            supabaseClient.rpc('get_top_scorers', { category_param: category }),
-            supabaseClient.rpc('get_top_assists', { category_param: category })
+            client.rpc('get_top_scorers', { category_param: category }),
+            client.rpc('get_top_assists', { category_param: category })
         ]);
 
         if (scorersResult.error) throw scorersResult.error;
@@ -1418,7 +1418,7 @@ function updateMatchTypeTitle(matchData) {
 async function loadMatchDetails(matchId) {
     try {
         console.log('Loading match details for ID:', matchId);
-        const { data: match, error } = await supabaseClient
+        const { data: match, error } = await getClient()
             .from('matches')
             .select(`
                 *,
@@ -1451,7 +1451,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     try {
         console.log('Waiting for Supabase initialization...');
         // Wait for Supabase to initialize
-        await waitForInit();
+        const client = await waitForInit();
         console.log('Supabase initialized successfully');
         
         // Check if we're in the correct page/context
@@ -1462,7 +1462,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
 
         // Initialize Supabase client globally
-        window.supabaseClient = supabaseClient;
+        window.supabaseClient = client;
 
         // Initialize admin controls if admin view exists
         const isAdmin = document.querySelector('.admin-view') !== null;
@@ -1474,7 +1474,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (!isAdmin) {
             try {
                 // First try to find an in-progress match
-                let { data: match, error } = await supabaseClient
+                const client = await getClient();
+                let { data: match, error } = await client
                     .from('matches')
                     .select(`
                         *,
@@ -1487,7 +1488,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
                 // If no in-progress match, get the latest completed match
                 if (!match) {
-                    const { data: completedMatch, error: completedError } = await supabaseClient
+                    const { data: completedMatch, error: completedError } = await client
                         .from('matches')
                         .select(`
                             *,
@@ -1527,7 +1528,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     updateMatchStats();
 
                     // Set up real-time subscription for match updates
-                    const matchSubscription = supabaseClient
+                    const matchSubscription = client
                         .channel('match_status_updates')
                         .on('postgres_changes', { 
                             event: 'UPDATE', 
@@ -1537,7 +1538,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                         }, async (payload) => {
                             if (payload.new.status === 'completed') {
                                 // Fetch the most recently completed match
-                                const { data: recentMatch, error: recentError } = await supabaseClient
+                                const { data: recentMatch, error: recentError } = await client
                                     .from('matches')
                                     .select(`
                                         *,
@@ -1558,7 +1559,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                                 }
                             } else if (payload.new.status === 'in_progress') {
                                 // Switch to in-progress match
-                                const { data: liveMatch, error: liveError } = await supabaseClient
+                                const { data: liveMatch, error: liveError } = await client
                                     .from('matches')
                                     .select(`
                                         *,

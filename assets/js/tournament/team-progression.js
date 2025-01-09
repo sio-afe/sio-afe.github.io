@@ -1,5 +1,5 @@
 // Import required dependencies
-import { supabaseClient } from '../supabase-client.js';
+import { getClient } from '../supabase-client.js';
 
 // Function to create a match date with specific time
 function createMatchDateTime(date, timeStr) {
@@ -12,7 +12,8 @@ function createMatchDateTime(date, timeStr) {
 // Function to calculate team standings in a group
 async function calculateGroupStandings(category, groupName) {
     try {
-        const { data: matches, error } = await supabaseClient
+        const client = await getClient();
+        const { data: matches, error } = await client
             .from('matches')
             .select(`
                 id,
@@ -95,8 +96,9 @@ async function calculateGroupStandings(category, groupName) {
 // Function to determine teams that advance to knockout stages
 async function determineKnockoutTeams(category) {
     try {
+        const client = await getClient();
         // Get tournament date from any existing match
-        const { data: matchDate } = await supabaseClient
+        const { data: matchDate } = await client
             .from('matches')
             .select('match_date')
             .eq('category', category)
@@ -108,7 +110,7 @@ async function determineKnockoutTeams(category) {
         }
 
         // Get group standings with group information
-        const { data: teams, error } = await supabaseClient
+        const { data: teams, error } = await client
             .from('teams')
             .select(`
                 id,
@@ -172,6 +174,7 @@ async function determineKnockoutTeams(category) {
 // Function to update knockout stage matches
 async function updateKnockoutMatches(category, advancingTeams, tournamentDate) {
     try {
+        const client = await getClient();
         // Create quarter-final matches according to the specified format
         const quarterFinalMatches = [
             {
@@ -210,7 +213,7 @@ async function updateKnockoutMatches(category, advancingTeams, tournamentDate) {
 
         // Create or update quarter-final matches
         for (const match of quarterFinalMatches) {
-            await supabaseClient
+            await client
                 .from('matches')
                 .upsert({
                     category,
@@ -233,7 +236,8 @@ async function updateKnockoutMatches(category, advancingTeams, tournamentDate) {
 // Function to determine semi-final teams based on quarter-final results
 async function determineSemiFinalTeams(category) {
     try {
-        const { data: quarterFinals, error } = await supabaseClient
+        const client = await getClient();
+        const { data: quarterFinals, error } = await client
             .from('matches')
             .select('*')
             .eq('category', category)
@@ -277,7 +281,7 @@ async function determineSemiFinalTeams(category) {
 
             // Create or update semi-final matches
             for (const match of semiFinalMatches) {
-                await supabaseClient
+                await client
                     .from('matches')
                     .upsert({
                         category,
@@ -301,7 +305,8 @@ async function determineSemiFinalTeams(category) {
 // Function to determine final teams based on semi-final results
 async function determineFinalTeams(category) {
     try {
-        const { data: semiFinals, error } = await supabaseClient
+        const client = await getClient();
+        const { data: semiFinals, error } = await client
             .from('matches')
             .select('*')
             .eq('category', category)
@@ -321,7 +326,7 @@ async function determineFinalTeams(category) {
         if (winners.length === 2) {
             const tournamentDate = semiFinals[0].match_date;
             
-            await supabaseClient
+            await client
                 .from('matches')
                 .upsert({
                     category,
@@ -344,12 +349,13 @@ async function determineFinalTeams(category) {
 // Function to handle automatic progression after match completion
 async function handleMatchCompletion(match) {
     try {
+        const client = await getClient();
         const { category, match_type } = match;
 
         switch (match_type) {
             case 'group':
                 // Check if all group matches are completed
-                const { data: groupMatches, error: groupError } = await supabaseClient
+                const { data: groupMatches, error: groupError } = await client
                     .from('matches')
                     .select('status')
                     .eq('category', category)
@@ -365,7 +371,7 @@ async function handleMatchCompletion(match) {
 
             case 'quarter-final':
                 // Check if all quarter-finals are completed
-                const { data: quarterFinals, error: qfError } = await supabaseClient
+                const { data: quarterFinals, error: qfError } = await client
                     .from('matches')
                     .select('status')
                     .eq('category', category)
@@ -381,7 +387,7 @@ async function handleMatchCompletion(match) {
 
             case 'semi-final':
                 // Check if all semi-finals are completed
-                const { data: semiFinals, error: sfError } = await supabaseClient
+                const { data: semiFinals, error: sfError } = await client
                     .from('matches')
                     .select('status')
                     .eq('category', category)

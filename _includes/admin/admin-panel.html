@@ -170,7 +170,7 @@
 </style>
 
 <script type="module">
-import { supabase, getMatches, isAdmin } from '/assets/js/supabase-client.js';
+import { getClient, getMatches, isAdmin } from '/assets/js/supabase-client.js';
 
 let selectedMatch = null;
 
@@ -188,6 +188,7 @@ document.querySelector('.close-panel').addEventListener('click', () => {
 
 // Load matches
 async function loadMatches() {
+    const client = await getClient();
     const { data: matches } = await getMatches();
     const matchList = document.querySelector('.match-list');
     
@@ -223,7 +224,8 @@ function selectMatch(matchId) {
 
 // Load match details
 async function loadMatchDetails(matchId) {
-    const { data: match } = await supabase
+    const client = await getClient();
+    const { data: match } = await client
         .from('matches')
         .select('*')
         .eq('id', matchId)
@@ -245,7 +247,8 @@ document.getElementById('matchEditForm').addEventListener('submit', async (e) =>
         status: document.getElementById('matchStatus').value
     };
 
-    const { error } = await supabase
+    const client = await getClient();
+    const { error } = await client
         .from('matches')
         .update(updates)
         .eq('id', selectedMatch);

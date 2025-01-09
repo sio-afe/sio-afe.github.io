@@ -1,4 +1,4 @@
-import { supabaseClient, signIn, signOut, isAdmin } from '../supabase-client.js';
+import { getClient, signIn, signOut, isAdmin } from '../supabase-client.js';
 
 // Initialize UI elements after DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {

@@ -1,4 +1,4 @@
-import { supabase, signIn, signOut, getTeams, getMatches, updateMatch, addGoal, getMatchGoals, getTopScorers, isAdmin } from '../supabase-client.js'
+import { getClient, signIn, signOut, getTeams, getMatches, updateMatch, addGoal, getMatchGoals, getTopScorers, isAdmin } from '../supabase-client.js'
 
 // DOM Elements
 const adminPanel = document.getElementById('admin-panel')
