@@ -208,13 +208,14 @@
 
     <!-- Admin View -->
     <div class="match-container admin-view">
-      <!-- Add match selection dropdown -->
+      <!-- Match Selection -->
       <div class="match-select-container">
         <select class="match-dropdown">
           <option value="">Select Match</option>
         </select>
       </div>
 
+      <!-- Match Display -->
       <div class="teams-row">
         <div class="team home">
           <div class="team-info">
@@ -237,6 +238,7 @@
         </div>
       </div>
 
+      <!-- Match Details -->
       <div class="match-details">
         <div class="match-meta">
           <div class="meta-item">
@@ -255,7 +257,6 @@
 
         <!-- Match Stats Section -->
         <div class="match-stats">
-          <h3>Match Statistics</h3>
           <div class="stats-row">
             <div class="team-stats home">
               <div class="stats-header">Home Team Stats</div>
@@ -272,43 +273,43 @@
           </div>
         </div>
 
-        <!-- Event Modal -->
-        <div class="event-modal">
-          <div class="modal-content">
-            <h3>Add Match Event</h3>
-            <form id="eventForm">
-              <div class="form-group">
-                <label>Team</label>
-                <select name="team" required>
-                  <option value="home">Home Team</option>
-                  <option value="away">Away Team</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Player Name</label>
-                <input type="text" name="playerName" placeholder="Enter player name" required>
-              </div>
-              <div class="form-group">
-                <label>Assist By (Optional)</label>
-                <input type="text" name="assistName" placeholder="Enter assist player name">
-              </div>
-              <div class="form-group">
-                <label>Minute</label>
-                <input type="number" name="minute" min="1" max="90" required>
-              </div>
-              <div class="modal-buttons">
-                <button type="submit" class="save-btn">Save Event</button>
-                <button type="button" class="cancel-btn">Cancel</button>
-              </div>
-            </form>
-          </div>
-        </div>
-
         <!-- Admin Controls -->
         <div class="admin-controls">
           <button class="start-match-btn">Start Match</button>
           <button class="add-stats-btn">Add Stats</button>
           <button class="update-status-btn">Mark as Completed</button>
+        </div>
+      </div>
+
+      <!-- Event Modal -->
+      <div class="event-modal">
+        <div class="modal-content">
+          <h3>Add Match Event</h3>
+          <form id="eventForm">
+            <div class="form-group">
+              <label>Team</label>
+              <select name="team" required>
+                <option value="home">Home Team</option>
+                <option value="away">Away Team</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Player Name</label>
+              <input type="text" name="playerName" placeholder="Enter player name" required>
+            </div>
+            <div class="form-group">
+              <label>Assist By (Optional)</label>
+              <input type="text" name="assistName" placeholder="Enter assist player name">
+            </div>
+            <div class="form-group">
+              <label>Minute</label>
+              <input type="number" name="minute" min="1" max="90" required>
+            </div>
+            <div class="modal-buttons">
+              <button type="submit" class="save-btn">Save Event</button>
+              <button type="button" class="cancel-btn">Cancel</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -1713,363 +1714,242 @@ document.addEventListener('DOMContentLoaded', async function() {
 }
 
 /* Admin View Styles */
-.admin-view .team-select {
-  width: 100%;
-  margin: 0.5rem 0;
+.admin-view {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(29, 53, 87, 0.1);
+    margin-bottom: 2rem;
 }
 
-.admin-view .team-dropdown {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  color: #1d3557;
-  background: white;
+.match-select-container {
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.match-dropdown {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 1rem;
+    color: #1d3557;
+    background: white;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231d3557' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2rem;
+    transition: all 0.2s ease;
+}
+
+.match-dropdown:hover {
+    border-color: #457b9d;
+}
+
+.match-dropdown:focus {
+    outline: none;
+    border-color: #457b9d;
+    box-shadow: 0 0 0 3px rgba(69, 123, 157, 0.1);
+}
+
+.admin-view .teams-row {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+}
+
+.admin-view .team-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.admin-view .team-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 50%;
+    padding: 0.5rem;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.admin-view .team-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1d3557;
+    text-align: center;
 }
 
 .admin-view .score[contenteditable="true"] {
-  padding: 0.25rem 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  min-width: 2ch;
-  cursor: text;
+    min-width: 40px;
+    padding: 0.5rem 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1d3557;
+    text-align: center;
+    background: white;
+    cursor: text;
+    transition: all 0.2s ease;
+}
+
+.admin-view .score[contenteditable="true"]:hover {
+    border-color: #457b9d;
 }
 
 .admin-view .score[contenteditable="true"]:focus {
-  border-color: #457b9d;
-  outline: none;
-  background: #f8f9fa;
+    outline: none;
+    border-color: #457b9d;
+    box-shadow: 0 0 0 3px rgba(69, 123, 157, 0.1);
 }
 
-.admin-view .date-input,
-.admin-view .time-input,
-.admin-view .venue-input {
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  color: #1d3557;
-  background: white;
-}
-
-.admin-view .date-input:focus,
-.admin-view .time-input:focus,
-.admin-view .venue-input:focus {
-  border-color: #457b9d;
-  outline: none;
-}
-
-.admin-controls {
-  display: flex;
-  gap: 1rem;
-  margin-top: 2rem;
-  padding: 1rem;
-  background: #f8f9fa;
-  border-radius: 8px;
-  justify-content: flex-end;
-}
-
-.save-changes-btn,
-.reset-changes-btn {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.save-changes-btn {
-  background: #457b9d;
-  color: white;
-}
-
-.save-changes-btn:hover {
-  background: #385f7a;
-}
-
-.reset-changes-btn {
-  background: #e9ecef;
-  color: #666;
-}
-
-.reset-changes-btn:hover {
-  background: #dee2e6;
-}
-
-.add-event-btn {
-  width: 100%;
-  padding: 0.75rem;
-  background: #457b9d;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s;
-  margin-top: 1rem;
-}
-
-.add-event-btn:hover {
-  background: #385f7a;
-}
-
-/* Event Modal Styles */
-.event-modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.event-modal .modal-content {
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
-.event-modal h3 {
-  color: #1d3557;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid #e63946;
-}
-
-.form-group {
-  margin-bottom: 1.25rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: #1d3557;
-  font-weight: 500;
-}
-
-.form-group input,
-.form-group select {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  color: #1d3557;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-  border-color: #457b9d;
-  outline: none;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .admin-view .team-select {
-    margin: 0.375rem 0;
-  }
-
-  .admin-view .team-dropdown,
-  .admin-view .date-input,
-  .admin-view .time-input,
-  .admin-view .venue-input {
-    padding: 0.375rem;
-    font-size: 0.85rem;
-  }
-
-  .admin-controls {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .save-changes-btn,
-  .reset-changes-btn {
-    width: 100%;
-    padding: 0.625rem 1.25rem;
-  }
-
-  .event-modal .modal-content {
+.admin-view .match-meta {
+    background: white;
     padding: 1.5rem;
-    width: 95%;
-  }
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* View Toggle Styles */
-.view-toggle {
-  display: none;
-  justify-content: center;
-  gap: 1rem;
-  margin: 1rem 0;
-  padding: 0.5rem;
-  background: #f8f9fa;
-  border-radius: 8px;
-}
-
-.toggle-btn {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-  background: #e9ecef;
-  color: #495057;
-}
-
-.toggle-btn.active {
-  background: #457b9d;
-  color: white;
-}
-
-.match-container {
-  display: none;
-}
-
-.match-container.active {
-  display: block;
-}
-
-/* Admin Controls */
 .admin-controls {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
-  padding: 1rem;
-  background: #f8f9fa;
-  border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(to right, #f8f9fa, #e9ecef);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .admin-controls button {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .start-match-btn {
-  background: #2ecc71;
-  color: white;
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    color: white;
 }
 
 .start-match-btn:hover {
-  background: #27ae60;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.2);
 }
 
 .add-stats-btn {
-  background: #3498db;
-  color: white;
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    color: white;
 }
 
 .add-stats-btn:hover {
-  background: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.2);
 }
 
 .update-status-btn {
-  background: #e74c3c;
-  color: white;
+    background: linear-gradient(45deg, #e74c3c, #c0392b);
+    color: white;
 }
 
 .update-status-btn:hover {
-  background: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.2);
 }
 
 .update-status-btn.completed {
-  background: #95a5a6;
-  cursor: not-allowed;
+    background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+    transform: none;
+    box-shadow: none;
+    cursor: not-allowed;
 }
 
-/* Event Modal */
-.event-modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 500px;
-}
-
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-}
-
-.form-group input,
-.form-group select {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 1rem;
-}
-
-.modal-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.save-btn {
-  background: #2ecc71;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.cancel-btn {
-  background: #e74c3c;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-/* Responsive Styles */
 @media (max-width: 768px) {
-  .admin-controls {
-    flex-direction: column;
-  }
+    .admin-view {
+        padding: 1.5rem;
+    }
 
-  .admin-controls button {
-    width: 100%;
-  }
+    .match-dropdown {
+        padding: 0.875rem;
+        font-size: 0.95rem;
+    }
 
-  .modal-content {
-    width: 95%;
-    padding: 1.5rem;
-  }
+    .admin-view .teams-row {
+        padding: 1.5rem;
+    }
+
+    .admin-view .team-logo {
+        width: 60px;
+        height: 60px;
+    }
+
+    .admin-view .team-name {
+        font-size: 1.1rem;
+    }
+
+    .admin-view .score[contenteditable="true"] {
+        min-width: 35px;
+        padding: 0.4rem 0.8rem;
+        font-size: 1.3rem;
+    }
+
+    .admin-controls {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .admin-controls button {
+        width: 100%;
+        padding: 0.875rem 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-view {
+        padding: 1rem;
+    }
+
+    .match-dropdown {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .admin-view .teams-row {
+        padding: 1rem;
+    }
+
+    .admin-view .team-logo {
+        width: 50px;
+        height: 50px;
+    }
+
+    .admin-view .team-name {
+        font-size: 1rem;
+    }
+
+    .admin-view .score[contenteditable="true"] {
+        min-width: 30px;
+        padding: 0.3rem 0.6rem;
+        font-size: 1.2rem;
+    }
 }
 
 /* Enhanced Celebration Overlay */
@@ -2250,6 +2130,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     background: linear-gradient(45deg, #95a5a6, #7f8c8d);
     transform: none;
     box-shadow: none;
+    cursor: not-allowed;
 }
 
 /* ... existing styles ... */

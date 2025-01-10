@@ -59,32 +59,47 @@ function initializeAdminControls() {
     const eventModal = document.querySelector('.event-modal');
     const eventForm = document.getElementById('eventForm');
     const cancelBtn = document.querySelector('.cancel-btn');
-    const viewToggle = document.querySelector('.view-toggle');
-    const userBtn = document.querySelector('.user-btn');
-    const adminBtn = document.querySelector('.admin-btn');
+    const userView = document.querySelector('.user-view');
+    const adminView = document.querySelector('.admin-view');
 
-    // Initialize view toggle
-    if (viewToggle) {
-        viewToggle.style.display = 'flex';
-        
-        if (userBtn) {
-            userBtn.addEventListener('click', () => {
-                document.querySelector('.user-view').classList.add('active');
-                document.querySelector('.admin-view').classList.remove('active');
-                userBtn.classList.add('active');
-                adminBtn.classList.remove('active');
-            });
-        }
-        
-        if (adminBtn) {
-            adminBtn.addEventListener('click', () => {
-                document.querySelector('.admin-view').classList.add('active');
-                document.querySelector('.user-view').classList.remove('active');
-                adminBtn.classList.add('active');
-                userBtn.classList.remove('active');
-            });
+    // Initialize view based on admin status
+    async function initializeView() {
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+                if (userView) userView.classList.add('active');
+                if (adminView) adminView.classList.remove('active');
+                return;
+            }
+
+            const { data: adminUser } = await supabase
+                .from('admin_users')
+                .select('role')
+                .eq('email', user.email)
+                .single();
+
+            if (adminUser) {
+                if (adminView) {
+                    adminView.classList.add('active');
+                    userView.classList.remove('active');
+                }
+            } else {
+                if (userView) {
+                    userView.classList.add('active');
+                    adminView.classList.remove('active');
+                }
+            }
+        } catch (error) {
+            console.error('Error checking admin status:', error);
+            if (userView) {
+                userView.classList.add('active');
+                adminView.classList.remove('active');
+            }
         }
     }
+
+    // Initialize view
+    initializeView();
 
     if (startMatchBtn) {
         startMatchBtn.addEventListener('click', async () => {

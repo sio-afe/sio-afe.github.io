@@ -71,46 +71,40 @@ layout: compress
     <!-- Load Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <!-- Initialize Supabase first -->
-    <script src="/assets/js/supabase-init.js"></script>
+    <script>
+      // Load application scripts in order, starting with supabase-init.js
+      const scripts = [
+        '/assets/js/supabase-init.js',
+        '/assets/js/supabase-client.js',
+        '/assets/js/admin/admin-ui.js',
+        '/assets/js/tournament/final-fixture.js',
+        '/assets/js/test-dynamic.js'
+      ];
 
-    <!-- Then load other modules -->
-    <script type="module">
-      // Wait for both DOM content and Supabase to be ready
-      Promise.all([
-        new Promise(resolve => {
-          if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', resolve);
-          } else {
-            resolve();
-          }
-        }),
-        window.supabaseReady
-      ]).then(() => {
-        const scripts = [
-          '/assets/js/supabase-client.js',
-          '/assets/js/admin/admin-ui.js',
-          '/assets/js/tournament/final-fixture.js',
-        ];
+      function loadScript(src) {
+        return new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.type = 'module';
+          script.src = src;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.body.appendChild(script);
+        });
+      }
 
-        function loadScript(src) {
-          return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.type = 'module';
-            script.src = src;
-            script.onload = resolve;
-            script.onerror = reject;
-            document.body.appendChild(script);
-          });
-        }
+      // Load scripts sequentially
+      scripts.reduce((promise, script) => {
+        return promise.then(() => loadScript(script));
+      }, Promise.resolve());
+    </script>
 
-        // Load scripts sequentially
-        return scripts.reduce((promise, script) => {
-          return promise.then(() => loadScript(script));
-        }, Promise.resolve());
-      }).then(() => {
-        // Initialize dynamic functionality after all scripts are loaded
+    <!-- Add dynamic functionality -->
+    <script src="{{ '/assets/js/dynamic-router.js' | relative_url }}"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Initialize dynamic functionality
         if (window.dynamicClient) {
+          // Subscribe to real-time updates
           window.dynamicClient.subscribeToChannel('page_updates');
         }
       }).catch(error => {
