@@ -1,12 +1,10 @@
-export let supabaseClient = null;
+// Export let supabaseClient = null;
 
 // Export the async getter function
 export async function getClient() {
     try {
         // Wait for Supabase to be ready
-        if (window.waitForSupabase) {
-            await window.waitForSupabase();
-        }
+        await window.supabaseReady;
         
         if (window.supabaseClient) {
             return window.supabaseClient;
