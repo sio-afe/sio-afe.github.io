@@ -34,6 +34,10 @@ const DEFAULT_TEAM_LOGO = '/assets/data/open-age/team-logos/default.png'
 // Current match state
 let currentMatch = null;
 
+// Module-level variables for event modal
+let eventModal = null;
+let eventForm = null;
+
 // Function to show notification
 function showNotification(message, type = 'info') {
     const existingNotification = document.querySelector('.notification');
@@ -985,9 +989,9 @@ function formatMatchEvents(events, teamType) {
 
 // Initialize event modal handlers
 function initializeEventModal() {
-    const eventModal = document.querySelector('.event-modal');
+    eventModal = document.querySelector('.event-modal');
     const cancelBtn = eventModal?.querySelector('.cancel-btn');
-    const eventForm = eventModal?.querySelector('#eventForm');
+    eventForm = eventModal?.querySelector('#eventForm');
 
     if (eventModal) {
         // Close modal when clicking outside
@@ -1173,35 +1177,32 @@ function filterFixtures(filter) {
 // Handle event form submission
 async function handleEventFormSubmit(e) {
     e.preventDefault();
-    const formData = new FormData(e.target);
     
+    if (!eventModal || !eventForm) {
+        console.error('Event modal or form not initialized');
+        showNotification('Error: Event form not properly initialized', 'error');
+        return;
+    }
+
     try {
-        if (!currentMatch) {
-            throw new Error('No match selected');
-        }
-
-        // Get team ID based on selection
-        const teamSelection = formData.get('team');
-        const teamId = teamSelection === 'home' ? 
-            currentMatch.home_team.id : 
-            currentMatch.away_team.id;
-
+        const formData = new FormData(eventForm);
         const eventData = {
-            match_id: currentMatch.id,
-            team_id: teamId,
-            scorer_name: formData.get('playerName'),
-            assist_name: formData.get('assistName') || null,
-            minute: parseInt(formData.get('minute'))
+            matchId: currentMatch.id,
+            teamId: formData.get('team'),
+            playerName: formData.get('player'),
+            assistName: formData.get('assist') || null,
+            minute: parseInt(formData.get('minute')),
+            isHome: formData.get('team') === currentMatch.home_team_id,
+            newScore: formData.get('team') === currentMatch.home_team_id ? 
+                (currentMatch.home_score || 0) + 1 : 
+                (currentMatch.away_score || 0) + 1
         };
 
-        console.log('Saving event data:', eventData);
-
-        // First add the event
         const { error: eventError } = await addMatchEventToDb(eventData);
         if (eventError) throw eventError;
 
         // Then update the match score
-        const updatedMatch = await updateMatchScore(currentMatch.id, teamSelection);
+        const updatedMatch = await updateMatchScore(currentMatch.id, eventData.teamId);
         if (updatedMatch) {
             currentMatch = updatedMatch;
             updateMatchDisplay(updatedMatch);

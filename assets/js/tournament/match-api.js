@@ -1,5 +1,28 @@
 import { getClient } from '../supabase-client.js';
 
+// Cache for match data
+const matchCache = new Map();
+const CACHE_DURATION = 10000; // 10 seconds
+
+// Get cached data if available and not expired
+function getCachedData(key) {
+    if (matchCache.has(key)) {
+        const { data, timestamp } = matchCache.get(key);
+        if (Date.now() - timestamp < CACHE_DURATION) {
+            return data;
+        }
+        matchCache.delete(key);
+    }
+    return null;
+}
+
+// Set cache data
+function setCacheData(key, data) {
+    matchCache.set(key, {
+        data,
+        timestamp: Date.now()
+    });
+}
 
 // Start a match
 export async function startMatch(matchId) {
@@ -81,11 +104,16 @@ export async function addMatchEvent(eventData) {
     }
 }
 
-// Get match details
+// Get match details with caching
 export async function getMatchDetails(matchId) {
     try {
-        const supabaseClient = await getClient();
+        // Check cache first
+        const cachedData = getCachedData(`match_${matchId}`);
+        if (cachedData) {
+            return { data: cachedData, error: null };
+        }
 
+        const supabaseClient = await getClient();
         const { data, error } = await supabaseClient
             .from('matches')
             .select(`
@@ -97,6 +125,9 @@ export async function getMatchDetails(matchId) {
             .single();
 
         if (error) throw error;
+        
+        // Cache the result
+        setCacheData(`match_${matchId}`, data);
         return { data, error: null };
     } catch (error) {
         console.error('Error fetching match details:', error);
@@ -104,24 +135,29 @@ export async function getMatchDetails(matchId) {
     }
 }
 
-// Get match events (goals)
+// Get match events with caching
 export async function getMatchEvents(matchId) {
     try {
-        const supabaseClient = await getClient();
+        // Check cache first
+        const cachedData = getCachedData(`events_${matchId}`);
+        if (cachedData) {
+            return { data: cachedData, error: null };
+        }
 
+        const supabaseClient = await getClient();
         const { data, error } = await supabaseClient
-            .from('goals')
-            .select(`
-                *,
-                team:teams(name)
-            `)
+            .from('match_events')
+            .select('*')
             .eq('match_id', matchId)
-            .order('minute');
+            .order('timestamp', { ascending: true });
 
         if (error) throw error;
+        
+        // Cache the result
+        setCacheData(`events_${matchId}`, data);
         return { data, error: null };
     } catch (error) {
-        console.error('Error getting match events:', error);
+        console.error('Error fetching match events:', error);
         return { data: null, error };
     }
 }

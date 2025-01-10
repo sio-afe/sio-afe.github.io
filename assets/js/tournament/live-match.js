@@ -286,7 +286,7 @@ export class LiveMatchHandler {
             const tournamentContainer = document.querySelector('.tournament-container');
             const category = tournamentContainer?.dataset.category;
 
-            // Subscribe to match updates
+            // Subscribe to match updates with minimal latency
             this.matchSubscription = this.supabase
                 .channel('live_match_updates')
                 .on('postgres_changes', { 
@@ -294,10 +294,17 @@ export class LiveMatchHandler {
                     schema: 'public', 
                     table: 'matches',
                     filter: `status=eq.in_progress,category=eq.${category}`
-                }, () => {
+                }, (payload) => {
+                    // Immediately update with payload data
+                    if (payload.new) {
+                        this.updateMatchDisplay(payload.new);
+                    }
+                    // Then fetch full data for complete sync
                     this.fetchLastInProgressMatch();
                 })
-                .subscribe();
+                .subscribe((status) => {
+                    console.log('Match subscription status:', status);
+                });
 
             // Subscribe to goal updates if there's a current match
             if (this.currentMatch) {
@@ -308,10 +315,17 @@ export class LiveMatchHandler {
                         schema: 'public',
                         table: 'goals',
                         filter: `match_id=eq.${this.currentMatch.id}`
-                    }, () => {
+                    }, (payload) => {
+                        // Immediate update with new goal data
+                        if (payload.new) {
+                            this.updateMatchStats([payload.new]);
+                        }
+                        // Then fetch complete stats for full sync
                         this.fetchMatchStats(this.currentMatch.id);
                     })
-                    .subscribe();
+                    .subscribe((status) => {
+                        console.log('Goals subscription status:', status);
+                    });
             }
         } catch (error) {
             console.error('Error setting up realtime subscriptions:', error);
