@@ -102,9 +102,9 @@
             "id": "OA8",
             "date": "2025-01-11",
             "time": "10:55 AM",
-            "homeTeam": "EKKA FC",
+            "homeTeam": "THFC",
             "awayTeam": "Real Ace FC",
-            "homeCrest": "ekka.jpeg",
+            "homeCrest": "",
             "awayCrest": "realace.jpeg",
             "venue": "Milli Model Ground",
             "status": "upcoming",
@@ -131,9 +131,9 @@
             "date": "2025-01-11",
             "time": "11:45 AM",
             "homeTeam": "Tikona FC",
-            "awayTeam": "EKKA FC",
+            "awayTeam": "THFC",
             "homeCrest": "tikona.jpeg",
-            "awayCrest": "ekka.jpeg",
+            "awayCrest": "",
             "venue": "Milli Model Ground",
             "status": "upcoming",
             "homeScore": null,
@@ -251,6 +251,20 @@
             "homeScore": null,
             "awayScore": null,
             "stage": "Semi Final"
+        },
+        {
+            "id": "OA-F",
+            "date": "2025-01-12",
+            "time": "4:45 PM",
+            "homeTeam": "Winner of SF1",
+            "awayTeam": "Winner of SF2",
+            "homeCrest": "",
+            "awayCrest": "",
+            "venue": "Milli Model Ground",
+            "status": "upcoming",
+            "homeScore": null,
+            "awayScore": null,
+            "stage": "Final"
         }
     ]
 }

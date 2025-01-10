@@ -517,22 +517,379 @@
     </div>
 
     <!-- Statistics Grid -->
+    <style>
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-radius: 16px;
+        margin: 2rem 0;
+    }
+
+    .stats-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+    }
+
+    .stats-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #e63946, #1d3557);
+    }
+
+    .stats-card h3 {
+        color: #1d3557;
+        font-size: 1.25rem;
+        margin: 0 0 1.5rem 0;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #f1f1f1;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .stats-card h3 i {
+        color: #e63946;
+        font-size: 1.1rem;
+    }
+
+    .stats-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        max-height: 400px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #ddd transparent;
+    }
+
+    .stats-list-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid #f1f1f1;
+        transition: all 0.2s ease;
+        background: white;
+    }
+
+    .stats-list-item:hover {
+        background: linear-gradient(90deg, rgba(230, 57, 70, 0.03), rgba(29, 53, 87, 0.03));
+        transform: translateX(5px);
+    }
+
+    .stats-list-item:last-child {
+        border-bottom: none;
+    }
+
+    .player-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        flex: 1;
+    }
+
+    .player-name {
+        font-weight: 600;
+        color: #1d3557;
+        font-size: 1rem;
+        text-transform: capitalize;
+        letter-spacing: 0.3px;
+        position: relative;
+        padding-left: 1.5rem;
+    }
+
+    .player-name::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 8px;
+        height: 8px;
+        background: #e63946;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(230, 57, 70, 0.3);
+    }
+
+    .player-team {
+        font-size: 0.85rem;
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-transform: capitalize;
+        letter-spacing: 0.2px;
+    }
+
+    .player-team img {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        object-fit: contain;
+        background: white;
+        padding: 2px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .stats-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding-left: 1rem;
+        border-left: 2px solid #f1f1f1;
+    }
+
+    .stat-value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #e63946;
+        min-width: 2.5ch;
+        text-align: center;
+        background: rgba(230, 57, 70, 0.1);
+        padding: 0.25rem 0.75rem;
+        border-radius: 8px;
+        text-shadow: 0 1px 2px rgba(230, 57, 70, 0.2);
+    }
+
+    /* Trophy Icons for Top 3 */
+    .stats-list-item:nth-child(1) .player-name::before {
+        background: #ffd700;
+        box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+    }
+
+    .stats-list-item:nth-child(2) .player-name::before {
+        background: #c0c0c0;
+        box-shadow: 0 2px 4px rgba(192, 192, 192, 0.3);
+    }
+
+    .stats-list-item:nth-child(3) .player-name::before {
+        background: #cd7f32;
+        box-shadow: 0 2px 4px rgba(205, 127, 50, 0.3);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .player-name {
+            font-size: 0.95rem;
+            padding-left: 1.25rem;
+        }
+
+        .player-name::before {
+            width: 7px;
+            height: 7px;
+        }
+
+        .player-team {
+            font-size: 0.8rem;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .player-name {
+            font-size: 0.9rem;
+            padding-left: 1.125rem;
+        }
+
+        .player-name::before {
+            width: 6px;
+            height: 6px;
+        }
+
+        .player-team {
+            font-size: 0.75rem;
+        }
+
+        .stat-value {
+            font-size: 1rem;
+            padding: 0.2rem 0.5rem;
+        }
+    }
+
+    /* Fixture Stats Player Names */
+    .fixture-stats .scorer-name {
+        font-weight: 500;
+        color: #1d3557;
+        text-transform: capitalize;
+        letter-spacing: 0.2px;
+    }
+
+    .fixture-stats .assist-name {
+        font-weight: 500;
+        color: #457b9d;
+        text-transform: capitalize;
+        letter-spacing: 0.2px;
+    }
+
+    /* Match Stats Player Names */
+    .match-stats .stat-player {
+        font-weight: 500;
+        color: #1d3557;
+        text-transform: capitalize;
+        letter-spacing: 0.2px;
+    }
+
+    .match-stats .assist-player {
+        font-weight: 500;
+        color: #457b9d;
+        text-transform: capitalize;
+        letter-spacing: 0.2px;
+    }
+
+    /* Event Modal Player Names */
+    .event-modal input[name="playerName"],
+    .event-modal input[name="assistName"] {
+        text-transform: capitalize;
+    }
+
+    .event-modal input[name="playerName"]::placeholder,
+    .event-modal input[name="assistName"]::placeholder {
+        text-transform: none;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Scrollbar Styling */
+    .stats-list::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .stats-list::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .stats-list::-webkit-scrollbar-thumb {
+        background: #ddd;
+        border-radius: 4px;
+    }
+
+    .stats-list::-webkit-scrollbar-thumb:hover {
+        background: #ccc;
+    }
+
+    /* Trophy Icons for Top 3 */
+    .stats-list-item:nth-child(1) .stat-value {
+        color: #ffd700;
+        background: rgba(255, 215, 0, 0.1);
+    }
+
+    .stats-list-item:nth-child(2) .stat-value {
+        color: #c0c0c0;
+        background: rgba(192, 192, 192, 0.1);
+    }
+
+    .stats-list-item:nth-child(3) .stat-value {
+        color: #cd7f32;
+        background: rgba(205, 127, 50, 0.1);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .stats-grid {
+            gap: 1.5rem;
+            padding: 1rem;
+        }
+
+        .stats-card {
+            padding: 1.25rem;
+        }
+
+        .stats-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .player-name {
+            font-size: 0.95rem;
+        }
+
+        .player-team {
+            font-size: 0.8rem;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stats-grid {
+            gap: 1rem;
+            padding: 0.75rem;
+        }
+
+        .stats-card {
+            padding: 1rem;
+        }
+
+        .stats-card h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stats-list-item {
+            padding: 0.75rem;
+        }
+
+        .player-name {
+            font-size: 0.9rem;
+        }
+
+        .player-team {
+            font-size: 0.75rem;
+        }
+
+        .stat-value {
+            font-size: 1rem;
+            padding: 0.2rem 0.5rem;
+        }
+
+        .stats-info {
+            gap: 0.75rem;
+            padding-left: 0.75rem;
+        }
+    }
+    </style>
+
     <div class="stats-grid">
-      <div class="stats-card">
-        <h3>Top Scorers</h3>
-        <div id="scorers-list" class="stats-list">
-          <!-- Content populated by JS -->
+        <div class="stats-card">
+            <h3><i class="fas fa-futbol"></i> Top Scorers</h3>
+            <div id="scorers-list" class="stats-list">
+                <!-- Content populated by JS -->
+            </div>
         </div>
-      </div>
 
-      <div class="stats-card">
-        <h3>Top Assists</h3>
-        <div id="assists-list" class="stats-list">
-          <!-- Content populated by JS -->
+        <div class="stats-card">
+            <h3><i class="fas fa-hands-helping"></i> Top Assists</h3>
+            <div id="assists-list" class="stats-list">
+                <!-- Content populated by JS -->
+            </div>
         </div>
-      </div>
-
-     
     </div>
   </div>
 </section>

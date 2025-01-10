@@ -27,7 +27,7 @@
             "group": "A"
         },
         {
-            "name": "Okhla Madrid",
+            "name": "Eagle Gang Jr",
             "crest": "",
             "captain": "",
             "played": 0,
@@ -53,7 +53,7 @@
             "group": "A"
         },
         {
-            "name": "Imperial Titans",
+            "name": "Tikona FC Jr",
             "crest": "",
             "captain": "",
             "played": 0,
@@ -64,19 +64,6 @@
             "goals_against": 0,
             "points": 0,
             "group": "A"
-        },
-        {
-            "name": "Tikona FC",
-            "crest": "",
-            "captain": "",
-            "played": 0,
-            "won": 0,
-            "drawn": 0,
-            "lost": 0,
-            "goals_for": 0,
-            "goals_against": 0,
-            "points": 0,
-            "group": "B"
         },
         {
             "name": "Fusion FC",
@@ -105,7 +92,7 @@
             "group": "B"
         },
         {
-            "name": "Young Warriors",
+            "name": "Imperial Titans",
             "crest": "",
             "captain": "",
             "played": 0,
@@ -118,7 +105,20 @@
             "group": "B"
         },
         {
-            "name": "Rising Stars",
+            "name": "Okhla Madrid",
+            "crest": "",
+            "captain": "",
+            "played": 0,
+            "won": 0,
+            "drawn": 0,
+            "lost": 0,
+            "goals_for": 0,
+            "goals_against": 0,
+            "points": 0,
+            "group": "B"
+        },
+        {
+            "name": "Al hamd Jr FC",
             "crest": "",
             "captain": "",
             "played": 0,

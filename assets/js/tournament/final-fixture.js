@@ -400,12 +400,20 @@ async function loadMatches() {
                             <div class="team home">
                                 <img src="${match.home_team?.crest_url || DEFAULT_TEAM_LOGO}" alt="${match.home_team?.name || 'TBD'}" class="team-crest">
                                 <span class="team-name">${match.home_team?.name || 'TBD'}</span>
+                                ${!match.home_team && document.querySelector('.admin-view')?.style.display !== 'none' ? 
+                                    `<button class="edit-team-btn" data-match-id="${match.id}" data-team-type="home">
+                                        <i class="fas fa-edit"></i>
+                                    </button>` : ''}
                                 <span class="score">${match.home_score || '0'}</span>
                             </div>
                             <div class="vs-badge">VS</div>
                             <div class="team away">
                                 <img src="${match.away_team?.crest_url || DEFAULT_TEAM_LOGO}" alt="${match.away_team?.name || 'TBD'}" class="team-crest">
                                 <span class="team-name">${match.away_team?.name || 'TBD'}</span>
+                                ${!match.away_team && document.querySelector('.admin-view')?.style.display !== 'none' ? 
+                                    `<button class="edit-team-btn" data-match-id="${match.id}" data-team-type="away">
+                                        <i class="fas fa-edit"></i>
+                                    </button>` : ''}
                                 <span class="score">${match.away_score || '0'}</span>
                             </div>
                         </div>
@@ -1000,80 +1008,58 @@ function initializeEventModal() {
 
         // Handle form submission
         if (eventForm) {
-            eventForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                
-                try {
-                    if (!currentMatch) {
-                        throw new Error('No match selected');
-                    }
-
-                    // Get team ID based on selection
-                    const teamSelection = formData.get('team');
-                    const teamId = teamSelection === 'home' ? 
-                        currentMatch.home_team.id : 
-                        currentMatch.away_team.id;
-
-                    const eventData = {
-                        match_id: currentMatch.id,
-                        team_id: teamId,
-                        scorer_name: formData.get('playerName'),
-                        assist_name: formData.get('assistName') || null,
-                        minute: parseInt(formData.get('minute'))
-                    };
-
-                    console.log('Saving event data:', eventData);
-
-                    // First add the event
-                    const { error: eventError } = await addMatchEventToDb(eventData);
-                    if (eventError) throw eventError;
-
-                    // Then update the match score
-                    const updatedMatch = await updateMatchScore(currentMatch.id, teamSelection);
-                    if (updatedMatch) {
-                        currentMatch = updatedMatch;
-                        updateMatchDisplay(updatedMatch);
-                    }
-
-                    showNotification('Event added successfully', 'success');
-                    eventModal.style.display = 'none';
-                    eventForm.reset();
-                    
-                    // Update match stats and other displays
-                    await Promise.all([
-                        updateMatchStats(),
-                        loadTopScorers(),
-                        loadMatches()
-                    ]);
-                } catch (error) {
-                    console.error('Error adding event:', error);
-                    showNotification('Error adding event: ' + error.message, 'error');
-                }
-            });
+            eventForm.addEventListener('submit', handleEventFormSubmit);
         }
     }
 }
 
-// Update match score when event is added
-async function updateMatchScore(matchId, scoringTeam) {
-    try {
-        const { data: match, error } = await supabaseClient
-            .from('matches')
-            .select('*')
-            .eq('id', matchId)
-            .single();
+// Initialize team selection modal
+function initializeTeamSelectionModal() {
+    const modal = document.createElement('div');
+    modal.className = 'modal team-selection-modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <h3>Select Team</h3>
+            <select id="teamSelect" class="team-select">
+                <option value="">Select a team...</option>
+            </select>
+            <div class="modal-buttons">
+                <button type="button" class="cancel-btn">Cancel</button>
+                <button type="button" class="confirm-btn">Confirm</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
 
-        if (error) throw error;
+    // Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
 
-        const updateData = {};
-        if (scoringTeam === 'home') {
-            updateData.home_score = (parseInt(match.home_score) || 0) + 1;
-        } else {
-            updateData.away_score = (parseInt(match.away_score) || 0) + 1;
+    // Close modal when clicking cancel
+    modal.querySelector('.cancel-btn').addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    // Handle team selection confirmation
+    modal.querySelector('.confirm-btn').addEventListener('click', async () => {
+        const select = modal.querySelector('#teamSelect');
+        const teamId = select.value;
+        const matchId = modal.dataset.matchId;
+        const teamType = modal.dataset.teamType;
+
+        if (!teamId || !matchId || !teamType) {
+            showNotification('Please select a team', 'error');
+            return;
         }
 
-        const { data: updatedMatch, error: updateError } = await supabaseClient
+        try {
+            const updateData = {};
+            updateData[`${teamType}_team_id`] = teamId;
+
+            const { data: updatedMatch, error } = await supabaseClient
             .from('matches')
             .update(updateData)
             .eq('id', matchId)
@@ -1084,14 +1070,63 @@ async function updateMatchScore(matchId, scoringTeam) {
             `)
             .single();
 
-        if (updateError) throw updateError;
-        return updatedMatch;
+            if (error) throw error;
+
+            // Update the display
+            await loadMatches();
+            showNotification('Team updated successfully', 'success');
+            modal.style.display = 'none';
     } catch (error) {
-        console.error('Error updating match score:', error);
-        showNotification('Error updating match score', 'error');
-        return null;
+            console.error('Error updating team:', error);
+            showNotification('Error updating team', 'error');
+        }
+    });
+
+    return modal;
+}
+
+// Handle team edit button click
+async function handleTeamEdit(event) {
+    const button = event.target.closest('.edit-team-btn');
+    if (!button) return;
+
+    const matchId = button.dataset.matchId;
+    const teamType = button.dataset.teamType;
+
+    try {
+        // Get available teams
+        const { data: teams, error } = await getTeams(category);
+        if (error) throw error;
+
+        // Get the modal
+        let modal = document.querySelector('.team-selection-modal');
+        if (!modal) {
+            modal = initializeTeamSelectionModal();
+        }
+
+        // Update modal data attributes
+        modal.dataset.matchId = matchId;
+        modal.dataset.teamType = teamType;
+
+        // Update select options
+        const select = modal.querySelector('#teamSelect');
+        select.innerHTML = `
+            <option value="">Select a team...</option>
+            ${teams.map(team => `
+                <option value="${team.id}">${team.name}</option>
+            `).join('')}
+        `;
+
+        // Show modal
+        modal.style.display = 'block';
+    } catch (error) {
+        console.error('Error loading teams:', error);
+        showNotification('Error loading teams', 'error');
     }
 }
+
+// Add event listener for team edit buttons
+document.addEventListener('click', handleTeamEdit);
 
 // Initialize filter buttons
 function initializeFilterButtons() {
@@ -1135,6 +1170,97 @@ function filterFixtures(filter) {
     });
 }
 
+// Handle event form submission
+async function handleEventFormSubmit(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    
+    try {
+        if (!currentMatch) {
+            throw new Error('No match selected');
+        }
+
+        // Get team ID based on selection
+        const teamSelection = formData.get('team');
+        const teamId = teamSelection === 'home' ? 
+            currentMatch.home_team.id : 
+            currentMatch.away_team.id;
+
+        const eventData = {
+            match_id: currentMatch.id,
+            team_id: teamId,
+            scorer_name: formData.get('playerName'),
+            assist_name: formData.get('assistName') || null,
+            minute: parseInt(formData.get('minute'))
+        };
+
+        console.log('Saving event data:', eventData);
+
+        // First add the event
+        const { error: eventError } = await addMatchEventToDb(eventData);
+        if (eventError) throw eventError;
+
+        // Then update the match score
+        const updatedMatch = await updateMatchScore(currentMatch.id, teamSelection);
+        if (updatedMatch) {
+            currentMatch = updatedMatch;
+            updateMatchDisplay(updatedMatch);
+        }
+
+        showNotification('Event added successfully', 'success');
+        eventModal.style.display = 'none';
+        eventForm.reset();
+        
+        // Update match stats and other displays
+        await Promise.all([
+            updateMatchStats(),
+            loadTopScorers(),
+            loadMatches()
+        ]);
+    } catch (error) {
+        console.error('Error adding event:', error);
+        showNotification('Error adding event: ' + error.message, 'error');
+    }
+}
+
+// Update match score when event is added
+async function updateMatchScore(matchId, scoringTeam) {
+    try {
+        const { data: match, error } = await supabaseClient
+            .from('matches')
+            .select('*')
+            .eq('id', matchId)
+            .single();
+
+        if (error) throw error;
+
+        const updateData = {};
+        if (scoringTeam === 'home') {
+            updateData.home_score = (parseInt(match.home_score) || 0) + 1;
+        } else {
+            updateData.away_score = (parseInt(match.away_score) || 0) + 1;
+        }
+
+        const { data: updatedMatch, error: updateError } = await supabaseClient
+            .from('matches')
+            .update(updateData)
+            .eq('id', matchId)
+            .select(`
+                *,
+                home_team:teams!matches_home_team_id_fkey(id, name, crest_url),
+                away_team:teams!matches_away_team_id_fkey(id, name, crest_url)
+            `)
+            .single();
+
+        if (updateError) throw updateError;
+        return updatedMatch;
+    } catch (error) {
+        console.error('Error updating match score:', error);
+        showNotification('Error updating match score', 'error');
+        return null;
+    }
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', async function() {
     try {
@@ -1157,3 +1283,97 @@ document.addEventListener('DOMContentLoaded', async function() {
         showNotification('Error initializing application', 'error');
     }
 });
+
+// Add styles for team selection modal and edit buttons
+const styles = document.createElement('style');
+styles.textContent = `
+    .team-selection-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+    }
+
+    .team-selection-modal .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        min-width: 300px;
+    }
+
+    .team-selection-modal h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .team-selection-modal .team-select {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .team-selection-modal .modal-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .team-selection-modal button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .team-selection-modal .cancel-btn {
+        background-color: #ddd;
+    }
+
+    .team-selection-modal .confirm-btn {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .edit-team-btn {
+        padding: 4px 8px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #666;
+        margin-left: 5px;
+    }
+
+    .edit-team-btn:hover {
+        color: #4CAF50;
+    }
+
+    .fixture .team {
+        position: relative;
+    }
+
+    .fixture .team .edit-team-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .fixture .team.home .edit-team-btn {
+        right: -5px;
+    }
+
+    .fixture .team.away .edit-team-btn {
+        left: -5px;
+    }
+`;
+document.head.appendChild(styles);
