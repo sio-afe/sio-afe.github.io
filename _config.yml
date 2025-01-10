@@ -149,6 +149,20 @@ paginate: 10
 # The base URL of your site
 baseurl: ""
 
+favicons:
+  - rel: icon
+    sizes: 16x16
+    href: /assets/img/favicons/favicon-16x16.png
+  - rel: icon 
+    sizes: 32x32
+    href: /assets/img/favicons/favicon-32x32.png
+  - rel: apple-touch-icon
+    sizes: 180x180
+    href: /assets/img/favicons/apple-touch-icon.png
+  - rel: manifest
+    href: /assets/img/favicons/site.webmanifest
+
+
 # ------------ The following options are not recommended to be modified ------------------
 
 kramdown:

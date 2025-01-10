@@ -782,7 +782,7 @@ permalink: /muqawamah/
 
     <div class="info-section">
         <h2>About MUQAWAMA Football Tournament</h2>
-        <p>The SIO Abul Fazal Enclave Area is proud to organize a two-day football tournament under the theme "<span class="highlight">MUQAWAMAH</span>" (Resistance).</p>
+        <p>The SIO Abul Fazal Enclave Area is proud to organize a two-day football tournament under the theme "<span class="highlight">MUQAWAMA</span>" (Resistance).</p>
         
         <div class="values-intro">
             <p>Our tournament transcends the boundaries of sport, embodying core values that strengthen our community and nurture the development of our youth.</p>
@@ -809,7 +809,6 @@ permalink: /muqawamah/
                 <ul>
                     <li>• Teams must arrive 15 minutes before scheduled match time</li>
                     <li>• All team players must be present at arrival time</li>
-                    <li>• Teams must wear matching jerseys for clear identification</li>
                     <li>• Teams are not allowed to bring their own footballs</li>
                 </ul>
             </div>
