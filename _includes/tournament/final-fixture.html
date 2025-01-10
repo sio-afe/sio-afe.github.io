@@ -84,57 +84,137 @@
 
       .firework {
         position: absolute;
-        width: 5px;
-        height: 5px;
+        width: 6px;
+        height: 6px;
         border-radius: 50%;
-        animation: explode 1.5s ease-out forwards;
-        mix-blend-mode: screen;
       }
 
       .firework:nth-child(1) {
-        top: 20%;
         left: 20%;
+        bottom: 0;
         background: #ffd700;
+        animation: simpleFirework1 1.5s ease-out forwards;
       }
 
       .firework:nth-child(2) {
-        top: 40%;
-        right: 20%;
+        left: 40%;
+        bottom: 0;
         background: #e63946;
+        animation: simpleFirework2 1.5s ease-out 0.2s forwards;
       }
 
       .firework:nth-child(3) {
-        bottom: 30%;
-        left: 50%;
+        left: 60%;
+        bottom: 0;
         background: #2ecc71;
+        animation: simpleFirework3 1.5s ease-out 0.4s forwards;
       }
 
       .firework:nth-child(4) {
-        top: 50%;
-        right: 40%;
+        left: 80%;
+        bottom: 0;
         background: #3498db;
+        animation: simpleFirework4 1.5s ease-out 0.6s forwards;
       }
 
       .firework:nth-child(5) {
-        bottom: 40%;
-        left: 30%;
+        left: 50%;
+        bottom: 0;
         background: #9b59b6;
+        animation: simpleFirework5 1.5s ease-out 0.8s forwards;
       }
 
-      @keyframes explode {
-        0% {
-          transform: scale(1);
-          opacity: 1;
-          box-shadow: 0 0 20px 5px currentColor;
-        }
-        40% {
-          opacity: 0.8;
-        }
-        100% {
-          transform: scale(40);
+      @keyframes simpleFirework1 {
+        0% { transform: translateY(0); opacity: 1; }
+        50% { transform: translateY(-40vh); opacity: 1; }
+        60% { transform: translateY(-45vh); opacity: 1; box-shadow: 0 0 20px 5px #ffd700; }
+        100% { transform: translateY(-45vh); opacity: 0; box-shadow: 0 0 40px 10px #ffd700; }
+      }
+
+      @keyframes simpleFirework2 {
+        0% { transform: translateY(0); opacity: 1; }
+        50% { transform: translateY(-50vh); opacity: 1; }
+        60% { transform: translateY(-55vh); opacity: 1; box-shadow: 0 0 20px 5px #e63946; }
+        100% { transform: translateY(-55vh); opacity: 0; box-shadow: 0 0 40px 10px #e63946; }
+      }
+
+      @keyframes simpleFirework3 {
+        0% { transform: translateY(0); opacity: 1; }
+        50% { transform: translateY(-45vh); opacity: 1; }
+        60% { transform: translateY(-50vh); opacity: 1; box-shadow: 0 0 20px 5px #2ecc71; }
+        100% { transform: translateY(-50vh); opacity: 0; box-shadow: 0 0 40px 10px #2ecc71; }
+      }
+
+      @keyframes simpleFirework4 {
+        0% { transform: translateY(0); opacity: 1; }
+        50% { transform: translateY(-55vh); opacity: 1; }
+        60% { transform: translateY(-60vh); opacity: 1; box-shadow: 0 0 20px 5px #3498db; }
+        100% { transform: translateY(-60vh); opacity: 0; box-shadow: 0 0 40px 10px #3498db; }
+      }
+
+      @keyframes simpleFirework5 {
+        0% { transform: translateY(0); opacity: 1; }
+        50% { transform: translateY(-40vh); opacity: 1; }
+        60% { transform: translateY(-45vh); opacity: 1; box-shadow: 0 0 20px 5px #9b59b6; }
+        100% { transform: translateY(-45vh); opacity: 0; box-shadow: 0 0 40px 10px #9b59b6; }
+      }
+
+      /* Add multiple particles for each firework */
+      .firework::before {
+        --x: 30px;
+        --y: -30px;
+      }
+
+      .firework::after {
+        --x: -30px;
+        --y: -30px;
+      }
+
+      /* Add more particles with pseudo-elements */
+      .firework::before {
+        box-shadow: 
+          30px -30px 0 #ffd700,
+          -30px -30px 0 #e63946,
+          30px 30px 0 #2ecc71,
+          -30px 30px 0 #3498db;
+      }
+
+      .firework::after {
+        box-shadow: 
+          15px -15px 0 #ffd700,
+          -15px -15px 0 #e63946,
+          15px 15px 0 #2ecc71,
+          -15px 15px 0 #3498db;
+        animation-delay: 0.1s;
+      }
+
+      /* Add sparkle effect */
+      @keyframes sparkle {
+        0%, 100% {
           opacity: 0;
-          box-shadow: 0 0 40px 10px currentColor;
+          transform: scale(0);
         }
+        50% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .firework::before,
+      .firework::after {
+        animation: explode 0.8s ease-out forwards, sparkle 0.4s ease-out infinite;
+      }
+
+      /* Trail effect */
+      .firework {
+        background-image: linear-gradient(to top, currentColor 50%, transparent);
+        background-size: 100% 200%;
+        background-position: 0 100%;
+        transition: background-position 0.2s;
+      }
+
+      .firework.shooting {
+        background-position: 0 0;
       }
     </style>
 
@@ -157,7 +237,7 @@
       <div class="teams-row">
         <div class="team home">
           <div class="team-info">
-            <img src="/assets/data/open-age/team-logos/default.png" alt="Home Team" class="team-logo" loading="lazy">
+            <img src="/assets/data/open-age/team-logos/default.png" alt="Home Team" class="team-logo" loading="lazy" />
             <h3 class="team-name"></h3>
             <div class="score">0</div>
           </div>
@@ -169,7 +249,7 @@
 
         <div class="team away">
           <div class="team-info">
-            <img src="/assets/data/open-age/team-logos/default.png" alt="Away Team" class="team-logo" loading="lazy">
+            <img src="/assets/data/open-age/team-logos/default.png" alt="Away Team" class="team-logo" loading="lazy" />
             <h3 class="team-name"></h3>
             <div class="score">0</div>
           </div>
@@ -219,7 +299,7 @@
       <div class="teams-row">
         <div class="team home">
           <div class="team-info">
-            <img src="/assets/data/open-age/team-logos/default.png" alt="Home Team" class="team-logo" loading="lazy">
+            <img src="/assets/data/open-age/team-logos/default.png" alt="Home Team" class="team-logo" loading="lazy" />
             <div class="team-name"></div>
             <div class="score" contenteditable="true" data-field="home-score">-</div>
           </div>
@@ -231,7 +311,7 @@
 
         <div class="team away">
           <div class="team-info">
-            <img src="/assets/data/open-age/team-logos/default.png" alt="Away Team" class="team-logo" loading="lazy">
+            <img src="/assets/data/open-age/team-logos/default.png" alt="Away Team" class="team-logo" loading="lazy" />
             <div class="team-name"></div>
             <div class="score" contenteditable="true" data-field="away-score">-</div>
           </div>
@@ -366,7 +446,7 @@
             <div class="fixture-teams">
               <div class="team home">
                 <div class="team-info">
-                  <img src="" alt="Home Team" class="team-logo" loading="lazy">
+                  <img src="/assets/data/open-age/team-logos/default.png" alt="Home Team" class="team-logo" loading="lazy" />
                   <h3 class="team-name"></h3>
                   <div class="score">0</div>
                 </div>
@@ -376,7 +456,7 @@
               </div>
               <div class="team away">
                 <div class="team-info">
-                  <img src="" alt="Away Team" class="team-logo" loading="lazy">
+                  <img src="/assets/data/open-age/team-logos/default.png" alt="Away Team" class="team-logo" loading="lazy" />
                   <h3 class="team-name"></h3>
                   <div class="score">0</div>
                 </div>
@@ -1983,63 +2063,167 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 .firework {
     position: absolute;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    animation: explode 1.5s ease-out forwards;
-    mix-blend-mode: screen;
+    width: 2px;
+    height: 2px;
+    animation: shoot 1s ease-out forwards;
 }
 
-/* Multiple fireworks with different colors and positions */
+.firework::before,
+.firework::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    animation: explode 0.8s ease-out forwards;
+}
+
 .firework:nth-child(1) {
-    top: 20%;
     left: 20%;
+    bottom: 0;
     background: #ffd700;
     animation-delay: 0s;
 }
 
+.firework:nth-child(1)::before,
+.firework:nth-child(1)::after {
+    background: #ffd700;
+    box-shadow: 0 0 2px #ffd700;
+}
+
 .firework:nth-child(2) {
-    top: 40%;
-    right: 20%;
+    left: 40%;
+    bottom: 0;
     background: #e63946;
-    animation-delay: 0.3s;
+    animation-delay: 0.4s;
+}
+
+.firework:nth-child(2)::before,
+.firework:nth-child(2)::after {
+    background: #e63946;
+    box-shadow: 0 0 2px #e63946;
 }
 
 .firework:nth-child(3) {
-    bottom: 30%;
-    left: 50%;
+    left: 60%;
+    bottom: 0;
     background: #2ecc71;
-    animation-delay: 0.6s;
+    animation-delay: 0.8s;
+}
+
+.firework:nth-child(3)::before,
+.firework:nth-child(3)::after {
+    background: #2ecc71;
+    box-shadow: 0 0 2px #2ecc71;
 }
 
 .firework:nth-child(4) {
-    top: 50%;
-    right: 40%;
+    left: 80%;
+    bottom: 0;
     background: #3498db;
-    animation-delay: 0.9s;
+    animation-delay: 1.2s;
+}
+
+.firework:nth-child(4)::before,
+.firework:nth-child(4)::after {
+    background: #3498db;
+    box-shadow: 0 0 2px #3498db;
 }
 
 .firework:nth-child(5) {
-    bottom: 40%;
-    left: 30%;
+    left: 50%;
+    bottom: 0;
     background: #9b59b6;
-    animation-delay: 1.2s;
+    animation-delay: 1.6s;
+}
+
+.firework:nth-child(5)::before,
+.firework:nth-child(5)::after {
+    background: #9b59b6;
+    box-shadow: 0 0 2px #9b59b6;
+}
+
+@keyframes shoot {
+    0% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-50vh) scale(1);
+    }
+    100% {
+        transform: translateY(-60vh) scale(0);
+    }
 }
 
 @keyframes explode {
     0% {
-        transform: scale(1);
-        opacity: 1;
-        box-shadow: 0 0 20px 5px currentColor;
+        transform: translate(0) scale(1);
     }
-    40% {
-        opacity: 0.8;
+    50% {
+        transform: translate(var(--x), var(--y)) scale(1);
     }
     100% {
-        transform: scale(40);
+        transform: translate(calc(var(--x) * 2), calc(var(--y) * 2)) scale(0);
         opacity: 0;
-        box-shadow: 0 0 40px 10px currentColor;
     }
+}
+
+/* Add multiple particles for each firework */
+.firework::before {
+    --x: 30px;
+    --y: -30px;
+}
+
+.firework::after {
+    --x: -30px;
+    --y: -30px;
+}
+
+/* Add more particles with pseudo-elements */
+.firework::before {
+    box-shadow: 
+        30px -30px 0 #ffd700,
+        -30px -30px 0 #e63946,
+        30px 30px 0 #2ecc71,
+        -30px 30px 0 #3498db;
+}
+
+.firework::after {
+    box-shadow: 
+        15px -15px 0 #ffd700,
+        -15px -15px 0 #e63946,
+        15px 15px 0 #2ecc71,
+        -15px 15px 0 #3498db;
+    animation-delay: 0.1s;
+}
+
+/* Add sparkle effect */
+@keyframes sparkle {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.firework::before,
+.firework::after {
+    animation: explode 0.8s ease-out forwards, sparkle 0.4s ease-out infinite;
+}
+
+/* Trail effect */
+.firework {
+    background-image: linear-gradient(to top, currentColor 50%, transparent);
+    background-size: 100% 200%;
+    background-position: 0 100%;
+    transition: background-position 0.2s;
+}
+
+.firework.shooting {
+    background-position: 0 0;
 }
 
 /* Enhanced Status Badge */

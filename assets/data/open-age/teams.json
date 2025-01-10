@@ -54,7 +54,7 @@
         },
         {
             "name": "Guncha Foundation",
-            "crest": "",
+            "crest": "guncha.png",
             "captain": "Anas Rafique",
             "played": 0,
             "won": 0,
@@ -92,9 +92,9 @@
             "group": "C"
         },
         {
-            "name": "EKKA FC",
-            "crest": "ekka.jpeg",
-            "captain": "Anmol Ekka",
+            "name": "THFC",
+            "crest": "",
+            "captain": "",
             "played": 0,
             "won": 0,
             "drawn": 0,
