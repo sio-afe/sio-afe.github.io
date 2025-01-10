@@ -361,6 +361,56 @@
       </div>
       <div id="fixtures-list" class="view-content active">
         <!-- Fixtures list will be populated by JS -->
+        <template id="fixture-template">
+          <div class="fixture">
+            <div class="fixture-teams">
+              <div class="team home">
+                <div class="team-info">
+                  <img src="" alt="Home Team" class="team-logo" loading="lazy">
+                  <h3 class="team-name"></h3>
+                  <div class="score">0</div>
+                </div>
+              </div>
+              <div class="vs-container">
+                <div class="vs-badge">VS</div>
+              </div>
+              <div class="team away">
+                <div class="team-info">
+                  <img src="" alt="Away Team" class="team-logo" loading="lazy">
+                  <h3 class="team-name"></h3>
+                  <div class="score">0</div>
+                </div>
+              </div>
+            </div>
+            <div class="fixture-meta">
+              <div class="meta-row">
+                <div class="meta-item">
+                  <i class="fas fa-calendar"></i>
+                  <span class="date"></span>
+                </div>
+                <div class="meta-item">
+                  <i class="fas fa-clock"></i>
+                  <span class="time"></span>
+                </div>
+                <div class="meta-item">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span class="venue"></span>
+                </div>
+              </div>
+            </div>
+            <!-- Add fixture stats section for scorers -->
+            <div class="fixture-stats">
+              <div class="stats-row">
+                <div class="team-stats home-stats">
+                  <!-- Home team scorers will be populated by JS -->
+                </div>
+                <div class="team-stats away-stats">
+                  <!-- Away team scorers will be populated by JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
       </div>
       <div id="bracket-view" class="view-content">
         <div class="tournament-bracket">

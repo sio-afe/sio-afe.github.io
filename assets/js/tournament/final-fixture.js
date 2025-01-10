@@ -354,6 +354,14 @@ async function loadMatches() {
             }
         }
 
+        // Fetch match events for all matches
+        const matchEventsPromises = matches.map(match => getMatchEvents(match.id));
+        const matchEventsResults = await Promise.all(matchEventsPromises);
+        const matchEvents = matchEventsResults.reduce((acc, result, index) => {
+            acc[matches[index].id] = result.data || [];
+            return acc;
+        }, {});
+
         // Update fixtures display
         const fixturesList = document.getElementById('fixtures-list');
         if (fixturesList) {
@@ -377,6 +385,11 @@ async function loadMatches() {
                 } else if (match.status === 'completed') {
                     statusBadge = '<span class="completed-badge">Completed</span>';
                 }
+
+                // Format match events
+                const events = matchEvents[match.id] || [];
+                const homeEvents = events.filter(event => event.team_id === match.home_team_id);
+                const awayEvents = events.filter(event => event.team_id === match.away_team_id);
                 
                 return `
                     <div class="fixture">
@@ -415,6 +428,42 @@ async function loadMatches() {
                                 </div>
                             </div>
                         </div>
+                        ${(homeEvents.length > 0 || awayEvents.length > 0) ? `
+                            <div class="fixture-stats">
+                                <div class="stats-row">
+                                    <div class="team-stats home-stats">
+                                        ${homeEvents.map(event => `
+                                            <div class="scorer">
+                                                <span class="scorer-name">${event.scorer_name}</span>
+                                                <span class="goal-icon"><i class="fas fa-futbol"></i></span>
+                                                <span class="goal-minute">${event.minute}'</span>
+                                                ${event.assist_name ? `
+                                                    <div class="assist-info">
+                                                        <span class="assist-icon"><i class="fas fa-hands-helping"></i></span>
+                                                        <span class="assist-name">${event.assist_name}</span>
+                                                    </div>
+                                                ` : ''}
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                    <div class="team-stats away-stats">
+                                        ${awayEvents.map(event => `
+                                            <div class="scorer">
+                                                <span class="scorer-name">${event.scorer_name}</span>
+                                                <span class="goal-icon"><i class="fas fa-futbol"></i></span>
+                                                <span class="goal-minute">${event.minute}'</span>
+                                                ${event.assist_name ? `
+                                                    <div class="assist-info">
+                                                        <span class="assist-icon"><i class="fas fa-hands-helping"></i></span>
+                                                        <span class="assist-name">${event.assist_name}</span>
+                                                    </div>
+                                                ` : ''}
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        ` : ''}
                     </div>
                 `;
             }).join('');

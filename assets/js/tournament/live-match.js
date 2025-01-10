@@ -1,4 +1,5 @@
 import { getClient } from '../supabase-client.js';
+import { getMatchEvents } from './match-api.js';
 
 // Default team logo path
 const DEFAULT_TEAM_LOGO = '/assets/data/open-age/team-logos/default.png';
