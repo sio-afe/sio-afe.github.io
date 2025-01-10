@@ -12,6 +12,7 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
             attempts++;
             console.log(`Attempting to initialize Supabase (attempt ${attempts}/${maxAttempts})...`);
 
+            // Check if supabase is loaded
             if (typeof supabase === 'undefined') {
                 if (attempts < maxAttempts) {
                     console.log('Supabase not loaded yet, retrying in 500ms...');
@@ -25,9 +26,20 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
             }
 
             try {
-                window.supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
-                console.log('Supabase client initialized successfully');
-                resolve(window.supabaseClient);
+                // Create the client
+                const client = supabase.createClient(supabaseUrl, supabaseAnonKey);
+                
+                // Test the client with a simple query
+                client.from('teams').select('count', { count: 'exact', head: true })
+                    .then(() => {
+                        console.log('Supabase client initialized and tested successfully');
+                        window.supabaseClient = client;
+                        resolve(client);
+                    })
+                    .catch(error => {
+                        console.error('Error testing Supabase client:', error);
+                        reject(error);
+                    });
             } catch (error) {
                 console.error('Error creating Supabase client:', error);
                 reject(error);

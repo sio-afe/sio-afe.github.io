@@ -6,10 +6,10 @@ export async function getClient() {
         // Wait for Supabase to be ready
         await window.supabaseReady;
         
-        if (window.supabaseClient) {
-            return window.supabaseClient;
+        if (!window.supabaseClient) {
+            throw new Error('Supabase client not initialized');
         }
-        throw new Error('Supabase client not initialized');
+        return window.supabaseClient;
     } catch (error) {
         console.error('Error getting Supabase client:', error);
         throw error;
@@ -134,16 +134,20 @@ const state = {
 
 // Subscribe to real-time changes
 function subscribeToChannel(channel, callback) {
-    const subscription = window.supabaseClient
-        .channel(channel)
-        .on('postgres_changes', { event: '*', schema: 'public' }, payload => {
-            state.currentData = payload.new;
-            notifySubscribers();
-            if (callback) callback(payload);
-        })
-        .subscribe();
-    
-    return subscription;
+    getClient().then(client => {
+        const subscription = client
+            .channel(channel)
+            .on('postgres_changes', { event: '*', schema: 'public' }, payload => {
+                state.currentData = payload.new;
+                notifySubscribers();
+                if (callback) callback(payload);
+            })
+            .subscribe();
+        
+        return subscription;
+    }).catch(error => {
+        console.error('Error subscribing to channel:', error);
+    });
 }
 
 // State management methods
@@ -156,11 +160,9 @@ function subscribe(callback) {
     return () => state.subscribers.delete(callback);
 }
 
-// Export methods
+// Export methods for dynamic client
 window.dynamicClient = {
     subscribeToChannel,
     subscribe,
     state
 };
-
-export default supabaseClient;
