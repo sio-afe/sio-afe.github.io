@@ -129,6 +129,9 @@ class FixtureManager {
             }
             // Finally fallback to match_date
             const matchDate = new Date(fixture.match_date);
+            // Subtract 5 hours and 30 minutes to convert IST to UTC
+            matchDate.setHours(matchDate.getHours() - 5);
+            matchDate.setMinutes(matchDate.getMinutes() - 30);
             const timeToShow = matchDate.toLocaleTimeString('en-GB', {
                 hour: '2-digit',
                 minute: '2-digit',

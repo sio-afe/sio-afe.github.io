@@ -373,6 +373,9 @@ async function loadMatches() {
                     month: 'long',
                     year: 'numeric'
                 });
+                // Subtract 5 hours and 30 minutes to convert IST to UTC
+                matchDate.setHours(matchDate.getHours() - 5);
+                matchDate.setMinutes(matchDate.getMinutes() - 30);
                 const formattedTime = matchDate.toLocaleTimeString('en-US', {
                     hour: 'numeric',
                     minute: '2-digit',
@@ -819,6 +822,9 @@ function updateMatchDisplay(match) {
 
     if (timeElement) {
         const matchDate = new Date(match.match_date);
+        // Subtract 5 hours and 30 minutes to convert IST to UTC
+        matchDate.setHours(matchDate.getHours() - 5);
+        matchDate.setMinutes(matchDate.getMinutes() - 30);
         timeElement.textContent = matchDate.toLocaleTimeString('en-US', {
             hour: 'numeric',
             minute: '2-digit',

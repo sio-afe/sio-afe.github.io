@@ -196,6 +196,9 @@ export class LiveMatchHandler {
             // Update time
             const timeElement = document.querySelector('.user-view .time');
             if (timeElement) {
+                // Subtract 5 hours and 30 minutes to convert IST to UTC
+                matchDate.setHours(matchDate.getHours() - 5);
+                matchDate.setMinutes(matchDate.getMinutes() - 30);
                 timeElement.textContent = matchDate.toLocaleTimeString('en-GB', {
                     hour: '2-digit',
                     minute: '2-digit'
