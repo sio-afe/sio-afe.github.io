@@ -52,7 +52,7 @@ function showNotification(message, type = 'info') {
 }
 
 // Initialize admin controls
-function initializeAdminControls() {
+async function initializeAdminControls() {
     const startMatchBtn = document.querySelector('.start-match-btn');
     const completeMatchBtn = document.querySelector('.update-status-btn');
     const addStatsBtn = document.querySelector('.add-stats-btn');
@@ -67,8 +67,8 @@ function initializeAdminControls() {
         try {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) {
-                if (userView) userView.classList.add('active');
-                if (adminView) adminView.classList.remove('active');
+                if (userView) userView.style.display = 'block';
+                if (adminView) adminView.style.display = 'none';
                 return;
             }
 
@@ -79,151 +79,156 @@ function initializeAdminControls() {
                 .single();
 
             if (adminUser) {
+                console.log('Admin user detected, showing admin view');
                 if (adminView) {
-                    adminView.classList.add('active');
-                    userView.classList.remove('active');
+                    adminView.style.display = 'block';
+                    userView.style.display = 'none';
+                    // Initialize admin controls
+                    await loadMatchesForDropdown();
+                    initializeAdminEventListeners();
                 }
             } else {
+                console.log('Non-admin user detected, showing user view');
                 if (userView) {
-                    userView.classList.add('active');
-                    adminView.classList.remove('active');
+                    userView.style.display = 'block';
+                    adminView.style.display = 'none';
                 }
             }
         } catch (error) {
             console.error('Error checking admin status:', error);
-            if (userView) {
-                userView.classList.add('active');
-                adminView.classList.remove('active');
-            }
+            if (userView) userView.style.display = 'block';
+            if (adminView) adminView.style.display = 'none';
         }
     }
 
     // Initialize view
-    initializeView();
+    await initializeView();
 
-    if (startMatchBtn) {
-        startMatchBtn.addEventListener('click', async () => {
-            if (!currentMatch) {
-                showNotification('Please select a match first', 'error');
-                return;
-            }
-            try {
-                const { data: updatedMatch, error } = await startMatch(currentMatch.id);
-                if (error) throw error;
-                
-                currentMatch = updatedMatch;
-                updateMatchDisplay(updatedMatch);
-                showNotification('Match started successfully', 'success');
-            } catch (error) {
-                console.error('Error starting match:', error);
-                showNotification('Error starting match', 'error');
-            }
-        });
-    }
-
-    if (completeMatchBtn) {
-        completeMatchBtn.addEventListener('click', async () => {
-            if (!currentMatch) {
-                showNotification('Please select a match first', 'error');
-                return;
-            }
-            try {
-                // Complete the match - the database trigger will handle team stats
-                const { data: updatedMatch, error } = await completeMatch(currentMatch.id);
-                if (error) throw error;
-                
-                currentMatch = updatedMatch;
-                updateMatchDisplay(updatedMatch);
-
-                // Handle automatic team progression after match completion
-                await handleMatchCompletion(updatedMatch);
-
-                // Show match completion celebration
-                const celebrationOverlay = document.querySelector('.celebration-overlay');
-                if (celebrationOverlay) {
-                    celebrationOverlay.classList.add('active');
-                    // Restart firework animations with longer duration
-                    const fireworks = celebrationOverlay.querySelectorAll('.firework');
-                    fireworks.forEach((firework, index) => {
-                        firework.style.animation = 'none';
-                        firework.offsetHeight; // Trigger reflow
-                        firework.style.animation = `explode ${2 + index * 0.5}s ease-out forwards ${index * 0.3}s`;
-                    });
-                    // Keep celebration visible longer for match completion
-                    setTimeout(() => {
-                        celebrationOverlay.classList.remove('active');
-                    }, 4000);
+    function initializeAdminEventListeners() {
+        if (startMatchBtn) {
+            startMatchBtn.addEventListener('click', async () => {
+                if (!currentMatch) {
+                    showNotification('Please select a match first', 'error');
+                    return;
                 }
-
-                // Show winner notification
-                const homeScore = parseInt(updatedMatch.home_score) || 0;
-                const awayScore = parseInt(updatedMatch.away_score) || 0;
-                let message = 'Match Completed! ';
-                if (homeScore > awayScore) {
-                    message += `${updatedMatch.home_team.name} wins!`;
-                } else if (awayScore > homeScore) {
-                    message += `${updatedMatch.away_team.name} wins!`;
-                } else {
-                    message += "It's a draw!";
+                try {
+                    const { data: updatedMatch, error } = await startMatch(currentMatch.id);
+                    if (error) throw error;
+                    
+                    currentMatch = updatedMatch;
+                    updateMatchDisplay(updatedMatch);
+                    showNotification('Match started successfully', 'success');
+                } catch (error) {
+                    console.error('Error starting match:', error);
+                    showNotification('Error starting match', 'error');
                 }
-                showNotification(message, 'success');
+            });
+        }
 
-                // Only refresh matches and top scorers, table updates via subscription
-                await Promise.all([
-                    loadMatches(),       // Update fixtures
-                    loadTopScorers()     // Update top scorers
-                ]);
+        if (completeMatchBtn) {
+            completeMatchBtn.addEventListener('click', async () => {
+                if (!currentMatch) {
+                    showNotification('Please select a match first', 'error');
+                    return;
+                }
+                try {
+                    // Complete the match - the database trigger will handle team stats
+                    const { data: updatedMatch, error } = await completeMatch(currentMatch.id);
+                    if (error) throw error;
+                    
+                    currentMatch = updatedMatch;
+                    updateMatchDisplay(updatedMatch);
 
-            } catch (error) {
-                console.error('Error completing match:', error);
-                showNotification('Error completing match', 'error');
-            }
-        });
-    }
+                    // Handle automatic team progression after match completion
+                    await handleMatchCompletion(updatedMatch);
 
-    if (addStatsBtn) {
-        addStatsBtn.addEventListener('click', () => {
-            if (!currentMatch) {
-                showNotification('Please select a match first', 'error');
-                return;
-            }
-            if (eventModal) {
-                eventModal.style.display = 'flex';
-            }
-        });
-    }
+                    // Show match completion celebration
+                    const celebrationOverlay = document.querySelector('.celebration-overlay');
+                    if (celebrationOverlay) {
+                        celebrationOverlay.classList.add('active');
+                        // Restart firework animations with longer duration
+                        const fireworks = celebrationOverlay.querySelectorAll('.firework');
+                        fireworks.forEach((firework, index) => {
+                            firework.style.animation = 'none';
+                            firework.offsetHeight; // Trigger reflow
+                            firework.style.animation = `explode ${2 + index * 0.5}s ease-out forwards ${index * 0.3}s`;
+                        });
+                        // Keep celebration visible longer for match completion
+                        setTimeout(() => {
+                            celebrationOverlay.classList.remove('active');
+                        }, 4000);
+                    }
 
-    if (eventForm) {
-        eventForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(eventForm);
-            const eventData = {
-                team: formData.get('team'),
-                playerName: formData.get('playerName'),
-                assistName: formData.get('assistName'),
-                minute: parseInt(formData.get('minute'))
-            };
-            await addMatchEvent(eventData);
-        });
-    }
+                    // Show winner notification
+                    const homeScore = parseInt(updatedMatch.home_score) || 0;
+                    const awayScore = parseInt(updatedMatch.away_score) || 0;
+                    let message = 'Match Completed! ';
+                    if (homeScore > awayScore) {
+                        message += `${updatedMatch.home_team.name} wins!`;
+                    } else if (awayScore > homeScore) {
+                        message += `${updatedMatch.away_team.name} wins!`;
+                    } else {
+                        message += "It's a draw!";
+                    }
+                    showNotification(message, 'success');
 
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', () => {
-            if (eventModal) {
-                eventModal.style.display = 'none';
-                if (eventForm) eventForm.reset();
-            }
-        });
-    }
+                    // Only refresh matches and top scorers, table updates via subscription
+                    await Promise.all([
+                        loadMatches(),       // Update fixtures
+                        loadTopScorers()     // Update top scorers
+                    ]);
 
-    // Close modal when clicking outside
-    if (eventModal) {
-        eventModal.addEventListener('click', (e) => {
-            if (e.target === eventModal) {
-                eventModal.style.display = 'none';
-                if (eventForm) eventForm.reset();
-            }
-        });
+                } catch (error) {
+                    console.error('Error completing match:', error);
+                    showNotification('Error completing match', 'error');
+                }
+            });
+        }
+
+        if (addStatsBtn) {
+            addStatsBtn.addEventListener('click', () => {
+                if (!currentMatch) {
+                    showNotification('Please select a match first', 'error');
+                    return;
+                }
+                if (eventModal) {
+                    eventModal.style.display = 'flex';
+                }
+            });
+        }
+
+        if (eventForm) {
+            eventForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(eventForm);
+                const eventData = {
+                    team: formData.get('team'),
+                    playerName: formData.get('playerName'),
+                    assistName: formData.get('assistName'),
+                    minute: parseInt(formData.get('minute'))
+                };
+                await addMatchEvent(eventData);
+            });
+        }
+
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                if (eventModal) {
+                    eventModal.style.display = 'none';
+                    if (eventForm) eventForm.reset();
+                }
+            });
+        }
+
+        // Close modal when clicking outside
+        if (eventModal) {
+            eventModal.addEventListener('click', (e) => {
+                if (e.target === eventModal) {
+                    eventModal.style.display = 'none';
+                    if (eventForm) eventForm.reset();
+                }
+            });
+        }
     }
 }
 
@@ -1479,135 +1484,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         // Initialize Supabase client globally
         window.supabaseClient = client;
 
-        // Initialize admin controls if admin view exists
-        const isAdmin = document.querySelector('.admin-view') !== null;
-        if (isAdmin) {
-            initializeAdminControls();
-        }
-
-        // For normal users, try to load the latest match (in progress or completed)
-        if (!isAdmin) {
-            try {
-                // First try to find an in-progress match
-                const client = await getClient();
-                let { data: match, error } = await client
-                    .from('matches')
-                    .select(`
-                        *,
-                        home_team:teams!matches_home_team_id_fkey(id, name, crest_url),
-                        away_team:teams!matches_away_team_id_fkey(id, name, crest_url)
-                    `)
-                    .eq('status', 'in_progress')
-                    .eq('category', category)
-                    .single();
-
-                // If no in-progress match, get the latest completed match
-                if (!match) {
-                    const { data: completedMatch, error: completedError } = await client
-                        .from('matches')
-                        .select(`
-                            *,
-                            home_team:teams!matches_home_team_id_fkey(id, name, crest_url),
-                            away_team:teams!matches_away_team_id_fkey(id, name, crest_url)
-                        `)
-                        .eq('status', 'completed')
-                        .eq('category', category)
-                        .order('match_date', { ascending: false })
-                        .order('updated_at', { ascending: false })
-                        .limit(1)
-                        .single();
-
-                    if (completedError) throw completedError;
-                    match = completedMatch;
-
-                    // If it's a completed match, show the celebration
-                    if (match) {
-                        const celebrationOverlay = document.querySelector('.celebration-overlay');
-                        if (celebrationOverlay) {
-                            celebrationOverlay.classList.add('active');
-                            const fireworks = celebrationOverlay.querySelectorAll('.firework');
-                            fireworks.forEach((firework, index) => {
-                                firework.style.animation = `explode ${2 + index * 0.5}s ease-out forwards ${index * 0.3}s`;
-                            });
-                            setTimeout(() => {
-                                celebrationOverlay.classList.remove('active');
-                            }, 4000);
-                        }
-                    }
-                }
-
-                if (match) {
-                    console.log('Found match:', match);
-                    currentMatch = match;
-                    updateMatchDisplay(match);
-                    updateMatchStats();
-
-                    // Set up real-time subscription for match updates
-                    const matchSubscription = client
-                        .channel('match_status_updates')
-                        .on('postgres_changes', { 
-                            event: 'UPDATE', 
-                            schema: 'public', 
-                            table: 'matches',
-                            filter: `category=eq.${category}`
-                        }, async (payload) => {
-                            if (payload.new.status === 'completed') {
-                                // Fetch the most recently completed match
-                                const { data: recentMatch, error: recentError } = await client
-                                    .from('matches')
-                                    .select(`
-                                        *,
-                                        home_team:teams!matches_home_team_id_fkey(id, name, crest_url),
-                                        away_team:teams!matches_away_team_id_fkey(id, name, crest_url)
-                                    `)
-                                    .eq('status', 'completed')
-                                    .eq('category', category)
-                                    .order('match_date', { ascending: false })
-                                    .order('updated_at', { ascending: false })
-                                    .limit(1)
-                                    .single();
-
-                                if (!recentError && recentMatch) {
-                                    currentMatch = recentMatch;
-                                    updateMatchDisplay(recentMatch);
-                                    updateMatchStats();
-                                }
-                            } else if (payload.new.status === 'in_progress') {
-                                // Switch to in-progress match
-                                const { data: liveMatch, error: liveError } = await client
-                                    .from('matches')
-                                    .select(`
-                                        *,
-                                        home_team:teams!matches_home_team_id_fkey(id, name, crest_url),
-                                        away_team:teams!matches_away_team_id_fkey(id, name, crest_url)
-                                    `)
-                                    .eq('id', payload.new.id)
-                                    .single();
-
-                                if (!liveError && liveMatch) {
-                                    currentMatch = liveMatch;
-                                    updateMatchDisplay(liveMatch);
-                                    updateMatchStats();
-                                }
-                            }
-                        })
-                        .subscribe();
-
-                    // Store subscription for cleanup
-                    window.matchSubscription = matchSubscription;
-                }
-            } catch (error) {
-                console.error('Error loading match:', error);
-            }
-        }
+        // Initialize admin controls
+        await initializeAdminControls();
 
         // Load tournament data
         await loadTournamentData();
-
-        // Load matches for dropdown if admin
-        if (isAdmin) {
-            await loadMatchesForDropdown();
-        }
 
     } catch (error) {
         console.error('Error initializing:', error);

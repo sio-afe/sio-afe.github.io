@@ -39,6 +39,29 @@
     </div>
 </div>
 
+<script>
+// Initialize Supabase client
+window.waitForSupabase = async function() {
+    if (window.supabase) return window.supabase;
+    
+    // Wait for supabase-client.js to load and initialize
+    let attempts = 0;
+    while (!window.supabase && attempts < 50) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        attempts++;
+    }
+    
+    if (!window.supabase) {
+        throw new Error('Supabase client failed to initialize');
+    }
+    
+    return window.supabase;
+};
+</script>
+
+<script type="module" src="/assets/js/supabase-client.js"></script>
+<script type="module" src="/assets/js/admin/admin-ui.js"></script>
+
 <style>
 #topbar {
   background-color: white;

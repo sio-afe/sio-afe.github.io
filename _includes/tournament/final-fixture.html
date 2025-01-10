@@ -207,7 +207,7 @@
     </div>
 
     <!-- Admin View -->
-    <div class="match-container admin-view">
+    <div class="match-container admin-view" style="display: none;">
       <!-- Match Selection -->
       <div class="match-select-container">
         <select class="match-dropdown">
@@ -454,39 +454,8 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', async function() {
-    // Check if user is admin
-    const supabase = window.supabaseClient;
-    const toggleView = document.querySelector('.view-toggle');
-    const userView = document.querySelector('.user-view');
-    const adminView = document.querySelector('.admin-view');
-
-    async function checkAdminStatus() {
-        try {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) return false;
-
-            const { data: adminUser } = await supabase
-                .from('admin_users')
-                .select('role')
-                .eq('email', user.email)
-                .single();
-
-            return !!adminUser;
-        } catch (error) {
-            console.error('Error checking admin status:', error);
-            return false;
-        }
-    }
-
-    // Initialize views based on admin status
-    const isAdmin = await checkAdminStatus();
-    if (isAdmin) {
-        adminView.style.display = 'block';
-        userView.style.display = 'none';
-    } else {
-        userView.style.display = 'block';
-        adminView.style.display = 'none';
-    }
+    // Remove the inline initialization since it's handled in final-fixture.js
+    console.log('Final fixture initialization complete');
 });
 </script>
 
