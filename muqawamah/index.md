@@ -899,8 +899,7 @@ permalink: /muqawamah/
 
     <div class="contact-section">
         <h2>Contact</h2>
-        <p><strong>Tournament Director:</strong> [Name]</p>
-        <p><strong>For queries:</strong> [Contact Information]</p>
+        <p><strong>For queries:</strong> [+91 88824 79365, +91 84678 27035]</p>
     </div>
 
 </div>

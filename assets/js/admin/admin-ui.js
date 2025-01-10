@@ -1,16 +1,7 @@
 import { getClient, signIn, signOut, isAdmin } from '../supabase-client.js';
 
-// Wait for both DOM content and Supabase to be ready
-Promise.all([
-    new Promise(resolve => {
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', resolve);
-        } else {
-            resolve();
-        }
-    }),
-    window.supabaseReady
-]).then(async () => {
+// Initialize admin UI
+async function initializeAdminUI() {
     console.log('Initializing admin UI...');
     
     // UI Elements
@@ -20,6 +11,12 @@ Promise.all([
     const adminLoginModal = document.getElementById('adminLoginModal');
     const adminLoginForm = document.getElementById('adminLoginForm');
     const closeModalBtn = document.querySelector('.close-modal');
+
+    // If admin elements don't exist, return early
+    if (!adminBtn || !adminLoginModal) {
+        console.log('Admin UI elements not found on this page');
+        return;
+    }
 
     // Debug logging for form elements
     console.log('Form elements found:', {
@@ -96,29 +93,27 @@ Promise.all([
     }
 
     // Event Listeners
-    if (adminBtn) {
-        adminBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            const isAdminUser = await isAdmin();
-            
-            if (isAdminUser) {
-                // If logged in, log out
-                try {
-                    await signOut();
-                    console.log('Logged out successfully');
-                    await updateUIForAuthState();
-                    // Reload the page to reset all admin states
-                    window.location.reload();
-                } catch (error) {
-                    console.error('Logout failed:', error);
-                    alert('Logout failed: ' + error.message);
-                }
-            } else {
-                // If not logged in, show login modal
-                showModal();
+    adminBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const isAdminUser = await isAdmin();
+        
+        if (isAdminUser) {
+            // If logged in, log out
+            try {
+                await signOut();
+                console.log('Logged out successfully');
+                await updateUIForAuthState();
+                // Reload the page to reset all admin states
+                window.location.reload();
+            } catch (error) {
+                console.error('Logout failed:', error);
+                alert('Logout failed: ' + error.message);
             }
-        });
-    }
+        } else {
+            // If not logged in, show login modal
+            showModal();
+        }
+    });
 
     if (closeModalBtn) {
         closeModalBtn.addEventListener('click', hideModal);
@@ -176,4 +171,11 @@ Promise.all([
 
     // Initialize UI state on load
     await updateUIForAuthState();
-}); 
+}
+
+// Initialize when DOM is ready and Supabase is initialized
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeAdminUI);
+} else {
+    initializeAdminUI();
+} 
