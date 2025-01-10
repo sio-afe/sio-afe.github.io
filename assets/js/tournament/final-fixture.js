@@ -14,6 +14,7 @@ import { handleMatchCompletion } from './team-progression.js'
 // Wait for DOM and Supabase initialization
 async function waitForInit() {
     try {
+        await window.waitForSupabase();
         const client = await getClient();
         window.supabaseClient = client;
         return client;
@@ -51,185 +52,541 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
-// Initialize admin controls
-async function initializeAdminControls() {
-    const startMatchBtn = document.querySelector('.start-match-btn');
-    const completeMatchBtn = document.querySelector('.update-status-btn');
-    const addStatsBtn = document.querySelector('.add-stats-btn');
-    const eventModal = document.querySelector('.event-modal');
-    const eventForm = document.getElementById('eventForm');
-    const cancelBtn = document.querySelector('.cancel-btn');
+// User view functionality
+async function initializeUserView() {
     const userView = document.querySelector('.user-view');
-    const adminView = document.querySelector('.admin-view');
+    if (!userView) return;
 
-    // Initialize view based on admin status
-    async function initializeView() {
-        try {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
-                if (userView) userView.style.display = 'block';
-                if (adminView) adminView.style.display = 'none';
-                return;
-            }
+    try {
+        // Try to find an in-progress match first
+        const { data: match, error } = await supabaseClient
+            .from('matches')
+            .select(`
+                *,
+                home_team:teams!matches_home_team_id_fkey(id, name, crest_url),
+                away_team:teams!matches_away_team_id_fkey(id, name, crest_url)
+            `)
+            .eq('status', 'in_progress')
+            .eq('category', category)
+            .single();
 
-            const { data: adminUser } = await supabase
-                .from('admin_users')
-                .select('role')
-                .eq('email', user.email)
+        if (match) {
+            currentMatch = match;
+            updateMatchDisplay(match);
+            updateMatchStats();
+            setupMatchSubscriptions(match.id);
+        } else {
+            // If no in-progress match, get the latest completed match
+            const { data: completedMatch, error: completedError } = await supabaseClient
+                .from('matches')
+                .select(`
+                    *,
+                    home_team:teams!matches_home_team_id_fkey(id, name, crest_url),
+                    away_team:teams!matches_away_team_id_fkey(id, name, crest_url)
+                `)
+                .eq('status', 'completed')
+                .eq('category', category)
+                .order('match_date', { ascending: false })
+                .limit(1)
                 .single();
 
-            if (adminUser) {
-                console.log('Admin user detected, showing admin view');
-                if (adminView) {
-                    adminView.style.display = 'block';
-                    userView.style.display = 'none';
-                    // Initialize admin controls
-                    await loadMatchesForDropdown();
-                    initializeAdminEventListeners();
-                }
-            } else {
-                console.log('Non-admin user detected, showing user view');
-                if (userView) {
-                    userView.style.display = 'block';
-                    adminView.style.display = 'none';
+            if (!completedError && completedMatch) {
+                currentMatch = completedMatch;
+                updateMatchDisplay(completedMatch);
+                updateMatchStats();
+                showMatchCompletionCelebration();
                 }
             }
         } catch (error) {
-            console.error('Error checking admin status:', error);
-            if (userView) userView.style.display = 'block';
-            if (adminView) adminView.style.display = 'none';
-        }
+        console.error('Error initializing user view:', error);
+        showNotification('Error loading match data', 'error');
     }
+}
 
-    // Initialize view
-    await initializeView();
+// Admin view functionality
+async function initializeAdminView() {
+    const adminView = document.querySelector('.admin-view');
+    if (!adminView) return;
 
-    function initializeAdminEventListeners() {
+    try {
+        // Initialize admin controls
+        const startMatchBtn = adminView.querySelector('.start-match-btn');
+        const completeMatchBtn = adminView.querySelector('.update-status-btn');
+        const addStatsBtn = adminView.querySelector('.add-stats-btn');
+
+        // Load matches for dropdown
+        await loadMatchesForDropdown();
+
+        // Initialize event listeners
         if (startMatchBtn) {
-            startMatchBtn.addEventListener('click', async () => {
-                if (!currentMatch) {
-                    showNotification('Please select a match first', 'error');
-                    return;
-                }
-                try {
-                    const { data: updatedMatch, error } = await startMatch(currentMatch.id);
-                    if (error) throw error;
-                    
-                    currentMatch = updatedMatch;
-                    updateMatchDisplay(updatedMatch);
-                    showNotification('Match started successfully', 'success');
-                } catch (error) {
-                    console.error('Error starting match:', error);
-                    showNotification('Error starting match', 'error');
-                }
-            });
+            startMatchBtn.addEventListener('click', handleStartMatch);
         }
 
         if (completeMatchBtn) {
-            completeMatchBtn.addEventListener('click', async () => {
-                if (!currentMatch) {
-                    showNotification('Please select a match first', 'error');
-                    return;
-                }
-                try {
-                    // Complete the match - the database trigger will handle team stats
-                    const { data: updatedMatch, error } = await completeMatch(currentMatch.id);
-                    if (error) throw error;
-                    
-                    currentMatch = updatedMatch;
-                    updateMatchDisplay(updatedMatch);
-
-                    // Handle automatic team progression after match completion
-                    await handleMatchCompletion(updatedMatch);
-
-                    // Show match completion celebration
-                    const celebrationOverlay = document.querySelector('.celebration-overlay');
-                    if (celebrationOverlay) {
-                        celebrationOverlay.classList.add('active');
-                        // Restart firework animations with longer duration
-                        const fireworks = celebrationOverlay.querySelectorAll('.firework');
-                        fireworks.forEach((firework, index) => {
-                            firework.style.animation = 'none';
-                            firework.offsetHeight; // Trigger reflow
-                            firework.style.animation = `explode ${2 + index * 0.5}s ease-out forwards ${index * 0.3}s`;
-                        });
-                        // Keep celebration visible longer for match completion
-                        setTimeout(() => {
-                            celebrationOverlay.classList.remove('active');
-                        }, 4000);
-                    }
-
-                    // Show winner notification
-                    const homeScore = parseInt(updatedMatch.home_score) || 0;
-                    const awayScore = parseInt(updatedMatch.away_score) || 0;
-                    let message = 'Match Completed! ';
-                    if (homeScore > awayScore) {
-                        message += `${updatedMatch.home_team.name} wins!`;
-                    } else if (awayScore > homeScore) {
-                        message += `${updatedMatch.away_team.name} wins!`;
-                    } else {
-                        message += "It's a draw!";
-                    }
-                    showNotification(message, 'success');
-
-                    // Only refresh matches and top scorers, table updates via subscription
-                    await Promise.all([
-                        loadMatches(),       // Update fixtures
-                        loadTopScorers()     // Update top scorers
-                    ]);
-
-                } catch (error) {
-                    console.error('Error completing match:', error);
-                    showNotification('Error completing match', 'error');
-                }
-            });
+            completeMatchBtn.addEventListener('click', handleCompleteMatch);
         }
 
         if (addStatsBtn) {
-            addStatsBtn.addEventListener('click', () => {
-                if (!currentMatch) {
-                    showNotification('Please select a match first', 'error');
-                    return;
-                }
-                if (eventModal) {
-                    eventModal.style.display = 'flex';
-                }
-            });
+            addStatsBtn.addEventListener('click', handleAddStats);
         }
 
-        if (eventForm) {
-            eventForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const formData = new FormData(eventForm);
-                const eventData = {
-                    team: formData.get('team'),
-                    playerName: formData.get('playerName'),
-                    assistName: formData.get('assistName'),
-                    minute: parseInt(formData.get('minute'))
-                };
-                await addMatchEvent(eventData);
-            });
-        }
+        // Initialize event modal
+        initializeEventModal();
 
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', () => {
-                if (eventModal) {
-                    eventModal.style.display = 'none';
-                    if (eventForm) eventForm.reset();
-                }
-            });
-        }
-
-        // Close modal when clicking outside
-        if (eventModal) {
-            eventModal.addEventListener('click', (e) => {
-                if (e.target === eventModal) {
-                    eventModal.style.display = 'none';
-                    if (eventForm) eventForm.reset();
-                }
-            });
-        }
+    } catch (error) {
+        console.error('Error initializing admin view:', error);
+        showNotification('Error initializing admin controls', 'error');
     }
+}
+
+// Admin event handlers
+async function handleStartMatch() {
+            if (!currentMatch) {
+                showNotification('Please select a match first', 'error');
+                return;
+            }
+            try {
+                const { data: updatedMatch, error } = await startMatch(currentMatch.id);
+                if (error) throw error;
+                
+                currentMatch = updatedMatch;
+                updateMatchDisplay(updatedMatch);
+                showNotification('Match started successfully', 'success');
+            } catch (error) {
+                console.error('Error starting match:', error);
+                showNotification('Error starting match', 'error');
+            }
+    }
+
+async function handleCompleteMatch() {
+            if (!currentMatch) {
+                showNotification('Please select a match first', 'error');
+                return;
+            }
+            try {
+                const { data: updatedMatch, error } = await completeMatch(currentMatch.id);
+                if (error) throw error;
+                
+                currentMatch = updatedMatch;
+                updateMatchDisplay(updatedMatch);
+                await handleMatchCompletion(updatedMatch);
+        showMatchCompletionCelebration();
+        showWinnerNotification(updatedMatch);
+        
+                await Promise.all([
+            loadMatches(),
+            loadTopScorers()
+                ]);
+            } catch (error) {
+                console.error('Error completing match:', error);
+                showNotification('Error completing match', 'error');
+            }
+    }
+
+function handleAddStats() {
+            if (!currentMatch) {
+                showNotification('Please select a match first', 'error');
+                return;
+            }
+    const eventModal = document.querySelector('.event-modal');
+            if (eventModal) {
+                eventModal.style.display = 'flex';
+                
+                // Reset form if exists
+                const eventForm = eventModal.querySelector('#eventForm');
+                if (eventForm) {
+                    eventForm.reset();
+                }
+
+                // Update team names in the dropdown
+                const teamSelect = eventModal.querySelector('select[name="team"]');
+                if (teamSelect) {
+                    const homeOption = teamSelect.querySelector('option[value="home"]');
+                    const awayOption = teamSelect.querySelector('option[value="away"]');
+                    if (homeOption && currentMatch.home_team) {
+                        homeOption.textContent = currentMatch.home_team.name;
+                    }
+                    if (awayOption && currentMatch.away_team) {
+                        awayOption.textContent = currentMatch.away_team.name;
+                    }
+                }
+            }
+    }
+
+async function handleEventSubmit(e) {
+            e.preventDefault();
+    const formData = new FormData(e.target);
+            const eventData = {
+                team: formData.get('team'),
+                playerName: formData.get('playerName'),
+                assistName: formData.get('assistName'),
+                minute: parseInt(formData.get('minute'))
+            };
+            await addMatchEvent(eventData);
+}
+
+// Helper functions
+function showMatchCompletionCelebration() {
+    const celebrationOverlay = document.querySelector('.celebration-overlay');
+                if (celebrationOverlay) {
+                    celebrationOverlay.classList.add('active');
+                    const fireworks = celebrationOverlay.querySelectorAll('.firework');
+                    fireworks.forEach((firework, index) => {
+                        firework.style.animation = `explode ${2 + index * 0.5}s ease-out forwards ${index * 0.3}s`;
+                    });
+                    setTimeout(() => {
+                        celebrationOverlay.classList.remove('active');
+                    }, 4000);
+    }
+}
+
+function showWinnerNotification(match) {
+    const homeScore = parseInt(match.home_score) || 0;
+    const awayScore = parseInt(match.away_score) || 0;
+    let message = 'Match Completed! ';
+    if (homeScore > awayScore) {
+        message += `${match.home_team.name} wins!`;
+    } else if (awayScore > homeScore) {
+        message += `${match.away_team.name} wins!`;
+    } else {
+        message += "It's a draw!";
+    }
+    showNotification(message, 'success');
+}
+
+// Initialize based on user role
+async function initializeView() {
+    try {
+        const client = await getClient();
+        const { data: { user } } = await client.auth.getUser();
+        
+        if (!user) {
+            document.querySelector('.user-view').style.display = 'block';
+            document.querySelector('.admin-view').style.display = 'none';
+            await initializeUserView();
+        return;
+    }
+
+        const { data: adminUser } = await client
+            .from('admin_users')
+            .select('role')
+            .eq('email', user.email)
+            .single();
+
+        if (adminUser) {
+            console.log('Admin user detected, showing admin view');
+            document.querySelector('.admin-view').style.display = 'block';
+            document.querySelector('.user-view').style.display = 'none';
+            await initializeAdminView();
+        } else {
+            console.log('Non-admin user detected, showing user view');
+            document.querySelector('.user-view').style.display = 'block';
+            document.querySelector('.admin-view').style.display = 'none';
+            await initializeUserView();
+        }
+    } catch (error) {
+        console.error('Error initializing view:', error);
+        document.querySelector('.user-view').style.display = 'block';
+        document.querySelector('.admin-view').style.display = 'none';
+        await initializeUserView();
+    }
+}
+
+// Load and display tournament data
+async function loadTournamentData() {
+  if (!category) {
+        console.error('Tournament category not found');
+        return;
+  }
+
+  try {
+    await Promise.all([
+      loadTeams(),
+      loadMatches(),
+      loadTopScorers()
+        ]);
+        
+        // Initialize filters after loading data
+        initializeFilterButtons();
+        
+  } catch (error) {
+        console.error('Error loading tournament data:', error);
+        showNotification('Error loading tournament data', 'error');
+  }
+}
+
+// Load teams and update league table
+async function loadTeams() {
+  try {
+        const { data: teams, error } = await getTeams(category);
+        if (error) throw error;
+
+    // Store teams in a variable accessible to the sorting functions
+    window.currentTeams = teams;
+
+    // Initial sort by points
+    sortAndDisplayTeams('points');
+
+    // Add event listeners to sort buttons if not already added
+    initializeSortButtons();
+
+  } catch (error) {
+        console.error('Error loading teams:', error);
+        showNotification('Error updating league table', 'error');
+    }
+}
+
+// Load matches and update fixtures
+async function loadMatches() {
+    try {
+        const { data: matches, error } = await getMatches(category);
+        if (error) throw error;
+
+        // Store matches globally for bracket view
+        window.currentMatches = matches;
+
+        // Update match display if needed
+        if (currentMatch) {
+            const updatedMatch = matches.find(m => m.id === currentMatch.id);
+            if (updatedMatch) {
+                currentMatch = updatedMatch;
+                updateMatchDisplay(updatedMatch);
+            }
+        }
+
+        // Update fixtures display
+        const fixturesList = document.getElementById('fixtures-list');
+        if (fixturesList) {
+            fixturesList.innerHTML = matches.map(match => {
+                const matchDate = new Date(match.match_date);
+                const formattedDate = matchDate.toLocaleDateString('en-GB', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                const formattedTime = matchDate.toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                });
+
+                let statusBadge = '';
+                if (match.status === 'in_progress') {
+                    statusBadge = '<span class="live-badge">Live</span>';
+                } else if (match.status === 'completed') {
+                    statusBadge = '<span class="completed-badge">Completed</span>';
+                }
+                
+                return `
+                    <div class="fixture">
+                        <div class="fixture-teams">
+                            <div class="team home">
+                                <img src="${match.home_team?.crest_url || DEFAULT_TEAM_LOGO}" alt="${match.home_team?.name || 'TBD'}" class="team-crest">
+                                <span class="team-name">${match.home_team?.name || 'TBD'}</span>
+                                <span class="score">${match.home_score || '0'}</span>
+                            </div>
+                            <div class="vs-badge">VS</div>
+                            <div class="team away">
+                                <img src="${match.away_team?.crest_url || DEFAULT_TEAM_LOGO}" alt="${match.away_team?.name || 'TBD'}" class="team-crest">
+                                <span class="team-name">${match.away_team?.name || 'TBD'}</span>
+                                <span class="score">${match.away_score || '0'}</span>
+                            </div>
+                        </div>
+                        <div class="fixture-meta">
+                            <div class="meta-row">
+                                ${statusBadge}
+                                <span class="group-badge">${match.match_type || 'Match'}</span>
+                            </div>
+                            <div class="meta-row">
+                                <div class="meta-item">
+                                    <i class="far fa-calendar"></i>
+                                    <span class="date-badge">${formattedDate}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="far fa-clock"></i>
+                                    <span class="time-badge">${formattedTime}</span>
+                                </div>
+                            </div>
+                            <div class="meta-row">
+                                <div class="meta-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span class="venue-badge">${match.venue || 'TBD'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+    } catch (error) {
+        console.error('Error loading matches:', error);
+        showNotification('Error loading matches', 'error');
+    }
+}
+
+// Load top scorers and assists
+async function loadTopScorers() {
+  try {
+        const client = await getClient();
+        const [scorersResult, assistsResult] = await Promise.all([
+            client.rpc('get_top_scorers', { category_param: category }),
+            client.rpc('get_top_assists', { category_param: category })
+        ]);
+
+        if (scorersResult.error) throw scorersResult.error;
+        if (assistsResult.error) throw assistsResult.error;
+
+        const scorers = scorersResult.data;
+        const assists = assistsResult.data;
+
+        // Update top scorers list
+        const scorersList = document.getElementById('scorers-list');
+        const assistsList = document.getElementById('assists-list');
+
+        if (scorersList) {
+            scorersList.innerHTML = formatStatsList(scorers, 'goals');
+        }
+
+        if (assistsList) {
+            assistsList.innerHTML = formatStatsList(assists, 'assists');
+        }
+
+    } catch (error) {
+        console.error('Error loading top scorers and assists:', error);
+        showNotification('Error updating statistics', 'error');
+    }
+}
+
+// Helper functions
+function formatStatsList(stats, type) {
+    if (!stats || stats.length === 0) {
+        return `
+            <div class="no-stats">
+                <i class="fas ${type === 'goals' ? 'fa-futbol' : 'fa-hands-helping'}"></i>
+                <p>No statistics available</p>
+            </div>`;
+    }
+
+    return `
+        <div class="stats-wrapper">
+            ${stats.map((stat, index) => `
+                <div class="stat-row ${index < 3 ? 'top-' + (index + 1) : ''}">
+                    <div class="rank">
+                        ${index < 3 ? 
+                            `<i class="fas fa-trophy trophy-${index + 1}"></i>` : 
+                            `<span class="position">${index + 1}</span>`
+                        }
+        </div>
+                    <div class="player-info">
+                        <div class="player-name">
+                            ${type === 'goals' ? stat.scorer_name : stat.assist_name}
+                            <span class="stat-count">
+                                ${type === 'goals' ? 
+                                    `<i class="fas fa-futbol"></i> ${stat.goals_count}` : 
+                                    `<i class="fas fa-hands-helping"></i> ${stat.assists_count}`
+                                }
+                            </span>
+      </div>
+                        <div class="team-name">
+                            <i class="fas fa-shield-alt"></i> ${stat.team_name}
+                        </div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+// Initialize sort buttons
+function initializeSortButtons() {
+    const sortButtons = document.querySelectorAll('.sort-btn');
+    
+    // Set initial active state on points button
+    const pointsButton = document.querySelector('[data-sort="points"]');
+    if (pointsButton) {
+        pointsButton.classList.add('active');
+    }
+
+    sortButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            // First remove active class from all buttons
+            sortButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class only to clicked button
+            button.classList.add('active');
+
+            // Perform the sort
+            const sortType = button.dataset.sort;
+            sortAndDisplayTeams(sortType);
+        });
+    });
+}
+
+// Sort and display teams
+function sortAndDisplayTeams(sortType) {
+    if (!window.currentTeams) return;
+
+    const teams = [...window.currentTeams];
+    
+    switch(sortType) {
+        case 'points':
+            teams.sort((a, b) => {
+                if (b.points !== a.points) return b.points - a.points;
+                const bGD = b.goals_for - b.goals_against;
+                const aGD = a.goals_for - a.goals_against;
+                if (bGD !== aGD) return bGD - aGD;
+                return b.goals_for - a.goals_for;
+            });
+                break;
+        case 'gd':
+            teams.sort((a, b) => {
+                const bGD = b.goals_for - b.goals_against;
+                const aGD = a.goals_for - a.goals_against;
+                if (bGD !== aGD) return bGD - aGD;
+                if (b.points !== a.points) return b.points - a.points;
+                return b.goals_for - a.goals_for;
+            });
+                break;
+        case 'goals':
+            teams.sort((a, b) => {
+                if (b.goals_for !== a.goals_for) return b.goals_for - a.goals_for;
+                if (b.points !== a.points) return b.points - a.points;
+                const bGD = b.goals_for - b.goals_against;
+                const aGD = a.goals_for - a.goals_against;
+                return bGD - aGD;
+            });
+                break;
+        }
+
+    // Update league table
+    const tableBody = document.getElementById('table-body');
+    if (!tableBody) return;
+
+    tableBody.innerHTML = teams.map((team, index) => `
+        <tr class="${index < 4 ? 'qualification-zone' : ''}">
+            <td>${index + 1}</td>
+            <td class="team-name-cell">
+                <div class="team-info">
+                    <img src="${team.crest_url || DEFAULT_TEAM_LOGO}" 
+                         alt="${team.name}" class="team-crest" loading="lazy">
+                    ${team.name}
+                    </div>
+            </td>
+            <td>${team.group_name || '-'}</td>
+            <td>${team.played || 0}</td>
+            <td>${team.won || 0}</td>
+            <td>${team.drawn || 0}</td>
+            <td>${team.lost || 0}</td>
+            <td>${team.points || 0}</td>
+            <td>${(team.goals_for || 0) - (team.goals_against || 0)}</td>
+            <td>${team.goals_for || 0}</td>
+            <td>${team.goals_against || 0}</td>
+        </tr>
+            `).join('');
 }
 
 // Load matches for dropdown
@@ -286,22 +643,6 @@ async function loadMatchesForDropdown() {
         // Add change event listener
         matchDropdown.addEventListener('change', handleMatchSelection);
 
-        // For normal users, if no match is currently selected, try to select an in-progress match
-        const isAdmin = document.querySelector('.admin-view') !== null;
-        if (!isAdmin && !currentMatch) {
-            const inProgressMatch = matches.find(match => match.status === 'in_progress');
-            if (inProgressMatch) {
-                matchDropdown.value = inProgressMatch.id;
-                handleMatchSelection({ target: { value: inProgressMatch.id } });
-            } else {
-                // If no in-progress match, try to find the next scheduled match
-                const nextScheduledMatch = matches.find(match => match.status === 'scheduled');
-                if (nextScheduledMatch) {
-                    matchDropdown.value = nextScheduledMatch.id;
-                    handleMatchSelection({ target: { value: nextScheduledMatch.id } });
-                }
-            }
-        }
     } catch (error) {
         console.error('Error loading matches:', error);
         showNotification('Error loading matches. Please try again later.', 'error');
@@ -324,6 +665,9 @@ async function handleMatchSelection(event) {
         updateMatchDisplay(match);
         await updateMatchStats();
 
+        // Update button visibility based on match status
+        updateMatchStatusButtons(match.status);
+
         // Set up real-time subscriptions for this match
         setupMatchSubscriptions(matchId);
     } catch (error) {
@@ -332,35 +676,24 @@ async function handleMatchSelection(event) {
     }
 }
 
-// Set up match subscriptions
-function setupMatchSubscriptions(matchId) {
-    // Clean up existing subscriptions
-    if (window.matchSubscription) {
-        window.matchSubscription.unsubscribe();
-    }
-    if (window.eventsSubscription) {
-        window.eventsSubscription.unsubscribe();
-    }
+// Reset match display
+function resetMatchDisplay() {
+    const adminView = document.querySelector('.admin-view');
+    if (!adminView) return;
 
-    // Subscribe to match updates
-    window.matchSubscription = subscribeToMatch(matchId, async (payload) => {
-        const { data: match, error } = await getMatchDetails(matchId);
-        if (!error && match) {
-            currentMatch = match;
-            await Promise.all([
-                updateMatchDisplay(match),
-                loadTopScorers()     // Update top scorers when match updates
-            ]);
-        }
-    });
+    adminView.querySelector('.team.home .team-name').textContent = 'TBD';
+    adminView.querySelector('.team.away .team-name').textContent = 'TBD';
+    adminView.querySelector('.team.home img').src = DEFAULT_TEAM_LOGO;
+    adminView.querySelector('.team.away img').src = DEFAULT_TEAM_LOGO;
+    adminView.querySelector('[data-field="home-score"]').textContent = '-';
+    adminView.querySelector('[data-field="away-score"]').textContent = '-';
+    adminView.querySelector('.date').textContent = 'TBD';
+    adminView.querySelector('.time').textContent = 'TBD';
+    adminView.querySelector('.venue').textContent = 'TBD';
 
-    // Subscribe to match events
-    window.eventsSubscription = subscribeToMatchEvents(matchId, async () => {
-        await Promise.all([
-            updateMatchStats(),
-            loadTopScorers()  // Update top scorers when events change
-        ]);
-    });
+    // Reset buttons - hide all when no match is selected
+    currentMatch = null;
+    updateMatchStatusButtons(null);
 }
 
 // Update match display
@@ -400,103 +733,14 @@ function updateMatchDisplay(match) {
         }
     }
 
-    // Update user view
-    const userView = document.querySelector('.user-view');
-    if (userView) {
-        console.log('👥 Updating user view for match:', match.id);
-        
-        // Update match status data attribute
-        userView.dataset.matchStatus = match.status;
-        console.log('🔄 Setting match status:', match.status);
+    // Update team names and logos
+    const view = document.querySelector('.admin-view');
+    if (!view) return;
 
-        // Update team names and logos
-        const homeTeamName = userView.querySelector('.team.home .team-name');
-        const awayTeamName = userView.querySelector('.team.away .team-name');
-        const homeTeamLogo = userView.querySelector('.team.home img');
-        const awayTeamLogo = userView.querySelector('.team.away img');
-
-        if (homeTeamName) homeTeamName.textContent = match.home_team.name || 'TBD';
-        if (awayTeamName) awayTeamName.textContent = match.away_team.name || 'TBD';
-        if (homeTeamLogo) homeTeamLogo.src = match.home_team.crest_url || DEFAULT_TEAM_LOGO;
-        if (awayTeamLogo) awayTeamLogo.src = match.away_team.crest_url || DEFAULT_TEAM_LOGO;
-
-        console.log('⚽ Teams updated:', {
-            home: match.home_team.name,
-            away: match.away_team.name
-        });
-
-        // Update scores
-        const homeScore = userView.querySelector('.team.home .score');
-        const awayScore = userView.querySelector('.team.away .score');
-        if (homeScore) homeScore.textContent = match.home_score || '0';
-        if (awayScore) awayScore.textContent = match.away_score || '0';
-
-        console.log('🎯 Scores updated:', {
-            home: match.home_score || '0',
-            away: match.away_score || '0'
-        });
-
-        // Update match details
-        updateMatchDetails(userView, match);
-        
-        // Update status badge
-        const statusBadge = userView.querySelector('.match-status-badge');
-        if (statusBadge) {
-            statusBadge.className = 'match-status-badge'; // Reset classes
-            if (match.status === 'in_progress') {
-                console.log('🔴 Match is LIVE');
-                statusBadge.classList.add('live');
-                statusBadge.textContent = '🔴 LIVE';
-            } else if (match.status === 'completed') {
-                console.log('✅ Match is COMPLETED');
-                statusBadge.classList.add('completed');
-                statusBadge.textContent = '✓ COMPLETED';
-                
-                // Show celebration for completed match
-                const celebrationOverlay = userView.querySelector('.celebration-overlay');
-                if (celebrationOverlay) {
-                    console.log('🎉 Showing celebration overlay');
-                    celebrationOverlay.classList.add('active');
-                    const fireworks = celebrationOverlay.querySelectorAll('.firework');
-                    fireworks.forEach((firework, index) => {
-                        firework.style.animation = 'none';
-                        firework.offsetHeight; // Trigger reflow
-                        firework.style.animation = `explode ${2 + index * 0.5}s ease-out forwards ${index * 0.3}s`;
-                    });
-                    setTimeout(() => {
-                        celebrationOverlay.classList.remove('active');
-                        console.log('🎉 Celebration overlay removed');
-                    }, 4000);
-                }
-            } else {
-                console.log('⏰ Match is UPCOMING');
-                statusBadge.classList.add('upcoming');
-                statusBadge.textContent = '⏰ UPCOMING';
-            }
-        }
-    }
-
-    // Update admin view if it exists
-    const adminView = document.querySelector('.admin-view');
-    if (adminView) {
-        updateAdminView(match);
-    }
-
-    // Update match status buttons
-    updateMatchStatusButtons(match.status);
-    console.log('✨ Match display update complete');
-}
-
-// Update admin view
-function updateAdminView(match) {
-    const adminView = document.querySelector('.admin-view');
-    if (!adminView || !match.home_team || !match.away_team) return;
-
-    // Update team names and crests
-    const homeTeamName = adminView.querySelector('.team.home .team-name');
-    const awayTeamName = adminView.querySelector('.team.away .team-name');
-    const homeTeamLogo = adminView.querySelector('.team.home img');
-    const awayTeamLogo = adminView.querySelector('.team.away img');
+    const homeTeamName = view.querySelector('.team.home .team-name');
+    const awayTeamName = view.querySelector('.team.away .team-name');
+    const homeTeamLogo = view.querySelector('.team.home img');
+    const awayTeamLogo = view.querySelector('.team.away img');
 
     if (homeTeamName) homeTeamName.textContent = match.home_team.name || 'TBD';
     if (awayTeamName) awayTeamName.textContent = match.away_team.name || 'TBD';
@@ -504,34 +748,18 @@ function updateAdminView(match) {
     if (awayTeamLogo) awayTeamLogo.src = match.away_team.crest_url || DEFAULT_TEAM_LOGO;
 
     // Update scores
-    const homeScore = adminView.querySelector('[data-field="home-score"]');
-    const awayScore = adminView.querySelector('[data-field="away-score"]');
+    const homeScore = view.querySelector('[data-field="home-score"]');
+    const awayScore = view.querySelector('[data-field="away-score"]');
     if (homeScore) homeScore.textContent = match.home_score || '0';
     if (awayScore) awayScore.textContent = match.away_score || '0';
 
     // Update match details
-    updateMatchDetails(adminView, match);
-}
-
-// Helper function to convert 24-hour time to 12-hour format
-function convertTo12Hour(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true,
-        timeZone: 'UTC'  // Use UTC to avoid timezone conversion
-    });
-}
-
-// Update match details helper
-function updateMatchDetails(view, match) {
-    const matchDate = new Date(match.match_date);
     const dateElement = view.querySelector('.date');
     const timeElement = view.querySelector('.time');
     const venueElement = view.querySelector('.venue');
 
     if (dateElement) {
+        const matchDate = new Date(match.match_date);
         dateElement.textContent = matchDate.toLocaleDateString('en-GB', {
             weekday: 'long',
             day: 'numeric',
@@ -541,13 +769,20 @@ function updateMatchDetails(view, match) {
     }
 
     if (timeElement) {
-        // Convert match_date to 12-hour format
-        timeElement.textContent = convertTo12Hour(match.match_date);
+        const matchDate = new Date(match.match_date);
+        timeElement.textContent = matchDate.toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        });
     }
 
     if (venueElement) {
         venueElement.textContent = match.venue || 'TBD';
     }
+
+    // Update match status buttons
+    updateMatchStatusButtons(match.status);
 }
 
 // Update match status buttons
@@ -558,261 +793,105 @@ function updateMatchStatusButtons(status) {
     
     if (!startMatchBtn || !completeMatchBtn || !addStatsBtn) return;
 
-    // Always show the buttons but manage their state
-    startMatchBtn.style.display = 'block';
-    completeMatchBtn.style.display = 'block';
-    addStatsBtn.style.display = 'block';
+    // Hide all buttons first
+    startMatchBtn.style.display = 'none';
+    completeMatchBtn.style.display = 'none';
+    addStatsBtn.style.display = 'none';
 
-    if (status === 'completed') {
-        startMatchBtn.style.display = 'none';
-        completeMatchBtn.textContent = 'Match Completed';
-        completeMatchBtn.classList.add('completed');
-        completeMatchBtn.disabled = true;
-        addStatsBtn.style.display = 'none';
-    } else if (status === 'in_progress') {
-        startMatchBtn.style.display = 'none';
-        completeMatchBtn.textContent = 'Mark as Completed';
-        completeMatchBtn.classList.remove('completed');
-        completeMatchBtn.disabled = false;
-        addStatsBtn.style.display = 'block';
-    } else {
-        startMatchBtn.disabled = false;
-        completeMatchBtn.style.display = 'none';
-        addStatsBtn.style.display = 'none';
-    }
-}
-
-// Reset match display
-function resetMatchDisplay() {
-    const adminView = document.querySelector('.admin-view');
-    if (!adminView) return;
-
-    adminView.querySelector('.team.home .team-name').textContent = 'TBD';
-    adminView.querySelector('.team.away .team-name').textContent = 'TBD';
-    adminView.querySelector('.team.home img').src = DEFAULT_TEAM_LOGO;
-    adminView.querySelector('.team.away img').src = DEFAULT_TEAM_LOGO;
-    adminView.querySelector('[data-field="home-score"]').textContent = '-';
-    adminView.querySelector('[data-field="away-score"]').textContent = '-';
-    adminView.querySelector('.date').textContent = 'TBD';
-    adminView.querySelector('.time').textContent = 'TBD';
-    adminView.querySelector('.venue').textContent = 'TBD';
-
-    // Reset buttons
-    updateMatchStatusButtons('scheduled');
-    currentMatch = null;
-}
-
-// Update status button
-function updateStatusButton(status) {
-    const statusBtn = document.querySelector('.update-status-btn');
-    if (!statusBtn) return;
-
-    if (status === 'completed') {
-        statusBtn.textContent = 'Match Completed';
-        statusBtn.classList.add('completed');
-        statusBtn.disabled = true;
-    } else {
-        statusBtn.textContent = 'Mark as Completed';
-        statusBtn.classList.remove('completed');
-        statusBtn.disabled = false;
-    }
-}
-
-// Add match event (goal)
-async function addMatchEvent(eventData) {
+    // Show appropriate buttons based on status
     if (!currentMatch) {
-        showNotification('Please select a match first', 'error');
-        return;
+        return; // Don't show any buttons if no match is selected
     }
 
-    try {
-        const teamId = eventData.team === 'home' ? currentMatch.home_team_id : currentMatch.away_team_id;
-        const isHome = eventData.team === 'home';
-        const newScore = isHome ? 
-            (currentMatch.home_score || 0) + 1 : 
-            (currentMatch.away_score || 0) + 1;
+    switch(status) {
+        case 'scheduled':
+            startMatchBtn.style.display = 'block';
+            startMatchBtn.disabled = false;
+            break;
+            
+        case 'in_progress':
+            completeMatchBtn.style.display = 'block';
+            completeMatchBtn.textContent = 'Mark as Completed';
+            completeMatchBtn.classList.remove('completed');
+            completeMatchBtn.disabled = false;
+            addStatsBtn.style.display = 'block';
+            break;
+            
+        case 'completed':
+            completeMatchBtn.style.display = 'block';
+            completeMatchBtn.textContent = 'Match Completed';
+            completeMatchBtn.classList.add('completed');
+            completeMatchBtn.disabled = true;
+            break;
+    }
+}
 
-        // Add event using the API function
-        const { data: updatedMatch, error } = await addMatchEventToDb(currentMatch.id, {
-            teamId,
-            isHome,
-            newScore,
-            playerName: eventData.playerName,
-            assistName: eventData.assistName,
-            minute: eventData.minute
-        });
+// Set up match subscriptions
+function setupMatchSubscriptions(matchId) {
+    // Clean up existing subscriptions
+    if (window.matchSubscription) {
+        window.matchSubscription.unsubscribe();
+    }
+    if (window.eventsSubscription) {
+        window.eventsSubscription.unsubscribe();
+    }
 
-        if (error) throw error;
-
-        // Fetch the complete match data with team information
-        const { data: fullMatch, error: matchError } = await supabaseClient
-            .from('matches')
-            .select(`
-                *,
-                home_team:teams!matches_home_team_id_fkey(id, name, crest_url),
-                away_team:teams!matches_away_team_id_fkey(id, name, crest_url)
-            `)
-            .eq('id', currentMatch.id)
-            .single();
-
-        if (matchError) throw matchError;
-
-        // Update current match state with complete data
-        currentMatch = fullMatch;
-
-        // Show goal celebration
-        const celebrationOverlay = document.querySelector('.celebration-overlay');
-        if (celebrationOverlay) {
-            celebrationOverlay.classList.add('active');
-            // Restart firework animations
-            const fireworks = celebrationOverlay.querySelectorAll('.firework');
-            fireworks.forEach(firework => {
-                firework.style.animation = 'none';
-                firework.offsetHeight; // Trigger reflow
-                firework.style.animation = null;
-            });
-            // Hide celebration after animation
-            setTimeout(() => {
-                celebrationOverlay.classList.remove('active');
-            }, 2000);
+    // Subscribe to match updates
+    window.matchSubscription = subscribeToMatch(matchId, async (payload) => {
+        const { data: match, error } = await getMatchDetails(matchId);
+        if (!error && match) {
+            currentMatch = match;
+            await Promise.all([
+                updateMatchDisplay(match),
+                loadTopScorers()
+            ]);
         }
+    });
 
-        const teamName = isHome ? currentMatch.home_team?.name : currentMatch.away_team?.name;
-        showNotification(`GOAL! ${eventData.playerName} scores for ${teamName || 'the team'}!`, 'success');
-        
-        // Update all necessary displays
+    // Subscribe to match events
+    window.eventsSubscription = subscribeToMatchEvents(matchId, async () => {
         await Promise.all([
-            updateMatchDisplay(currentMatch),
             updateMatchStats(),
-            loadMatches(),       // Update fixtures
-            loadTopScorers()     // Update top scorers and assists
+            loadTopScorers()
         ]);
-
-        // Close the event modal and reset form
-        const eventModal = document.querySelector('.event-modal');
-        const eventForm = document.getElementById('eventForm');
-        if (eventModal) {
-            eventModal.style.display = 'none';
-            if (eventForm) eventForm.reset();
-        }
-
-        // Update the fixtures list
-        const fixturesList = document.getElementById('fixtures-list');
-        if (fixturesList) {
-            const fixtureElement = fixturesList.querySelector(`[data-match-id="${currentMatch.id}"]`);
-            if (fixtureElement) {
-                const homeScore = fixtureElement.querySelector('.team.home .score');
-                const awayScore = fixtureElement.querySelector('.team.away .score');
-                if (homeScore) homeScore.textContent = currentMatch.home_score || '0';
-                if (awayScore) awayScore.textContent = currentMatch.away_score || '0';
-            }
-        }
-
-    } catch (error) {
-        console.error('Error adding match event:', error);
-        showNotification('Error adding event', 'error');
-    }
+    });
 }
 
-// Add or update player in the players table
-async function addOrUpdatePlayer(playerName, teamId) {
-    try {
-        // First check if player exists
-        const { data: existingPlayer, error: searchError } = await supabaseClient
-            .from('players')
-            .select('id')
-            .eq('name', playerName)
-            .eq('team_id', teamId)
-            .maybeSingle();
-
-        if (searchError) throw searchError;
-
-        // If player doesn't exist, add them
-        if (!existingPlayer) {
-            const { error: insertError } = await supabaseClient
-                .from('players')
-                .insert([{
-                    name: playerName,
-                    team_id: teamId
-                }]);
-
-            if (insertError) throw insertError;
-        }
-    } catch (error) {
-        console.error('Error managing player:', error);
-        throw error;
-    }
-}
-
-// Update match stats display
+// Update match stats
 async function updateMatchStats() {
     if (!currentMatch) return;
 
     try {
-        const { data: goals, error } = await supabaseClient
-            .from('goals')
-            .select(`
-                *,
-                team:teams(name)
-            `)
-            .eq('match_id', currentMatch.id)
-            .order('minute');
-
+        const { data: events, error } = await getMatchEvents(currentMatch.id);
         if (error) throw error;
 
-        // Group goals by team
-        const homeGoals = goals.filter(g => g.team_id === currentMatch.home_team_id);
-        const awayGoals = goals.filter(g => g.team_id === currentMatch.away_team_id);
+        // Group events by team
+        const homeEvents = events.filter(e => e.team_id === currentMatch.home_team_id);
+        const awayEvents = events.filter(e => e.team_id === currentMatch.away_team_id);
 
-        // Update stats in both views
-        ['user-view', 'admin-view'].forEach(viewType => {
-            const view = document.querySelector(`.${viewType}`);
-            if (!view) return;
+        // Update stats in admin view
+        const adminView = document.querySelector('.admin-view');
+        if (!adminView) return;
 
-            // Ensure stats containers exist
-            let homeStats = view.querySelector('.team-stats.home .stats-content');
-            let awayStats = view.querySelector('.team-stats.away .stats-content');
+        const homeStats = adminView.querySelector('.team-stats.home');
+        const awayStats = adminView.querySelector('.team-stats.away');
 
-            // Create containers if they don't exist
-            if (!homeStats) {
-                const homeContainer = view.querySelector('.team-stats.home') || createStatsContainer(view, 'home');
-                homeStats = homeContainer.querySelector('.stats-content') || createStatsContent(homeContainer);
-            }
-            if (!awayStats) {
-                const awayContainer = view.querySelector('.team-stats.away') || createStatsContainer(view, 'away');
-                awayStats = awayContainer.querySelector('.stats-content') || createStatsContent(awayContainer);
-            }
+        if (homeStats) {
+            homeStats.innerHTML = formatMatchEvents(homeEvents, 'home');
+        }
 
-            // Update the stats content
-            homeStats.innerHTML = formatMatchEvents(homeGoals, 'home');
-            awayStats.innerHTML = formatMatchEvents(awayGoals, 'away');
-        });
-  } catch (error) {
+        if (awayStats) {
+            awayStats.innerHTML = formatMatchEvents(awayEvents, 'away');
+        }
+    } catch (error) {
         console.error('Error updating match stats:', error);
         showNotification('Error updating match stats', 'error');
     }
 }
 
-// Helper function to create stats container
-function createStatsContainer(view, teamType) {
-    const container = document.createElement('div');
-    container.className = `team-stats ${teamType}`;
-    container.innerHTML = `<h3>${teamType.charAt(0).toUpperCase() + teamType.slice(1)} Team Stats</h3>`;
-    view.appendChild(container);
-    return container;
-}
-
-// Helper function to create stats content
-function createStatsContent(container) {
-    const content = document.createElement('div');
-    content.className = 'stats-content';
-    container.appendChild(content);
-    return content;
-}
-
 // Format match events for display
 function formatMatchEvents(events, teamType) {
-    if (!events.length) return '<div class="no-stats"></div>';
+    if (!events.length) return '<div class="no-stats">No events recorded</div>';
 
     return events.map(event => `
         <div class="stat-item">
@@ -841,653 +920,181 @@ function formatMatchEvents(events, teamType) {
     `).join('');
 }
 
-// Load and display tournament data
-async function loadTournamentData() {
-  if (!category) {
-    console.error('Tournament category not found')
-    return
-  }
+// Initialize event modal handlers
+function initializeEventModal() {
+    const eventModal = document.querySelector('.event-modal');
+    const cancelBtn = eventModal?.querySelector('.cancel-btn');
+    const eventForm = eventModal?.querySelector('#eventForm');
 
-  try {
-    await Promise.all([
-      loadTeams(),
-      loadMatches(),
-      loadTopScorers()
-    ])
-  } catch (error) {
-    console.error('Error loading tournament data:', error)
-  }
-}
-
-// Load teams and update league table
-async function loadTeams() {
-  try {
-    const { data: teams, error } = await getTeams(category)
-    if (error) throw error
-
-    // Store teams in a variable accessible to the sorting functions
-    window.currentTeams = teams;
-
-    // Initial sort by points
-    sortAndDisplayTeams('points');
-
-    // Add event listeners to sort buttons if not already added
-    initializeSortButtons();
-
-  } catch (error) {
-    console.error('Error loading teams:', error)
-    showNotification('Error updating league table', 'error')
-  }
-}
-
-// Initialize sort buttons
-function initializeSortButtons() {
-    const sortButtons = document.querySelectorAll('.sort-btn');
-    
-    // Set initial active state on points button
-    const pointsButton = document.querySelector('[data-sort="points"]');
-    if (pointsButton) {
-        pointsButton.classList.add('active');
-    }
-
-    sortButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            // First remove active class from all buttons
-            sortButtons.forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Add active class only to clicked button
-            button.classList.add('active');
-            
-            // Perform the sort
-            const sortType = button.dataset.sort;
-            sortAndDisplayTeams(sortType);
+    if (eventModal) {
+        // Close modal when clicking outside
+        eventModal.addEventListener('click', (e) => {
+            if (e.target === eventModal) {
+                eventModal.style.display = 'none';
+                if (eventForm) eventForm.reset();
+            }
         });
-    });
-}
 
-// Sort and display teams
-function sortAndDisplayTeams(sortType) {
-    if (!window.currentTeams) return;
-
-    const teams = [...window.currentTeams];
-    
-    switch(sortType) {
-        case 'points':
-            teams.sort((a, b) => {
-                if (b.points !== a.points) return b.points - a.points;
-                const bGD = b.goals_for - b.goals_against;
-                const aGD = a.goals_for - a.goals_against;
-                if (bGD !== aGD) return bGD - aGD;
-                return b.goals_for - a.goals_for;
+        // Close modal when clicking cancel button
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                eventModal.style.display = 'none';
+                if (eventForm) eventForm.reset();
             });
-            break;
-        case 'gd':
-            teams.sort((a, b) => {
-                const bGD = b.goals_for - b.goals_against;
-                const aGD = a.goals_for - a.goals_against;
-                if (bGD !== aGD) return bGD - aGD;
-                if (b.points !== a.points) return b.points - a.points;
-                return b.goals_for - a.goals_for;
-            });
-            break;
-        case 'goals':
-            teams.sort((a, b) => {
-                if (b.goals_for !== a.goals_for) return b.goals_for - a.goals_for;
-                if (b.points !== a.points) return b.points - a.points;
-                const bGD = b.goals_for - b.goals_against;
-                const aGD = a.goals_for - a.goals_against;
-                return bGD - aGD;
-            });
-            break;
-    }
-
-    // Update league table
-    const tableBody = document.getElementById('table-body');
-    if (!tableBody) return;
-
-    tableBody.innerHTML = teams.map((team, index) => `
-        <tr class="${index < 4 ? 'qualification-zone' : ''}">
-            <td>${index + 1}</td>
-            <td class="team-name-cell">
-                <div class="team-info">
-                    <img src="${team.crest_url || DEFAULT_TEAM_LOGO}" 
-                         alt="${team.name}" class="team-crest" loading="lazy">
-                    ${team.name}
-                </div>
-            </td>
-            <td>${team.group_name || '-'}</td>
-            <td>${team.played || 0}</td>
-            <td>${team.won || 0}</td>
-            <td>${team.drawn || 0}</td>
-            <td>${team.lost || 0}</td>
-            <td>${team.points || 0}</td>
-            <td>${(team.goals_for || 0) - (team.goals_against || 0)}</td>
-            <td>${team.goals_for || 0}</td>
-            <td>${team.goals_against || 0}</td>
-        </tr>
-    `).join('');
-}
-
-// Load matches and update fixtures
-async function loadMatches() {
-    try {
-        console.log('Loading matches for category:', category);
-        
-        // First fetch matches with team information
-        const client = await getClient();
-        const { data: matches, error } = await client
-            .from('matches')
-            .select(`
-                id,
-                home_team:teams!matches_home_team_id_fkey(id, name, crest_url),
-                away_team:teams!matches_away_team_id_fkey(id, name, crest_url),
-                home_score,
-                away_score,
-                match_date,
-                venue,
-                status,
-                match_type
-            `)
-            .eq('category', category)
-            .order('match_date');
-
-        if (error) {
-            console.error('Supabase query error:', error);
-            throw error;
         }
 
-        // Then fetch goals separately
-        const { data: allGoals, error: goalsError } = await client
-            .from('goals')
+        // Handle form submission
+        if (eventForm) {
+            eventForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                
+                try {
+                    if (!currentMatch) {
+                        throw new Error('No match selected');
+                    }
+
+                    // Get team ID based on selection
+                    const teamSelection = formData.get('team');
+                    const teamId = teamSelection === 'home' ? 
+                        currentMatch.home_team.id : 
+                        currentMatch.away_team.id;
+
+                    const eventData = {
+                        match_id: currentMatch.id,
+                        team_id: teamId,
+                        scorer_name: formData.get('playerName'),
+                        assist_name: formData.get('assistName') || null,
+                        minute: parseInt(formData.get('minute'))
+                    };
+
+                    console.log('Saving event data:', eventData);
+
+                    // First add the event
+                    const { error: eventError } = await addMatchEventToDb(eventData);
+                    if (eventError) throw eventError;
+
+                    // Then update the match score
+                    const updatedMatch = await updateMatchScore(currentMatch.id, teamSelection);
+                    if (updatedMatch) {
+                        currentMatch = updatedMatch;
+                        updateMatchDisplay(updatedMatch);
+                    }
+
+                    showNotification('Event added successfully', 'success');
+                    eventModal.style.display = 'none';
+                    eventForm.reset();
+                    
+                    // Update match stats and other displays
+                    await Promise.all([
+                        updateMatchStats(),
+                        loadTopScorers(),
+                        loadMatches()
+                    ]);
+                } catch (error) {
+                    console.error('Error adding event:', error);
+                    showNotification('Error adding event: ' + error.message, 'error');
+                }
+            });
+        }
+    }
+}
+
+// Update match score when event is added
+async function updateMatchScore(matchId, scoringTeam) {
+    try {
+        const { data: match, error } = await supabaseClient
+            .from('matches')
             .select('*')
-            .in('match_id', matches.map(m => m.id));
-
-        if (goalsError) {
-            console.error('Error fetching goals:', goalsError);
-            throw goalsError;
-        }
-
-        // Combine matches with their goals
-        const matchesWithGoals = matches.map(match => {
-            const matchGoals = allGoals.filter(goal => goal.match_id === match.id);
-            return {
-                ...match,
-                goals: matchGoals.map(goal => ({
-                    ...goal,
-                    is_home: goal.team_id === match.home_team.id
-                }))
-            };
-        });
-
-        console.log('Fetched matches:', matchesWithGoals);
-
-        const fixturesList = document.getElementById('fixtures-list');
-        if (!fixturesList) {
-            console.error('Fixtures list element not found');
-            return;
-        }
-
-        if (!matchesWithGoals || matchesWithGoals.length === 0) {
-            console.log('No matches found');
-            fixturesList.innerHTML = `
-                <div class="no-matches">
-                    <p>No matches scheduled yet</p>
-                </div>
-            `;
-            return;
-        }
-
-        const fixturesHtml = matchesWithGoals.map(match => {
-            console.log('Processing match:', match);
-            
-            if (!match) {
-                console.error('Invalid match data');
-                return '';
-            }
-
-            // Format date from match_date
-            const matchDate = new Date(match.match_date);
-            const formattedDate = matchDate.toLocaleDateString('en-GB', {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric'
-            });
-
-            // Format time in 12-hour format
-            const formattedTime = convertTo12Hour(match.match_date);
-
-            // Sort goals by minute
-            const homeGoals = match.goals
-                ?.filter(goal => goal.is_home)
-                .sort((a, b) => a.minute - b.minute) || [];
-            const awayGoals = match.goals
-                ?.filter(goal => !goal.is_home)
-                .sort((a, b) => a.minute - b.minute) || [];
-
-            console.log('Match goals:', { homeGoals, awayGoals });
-
-            // Format goal scorers
-            const homeScorers = homeGoals.map(goal => `
-                <div class="scorer">
-                    <span class="goal-icon"><i class="fas fa-futbol"></i></span>
-                    <span class="scorer-name">${goal.scorer_name}</span>
-                    <span class="goal-minute">${goal.minute}'</span>
-                    ${goal.assist_name ? `<span class="assist">(assist: ${goal.assist_name})</span>` : ''}
-                </div>
-            `).join('');
-
-            const awayScorers = awayGoals.map(goal => `
-                <div class="scorer">
-                    <span class="goal-icon"><i class="fas fa-futbol"></i></span>
-                    <span class="scorer-name">${goal.scorer_name}</span>
-                    <span class="goal-minute">${goal.minute}'</span>
-                    ${goal.assist_name ? `<span class="assist">(assist: ${goal.assist_name})</span>` : ''}
-                </div>
-            `).join('');
-
-            return `
-                <div class="fixture" data-match-id="${match.id}">
-                    <div class="fixture-teams">
-                        <div class="team home">
-                            <div class="team-info">
-                                <img src="${match.home_team?.crest_url || DEFAULT_TEAM_LOGO}" alt="${match.home_team?.name || 'Home Team'}" class="team-logo" loading="lazy">
-                                <div class="team-name">${match.home_team?.name || 'TBD'}</div>
-                                <div class="score">${match.home_score || 0}</div>
-                            </div>
-                        </div>
-                        <div class="vs-container">
-                            <div class="vs-badge">VS</div>
-                        </div>
-                        <div class="team away">
-                            <div class="team-info">
-                                <img src="${match.away_team?.crest_url || DEFAULT_TEAM_LOGO}" alt="${match.away_team?.name || 'Away Team'}" class="team-logo" loading="lazy">
-                                <div class="team-name">${match.away_team?.name || 'TBD'}</div>
-                                <div class="score">${match.away_score || 0}</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="fixture-meta">
-                        <div class="meta-row">
-                            <div class="meta-item">
-                                <i class="fas fa-calendar"></i>
-                                <span class="date">${formattedDate}</span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fas fa-clock"></i>
-                                <span class="time">${formattedTime}</span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span class="venue">${match.venue || 'TBD'}</span>
-                            </div>
-                        </div>
-                        ${match.status !== 'scheduled' ? 
-                            `<span class="match-status ${match.status.toLowerCase()}">${match.status}</span>` : ''}
-                    </div>
-                    ${(match.status === 'completed' || match.status === 'in_progress') && (homeGoals.length > 0 || awayGoals.length > 0) ? `
-                        <div class="fixture-stats">
-                            <div class="team-stats home-stats">
-                                ${homeScorers}
-                            </div>
-                            <div class="team-stats away-stats">
-                                ${awayScorers}
-                            </div>
-                        </div>
-                    ` : ''}
-                </div>
-            `;
-        }).join('');
-
-        console.log('Setting fixtures HTML');
-        fixturesList.innerHTML = fixturesHtml;
-        console.log('Fixtures loaded successfully');
-
-        // Store matches globally for bracket view
-        window.currentMatches = matchesWithGoals;
-
-        // Initialize fixture controls after loading matches
-        initializeFixtureControls();
-
-    } catch (error) {
-        console.error('Error loading matches:', error);
-        const fixturesList = document.getElementById('fixtures-list');
-        if (fixturesList) {
-            fixturesList.innerHTML = `
-                <div class="error-message">
-                    <p>Error loading matches. Please try again later.</p>
-                </div>
-            `;
-        }
-        showNotification('Error loading matches. Please try again later.', 'error');
-    }
-}
-
-// Load top scorers and assists
-async function loadTopScorers() {
-  try {
-        // Fetch both top scorers and assists in parallel
-        const client = await getClient();
-        const [scorersResult, assistsResult] = await Promise.all([
-            client.rpc('get_top_scorers', { category_param: category }),
-            client.rpc('get_top_assists', { category_param: category })
-        ]);
-
-        if (scorersResult.error) throw scorersResult.error;
-        if (assistsResult.error) throw assistsResult.error;
-
-        const scorers = scorersResult.data;
-        const assists = assistsResult.data;
-
-        // Update top scorers list
-        const scorersList = document.getElementById('scorers-list');
-        const assistsList = document.getElementById('assists-list');
-
-        if (scorersList) {
-            scorersList.innerHTML = formatStatsList(scorers, 'goals');
-        }
-
-        if (assistsList) {
-            assistsList.innerHTML = formatStatsList(assists, 'assists');
-        }
-
-        // Update scorers in fixtures list
-        updateFixturesWithStats(scorers, assists);
-
-    } catch (error) {
-        console.error('Error loading top scorers and assists:', error);
-        showNotification('Error updating statistics', 'error');
-    }
-}
-
-// Helper function to format stats list
-function formatStatsList(stats, type) {
-    if (!stats || stats.length === 0) {
-        return `
-            <div class="no-stats">
-                <i class="fas ${type === 'goals' ? 'fa-futbol' : 'fa-hands-helping'}"></i>
-                <p>No statistics available</p>
-            </div>`;
-    }
-
-    return `
-        <div class="stats-wrapper">
-            ${stats.map((stat, index) => `
-                <div class="stat-row ${index < 3 ? 'top-' + (index + 1) : ''}">
-                    <div class="rank">
-                        ${index < 3 ? 
-                            `<i class="fas fa-trophy trophy-${index + 1}"></i>` : 
-                            `<span class="position">${index + 1}</span>`
-                        }
-        </div>
-                    <div class="player-info">
-                        <div class="player-name">
-                            ${type === 'goals' ? stat.scorer_name : stat.assist_name}
-                            <span class="stat-count">
-                                ${type === 'goals' ? 
-                                    `<i class="fas fa-futbol"></i> ${stat.goals_count}` : 
-                                    `<i class="fas fa-hands-helping"></i> ${stat.assists_count}`
-                                }
-                            </span>
-      </div>
-                        <div class="team-name">
-                            <i class="fas fa-shield-alt"></i> ${stat.team_name}
-                        </div>
-                    </div>
-                </div>
-            `).join('')}
-        </div>
-    `;
-}
-
-// Helper function to update fixtures with stats
-function updateFixturesWithStats(scorers, assists) {
-    const fixturesList = document.getElementById('fixtures-list');
-    if (!fixturesList) return;
-
-    const fixtures = fixturesList.querySelectorAll('.fixture');
-    fixtures.forEach(fixture => {
-        const homeStats = fixture.querySelector('.team.home .player-stats');
-        const awayStats = fixture.querySelector('.team.away .player-stats');
-        
-        if (homeStats && awayStats) {
-            const homeTeamName = fixture.querySelector('.team.home .team-name')?.textContent;
-            const awayTeamName = fixture.querySelector('.team.away .team-name')?.textContent;
-
-            const homeTeamScorers = scorers.filter(s => s.team_name === homeTeamName);
-            const homeTeamAssists = assists.filter(a => a.team_name === homeTeamName);
-            const awayTeamScorers = scorers.filter(s => s.team_name === awayTeamName);
-            const awayTeamAssists = assists.filter(a => a.team_name === awayTeamName);
-
-            homeStats.innerHTML = formatTeamStats(homeTeamScorers, homeTeamAssists);
-            awayStats.innerHTML = formatTeamStats(awayTeamScorers, awayTeamAssists);
-        }
-    });
-}
-
-// Helper function to format team stats
-function formatTeamStats(scorers, assists) {
-    let html = '';
-    if (scorers.length > 0) {
-        html += '<div class="scorers">';
-        scorers.forEach(s => {
-            html += `<div class="stat">${s.scorer_name} (${s.goals_count})</div>`;
-        });
-        html += '</div>';
-    }
-    if (assists.length > 0) {
-        html += '<div class="assists">';
-        assists.forEach(a => {
-            html += `<div class="stat">${a.assist_name} (${a.assists_count} assists)</div>`;
-        });
-        html += '</div>';
-    }
-    return html || '<div class="no-stats">No stats</div>';
-}
-
-// Initialize fixture filters and view toggles
-function initializeFixtureControls() {
-    // Initialize filter buttons
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const fixturesList = document.getElementById('fixtures-list');
-    const bracketView = document.getElementById('bracket-view');
-
-    // Set initial active state on 'all' filter
-    const allButton = document.querySelector('[data-filter="all"]');
-    if (allButton) {
-        allButton.classList.add('active');
-    }
-
-    filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            // Remove active class from all filter buttons
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            // Add active class to clicked button
-            button.classList.add('active');
-
-            const filterType = button.dataset.filter;
-            filterFixtures(filterType);
-        });
-    });
-
-    // Initialize view toggle buttons
-    const viewButtons = document.querySelectorAll('.view-btn');
-    viewButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            // Remove active class from all view buttons
-            viewButtons.forEach(btn => btn.classList.remove('active'));
-            // Add active class to clicked button
-            button.classList.add('active');
-
-            const viewType = button.dataset.view;
-            // Toggle between list and bracket view
-            if (viewType === 'list') {
-                fixturesList.classList.add('active');
-                bracketView.classList.remove('active');
-            } else {
-                fixturesList.classList.remove('active');
-                bracketView.classList.add('active');
-                updateBracketView(window.currentMatches || []);
-            }
-        });
-    });
-}
-
-// Filter fixtures based on selected filter
-function filterFixtures(filterType) {
-    const fixtures = document.querySelectorAll('.fixture');
-    const currentDate = new Date();
-
-    fixtures.forEach(fixture => {
-        const matchStatus = fixture.querySelector('.match-status')?.textContent.toLowerCase() || 'scheduled';
-        const matchDate = new Date(fixture.querySelector('.date')?.textContent);
-        
-        let shouldShow = false;
-        switch(filterType) {
-            case 'all':
-                shouldShow = true;
-                break;
-            case 'upcoming':
-                shouldShow = matchStatus === 'scheduled' && matchDate > currentDate;
-                break;
-            case 'live':
-                shouldShow = matchStatus === 'in_progress';
-                break;
-            case 'completed':
-                shouldShow = matchStatus === 'completed';
-                break;
-        }
-
-        fixture.style.display = shouldShow ? 'block' : 'none';
-    });
-}
-
-// Update bracket view with match data
-function updateBracketView(matches) {
-    const bracketMatches = {
-        'quarter-final': document.querySelector('.quarter-finals .bracket-matches'),
-        'semi-final': document.querySelector('.semi-finals .bracket-matches'),
-        'final': document.querySelector('.finals .bracket-matches')
-    };
-
-    // Group matches by type
-    const matchesByType = matches.reduce((acc, match) => {
-        if (match.match_type && match.match_type !== 'group') {
-            if (!acc[match.match_type]) {
-                acc[match.match_type] = [];
-            }
-            acc[match.match_type].push(match);
-        }
-        return acc;
-    }, {});
-
-    // Update each bracket section
-    Object.entries(bracketMatches).forEach(([type, section]) => {
-        if (section && matchesByType[type]) {
-            section.innerHTML = matchesByType[type].map(match => `
-                <div class="bracket-match">
-                    <div class="team-bracket">
-                        <img src="${match.home_team?.crest_url || DEFAULT_TEAM_LOGO}" 
-                             alt="${match.home_team?.name || 'TBD'}" class="team-crest" loading="lazy">
-                        <span class="team-name">${match.home_team?.name || 'TBD'}</span>
-                        <span class="team-score">${match.home_score || 0}</span>
-                    </div>
-                    <div class="team-bracket">
-                        <img src="${match.away_team?.crest_url || DEFAULT_TEAM_LOGO}" 
-                             alt="${match.away_team?.name || 'TBD'}" class="team-crest" loading="lazy">
-                        <span class="team-name">${match.away_team?.name || 'TBD'}</span>
-                        <span class="team-score">${match.away_score || 0}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-    });
-}
-
-// Function to update match type title
-function updateMatchTypeTitle(matchData) {
-    const titleElement = document.getElementById('matchTypeTitle');
-    if (!titleElement) return;
-
-    if (!matchData || !matchData.match_type) {
-        titleElement.textContent = 'Match';
-        return;
-    }
-
-    const matchType = matchData.match_type.toLowerCase();
-    switch(matchType) {
-        case 'group':
-            titleElement.textContent = 'Group Match';
-            break;
-        case 'quarter-final':
-            titleElement.textContent = 'Quarter Final';
-            break;
-        case 'semi-final':
-            titleElement.textContent = 'Semi Final';
-            break;
-        case 'final':
-            titleElement.textContent = 'Final';
-            break;
-        default:
-            titleElement.textContent = 'Match';
-    }
-}
-
-// Update the loadMatchDetails function to include match type update
-async function loadMatchDetails(matchId) {
-    try {
-        console.log('Loading match details for ID:', matchId);
-        const { data: match, error } = await getClient()
-            .from('matches')
-            .select(`
-                *,
-                home_team:teams!matches_home_team_id_fkey(id, name, crest_url),
-                away_team:teams!matches_away_team_id_fkey(id, name, crest_url)
-            `)
             .eq('id', matchId)
             .single();
 
         if (error) throw error;
 
-        console.log('Loaded match details:', match);
+        const updateData = {};
+        if (scoringTeam === 'home') {
+            updateData.home_score = (parseInt(match.home_score) || 0) + 1;
+        } else {
+            updateData.away_score = (parseInt(match.away_score) || 0) + 1;
+        }
 
-        // Update match type title
-        updateMatchTypeTitle(match);
+        const { data: updatedMatch, error: updateError } = await supabaseClient
+            .from('matches')
+            .update(updateData)
+            .eq('id', matchId)
+            .select(`
+                *,
+                home_team:teams!matches_home_team_id_fkey(id, name, crest_url),
+                away_team:teams!matches_away_team_id_fkey(id, name, crest_url)
+            `)
+            .single();
 
-        // Update match display and other elements
-        currentMatch = match;
-        updateMatchDisplay(match);
-        await updateMatchStats();
-
+        if (updateError) throw updateError;
+        return updatedMatch;
     } catch (error) {
-        console.error('Error loading match details:', error);
-        showNotification('Error loading match details', 'error');
+        console.error('Error updating match score:', error);
+        showNotification('Error updating match score', 'error');
+        return null;
     }
+}
+
+// Initialize filter buttons
+function initializeFilterButtons() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            button.classList.add('active');
+            
+            const filter = button.dataset.filter;
+            filterFixtures(filter);
+        });
+    });
+}
+
+// Filter fixtures based on status
+function filterFixtures(filter) {
+    const fixtures = document.querySelectorAll('#fixtures-list .fixture');
+    
+    fixtures.forEach(fixture => {
+        const hasLiveBadge = fixture.querySelector('.live-badge');
+        const hasCompletedBadge = fixture.querySelector('.completed-badge');
+        
+        switch(filter) {
+            case 'all':
+                fixture.style.display = 'block';
+                break;
+            case 'live':
+                fixture.style.display = hasLiveBadge ? 'block' : 'none';
+                break;
+            case 'completed':
+                fixture.style.display = hasCompletedBadge ? 'block' : 'none';
+                break;
+            case 'upcoming':
+                fixture.style.display = (!hasLiveBadge && !hasCompletedBadge) ? 'block' : 'none';
+                break;
+        }
+    });
 }
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async function() {
     try {
         console.log('Waiting for Supabase initialization...');
-        // Wait for Supabase to initialize
         const client = await waitForInit();
         console.log('Supabase initialized successfully');
         
-        // Check if we're in the correct page/context
         const matchContainer = document.querySelector('.final-match-card');
         if (!matchContainer) {
             console.log('Not on final match page, exiting');
-            return; // Exit if we're not on the correct page
+            return;
         }
 
-        // Initialize Supabase client globally
         window.supabaseClient = client;
-
-        // Initialize admin controls
-        await initializeAdminControls();
-
-        // Load tournament data
+        await initializeView();
         await loadTournamentData();
 
     } catch (error) {
@@ -1495,154 +1102,3 @@ document.addEventListener('DOMContentLoaded', async function() {
         showNotification('Error initializing application', 'error');
     }
 });
-
-// Add notification styles
-const notificationStyles = `
-    .notification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 1rem 2rem;
-        border-radius: 8px;
-        background: #1d3557;
-        color: white;
-        z-index: 1000;
-        animation: slideIn 0.3s ease-out;
-    }
-
-    .notification.error {
-        background: #e63946;
-    }
-
-    .notification.success {
-        background: #2ecc71;
-    }
-
-    @keyframes slideIn {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-`;
-
-// Add styles for the stats display
-const statsStyles = `
-    .stats-wrapper {
-        padding: 0.5rem;
-        border-radius: 8px;
-        background: #fff;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .stat-row {
-        display: flex;
-        align-items: center;
-        padding: 0.75rem;
-        margin: 0.5rem 0;
-        background: #f8f9fa;
-        border-radius: 8px;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .stat-row:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-
-    .stat-row.top-1 {
-        background: linear-gradient(135deg, #ffd700 0%, #fff7e6 100%);
-    }
-
-    .stat-row.top-2 {
-        background: linear-gradient(135deg, #c0c0c0 0%, #f5f5f5 100%);
-    }
-
-    .stat-row.top-3 {
-        background: linear-gradient(135deg, #cd7f32 0%, #faf0e6 100%);
-    }
-
-    .rank {
-        width: 40px;
-        text-align: center;
-        font-weight: bold;
-    }
-
-    .rank .position {
-        display: inline-block;
-        width: 24px;
-        height: 24px;
-        line-height: 24px;
-        border-radius: 50%;
-        background: #e9ecef;
-        color: #495057;
-    }
-
-    .trophy-1 { color: #ffd700; }
-    .trophy-2 { color: #c0c0c0; }
-    .trophy-3 { color: #cd7f32; }
-
-    .player-info {
-        flex: 1;
-        margin-left: 1rem;
-    }
-
-    .player-name {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-weight: 600;
-        color: #212529;
-        margin-bottom: 0.25rem;
-    }
-
-    .stat-count {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-weight: bold;
-        color: #1d3557;
-    }
-
-    .team-name {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.9rem;
-        color: #6c757d;
-    }
-
-    .no-stats {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 2rem;
-        color: #6c757d;
-        background: #f8f9fa;
-        border-radius: 8px;
-        text-align: center;
-    }
-
-    .no-stats i {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-        opacity: 0.5;
-    }
-
-    .fa-futbol, .fa-hands-helping {
-        color: #1d3557;
-    }
-
-    .fa-shield-alt {
-        color: #6c757d;
-    }
-`;
-
-// Add the styles to the document
-    const style = document.createElement('style');
-style.textContent = statsStyles + notificationStyles;
-    document.head.appendChild(style);

@@ -50,35 +50,31 @@ export async function completeMatch(matchId) {
 }
 
 // Add a match event (goal)
-export async function addMatchEvent(matchId, eventData) {
+export async function addMatchEvent(eventData) {
     try {
-        const supabaseClient = await getClient();
+        const client = await getClient();
+        
+        // Validate required fields
+        if (!eventData.match_id || !eventData.team_id || !eventData.scorer_name || !eventData.minute) {
+            throw new Error('Missing required event data');
+        }
 
-        // Add goal record
-        const { error: goalError } = await supabaseClient
+        // Insert the event into the goals table
+        const { data, error } = await client
             .from('goals')
-            .insert([{
-                match_id: matchId,
-                team_id: eventData.teamId,
-                scorer_name: eventData.playerName,
-                assist_name: eventData.assistName || null,
+            .insert({
+                match_id: eventData.match_id,
+                team_id: eventData.team_id,
+                scorer_name: eventData.scorer_name,
+                assist_name: eventData.assist_name,
                 minute: eventData.minute
-            }]);
-
-        if (goalError) throw goalError;
-
-        // Update match score
-        const scoreField = eventData.isHome ? 'home_score' : 'away_score';
-        const { data: match, error: updateError } = await supabaseClient
-            .from('matches')
-            .update({ [scoreField]: eventData.newScore })
-            .eq('id', matchId)
+            })
             .select()
             .single();
 
-        if (updateError) throw updateError;
+        if (error) throw error;
+        return { data, error: null };
 
-        return { data: match, error: null };
     } catch (error) {
         console.error('Error adding match event:', error);
         return { data: null, error };

@@ -138,7 +138,7 @@
       }
     </style>
 
-    <h2 class="match-title">Match</h2>
+    <h2 class="match-title" id="matchTypeTitle">Match</h2>
 
     <!-- Normal User View - Active by default -->
     <div class="match-container user-view active" data-match-status="">
@@ -206,7 +206,7 @@
       </div>
     </div>
 
-    <!-- Admin View -->
+    <!-- Admin View - Hidden by default -->
     <div class="match-container admin-view" style="display: none;">
       <!-- Match Selection -->
       <div class="match-select-container">
@@ -254,60 +254,54 @@
             <span class="venue"></span>
           </div>
         </div>
-
-        <!-- Match Stats Section -->
-        <div class="match-stats">
-          <div class="stats-row">
-            <div class="team-stats home">
-              <div class="stats-header">Home Team Stats</div>
-              <div class="stats-content">
-                <!-- Home team stats will be populated by JS -->
-              </div>
-            </div>
-            <div class="team-stats away">
-              <div class="stats-header">Away Team Stats</div>
-              <div class="stats-content">
-                <!-- Away team stats will be populated by JS -->
-              </div>
-            </div>
-          </div>
-        </div>
-
+        
         <!-- Admin Controls -->
         <div class="admin-controls">
           <button class="start-match-btn">Start Match</button>
           <button class="add-stats-btn">Add Stats</button>
           <button class="update-status-btn">Mark as Completed</button>
         </div>
+
+        <!-- Match Stats Section -->
+        <div class="match-stats">
+          <div class="stats-row">
+            <div class="team-stats home">
+              <!-- Home team stats will be populated by JS -->
+            </div>
+            <div class="team-stats away">
+              <!-- Away team stats will be populated by JS -->
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Event Modal -->
-      <div class="event-modal">
-        <div class="modal-content">
-          <h3>Add Match Event</h3>
+      <div class="event-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
+        <div class="modal-content" style="background: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 500px; position: relative; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);">
+          <h3 style="margin-top: 0; color: #1d3557; font-size: 1.5rem; margin-bottom: 1.5rem;">Add Match Event</h3>
           <form id="eventForm">
-            <div class="form-group">
-              <label>Team</label>
-              <select name="team" required>
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; color: #1d3557;">Team</label>
+              <select name="team" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
                 <option value="home">Home Team</option>
                 <option value="away">Away Team</option>
               </select>
             </div>
-            <div class="form-group">
-              <label>Player Name</label>
-              <input type="text" name="playerName" placeholder="Enter player name" required>
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; color: #1d3557;">Player Name</label>
+              <input type="text" name="playerName" placeholder="Enter player name" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
             </div>
-            <div class="form-group">
-              <label>Assist By (Optional)</label>
-              <input type="text" name="assistName" placeholder="Enter assist player name">
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; color: #1d3557;">Assist By (Optional)</label>
+              <input type="text" name="assistName" placeholder="Enter assist player name" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
             </div>
-            <div class="form-group">
-              <label>Minute</label>
-              <input type="number" name="minute" min="1" max="90" required>
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+              <label style="display: block; margin-bottom: 0.5rem; color: #1d3557;">Minute</label>
+              <input type="number" name="minute" min="1" max="90" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
             </div>
-            <div class="modal-buttons">
-              <button type="submit" class="save-btn">Save Event</button>
-              <button type="button" class="cancel-btn">Cancel</button>
+            <div class="modal-buttons" style="display: flex; gap: 1rem; justify-content: flex-end;">
+              <button type="button" class="cancel-btn" style="padding: 0.75rem 1.5rem; border: 1px solid #ddd; border-radius: 8px; background: white; color: #666; cursor: pointer; font-weight: 600;">Cancel</button>
+              <button type="submit" class="save-btn" style="padding: 0.75rem 1.5rem; border: none; border-radius: 8px; background: #1d3557; color: white; cursor: pointer; font-weight: 600;">Save Event</button>
             </div>
           </form>
         </div>
