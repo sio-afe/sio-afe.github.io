@@ -850,7 +850,7 @@ permalink: /muqawamah/
     </div>
 
     <div class="sponsors-section">
-        <h2>Our Valued Partners</h2>
+        <h2>Our Sponsors</h2>
         <div class="sponsors-grid">
             <div class="sponsor-item">
                 <img src="/assets/data/sponsors/shaheen-academy.png" alt="Shaheen Academy">
@@ -861,6 +861,14 @@ permalink: /muqawamah/
                 <p>Hidayat Publishers</p>
             </div>
             <div class="sponsor-item">
+                <img src="/assets/data/sponsors/ocean.png" alt="Oceans Secret">
+                <p>Oceans Secret</p>
+            </div>
+            <div class="sponsor-item">
+                <img src="/assets/data/sponsors/whitedot.jpeg" alt="White Dot Publishers">
+                <p>White Dot Publishers</p>
+            </div>
+            <div class="sponsor-item">
                 <img src="/assets/data/sponsors/bazmi.jpeg" alt="Bazmi PG">
                 <p>Bazmi PG</p>
             </div>
@@ -869,9 +877,14 @@ permalink: /muqawamah/
                 <p>Dr Lal Hospital</p>
             </div>
             <div class="sponsor-item">
+                <img src="/assets/data/sponsors/sps.jpeg" alt="Shaheen Public School">
+                <p>Shaheen Public School</p>
+            </div>
+            <div class="sponsor-item">
                 <img src="/assets/data/sponsors/nadeem.jpeg" alt="Nadeem Contactor">
                 <p>Nadeem Contactor</p>
             </div>
+            
             <div class="sponsor-item">
                 <img src="/assets/data/sponsors/jabbar.png" alt="Jabbar Contactor">
                 <p>Jabbar Contactor</p>
@@ -880,6 +893,7 @@ permalink: /muqawamah/
                 <img src="/assets/data/sponsors/zavia.png" alt="Zavia Prints">
                 <p>Zavia Prints</p>
             </div>
+            
         </div>
     </div>
 

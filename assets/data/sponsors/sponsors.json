@@ -9,6 +9,10 @@
             "logo": "/assets/data/sponsors/hidayat.png"
         },
         {
+            "name": "Oceans Secret",
+            "logo": "/assets/data/sponsors/ocean.png"
+        },
+        {
             "name": "Bazmi PG",
             "logo": "/assets/data/sponsors/bazmi.jpeg"
         },
@@ -21,12 +25,20 @@
             "logo": "/assets/data/sponsors/nadeem.jpeg"
         },
         {
+            "name": "White Dot Publishers",
+            "logo": "/assets/data/sponsors/whitedot.jpeg"
+        },
+        {
             "name": "Jabbar Contactor",
             "logo": "/assets/data/sponsors/jabbar.png"
         },
         {
             "name": "Zavia Prints",
             "logo": "/assets/data/sponsors/zavia.png"
+        },
+        {
+            "name": "Shaheen Public School",
+            "logo": "/assets/data/sponsors/sps.jpeg"
         }
     ]
 }

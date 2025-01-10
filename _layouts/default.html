@@ -76,8 +76,17 @@ layout: compress
 
     <!-- Then load other modules -->
     <script type="module">
-      // Wait for Supabase to be ready before loading other modules
-      window.supabaseReady.then(() => {
+      // Wait for both DOM content and Supabase to be ready
+      Promise.all([
+        new Promise(resolve => {
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', resolve);
+          } else {
+            resolve();
+          }
+        }),
+        window.supabaseReady
+      ]).then(() => {
         const scripts = [
           '/assets/js/supabase-client.js',
           '/assets/js/admin/admin-ui.js',
@@ -96,29 +105,16 @@ layout: compress
         }
 
         // Load scripts sequentially
-        scripts.reduce((promise, script) => {
+        return scripts.reduce((promise, script) => {
           return promise.then(() => loadScript(script));
         }, Promise.resolve());
-      }).catch(error => {
-        console.error('Failed to initialize Supabase:', error);
-      });
-    </script>
-
-    <!-- Add dynamic functionality -->
-    <script type="module">
-      document.addEventListener('DOMContentLoaded', async function() {
-        try {
-          // Wait for Supabase to be ready
-          await window.supabaseReady;
-          
-          // Initialize dynamic functionality
-          if (window.dynamicClient) {
-            // Subscribe to real-time updates
-            window.dynamicClient.subscribeToChannel('page_updates');
-          }
-        } catch (error) {
-          console.error('Error initializing dynamic functionality:', error);
+      }).then(() => {
+        // Initialize dynamic functionality after all scripts are loaded
+        if (window.dynamicClient) {
+          window.dynamicClient.subscribeToChannel('page_updates');
         }
+      }).catch(error => {
+        console.error('Failed to initialize application:', error);
       });
     </script>
   </body>
