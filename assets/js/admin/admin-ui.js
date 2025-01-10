@@ -1,7 +1,16 @@
 import { getClient, signIn, signOut, isAdmin } from '../supabase-client.js';
 
-// Initialize UI elements after DOM is loaded
-document.addEventListener('DOMContentLoaded', async () => {
+// Wait for both DOM content and Supabase to be ready
+Promise.all([
+    new Promise(resolve => {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', resolve);
+        } else {
+            resolve();
+        }
+    }),
+    window.supabaseReady
+]).then(async () => {
     console.log('Initializing admin UI...');
     
     // UI Elements
@@ -25,16 +34,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Show/hide admin controls based on auth state
     async function updateUIForAuthState() {
         try {
-            // Add a small delay to ensure Supabase is initialized
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
             const isAdminUser = await isAdmin();
             console.log('Admin status:', isAdminUser);
             
             // Update button based on auth state
             if (adminIcon && adminBtnText) {
                 adminIcon.className = isAdminUser ? 'fas fa-sign-out-alt' : 'fas fa-user-shield';
-                adminBtnText.textContent = isAdminUser ? '' : '';
+                adminBtnText.textContent = isAdminUser ? 'Logout' : 'Login';
                 adminBtn.title = isAdminUser ? 'Logout' : 'Login';
             }
 
@@ -169,5 +175,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Initialize UI state on load
-    updateUIForAuthState();
+    await updateUIForAuthState();
 }); 
