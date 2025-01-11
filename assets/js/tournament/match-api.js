@@ -146,10 +146,10 @@ export async function getMatchEvents(matchId) {
 
         const supabaseClient = await getClient();
         const { data, error } = await supabaseClient
-            .from('match_events')
+            .from('goals')
             .select('*')
             .eq('match_id', matchId)
-            .order('timestamp', { ascending: true });
+            .order('minute', { ascending: true });
 
         if (error) throw error;
         

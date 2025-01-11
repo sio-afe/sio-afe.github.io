@@ -283,6 +283,18 @@
             </div>
           </div>
         </div>
+        
+        <!-- Add fixture stats section for scorers -->
+        <div class="fixture-stats">
+          <div class="stats-row">
+            <div class="team-stats home-stats">
+              <!-- Home team scorers will be populated by JS -->
+            </div>
+            <div class="team-stats away-stats">
+              <!-- Away team scorers will be populated by JS -->
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -2793,55 +2805,69 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* Add styles for goal scorers in fixtures */
 .fixture-stats {
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px dashed #eee;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
   font-size: 0.85rem;
-  color: #666;
+}
+
+.fixture-stats .stats-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 1rem;
 }
 
 .fixture-stats .team-stats {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.5rem;
 }
 
 .fixture-stats .home-stats {
   text-align: right;
+  align-items: flex-end;
 }
 
 .fixture-stats .away-stats {
   text-align: left;
+  align-items: flex-start;
 }
 
-.fixture-stats .scorer {
+.fixture-stats .goal-event {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #1d3557;
-  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
 }
 
-.fixture-stats .home-stats .scorer {
+.fixture-stats .home-stats .goal-event {
   justify-content: flex-end;
 }
 
-.fixture-stats .away-stats .scorer {
+.fixture-stats .away-stats .goal-event {
   justify-content: flex-start;
 }
 
-.fixture-stats .scorer-name {
-  font-weight: 500;
+.fixture-stats .scorer {
+  font-weight: 600;
+  color: #1d3557;
+}
+
+.fixture-stats .assist {
+  font-size: 0.8rem;
+  color: #666;
+  font-style: italic;
 }
 
 .fixture-stats .goal-minute {
-  color: #666;
-  font-size: 0.75rem;
-}
-
-.fixture-stats .goal-icon {
-  color: #e63946;
   font-size: 0.7rem;
+  color: #888;
+  padding: 0.1rem 0.3rem;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
 }
 
 @media (max-width: 768px) {
@@ -2851,6 +2877,10 @@ document.addEventListener('DOMContentLoaded', function() {
   
   .fixture-stats .scorer {
     font-size: 0.75rem;
+  }
+  
+  .fixture-stats .assist {
+    font-size: 0.7rem;
   }
   
   .fixture-stats .goal-minute {
@@ -2867,6 +2897,10 @@ document.addEventListener('DOMContentLoaded', function() {
   
   .fixture-stats .scorer {
     font-size: 0.7rem;
+  }
+  
+  .fixture-stats .assist {
+    font-size: 0.65rem;
   }
   
   .fixture-stats .goal-minute {

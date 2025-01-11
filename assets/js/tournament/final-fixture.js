@@ -958,33 +958,44 @@ async function updateMatchStats() {
 
 // Format match events for display
 function formatMatchEvents(events, teamType) {
-    if (!events.length) return '<div class="no-stats">No events recorded</div>';
+    if (!events || !events.length) return '';
 
-    return events.map(event => `
-        <div class="stat-item">
-            ${teamType === 'home' ? `
-                <span class="stat-player">${event.scorer_name}</span>
-                <span class="stat-icon goal">
-                    <i class="fas fa-futbol"></i>
-                </span>
-                <span class="stat-minute">${event.minute}'</span>
-            ` : `
-                <span class="stat-minute">${event.minute}'</span>
-                <span class="stat-icon goal">
-                    <i class="fas fa-futbol"></i>
-                </span>
-                <span class="stat-player">${event.scorer_name}</span>
-            `}
-            ${event.assist_name ? `
-                <div class="assist-info">
-                    <span class="stat-icon assist">
-                        <i class="fas fa-hands-helping"></i>
-                    </span>
-                    <span class="stat-player">${event.assist_name}</span>
-                </div>
-            ` : ''}
-        </div>
-    `).join('');
+    const sortedEvents = events.sort((a, b) => a.minute - b.minute);
+    
+    return sortedEvents.map(event => {
+        const goalEvent = document.createElement('div');
+        goalEvent.className = 'goal-event';
+        
+        const scorerSpan = document.createElement('span');
+        scorerSpan.className = 'scorer';
+        scorerSpan.textContent = event.scorer_name;
+        
+        const minuteSpan = document.createElement('span');
+        minuteSpan.className = 'goal-minute';
+        minuteSpan.textContent = `${event.minute}'`;
+        
+        if (teamType === 'home') {
+            goalEvent.appendChild(scorerSpan);
+            if (event.assist_name) {
+                const assistSpan = document.createElement('span');
+                assistSpan.className = 'assist';
+                assistSpan.textContent = ` (assist: ${event.assist_name})`;
+                goalEvent.appendChild(assistSpan);
+            }
+            goalEvent.appendChild(minuteSpan);
+        } else {
+            goalEvent.appendChild(minuteSpan);
+            if (event.assist_name) {
+                const assistSpan = document.createElement('span');
+                assistSpan.className = 'assist';
+                assistSpan.textContent = ` (assist: ${event.assist_name})`;
+                goalEvent.appendChild(assistSpan);
+            }
+            goalEvent.appendChild(scorerSpan);
+        }
+        
+        return goalEvent.outerHTML;
+    }).join('');
 }
 
 // Initialize event modal handlers
@@ -1178,35 +1189,54 @@ function filterFixtures(filter) {
 async function handleEventFormSubmit(e) {
     e.preventDefault();
     
-    if (!eventModal || !eventForm) {
-        console.error('Event modal or form not initialized');
-        showNotification('Error: Event form not properly initialized', 'error');
+    if (!eventModal || !eventForm || !currentMatch) {
+        console.error('Event modal, form, or current match not initialized');
+        showNotification('Error: Form not properly initialized', 'error');
         return;
     }
 
     try {
         const formData = new FormData(eventForm);
+        const teamType = formData.get('team'); // 'home' or 'away'
+        const teamId = teamType === 'home' ? currentMatch.home_team_id : currentMatch.away_team_id;
+
         const eventData = {
-            matchId: currentMatch.id,
-            teamId: formData.get('team'),
-            playerName: formData.get('player'),
-            assistName: formData.get('assist') || null,
+            match_id: currentMatch.id,
+            team_id: teamId,
+            scorer_name: formData.get('playerName'),
+            assist_name: formData.get('assistName') || null,
             minute: parseInt(formData.get('minute')),
-            isHome: formData.get('team') === currentMatch.home_team_id,
-            newScore: formData.get('team') === currentMatch.home_team_id ? 
-                (currentMatch.home_score || 0) + 1 : 
-                (currentMatch.away_score || 0) + 1
+            type: 'goal'
         };
+
+        console.log('Adding match event with data:', eventData);
 
         const { error: eventError } = await addMatchEventToDb(eventData);
         if (eventError) throw eventError;
 
-        // Then update the match score
-        const updatedMatch = await updateMatchScore(currentMatch.id, eventData.teamId);
-        if (updatedMatch) {
-            currentMatch = updatedMatch;
-            updateMatchDisplay(updatedMatch);
+        // Update the match score
+        const updateData = {};
+        if (teamType === 'home') {
+            updateData.home_score = (parseInt(currentMatch.home_score) || 0) + 1;
+        } else {
+            updateData.away_score = (parseInt(currentMatch.away_score) || 0) + 1;
         }
+
+        const { data: updatedMatch, error: updateError } = await supabaseClient
+            .from('matches')
+            .update(updateData)
+            .eq('id', currentMatch.id)
+            .select(`
+                *,
+                home_team:teams!matches_home_team_id_fkey(id, name, crest_url),
+                away_team:teams!matches_away_team_id_fkey(id, name, crest_url)
+            `)
+            .single();
+
+        if (updateError) throw updateError;
+
+        currentMatch = updatedMatch;
+        updateMatchDisplay(updatedMatch);
 
         showNotification('Event added successfully', 'success');
         eventModal.style.display = 'none';
@@ -1221,44 +1251,6 @@ async function handleEventFormSubmit(e) {
     } catch (error) {
         console.error('Error adding event:', error);
         showNotification('Error adding event: ' + error.message, 'error');
-    }
-}
-
-// Update match score when event is added
-async function updateMatchScore(matchId, scoringTeam) {
-    try {
-        const { data: match, error } = await supabaseClient
-            .from('matches')
-            .select('*')
-            .eq('id', matchId)
-            .single();
-
-        if (error) throw error;
-
-        const updateData = {};
-        if (scoringTeam === 'home') {
-            updateData.home_score = (parseInt(match.home_score) || 0) + 1;
-        } else {
-            updateData.away_score = (parseInt(match.away_score) || 0) + 1;
-        }
-
-        const { data: updatedMatch, error: updateError } = await supabaseClient
-            .from('matches')
-            .update(updateData)
-            .eq('id', matchId)
-            .select(`
-                *,
-                home_team:teams!matches_home_team_id_fkey(id, name, crest_url),
-                away_team:teams!matches_away_team_id_fkey(id, name, crest_url)
-            `)
-            .single();
-
-        if (updateError) throw updateError;
-        return updatedMatch;
-    } catch (error) {
-        console.error('Error updating match score:', error);
-        showNotification('Error updating match score', 'error');
-        return null;
     }
 }
 
