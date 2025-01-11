@@ -938,6 +938,61 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Remove the inline initialization since it's handled in final-fixture.js
     console.log('Final fixture initialization complete');
 });
+
+// Team Popup Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const popup = document.getElementById('team-popup');
+    const closeBtn = popup.querySelector('.close-popup');
+    const tableBody = document.getElementById('table-body');
+
+    // Close popup when clicking the close button
+    closeBtn.addEventListener('click', () => {
+        popup.classList.remove('active');
+    });
+
+    // Close popup when clicking outside
+    popup.addEventListener('click', (e) => {
+        if (e.target === popup) {
+            popup.classList.remove('active');
+        }
+    });
+
+    // Handle team name clicks in the table
+    tableBody.addEventListener('click', async (e) => {
+        const teamCell = e.target.closest('.team-name-cell');
+        if (!teamCell) return;
+
+        const teamName = teamCell.querySelector('.team-info').textContent.trim();
+        
+        try {
+            // Get team details from Supabase
+            const { data: team, error } = await window.supabaseClient
+                .from('teams')
+                .select('*')
+                .eq('name', teamName)
+                .single();
+
+            if (error) throw error;
+
+            // Update popup content
+            popup.querySelector('.team-popup-name').textContent = team.name;
+            popup.querySelector('.team-popup-logo').src = team.crest_url || '/assets/data/open-age/team-logos/default.png';
+            popup.querySelector('.captain-name').textContent = team.captain || 'N/A';
+            popup.querySelector('.matches-played').textContent = team.played || '0';
+            popup.querySelector('.matches-won').textContent = team.won || '0';
+            popup.querySelector('.matches-lost').textContent = team.lost || '0';
+            popup.querySelector('.matches-drawn').textContent = team.drawn || '0';
+            popup.querySelector('.points').textContent = team.points || '0';
+
+            // Show popup
+            popup.classList.add('active');
+        } catch (error) {
+            console.error('Error fetching team details:', error);
+            // Show error notification using existing notification function
+            showNotification('Error loading team details', 'error');
+        }
+    });
+});
 </script>
 
 <script src="/assets/js/tournament/final-fixture.js" type="module"></script>
