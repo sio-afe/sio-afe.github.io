@@ -768,6 +768,99 @@ permalink: /muqawamah/
         display: block;
     }
 }
+
+.muqawama-section {
+    margin-top: 2rem;
+    padding: 1rem 0;
+}
+
+.muqawama-section h3 {
+    color: #1a237e;
+    font-size: 1.8em;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.muqawama-section h4 {
+    color: #1d3557;
+    font-size: 1.4em;
+    margin: 1.5rem 0 1rem;
+    border-left: 4px solid #4CAF50;
+    padding-left: 1rem;
+}
+
+.muqawama-why, .muqawama-vision, .muqawama-essence, .club-role {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: rgba(76, 175, 80, 0.05);
+    border-radius: 8px;
+}
+
+.muqawama-essence {
+    background: rgba(33, 150, 243, 0.05);
+    font-style: italic;
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.club-role ul {
+    list-style: none;
+    padding-left: 1.5rem;
+    margin-top: 1rem;
+}
+
+.club-role ul li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.club-role ul li::before {
+    content: "•";
+    color: #4CAF50;
+    font-size: 1.5em;
+    position: absolute;
+    left: 0;
+    top: -0.2rem;
+}
+
+.muqawama-call {
+    text-align: center;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(33, 150, 243, 0.1));
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .muqawama-section h3 {
+        font-size: 1.5em;
+    }
+
+    .muqawama-section h4 {
+        font-size: 1.2em;
+    }
+
+    .muqawama-why, .muqawama-vision, .muqawama-essence, .club-role {
+        padding: 0.8rem;
+    }
+
+    .club-role ul {
+        padding-left: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .muqawama-section h3 {
+        font-size: 1.3em;
+    }
+
+    .muqawama-section h4 {
+        font-size: 1.1em;
+    }
+}
 </style>
 
 <div class="tournament-container">
@@ -788,7 +881,61 @@ permalink: /muqawamah/
             <p>Our tournament transcends the boundaries of sport, embodying core values that strengthen our community and nurture the development of our youth.</p>
         </div>
 
-       
+        <div class="muqawama-section">
+            <h3>MUQAWAMA: More Than a Tournament</h3>
+            <p>Welcome to the two-day football tournament under the theme "MUQAWAMA"—a unique initiative by SIO Abul Fazal Enclave. This event is not just about competition but about building a community grounded in unity, ethics, and Islamic values.</p>
+
+            <div class="muqawama-why">
+                <h4>Why MUQAWAMA?</h4>
+                <p>In today's challenging world, "Muqawama" (resistance) represents the steadfastness required to uphold Islamic principles in every facet of life. This tournament is our first step towards nurturing those values within our youth.</p>
+            </div>
+
+            <div class="muqawama-vision">
+                <h4>Beyond Two Days</h4>
+                <p>Unlike traditional tournaments that end when the trophy is claimed, MUQAWAMA is a beginning. Through this initiative, we aim to establish a football club where all players, regardless of which team they represent, come together as one, building a better understanding of each other.</p>
+            </div>
+
+            <div class="objectives-grid">
+                <div class="objective-card">
+                    <h3>Unity and Brotherhood</h3>
+                    <p>Strengthening the bonds among participants and fostering collective growth.</p>
+                </div>
+
+                <div class="objective-card">
+                    <h3>Islamic Ethics and Values</h3>
+                    <p>Embodying principles of discipline, righteousness, and integrity on and off the field.</p>
+                </div>
+
+                <div class="objective-card">
+                    <h3>Talent Development</h3>
+                    <p>Sharpening skills while aligning sportsmanship with spiritual responsibility.</p>
+                </div>
+
+                <div class="objective-card">
+                    <h3>Rekindling Islamic Identity</h3>
+                    <p>Encouraging players to reflect on their roles as ambassadors of Islamic values.</p>
+                </div>
+            </div>
+
+            <div class="muqawama-essence">
+                <p>MUQAWAMA is more than a tournament—it is a call to action, a reminder to balance talent with virtue and sportsmanship with ethics. It is a step toward building a community that embodies both physical excellence and spiritual resilience.</p>
+            </div>
+
+            <div class="club-role">
+                <h4>Your Role in the Club</h4>
+                <p>By becoming a part of this club, you will not only grow as a player but as an individual committed to a higher cause. Together, we will:</p>
+                <ul>
+                    <li>Provide mentorship and guidance</li>
+                    <li>Organize regular training and discussions</li>
+                    <li>Prepare to lead as representatives of a balanced, ethical lifestyle</li>
+                    <li>Integrate Islamic principles into your daily life</li>
+                </ul>
+            </div>
+
+            <div class="muqawama-call">
+                <p>Join us in making MUQAWAMA more than a tournament—make it a movement. Together, let's embody the spirit of resistance and resilience in every field of life.</p>
+            </div>
+        </div>
     </div>
 
     <div class="info-section">
