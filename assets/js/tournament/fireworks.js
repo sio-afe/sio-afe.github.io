@@ -138,7 +138,6 @@
 
         function animate() {
             if (!isRunning) {
-                // Only remove canvas after fade completes
                 setTimeout(() => canvas.remove(), 2000);
                 return;
             }
@@ -152,8 +151,8 @@
             // Stop animation at 10 seconds
             if (Date.now() - startTime > 10000) {
                 isRunning = false;
-                return;
-            }
+            return;
+        }
 
             requestAnimationFrame(animate);
             ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear with transparency
@@ -164,16 +163,16 @@
                 fireworks.push(new Firework());
             }
 
-            // Update and draw fireworks
+        // Update and draw fireworks
             for (let i = fireworks.length - 1; i >= 0; i--) {
                 fireworks[i].update();
                 fireworks[i].draw();
                 if (fireworks[i].exploded && Math.random() < 0.1) {
                     fireworks.splice(i, 1);
-                }
             }
+        }
 
-            // Update and draw particles
+        // Update and draw particles
             for (let i = particles.length - 1; i >= 0; i--) {
                 particles[i].update();
                 particles[i].draw();

@@ -230,6 +230,184 @@ async function handleEventSubmit(e) {
 }
 
 // Helper functions
+async function showWinnersPlacardAfterFireworks() {
+    try {
+        const category = document.querySelector('.tournament-container').dataset.category;
+        const { data: winners, error } = await window.supabaseClient
+            .from('teams')
+            .select('name, crest_url, points')
+            .eq('category', category)
+            .order('points', { ascending: false })
+            .limit(3);
+
+        if (error || !winners || winners.length === 0) {
+            console.error('Error fetching winners:', error);
+            return;
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes goldFlare {
+                0% { 
+                    transform: translate(-150%, -150%) rotate(45deg);
+                    opacity: 0;
+                    filter: blur(5px);
+                }
+                25% {
+                    opacity: 0.6;
+                    filter: blur(8px);
+                }
+                50% {
+                    filter: blur(10px);
+                }
+                75% {
+                    opacity: 0.6;
+                    filter: blur(8px);
+                }
+                100% { 
+                    transform: translate(150%, 150%) rotate(45deg);
+                    opacity: 0;
+                    filter: blur(5px);
+                }
+            }
+            
+            .winners-placard {
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .winners-placard::before {
+                content: '';
+                position: absolute;
+                top: -100%;
+                left: -100%;
+                width: 300%;
+                height: 150px;
+                background: linear-gradient(
+                    90deg,
+                    transparent 0%,
+                    rgba(255, 215, 0, 0.01) 10%,
+                    rgba(255, 215, 0, 0.05) 20%,
+                    rgba(255, 215, 0, 0.1) 30%,
+                    rgba(255, 215, 0, 0.2) 40%,
+                    rgba(255, 215, 0, 0.4) 45%,
+                    rgba(255, 215, 0, 0.6) 48%,
+                    rgba(255, 215, 0, 0.8) 50%,
+                    rgba(255, 215, 0, 0.6) 52%,
+                    rgba(255, 215, 0, 0.4) 55%,
+                    rgba(255, 215, 0, 0.2) 60%,
+                    rgba(255, 215, 0, 0.1) 70%,
+                    rgba(255, 215, 0, 0.05) 80%,
+                    rgba(255, 215, 0, 0.01) 90%,
+                    transparent 100%
+                );
+                animation: none;
+                pointer-events: none;
+                opacity: 0;
+                transform-origin: 0 0;
+                filter: blur(8px);
+                mix-blend-mode: screen;
+            }
+
+            .winners-placard.show-flare::before {
+                animation: goldFlare 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+            }
+            
+            @media (max-width: 768px) {
+                .winners-placard {
+                    padding: 12px !important;
+                }
+                .winner-title {
+                    font-size: 18px !important;
+                    margin-bottom: 8px !important;
+                }
+                .main-winner-crest {
+                    width: 60px !important;
+                    height: 60px !important;
+                }
+                .main-winner h3 {
+                    font-size: 16px !important;
+                }
+                .main-winner p {
+                    font-size: 12px !important;
+                    margin: 3px 0 !important;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        const placard = document.createElement('div');
+        placard.style.position = 'fixed';
+        placard.style.top = '50%';
+        placard.style.left = '50%';
+        placard.style.transform = 'translate(-50%, -50%) scale(0.95)';
+        placard.style.background = 'linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(20, 20, 20, 0.95))';
+        placard.style.padding = '20px';
+        placard.style.color = 'white';
+        placard.style.textAlign = 'center';
+        placard.style.opacity = '0';
+        placard.style.transition = 'all 1s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        placard.style.zIndex = '10000';
+        placard.style.width = '85%';
+        placard.style.maxWidth = '400px';
+        placard.style.borderRadius = '15px';
+        placard.style.boxShadow = '0 0 30px rgba(255, 215, 0, 0.3)';
+        placard.style.border = '2px solid gold';
+
+        const winnerContent = `
+            <div class="winners-placard">
+                <h2 class="winner-title" style="color: gold; font-size: 24px; margin: 0 0 15px 0; 
+                    text-shadow: 0 0 10px rgba(255,215,0,0.5);">
+                    🏆 Muqawama Champions 🏆
+                </h2>
+                
+                <div class="main-winner" style="margin: 0; padding: 15px; 
+                    background: linear-gradient(45deg, rgba(255,215,0,0.1), rgba(255,215,0,0.2));
+                    border-radius: 12px; border: 2px solid gold;">
+                    <img src="${winners[0].crest_url || '/assets/data/open-age/team-logos/default.png'}" 
+                        class="main-winner-crest"
+                        style="width: 100px; height: 100px; object-fit: contain; margin: 5px auto;
+                        filter: drop-shadow(0 0 10px rgba(255,215,0,0.5));" />
+                    <h3 style="color: gold; font-size: 28px; margin: 15px 0;
+                        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+                        ${winners[0].name}
+                    </h3>
+                    <p style="color: #FFF; font-size: 16px; margin: 10px 0;">
+                        Champions of Muqawama Tournament
+                    </p>
+                    <p style="color: gold; font-size: 16px; margin: 10px 0;">
+                        ${winners[0].points} Points
+                    </p>
+                </div>
+            </div>
+        `;
+
+        placard.innerHTML = winnerContent;
+        document.body.appendChild(placard);
+
+        setTimeout(() => {
+            placard.style.opacity = '1';
+            placard.style.transform = 'translate(-50%, -50%) scale(1)';
+            
+            // Add flare after placard appears
+            setTimeout(() => {
+                placard.querySelector('.winners-placard').classList.add('show-flare');
+            }, 500);
+            
+            setTimeout(() => {
+                placard.style.opacity = '0';
+                placard.style.transform = 'translate(-50%, -50%) scale(0.95)';
+                setTimeout(() => {
+                    placard.remove();
+                    style.remove();
+                }, 1000);
+            }, 7000);
+        }, 100);
+    } catch (error) {
+        console.error('Error showing winners placard:', error);
+    }
+}
+
 function showMatchCompletionCelebration() {
     const celebrationOverlay = document.querySelector('.celebration-overlay');
     if (celebrationOverlay) {
@@ -239,8 +417,9 @@ function showMatchCompletionCelebration() {
             firework.style.animation = `explode ${2 + index * 0.5}s ease-out forwards ${index * 0.3}s`;
         });
         
-        // Initialize fireworks effect
+        // Initialize fireworks effect and show placard together
         $('.tournament-container').fireworks();
+        showWinnersPlacardAfterFireworks();
         
         setTimeout(() => {
             celebrationOverlay.classList.remove('active');
@@ -1295,12 +1474,38 @@ document.addEventListener('DOMContentLoaded', async function() {
             return;
         }
 
-        // Initialize fireworks for finals page
-        $('.tournament-container').fireworks();
+        // Create celebration overlay if it doesn't exist
+        if (!document.querySelector('.celebration-overlay')) {
+            const overlay = document.createElement('div');
+            overlay.className = 'celebration-overlay';
+            overlay.innerHTML = `
+                <div class="firework"></div>
+                <div class="firework"></div>
+                <div class="firework"></div>
+                <div class="firework"></div>
+                <div class="firework"></div>
+            `;
+            document.body.appendChild(overlay);
+        }
 
         window.supabaseClient = client;
         await initializeView();
         await loadTournamentData();
+
+        // Check if match is completed and show fireworks
+        const { data: match } = await client
+            .from('matches')
+            .select('*')
+            .eq('category', document.querySelector('.tournament-container').dataset.category)
+            .eq('stage', 'final')
+            .single();
+
+        if (match && match.status === 'completed') {
+            // Initialize fireworks and show winners
+            $('.tournament-container').fireworks();
+            // Show winners placard after fireworks
+            setTimeout(showWinnersPlacardAfterFireworks, 0); // Show immediately with fireworks
+        }
 
     } catch (error) {
         console.error('Error initializing:', error);
