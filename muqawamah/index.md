@@ -861,6 +861,148 @@ permalink: /muqawamah/
         font-size: 1.1em;
     }
 }
+
+.find-images-section {
+    text-align: center;
+    margin: 30px auto;
+    padding: 30px;
+    max-width: 600px;
+    background: linear-gradient(145deg, #ffffff, #f8f9fa);
+    border-radius: 20px;
+    color: #1a237e;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.find-images-section::before,
+.find-images-section::after {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(33, 150, 243, 0.1));
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.find-images-section::before {
+    top: -100px;
+    left: -100px;
+}
+
+.find-images-section::after {
+    bottom: -100px;
+    right: -100px;
+}
+
+.find-images-section h2 {
+    margin-bottom: 15px;
+    font-size: 1.8em;
+    color: #1a237e;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+}
+
+.find-images-section p {
+    margin-bottom: 20px;
+    font-size: 1em;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #424242;
+    line-height: 1.5;
+    position: relative;
+    z-index: 1;
+}
+
+.qr-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px auto;
+    max-width: 200px;
+    padding: 15px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.qr-container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    padding: 2px;
+    background: linear-gradient(135deg, #4CAF50, #2196F3);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+.qr-container:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+}
+
+.qr-code {
+    width: 100%;
+    height: auto;
+    max-width: 180px;
+    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    .find-images-section {
+        margin: 20px 15px;
+        padding: 25px 20px;
+    }
+
+    .find-images-section h2 {
+        font-size: 1.5em;
+        margin-bottom: 12px;
+    }
+
+    .find-images-section p {
+        font-size: 0.95em;
+        padding: 0 10px;
+        margin-bottom: 15px;
+    }
+
+    .qr-container {
+        max-width: 180px;
+        padding: 12px;
+    }
+
+    .qr-code {
+        max-width: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    .find-images-section {
+        padding: 20px 15px;
+        margin: 15px 10px;
+    }
+
+    .find-images-section h2 {
+        font-size: 1.3em;
+    }
+
+    .qr-container {
+        max-width: 160px;
+        padding: 10px;
+    }
+
+    .qr-code {
+        max-width: 140px;
+    }
+}
 </style>
 
 <div class="tournament-container">
@@ -1040,6 +1182,14 @@ permalink: /muqawamah/
                 <p>Zavia Prints</p>
             </div>
             
+        </div>
+    </div>
+
+    <div class="find-images-section">
+        <h2>Find Your Images</h2>
+        <p>Scan to access all tournament photos and memories</p>
+        <div class="qr-container">
+            <img src="/assets/img/find_images_qr.png" alt="QR Code for Tournament Images" class="qr-code">
         </div>
     </div>
 
