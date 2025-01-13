@@ -864,13 +864,12 @@ permalink: /muqawamah/
 
 .find-images-section {
     text-align: center;
-    margin: 30px auto;
-    padding: 30px;
-    max-width: 600px;
+    margin: 40px 0;
+    padding: 40px;
     background: linear-gradient(145deg, #ffffff, #f8f9fa);
-    border-radius: 20px;
+    border-radius: 15px;
     color: #1a237e;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     position: relative;
     overflow: hidden;
 }
@@ -959,8 +958,8 @@ permalink: /muqawamah/
 
 @media (max-width: 768px) {
     .find-images-section {
-        margin: 20px 15px;
-        padding: 25px 20px;
+        margin: 30px 0;
+        padding: 25px 15px;
     }
 
     .find-images-section h2 {
@@ -986,8 +985,8 @@ permalink: /muqawamah/
 
 @media (max-width: 480px) {
     .find-images-section {
+        margin: 20px 0;
         padding: 20px 15px;
-        margin: 15px 10px;
     }
 
     .find-images-section h2 {
