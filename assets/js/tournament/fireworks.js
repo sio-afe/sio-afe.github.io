@@ -1,188 +1,189 @@
-class Fireworks {
-    constructor() {
-        console.log('Fireworks constructor called');
-        this.canvas = document.getElementById('fireworksCanvas');
-        if (!this.canvas) {
-            console.error('Canvas element not found!');
-            return;
+// Fireworks jQuery Plugin
+(function($) {
+    $.fn.fireworks = function() {
+        var canvas = document.createElement('canvas');
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.zIndex = '9999';
+        canvas.style.background = 'transparent';
+        canvas.style.opacity = '1';
+        canvas.style.transition = 'opacity 2s ease-out';
+        this.append(canvas);
+
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+
+        var ctx = canvas.getContext('2d');
+        var particles = [];
+        var ratio = window.devicePixelRatio;
+        var fireworks = [];
+        var isRunning = true;
+        var startTime = Date.now();
+        var isFadingOut = false;
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', function() {
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+        });
+
+        // Firework class
+        function Firework() {
+            this.x = Math.random() * canvas.width;
+            this.y = canvas.height;
+            this.targetY = canvas.height * 0.2 + (Math.random() * canvas.height * 0.3);
+            this.speed = 8 + Math.random() * 4;
+            this.angle = Math.PI / 2;  // Straight up
+            this.trail = [];
+            this.trailLength = 10;
+            this.exploded = false;
+            this.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
         }
-        
-        console.log('Canvas found, initializing...');
-        this.ctx = this.canvas.getContext('2d');
-        this.particles = [];
-        this.fireworks = [];
-        this.isRunning = false;
-        this.isMobile = window.innerWidth <= 768;
-        
-        this.init();
-    }
 
-    init() {
-        this.resizeCanvas();
-        this.setupEventListeners();
-        console.log('Fireworks initialized');
-    }
+        Firework.prototype.update = function() {
+            this.x += Math.cos(this.angle) * this.speed;
+            this.y -= Math.sin(this.angle) * this.speed;
 
-    resizeCanvas() {
-        // Handle device pixel ratio for sharper rendering on mobile
-        const dpr = window.devicePixelRatio || 1;
-        const rect = document.body.getBoundingClientRect();
-        
-        this.canvas.width = rect.width * dpr;
-        this.canvas.height = rect.height * dpr;
-        
-        this.canvas.style.width = `${rect.width}px`;
-        this.canvas.style.height = `${rect.height}px`;
-        
-        this.ctx.scale(dpr, dpr);
-        
-        // Update mobile check on resize
-        this.isMobile = window.innerWidth <= 768;
-    }
-
-    setupEventListeners() {
-        window.addEventListener('resize', () => this.resizeCanvas());
-        document.addEventListener('goalScored', () => {
-            console.log('Goal scored event received');
-            this.celebrate();
-        });
-        document.addEventListener('matchEnd', () => {
-            console.log('Match end event received');
-            this.celebrate(true);
-        });
-        
-        // Handle visibility change to stop animations when tab is hidden
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                this.isRunning = false;
+            // Add trail
+            this.trail.push({ x: this.x, y: this.y });
+            if (this.trail.length > this.trailLength) {
+                this.trail.shift();
             }
-        });
-    }
 
-    celebrate(isMatchEnd = false) {
-        console.log(`Celebrating ${isMatchEnd ? 'match end' : 'goal'}`);
-        this.isRunning = true;
-        
-        // Adjust duration and count for mobile
-        const duration = this.isMobile ? 
-            (isMatchEnd ? 5000 : 2000) : 
-            (isMatchEnd ? 10000 : 3000);
-        
-        const count = this.isMobile ? 
-            (isMatchEnd ? 5 : 2) : 
-            (isMatchEnd ? 10 : 3);
-
-        for (let i = 0; i < count; i++) {
-            setTimeout(() => this.launchFirework(), i * (this.isMobile ? 400 : 300));
-        }
-
-        setTimeout(() => {
-            this.isRunning = false;
-            this.particles = [];
-            this.fireworks = [];
-        }, duration);
-
-        if (!this.animationFrame) {
-            this.animate();
-        }
-    }
-
-    launchFirework() {
-        const firework = {
-            x: this.canvas.width * Math.random(),
-            y: this.canvas.height,
-            targetY: this.canvas.height * 0.2 + (Math.random() * this.canvas.height * 0.3),
-            speed: 15 + Math.random() * 5,
-            color: this.getRandomColor(),
-            particles: []
+            if (this.y <= this.targetY && !this.exploded) {
+                this.exploded = true;
+                this.explode();
+            }
         };
 
-        this.fireworks.push(firework);
-    }
+        Firework.prototype.draw = function() {
+            ctx.beginPath();
+            ctx.moveTo(this.trail[0].x, this.trail[0].y);
+            for (let i = 1; i < this.trail.length; i++) {
+                ctx.lineTo(this.trail[i].x, this.trail[i].y);
+            }
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        };
 
-    getRandomColor() {
-        const colors = [
-            '#ff4444', // red
-            '#44ff44', // green
-            '#4444ff', // blue
-            '#ffff44', // yellow
-            '#ff44ff', // magenta
-            '#44ffff'  // cyan
-        ];
-        return colors[Math.floor(Math.random() * colors.length)];
-    }
+        Firework.prototype.explode = function() {
+            const particleCount = 100;  // More particles
+            for (let i = 0; i < particleCount; i++) {
+                const angle = (Math.PI * 2 * i) / particleCount;
+                const speed = 6 + Math.random() * 6;  // Faster particles
+                particles.push(new Particle(this.x, this.y, angle, speed, this.color));
+            }
+        };
 
-    createParticles(x, y, color) {
-        for (let i = 0; i < 50; i++) {
-            const particle = {
-                x,
-                y,
-                color,
-                velocity: {
-                    x: (Math.random() - 0.5) * 8,
-                    y: (Math.random() - 0.5) * 8
-                },
-                alpha: 1,
-                life: 1
-            };
-            this.particles.push(particle);
+        // Particle class
+        function Particle(x, y, angle, speed, color) {
+            this.x = x;
+            this.y = y;
+            this.angle = angle;
+            this.speed = speed;
+            this.life = 150;  // Longer life
+            this.color = color;
+            this.alpha = 1;
+            this.decay = Math.random() * 0.015 + 0.015;  // Slower decay
+            this.gravity = 0.12;
+            this.drift = (Math.random() - 0.5) * 0.3;
+            this.radius = 3 + Math.random() * 3;  // Even bigger particles
+            this.trail = [];  // Add trail for streaking effect
+            this.trailLength = 5 + Math.floor(Math.random() * 3);  // Random trail length
         }
-    }
 
-    animate() {
-        if (!this.isRunning) {
-            this.animationFrame = null;
-            return;
-        }
+        Particle.prototype.update = function() {
+            // Store current position in trail
+            this.trail.push({x: this.x, y: this.y, alpha: this.alpha});
+            if (this.trail.length > this.trailLength) {
+                this.trail.shift();
+            }
 
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            this.speed *= 0.98;
+            this.x += Math.cos(this.angle) * this.speed + this.drift;
+            this.y += Math.sin(this.angle) * this.speed + this.gravity;
+            this.alpha -= this.decay;
+            this.life--;
+        };
 
-        // Update and draw fireworks
-        for (let i = this.fireworks.length - 1; i >= 0; i--) {
-            const firework = this.fireworks[i];
-            firework.y -= firework.speed;
-            
-            this.ctx.beginPath();
-            this.ctx.arc(firework.x, firework.y, 2, 0, Math.PI * 2);
-            this.ctx.fillStyle = firework.color;
-            this.ctx.fill();
+        Particle.prototype.draw = function() {
+            // Draw trail
+            if (this.trail.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(this.trail[0].x, this.trail[0].y);
+                for (let i = 1; i < this.trail.length; i++) {
+                    const point = this.trail[i];
+                    ctx.lineTo(point.x, point.y);
+                }
+                ctx.strokeStyle = this.color.replace(')', `,${this.alpha * 0.5})`);
+                ctx.lineWidth = this.radius * 0.8;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+            }
 
-            if (firework.y <= firework.targetY) {
-                this.createParticles(firework.x, firework.y, firework.color);
-                this.fireworks.splice(i, 1);
+            // Draw particle
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = this.color.replace(')', `,${this.alpha})`);
+            ctx.shadowBlur = 15;  // Increased glow
+            ctx.shadowColor = this.color;
+            ctx.fill();
+            ctx.shadowBlur = 0;  // Reset shadow
+        };
+
+        function animate() {
+            if (!isRunning) {
+                // Only remove canvas after fade completes
+                setTimeout(() => canvas.remove(), 2000);
+                return;
+            }
+
+            // Start fading out at 8 seconds (2 seconds before end)
+            if (Date.now() - startTime > 8000 && !isFadingOut) {
+                isFadingOut = true;
+                canvas.style.opacity = '0';
+            }
+
+            // Stop animation at 10 seconds
+            if (Date.now() - startTime > 10000) {
+                isRunning = false;
+                return;
+            }
+
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear with transparency
+
+            // Reduce frequency of new fireworks during fade-out
+            const launchChance = isFadingOut ? 0.02 : 0.05;
+            if (Math.random() < launchChance) {
+                fireworks.push(new Firework());
+            }
+
+            // Update and draw fireworks
+            for (let i = fireworks.length - 1; i >= 0; i--) {
+                fireworks[i].update();
+                fireworks[i].draw();
+                if (fireworks[i].exploded && Math.random() < 0.1) {
+                    fireworks.splice(i, 1);
+                }
+            }
+
+            // Update and draw particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].alpha <= 0 || particles[i].life <= 0) {
+                    particles.splice(i, 1);
+                }
             }
         }
 
-        // Update and draw particles
-        for (let i = this.particles.length - 1; i >= 0; i--) {
-            const particle = this.particles[i];
-            particle.x += particle.velocity.x;
-            particle.y += particle.velocity.y;
-            particle.velocity.y += 0.1; // Gravity
-            particle.life -= 0.01;
-            particle.alpha = particle.life;
-
-            this.ctx.beginPath();
-            this.ctx.arc(particle.x, particle.y, 1, 0, Math.PI * 2);
-            this.ctx.fillStyle = `${particle.color}${Math.floor(particle.alpha * 255).toString(16).padStart(2, '0')}`;
-            this.ctx.fill();
-
-            if (particle.life <= 0) {
-                this.particles.splice(i, 1);
-            }
-        }
-
-        this.animationFrame = requestAnimationFrame(() => this.animate());
-    }
-}
-
-// Initialize with error handling
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded, creating Fireworks');
-    try {
-        new Fireworks();
-    } catch (error) {
-        console.error('Error initializing Fireworks:', error);
-    }
-});
+        requestAnimationFrame(animate);
+        return this;
+    };
+}(jQuery));

@@ -225,21 +225,18 @@
       <!-- Match Status Badge -->
       <div class="match-status-badge"></div>
 
-      <!-- Celebration Overlay -->
-      <div class="celebration-overlay">
-        <div class="firework"></div>
-        <div class="firework"></div>
-        <div class="firework"></div>
-        <div class="firework"></div>
-        <div class="firework"></div>
+      <!-- Loading State -->
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Loading match data...</p>
       </div>
 
-      <div class="teams-row">
+      <div class="teams-row" style="display: none;">
         <div class="team home">
           <div class="team-info">
-            <img src="/assets/data/open-age/team-logos/default.png" alt="Home Team" class="team-logo" loading="lazy" />
+            <img src="/assets/data/open-age/team-logos/default.png" alt="Home Team" class="team-logo shimmer" loading="lazy" />
             <h3 class="team-name"></h3>
-            <div class="score">0</div>
+            <div class="score">-</div>
           </div>
         </div>
 
@@ -249,9 +246,9 @@
 
         <div class="team away">
           <div class="team-info">
-            <img src="/assets/data/open-age/team-logos/default.png" alt="Away Team" class="team-logo" loading="lazy" />
+            <img src="/assets/data/open-age/team-logos/default.png" alt="Away Team" class="team-logo shimmer" loading="lazy" />
             <h3 class="team-name"></h3>
-            <div class="score">0</div>
+            <div class="score">-</div>
           </div>
         </div>
       </div>
@@ -947,6 +944,15 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', async function() {
+    // Show loading state initially
+    const loadingState = document.querySelector('.loading-state');
+    const teamsRow = document.querySelector('.teams-row');
+    
+    if (loadingState && teamsRow) {
+        loadingState.style.display = 'flex';
+        teamsRow.style.display = 'none';
+    }
+
     // Remove the inline initialization since it's handled in final-fixture.js
     console.log('Final fixture initialization complete');
 });
@@ -2906,5 +2912,40 @@ document.addEventListener('DOMContentLoaded', function() {
   .fixture-stats .goal-minute {
     font-size: 0.65rem;
   }
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #1d3557;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 </style>

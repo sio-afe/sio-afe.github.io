@@ -232,15 +232,19 @@ async function handleEventSubmit(e) {
 // Helper functions
 function showMatchCompletionCelebration() {
     const celebrationOverlay = document.querySelector('.celebration-overlay');
-                if (celebrationOverlay) {
-                    celebrationOverlay.classList.add('active');
-                    const fireworks = celebrationOverlay.querySelectorAll('.firework');
-                    fireworks.forEach((firework, index) => {
-                        firework.style.animation = `explode ${2 + index * 0.5}s ease-out forwards ${index * 0.3}s`;
-                    });
-                    setTimeout(() => {
-                        celebrationOverlay.classList.remove('active');
-                    }, 4000);
+    if (celebrationOverlay) {
+        celebrationOverlay.classList.add('active');
+        const fireworks = celebrationOverlay.querySelectorAll('.firework');
+        fireworks.forEach((firework, index) => {
+            firework.style.animation = `explode ${2 + index * 0.5}s ease-out forwards ${index * 0.3}s`;
+        });
+        
+        // Initialize fireworks effect
+        $('.tournament-container').fireworks();
+        
+        setTimeout(() => {
+            celebrationOverlay.classList.remove('active');
+        }, 4000);
     }
 }
 
@@ -762,94 +766,118 @@ function resetMatchDisplay() {
 
 // Update match display
 function updateMatchDisplay(match) {
-    console.log('🎯 Updating match display with data:', match);
-    if (!match || !match.home_team || !match.away_team) {
-        console.error('❌ Invalid match data:', match);
-        showNotification('Error: Invalid match data', 'error');
-        return;
+    const userView = document.querySelector('.user-view');
+    if (!userView) return;
+
+    // Hide loading state and show teams row
+    const loadingState = userView.querySelector('.loading-state');
+    const teamsRow = userView.querySelector('.teams-row');
+    
+    if (loadingState) {
+        loadingState.style.display = 'none';
+    }
+    if (teamsRow) {
+        teamsRow.style.display = 'grid';
     }
 
-    // Update match title/type
-    const titleElement = document.getElementById('matchTypeTitle');
-    if (titleElement) {
-        console.log('📝 Match type from data:', match.match_type);
-        if (!match.match_type) {
-            titleElement.textContent = 'Match';
-        } else {
-            const matchType = match.match_type.toLowerCase();
-            console.log('🔄 Processing match type:', matchType);
-            switch(matchType) {
-                case 'group':
-                    titleElement.textContent = 'Group Match';
-                    break;
-                case 'quarter-final':
-                    titleElement.textContent = 'Quarter Final';
-                    break;
-                case 'semi-final':
-                    titleElement.textContent = 'Semi Final';
-                    break;
-                case 'final':
-                    titleElement.textContent = 'Final';
-                    break;
-                default:
-                    titleElement.textContent = 'Match';
-            }
-        }
+    // Update match type title
+    const matchTitle = document.getElementById('matchTypeTitle');
+    if (matchTitle) {
+        matchTitle.textContent = match.stage || 'Match';
     }
 
     // Update team names and logos
-    const view = document.querySelector('.admin-view');
-    if (!view) return;
+    const homeTeamName = userView.querySelector('.team.home .team-name');
+    const awayTeamName = userView.querySelector('.team.away .team-name');
+    const homeTeamLogo = userView.querySelector('.team.home .team-logo');
+    const awayTeamLogo = userView.querySelector('.team.away .team-logo');
+    const homeScore = userView.querySelector('.team.home .score');
+    const awayScore = userView.querySelector('.team.away .score');
 
-    const homeTeamName = view.querySelector('.team.home .team-name');
-    const awayTeamName = view.querySelector('.team.away .team-name');
-    const homeTeamLogo = view.querySelector('.team.home img');
-    const awayTeamLogo = view.querySelector('.team.away img');
+    if (homeTeamName && match.home_team) {
+        homeTeamName.textContent = match.home_team.name;
+    }
+    if (awayTeamName && match.away_team) {
+        awayTeamName.textContent = match.away_team.name;
+    }
 
-    if (homeTeamName) homeTeamName.textContent = match.home_team.name || 'TBD';
-    if (awayTeamName) awayTeamName.textContent = match.away_team.name || 'TBD';
-    if (homeTeamLogo) homeTeamLogo.src = match.home_team.crest_url || DEFAULT_TEAM_LOGO;
-    if (awayTeamLogo) awayTeamLogo.src = match.away_team.crest_url || DEFAULT_TEAM_LOGO;
+    // Update team logos with proper error handling
+    if (homeTeamLogo && match.home_team) {
+        homeTeamLogo.src = match.home_team.crest_url || '/assets/data/open-age/team-logos/default.png';
+        homeTeamLogo.classList.remove('shimmer');
+        homeTeamLogo.onerror = () => {
+            homeTeamLogo.src = '/assets/data/open-age/team-logos/default.png';
+        };
+    }
+    if (awayTeamLogo && match.away_team) {
+        awayTeamLogo.src = match.away_team.crest_url || '/assets/data/open-age/team-logos/default.png';
+        awayTeamLogo.classList.remove('shimmer');
+        awayTeamLogo.onerror = () => {
+            awayTeamLogo.src = '/assets/data/open-age/team-logos/default.png';
+        };
+    }
 
     // Update scores
-    const homeScore = view.querySelector('[data-field="home-score"]');
-    const awayScore = view.querySelector('[data-field="away-score"]');
-    if (homeScore) homeScore.textContent = match.home_score || '0';
-    if (awayScore) awayScore.textContent = match.away_score || '0';
+    if (homeScore) {
+        homeScore.textContent = match.home_score !== null ? match.home_score : '-';
+    }
+    if (awayScore) {
+        awayScore.textContent = match.away_score !== null ? match.away_score : '-';
+    }
+
+    // Update match status badge
+    const statusBadge = userView.querySelector('.match-status-badge');
+    if (statusBadge) {
+        statusBadge.textContent = match.status === 'in_progress' ? 'LIVE' :
+                                match.status === 'completed' ? 'COMPLETED' : 'UPCOMING';
+        statusBadge.className = `match-status-badge ${match.status}`;
+    }
 
     // Update match details
-    const dateElement = view.querySelector('.date');
-    const timeElement = view.querySelector('.time');
-    const venueElement = view.querySelector('.venue');
+    const dateElement = userView.querySelector('.match-meta .date');
+    const timeElement = userView.querySelector('.match-meta .time');
+    const venueElement = userView.querySelector('.match-meta .venue');
 
     if (dateElement) {
         const matchDate = new Date(match.match_date);
         dateElement.textContent = matchDate.toLocaleDateString('en-GB', {
-            weekday: 'long',
             day: 'numeric',
-            month: 'long',
+            month: 'short',
             year: 'numeric'
         });
     }
-
     if (timeElement) {
-        const matchDate = new Date(match.match_date);
-        // Subtract 5 hours and 30 minutes to convert IST to UTC
-        matchDate.setHours(matchDate.getHours() - 5);
-        matchDate.setMinutes(matchDate.getMinutes() - 30);
-        timeElement.textContent = matchDate.toLocaleTimeString('en-US', {
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
-        });
+        // Use the scheduled_time field directly
+        if (match.scheduled_time) {
+            // Parse time in HH:mm format (24-hour)
+            const [hours, minutes] = match.scheduled_time.split(':');
+            const date = new Date();
+            date.setHours(parseInt(hours));
+            date.setMinutes(parseInt(minutes));
+            
+            timeElement.textContent = date.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+        } else {
+            timeElement.textContent = 'TBD';
+        }
     }
-
     if (venueElement) {
         venueElement.textContent = match.venue || 'TBD';
     }
 
-    // Update match status buttons
-    updateMatchStatusButtons(match.status);
+    // Show celebration overlay for completed matches
+    if (match.status === 'completed') {
+        const celebrationOverlay = document.querySelector('.celebration-overlay');
+        if (celebrationOverlay) {
+            celebrationOverlay.classList.add('active');
+            setTimeout(() => {
+                celebrationOverlay.classList.remove('active');
+            }, 4000);
+        }
+    }
 }
 
 // Update match status buttons
@@ -1266,6 +1294,9 @@ document.addEventListener('DOMContentLoaded', async function() {
             console.log('Not on final match page, exiting');
             return;
         }
+
+        // Initialize fireworks for finals page
+        $('.tournament-container').fireworks();
 
         window.supabaseClient = client;
         await initializeView();
