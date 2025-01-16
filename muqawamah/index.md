@@ -1002,6 +1002,251 @@ permalink: /muqawamah/
         max-width: 140px;
     }
 }
+
+.social-section {
+    text-align: center;
+    margin: 40px auto;
+    padding: 30px;
+    max-width: 1000px;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.social-header {
+    margin-bottom: 25px;
+}
+
+.social-header h2 {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.social-header p {
+    color: #666;
+    font-size: 1.1em;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.instagram-container {
+    display: inline-block;
+    margin: 25px auto;
+}
+
+.instagram-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 25px;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: white;
+    text-decoration: none;
+    font-size: 1.1em;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.instagram-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.instagram-button i {
+    font-size: 1.3em;
+}
+
+@media (max-width: 768px) {
+    .social-section {
+        margin: 30px 0;
+        padding: 25px 15px;
+    }
+
+    .social-header h2 {
+        font-size: 1.5em;
+        margin-bottom: 12px;
+    }
+
+    .social-header p {
+        font-size: 0.95em;
+        padding: 0 10px;
+        margin-bottom: 15px;
+    }
+
+    .instagram-button {
+        font-size: 1em;
+        padding: 10px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .social-section {
+        margin: 20px 0;
+        padding: 20px 15px;
+    }
+
+    .social-header h2 {
+        font-size: 1.3em;
+    }
+
+    .instagram-button {
+        font-size: 0.95em;
+        padding: 8px 16px;
+    }
+
+    .instagram-button i {
+        font-size: 1.2em;
+    }
+}
+
+.tournament-highlights {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin-top: 30px;
+    padding: 0;
+}
+
+.highlight-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 25px 20px;
+    transition: all 0.3s ease;
+}
+
+.highlight-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.highlight-icon {
+    width: 60px;
+    height: 60px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.highlight-icon i {
+    font-size: 1.8em;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.highlight-title {
+    font-size: 1.1em;
+    color: #333;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.highlight-text {
+    color: #666;
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .tournament-highlights {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        margin-top: 20px;
+        padding: 0;
+    }
+
+    .highlight-card {
+        padding: 20px;
+        margin: 0;
+    }
+
+    .highlight-icon {
+        width: 50px;
+        height: 50px;
+        margin: 0 auto 12px;
+    }
+
+    .highlight-icon i {
+        font-size: 1.5em;
+    }
+
+    .highlight-title {
+        font-size: 1em;
+        margin-bottom: 6px;
+    }
+
+    .highlight-text {
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 480px) {
+    .tournament-highlights {
+        gap: 12px;
+        margin-top: 15px;
+    }
+
+    .highlight-card {
+        padding: 15px;
+    }
+
+    .highlight-icon {
+        width: 45px;
+        height: 45px;
+        margin: 0 auto 10px;
+    }
+
+    .highlight-icon i {
+        font-size: 1.3em;
+    }
+}
+
+<div class="social-section">
+    <div class="social-header">
+        <h2>Join the Muqawama Community</h2>
+        <p>Follow us on Instagram for exclusive tournament updates, behind-the-scenes moments, and community highlights</p>
+    </div>
+
+    <div class="instagram-container">
+        <a href="https://instagram.com/muqawama2025" target="_blank" rel="noopener" class="instagram-button">
+            <i class="fab fa-instagram"></i>
+            <span>Follow @muqawama2025</span>
+        </a>
+    </div>
+
+    <div class="tournament-highlights">
+        <div class="highlight-card">
+            <div class="highlight-icon">
+                <i class="fas fa-futbol"></i>
+            </div>
+            <div class="highlight-title">22 Teams</div>
+            <div class="highlight-text">Competing in an intense display of skill and sportsmanship</div>
+        </div>
+
+        <div class="highlight-card">
+            <div class="highlight-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="highlight-title">200+ Players</div>
+            <div class="highlight-text">United in their passion for football and community spirit</div>
+        </div>
+
+        <div class="highlight-card">
+            <div class="highlight-icon">
+                <i class="fas fa-camera"></i>
+            </div>
+            <div class="highlight-title">1000+ Moments</div>
+            <div class="highlight-text">Capturing the excitement, victories, and memorable experiences</div>
+        </div>
+    </div>
+</div>
 </style>
 
 <div class="tournament-container">
@@ -1192,9 +1437,44 @@ permalink: /muqawamah/
         </div>
     </div>
 
-    <div class="contact-section">
-        <h2>Contact</h2>
-        <p><strong>For queries:</strong> [+91 88824 79365, +91 84678 27035]</p>
+    <div class="social-section">
+        <div class="social-header">
+            <h2>Join the Muqawama Community</h2>
+            <p>Follow us on Instagram for exclusive tournament updates, behind-the-scenes moments, and community highlights</p>
+        </div>
+
+        <div class="instagram-container">
+            <a href="https://instagram.com/muqawama2025" target="_blank" rel="noopener" class="instagram-button">
+                <i class="fab fa-instagram"></i>
+                <span>Follow @muqawama2025</span>
+            </a>
+        </div>
+
+        <div class="tournament-highlights">
+            <div class="highlight-card">
+                <div class="highlight-icon">
+                    <i class="fas fa-futbol"></i>
+                </div>
+                <div class="highlight-title">22 Teams</div>
+                <div class="highlight-text">Competing in an intense display of skill and sportsmanship</div>
+            </div>
+
+            <div class="highlight-card">
+                <div class="highlight-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="highlight-title">200+ Players</div>
+                <div class="highlight-text">United in their passion for football and community spirit</div>
+            </div>
+
+            <div class="highlight-card">
+                <div class="highlight-icon">
+                    <i class="fas fa-camera"></i>
+                </div>
+                <div class="highlight-title">1000+ Moments</div>
+                <div class="highlight-text">Capturing the excitement, victories, and memorable experiences</div>
+            </div>
+        </div>
     </div>
 
 </div>
