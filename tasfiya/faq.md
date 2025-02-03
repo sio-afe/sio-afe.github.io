@@ -186,7 +186,6 @@ title: FAQ - Tasfiya
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('/assets/img/islamic/bckg.png') center/contain no-repeat;
     opacity: 0.1;
     z-index: 0;
 }

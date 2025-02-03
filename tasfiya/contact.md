@@ -30,7 +30,7 @@ title: Contact Us - Tasfiya
 
     <div class="contact-form">
         <h2>Send us a Message</h2>
-        <form id="contactForm">
+        <form id="contactForm" onsubmit="return false;">
             <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" id="name" name="name" required>
@@ -232,12 +232,30 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         submitBtn.classList.add('loading');
         
-        // Simulate form submission delay
+        // Get form values
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const subject = document.getElementById('subject').value;
+        const message = document.getElementById('message').value;
+        
+        // Construct mailto URL
+        const mailtoUrl = `mailto:adnanshakeel@pm.me?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
+`Name: ${name}
+Email: ${email}
+
+Message:
+${message}`
+        )}`;
+        
+        // Open email client in new window
+        window.open(mailtoUrl, '_blank');
+        
+        // Show success message and reset form
         setTimeout(() => {
             submitBtn.classList.remove('loading');
-            showMessage('success', 'Thank you for your message. We will get back to you soon!');
+            showMessage('success', 'Opening email client in new window...');
             contactForm.reset();
-        }, 1500);
+        }, 1000);
     });
     
     function showMessage(type, text) {
