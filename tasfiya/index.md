@@ -33,30 +33,35 @@ title: Tasfiya - Qur'an Recitation Competition
     font-size: 1.25rem;
     font-weight: 300;
     line-height: 1.8;
+    text-align: left;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .feature-card {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
     padding: 2rem;
-    transition: transform 0.3s ease;
-    backdrop-filter: blur(10px);
+    transition: background 0.3s ease;
     border: 1px solid rgba(255, 215, 0, 0.1);
 }
 
 .feature-card:hover {
-    transform: translateY(-5px);
+    background: rgba(255, 215, 0, 0.05);
 }
 
 .feature-card h3 {
     color: #ffd700;
     font-size: 1.5rem;
     margin-bottom: 1rem;
+    text-align: center;
 }
 
 .feature-card p {
     color: rgba(255, 255, 255, 0.9);
     margin-bottom: 0;
+    text-align: center;
+    line-height: 1.6;
+    font-size: 1.1rem;
 }
 </style>
 

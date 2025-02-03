@@ -8,160 +8,200 @@ title: About Competition - Tasfiya
 </div>
 
 <div class="about-content">
-    <div class="section mb-5">
-        <h2 class="text-gold mb-4">Overview</h2>
-        <p class="lead">
-            The Tasfiya Competition is a prestigious Qur'an recitation and Athan competition that brings together talented individuals from across Delhi to showcase their beautiful voices in reciting the Holy Qur'an and performing the call to prayer.
+    <section class="content-section">
+        <h2>Overview</h2>
+        <p>
+            Muslims voices are unified from all around the islamic world raising the call to prayer (Adhan) and reciting verses from the holy Quran in aesthetics, precised and special voices and maqamat.
+            To spread the holy Quran knowledge and glorify the call to prayer through #Tasfiya competition
+            And to raise the competitive soul between the contestants whom gifted with the best voices, reciting and maqamat talents.
         </p>
-    </div>
+    </section>
 
-    <div class="row justify-content-center mb-5">
-        <div class="col-md-6 mb-4">
-            <div class="feature-card">
-                <i class="fas fa-trophy fa-3x mb-3" style="color: #ffd700;"></i>
-                <h3>Competition Categories</h3>
-                <ul class="list-unstyled">
-                    <li>• Qur'an Recitation - Senior Division</li>
-                    <li>• Qur'an Recitation - Junior Division</li>
-                    <li>• Athan Competition</li>
-                    <li>• Special Category for Huffaz</li>
+    <section class="content-section">
+        <h2>Goal of the Competition</h2>
+        <p>
+            The competition, aims to highlight the beautiful voices in reciting the Holy Quran and raising the call to prayer. It is also part of the initiative that seeks to highlight talents in their fields. This competition specifically stems from the principle of glorifying the Holy Quran and the call to prayer and highlighting the aesthetics of the voices and maqamat (a system of scales, habitual melodic phrases, modulation possibilities, ornamentation norms, and aesthetic conventions) for Quran reciters and muezzins.
+        </p>
+    </section>
+
+    <section class="content-section">
+        <h2>Competition Categories</h2>
+        <div class="category-list">
+            <div class="category-item">
+                <i class="fas fa-quran"></i>
+                <span>Qur'an Recitation - Senior Division</span>
+            </div>
+            <div class="category-item">
+                <i class="fas fa-child"></i>
+                <span>Qur'an Recitation - Junior Division</span>
+            </div>
+            <div class="category-item">
+                <i class="fas fa-mosque"></i>
+                <span>Athan Competition</span>
+            </div>
+            <div class="category-item">
+                <i class="fas fa-star"></i>
+                <span>Special Category for Huffaz</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <h2>Prizes</h2>
+        <div class="prize-list">
+            <div class="prize-item">
+                <i class="fas fa-trophy gold"></i>
+                <span>First Prize: TBD</span>
+            </div>
+            <div class="prize-item">
+                <i class="fas fa-trophy silver"></i>
+                <span>Second Prize: TBD</span>
+            </div>
+            <div class="prize-item">
+                <i class="fas fa-trophy bronze"></i>
+                <span>Third Prize: TBD</span>
+            </div>
+            <div class="prize-item">
+                <i class="fas fa-award"></i>
+                <span>Special Recognition Awards</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <h2>Judging Criteria</h2>
+        <div class="criteria-container">
+            <div class="criteria-section">
+                <h3>Qur'an Recitation</h3>
+                <ul>
+                    <li>Tajweed Rules</li>
+                    <li>Voice Quality</li>
+                    <li>Pronunciation</li>
+                    <li>Memorization</li>
+                </ul>
+            </div>
+            <div class="criteria-section">
+                <h3>Athan Competition</h3>
+                <ul>
+                    <li>Voice Clarity</li>
+                    <li>Proper Pronunciation</li>
+                    <li>Melody and Rhythm</li>
+                    <li>Overall Impact</li>
                 </ul>
             </div>
         </div>
-        <div class="col-md-6 mb-4">
-            <div class="feature-card">
-                <i class="fas fa-award fa-3x mb-3" style="color: #ffd700;"></i>
-                <h3>Prizes</h3>
-                <ul class="list-unstyled">
-                    <li>• First Prize: ₹25,000</li>
-                    <li>• Second Prize: ₹15,000</li>
-                    <li>• Third Prize: ₹10,000</li>
-                    <li>• Special Recognition Awards</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="section mb-5">
-        <h2 class="text-gold mb-4">Judging Criteria</h2>
-        <div class="row">
-            <div class="col-md-6 mb-4">
-                <div class="feature-card">
-                    <h4>Qur'an Recitation</h4>
-                    <ul class="list-unstyled">
-                        <li>• Tajweed Rules</li>
-                        <li>• Voice Quality</li>
-                        <li>• Pronunciation</li>
-                        <li>• Memorization</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-md-6 mb-4">
-                <div class="feature-card">
-                    <h4>Athan Competition</h4>
-                    <ul class="list-unstyled">
-                        <li>• Voice Clarity</li>
-                        <li>• Proper Pronunciation</li>
-                        <li>• Melody and Rhythm</li>
-                        <li>• Overall Impact</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+    </section>
 </div>
 
 <style>
-.text-gold {
+.about-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.content-section {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+}
+
+.content-section:last-child {
+    border-bottom: none;
+}
+
+.content-section h2 {
     color: #ffd700;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.section {
-    background: rgba(255, 255, 255, 0.03);
-    padding: 2rem;
-    border-radius: 15px;
-    backdrop-filter: blur(10px);
-    transform: translateY(0);
-    transition: transform 0.3s ease, background 0.3s ease;
-}
-
-.section:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.feature-card {
-    background: rgba(255, 255, 255, 0.03);
-    padding: 2rem;
-    border-radius: 15px;
-    backdrop-filter: blur(10px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(255, 215, 0, 0.1);
-    height: 100%;
-    animation: fadeIn 0.5s ease-out calc(var(--animation-order, 0) * 0.1s) both;
-}
-
-.feature-card:hover {
-    transform: translateY(-5px) scale(1.02);
-    border-color: rgba(255, 215, 0, 0.3);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.feature-card i {
-    transition: transform 0.3s ease;
-}
-
-.feature-card:hover i {
-    transform: scale(1.1) rotate(5deg);
-}
-
-.feature-card ul li {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
     position: relative;
-    padding-left: 1.5rem;
-    margin-bottom: 0.8rem;
-    opacity: 0.9;
-    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.feature-card ul li:before {
+.content-section p {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.8;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.category-list, .prize-list {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.category-item, .prize-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    text-align: left;
+}
+
+.category-item i, .prize-item i {
+    color: #ffd700;
+    font-size: 1.3rem;
+    width: 24px;
+    text-align: center;
+}
+
+.prize-item i.gold { color: #ffd700; }
+.prize-item i.silver { color: #C0C0C0; }
+.prize-item i.bronze { color: #CD7F32; }
+
+.criteria-container {
+    display: grid;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.criteria-section h3 {
+    color: #ffd700;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+.criteria-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.criteria-section ul li {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 0.8rem;
+    padding-left: 1.5rem;
+    position: relative;
+    text-align: left;
+}
+
+.criteria-section ul li:before {
     content: '•';
     color: #ffd700;
     position: absolute;
     left: 0;
-    transition: transform 0.3s ease;
 }
 
-.feature-card:hover ul li {
-    opacity: 1;
-    transform: translateX(5px);
-}
-
-.feature-card:hover ul li:before {
-    transform: scale(1.2);
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideIn {
-    from { opacity: 0; transform: translateX(-20px); }
-    to { opacity: 1; transform: translateX(0); }
-}
-
-.lead {
-    animation: slideIn 0.5s ease-out 0.2s both;
+@media (min-width: 768px) {
+    .criteria-container {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
 @media (max-width: 768px) {
-    .feature-card {
-        margin-bottom: 1rem;
+    .content-section h2 {
+        font-size: 1.5rem;
     }
-    
-    .section {
-        padding: 1.5rem;
+
+    .content-section p {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .category-item, .prize-item {
+        font-size: 1rem;
     }
 }
 </style> 

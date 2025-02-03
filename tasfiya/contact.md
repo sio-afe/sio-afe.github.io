@@ -62,28 +62,22 @@ title: Contact Us - Tasfiya
 
 <style>
 .contact-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1rem;
 }
 
 .contact-info {
     display: grid;
     gap: 1.5rem;
+    margin-bottom: 3rem;
 }
 
 .contact-card {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.02);
     padding: 2rem;
-    border-radius: 15px;
+    border-radius: 8px;
     text-align: center;
-    backdrop-filter: blur(10px);
-    transition: transform 0.3s ease;
-}
-
-.contact-card:hover {
-    transform: translateY(-5px);
 }
 
 .contact-card i {
@@ -95,24 +89,27 @@ title: Contact Us - Tasfiya
 .contact-card h3 {
     color: #ffd700;
     margin-bottom: 1rem;
+    font-size: 1.3rem;
 }
 
 .contact-card p {
     color: rgba(255, 255, 255, 0.9);
-    line-height: 1.6;
+    line-height: 1.8;
+    font-size: 1.1rem;
+    text-align: center;
 }
 
 .contact-form {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.02);
     padding: 2rem;
-    border-radius: 15px;
-    backdrop-filter: blur(10px);
+    border-radius: 8px;
 }
 
 .contact-form h2 {
     color: #ffd700;
     margin-bottom: 2rem;
     text-align: center;
+    font-size: 1.8rem;
 }
 
 .form-group {
@@ -123,6 +120,7 @@ title: Contact Us - Tasfiya
     display: block;
     color: rgba(255, 255, 255, 0.9);
     margin-bottom: 0.5rem;
+    font-size: 1.1rem;
 }
 
 .form-group input,
@@ -133,27 +131,20 @@ title: Contact Us - Tasfiya
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 8px;
     color: white;
+    font-size: 1.1rem;
     transition: border-color 0.3s ease;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: #ffd700;
-}
-
 .submit-btn {
-    position: relative;
-    overflow: hidden;
     width: 100%;
     padding: 1rem;
-    background: rgba(255, 215, 0, 0.1);
+    background: rgba(255, 215, 0, 0.05);
     border: 1px solid #ffd700;
     border-radius: 8px;
     color: #ffd700;
     font-size: 1.1rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -161,33 +152,32 @@ title: Contact Us - Tasfiya
 }
 
 .submit-btn:hover {
-    background: rgba(255, 215, 0, 0.2);
+    background: rgba(255, 215, 0, 0.1);
 }
 
-.submit-btn .loading-spinner {
-    display: none;
-    position: absolute;
+@media (min-width: 768px) {
+    .contact-info {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
-.submit-btn.loading .btn-text,
-.submit-btn.loading .fa-paper-plane {
-    visibility: hidden;
-}
-
-.submit-btn.loading .loading-spinner {
-    display: inline-block;
-}
-
-.form-group input:not(:placeholder-shown):valid,
-.form-group textarea:not(:placeholder-shown):valid {
-    border-color: rgba(0, 255, 0, 0.3);
-    background: rgba(0, 255, 0, 0.05);
-}
-
-.form-group input:not(:placeholder-shown):invalid,
-.form-group textarea:not(:placeholder-shown):invalid {
-    border-color: rgba(255, 0, 0, 0.3);
-    background: rgba(255, 0, 0, 0.05);
+@media (max-width: 768px) {
+    .contact-card,
+    .contact-form {
+        padding: 1.5rem;
+    }
+    
+    .contact-card p,
+    .form-group label,
+    .form-group input,
+    .form-group textarea {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+    
+    .contact-form h2 {
+        font-size: 1.5rem;
+    }
 }
 
 .success-message,
@@ -209,17 +199,6 @@ title: Contact Us - Tasfiya
     background: rgba(255, 0, 0, 0.1);
     border: 1px solid rgba(255, 0, 0, 0.3);
     color: #FFB6C1;
-}
-
-@media (max-width: 768px) {
-    .contact-content {
-        grid-template-columns: 1fr;
-    }
-    
-    .contact-card,
-    .contact-form {
-        padding: 1.5rem;
-    }
 }
 </style>
 

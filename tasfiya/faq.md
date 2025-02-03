@@ -73,16 +73,10 @@ title: FAQ - Tasfiya
 
 <style>
 .faq-item {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 15px;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
     overflow: hidden;
-    backdrop-filter: blur(10px);
-    transform: translateY(0);
-    transition: transform 0.3s ease, background 0.3s ease;
-}
-
-.faq-item:hover {
-    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.02);
 }
 
 .faq-header {
@@ -91,60 +85,49 @@ title: FAQ - Tasfiya
 
 .faq-btn {
     width: 100%;
-    padding: 1.5rem;
+    padding: 1.2rem 1.5rem;
     text-align: left;
     background: none;
     border: none;
     color: #ffd700;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 500;
     display: flex;
     align-items: center;
-    transition: all 0.3s ease;
+    transition: background 0.3s ease;
 }
 
-.faq-btn:hover {
-    background: rgba(255, 215, 0, 0.1);
-    text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
-}
-
-.faq-btn:not(.collapsed) {
-    background: rgba(255, 215, 0, 0.1);
+.faq-btn:hover, .faq-btn:not(.collapsed) {
+    background: rgba(255, 215, 0, 0.05);
 }
 
 .faq-btn i {
-    font-size: 1.2rem;
     color: #ffd700;
-    transition: transform 0.3s ease;
-}
-
-.faq-btn:not(.collapsed) i {
-    transform: scale(1.1);
+    margin-right: 1rem;
+    width: 24px;
+    text-align: center;
 }
 
 .faq-body {
     padding: 1.5rem;
     color: rgba(255, 255, 255, 0.9);
     border-top: 1px solid rgba(255, 215, 0, 0.1);
+    line-height: 1.8;
+    font-size: 1.1rem;
+    text-align: left;
     background: rgba(0, 0, 0, 0.1);
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease, padding 0.3s ease;
-}
-
-.collapse.show .faq-body {
-    max-height: 500px;
-    padding: 1.5rem;
 }
 
 @media (max-width: 768px) {
     .faq-btn {
         padding: 1rem;
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
     
     .faq-body {
         padding: 1rem;
+        font-size: 1rem;
+        line-height: 1.6;
     }
 }
 
@@ -154,6 +137,9 @@ title: FAQ - Tasfiya
 }
 
 .faq-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem;
     animation: fadeIn 0.5s ease-out;
 }
 
