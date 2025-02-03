@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{% if page.url contains '/ur/' %}ur{% else %}en{% endif %}" dir="{% if page.url contains '/ur/' %}rtl{% else %}ltr{% endif %}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +15,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -29,6 +29,59 @@
             background: linear-gradient(-45deg, #005f73, #0a9396, #094c59, #083c48);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
+        }
+
+        /* RTL and Urdu Typography */
+        [dir="rtl"] body {
+            font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
+        }
+
+        [dir="rtl"] h1,
+        [dir="rtl"] h2,
+        [dir="rtl"] h3 {
+            font-family: 'Mehr Nastaliq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', sans-serif;
+            line-height: 1.8;
+        }
+
+        [dir="rtl"] p,
+        [dir="rtl"] div,
+        [dir="rtl"] span {
+            font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
+            line-height: 1.8;
+        }
+
+        /* Font loading */
+        @font-face {
+            font-family: 'Jameel Noori Nastaleeq';
+            src: local('Jameel Noori Nastaleeq');
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Mehr Nastaliq';
+            src: local('Mehr Nastaliq');
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Nafees Nastaleeq';
+            src: local('Nafees Nastaleeq');
+            font-display: swap;
+        }
+
+        /* Adjust spacing for Nastaleeq script */
+        [dir="rtl"] {
+            line-height: 1.8;
+        }
+
+        [dir="rtl"] .container {
+            text-align: right;
+        }
+
+        /* Adjust icon positioning for RTL */
+        [dir="rtl"] i {
+            margin-left: 0.5rem;
+            margin-right: 0;
         }
 
         @keyframes gradientBG {
@@ -133,7 +186,7 @@
             <div class="container">
                 <div class="row align-items-center min-vh-75">
                     <div class="col-lg-8 mx-auto text-center">
-{{ content }} 
+                        {{ content }} 
                     </div>
                 </div>
             </div>

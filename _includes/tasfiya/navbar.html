@@ -1,11 +1,11 @@
 <nav class="navbar navbar-expand-lg navbar-dark moroccan-nav">
     <div class="container">
-        <a class="navbar-brand" href="{{ '/tasfiya' | relative_url }}">
+        <a class="navbar-brand" href="{% if page.url contains '/ur/' %}{{ '/tasfiya/ur' | relative_url }}{% else %}{{ '/tasfiya' | relative_url }}{% endif %}">
             <img src="{{ '/assets/img/islamic/banner1.png' | relative_url }}" alt="Tasfiya">
         </a>
         
         <!-- Mobile Menu Toggle -->
-        <button class="mobile-menu-toggle" type="button" aria-label="Toggle navigation">
+        <button class="mobile-menu-toggle d-lg-none" type="button" aria-label="Toggle navigation">
             <i class="fas fa-bars"></i>
         </button>
 
@@ -13,23 +13,28 @@
         <div class="desktop-menu d-none d-lg-flex">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ '/tasfiya' | relative_url }}">
-                        <i class="fas fa-home me-1"></i>Home
+                    <a class="nav-link" href="{% if page.url contains '/ur/' %}{{ '/tasfiya/ur' | relative_url }}{% else %}{{ '/tasfiya' | relative_url }}{% endif %}">
+                        <i class="fas fa-home me-1"></i>{% if page.url contains '/ur/' %}ہوم{% else %}Home{% endif %}
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ '/tasfiya/about' | relative_url }}">
-                        <i class="fas fa-info-circle me-1"></i>About Competition
+                    <a class="nav-link" href="{% if page.url contains '/ur/' %}{{ '/tasfiya/ur/about' | relative_url }}{% else %}{{ '/tasfiya/about' | relative_url }}{% endif %}">
+                        <i class="fas fa-info-circle me-1"></i>{% if page.url contains '/ur/' %}مقابلے کے بارے میں{% else %}About Competition{% endif %}
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ '/tasfiya/faq' | relative_url }}">
-                        <i class="fas fa-question-circle me-1"></i>FAQ
+                    <a class="nav-link" href="{% if page.url contains '/ur/' %}{{ '/tasfiya/ur/faq' | relative_url }}{% else %}{{ '/tasfiya/faq' | relative_url }}{% endif %}">
+                        <i class="fas fa-question-circle me-1"></i>{% if page.url contains '/ur/' %}عمومی سوالات{% else %}FAQ{% endif %}
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ '/tasfiya/contact' | relative_url }}">
-                        <i class="fas fa-envelope me-1"></i>Contact Us
+                    <a class="nav-link" href="{% if page.url contains '/ur/' %}{{ '/tasfiya/ur/contact' | relative_url }}{% else %}{{ '/tasfiya/contact' | relative_url }}{% endif %}">
+                        <i class="fas fa-envelope me-1"></i>{% if page.url contains '/ur/' %}رابطہ کریں{% else %}Contact Us{% endif %}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link language-switch" href="{% if page.url contains '/ur/' %}{{ page.url | replace: '/ur/', '/' }}{% else %}{{ page.url | replace: '/tasfiya', '/tasfiya/ur' }}{% endif %}">
+                        <i class="fas fa-language me-1"></i>{% if page.url contains '/ur/' %}English{% else %}اردو{% endif %}
                     </a>
                 </li>
             </ul>
@@ -39,7 +44,9 @@
         <div class="mobile-menu">
             <div class="mobile-menu-header">
                 <div class="d-flex align-items-center">
-                    <img src="{{ '/assets/img/islamic/banner1.png' | relative_url }}" alt="Tasfiya">
+                    <a href="{% if page.url contains '/ur/' %}{{ '/tasfiya/ur' | relative_url }}{% else %}{{ '/tasfiya' | relative_url }}{% endif %}">
+                        <img src="{{ '/assets/img/islamic/banner1.png' | relative_url }}" alt="Tasfiya">
+                    </a>
                 </div>
                 <button class="mobile-menu-close">
                     <i class="fas fa-times"></i>
@@ -47,23 +54,32 @@
             </div>
             <ul class="mobile-nav">
                 <li>
-                    <a href="{{ '/tasfiya' | relative_url }}">
-                        <i class="fas fa-home me-2"></i>Home
+                    <a href="{% if page.url contains '/ur/' %}{{ '/tasfiya/ur' | relative_url }}{% else %}{{ '/tasfiya' | relative_url }}{% endif %}" 
+                       class="{% if page.url == '/tasfiya/' or page.url == '/tasfiya/ur/' %}active{% endif %}">
+                        <i class="fas fa-home me-2"></i>{% if page.url contains '/ur/' %}ہوم{% else %}Home{% endif %}
                     </a>
                 </li>
                 <li>
-                    <a href="{{ '/tasfiya/about' | relative_url }}">
-                        <i class="fas fa-info-circle me-2"></i>About Competition
+                    <a href="{% if page.url contains '/ur/' %}{{ '/tasfiya/ur/about' | relative_url }}{% else %}{{ '/tasfiya/about' | relative_url }}{% endif %}"
+                       class="{% if page.url contains '/about' %}active{% endif %}">
+                        <i class="fas fa-info-circle me-2"></i>{% if page.url contains '/ur/' %}مقابلے کے بارے میں{% else %}About Competition{% endif %}
                     </a>
                 </li>
                 <li>
-                    <a href="{{ '/tasfiya/faq' | relative_url }}">
-                        <i class="fas fa-question-circle me-2"></i>FAQ
+                    <a href="{% if page.url contains '/ur/' %}{{ '/tasfiya/ur/faq' | relative_url }}{% else %}{{ '/tasfiya/faq' | relative_url }}{% endif %}"
+                       class="{% if page.url contains '/faq' %}active{% endif %}">
+                        <i class="fas fa-question-circle me-2"></i>{% if page.url contains '/ur/' %}عمومی سوالات{% else %}FAQ{% endif %}
                     </a>
                 </li>
                 <li>
-                    <a href="{{ '/tasfiya/contact' | relative_url }}">
-                        <i class="fas fa-envelope me-2"></i>Contact Us
+                    <a href="{% if page.url contains '/ur/' %}{{ '/tasfiya/ur/contact' | relative_url }}{% else %}{{ '/tasfiya/contact' | relative_url }}{% endif %}"
+                       class="{% if page.url contains '/contact' %}active{% endif %}">
+                        <i class="fas fa-envelope me-2"></i>{% if page.url contains '/ur/' %}رابطہ کریں{% else %}Contact Us{% endif %}
+                    </a>
+                </li>
+                <li>
+                    <a href="{% if page.url contains '/ur/' %}{{ page.url | replace: '/ur/', '/' }}{% else %}{{ page.url | replace: '/tasfiya', '/tasfiya/ur' }}{% endif %}">
+                        <i class="fas fa-language me-2"></i>{% if page.url contains '/ur/' %}English{% else %}اردو{% endif %}
                     </a>
                 </li>
             </ul>
@@ -195,24 +211,6 @@
 }
 
 /* Mobile Menu Styles */
-.mobile-menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    color: #ffd700;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 0.5rem;
-    z-index: 1001;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.mobile-menu-toggle.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
-
 .mobile-menu {
     position: fixed;
     top: 0;
@@ -232,6 +230,20 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* RTL Mobile Menu Styles */
+[dir="rtl"] .mobile-menu {
+    right: auto;
+    left: 0;
+    transform: translateX(-100%);
+    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
+    border-left: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[dir="rtl"] .mobile-menu.active {
+    transform: translateX(0);
 }
 
 .mobile-menu::before {
@@ -256,28 +268,7 @@
 }
 
 .mobile-menu-close {
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: #ffd700;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 0.5rem;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.mobile-menu-close:hover {
-    background: rgba(255, 215, 0, 0.15);
-    transform: rotate(90deg);
-    border-color: rgba(255, 215, 0, 0.3);
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    display: none; /* Hide the close button */
 }
 
 .mobile-menu-header {
@@ -288,7 +279,7 @@
     border-bottom: 1px solid rgba(255, 215, 0, 0.1);
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center; /* Center the logo */
     z-index: 2;
     backdrop-filter: blur(10px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -297,6 +288,7 @@
 .mobile-menu-header img {
     height: 45px;
     width: auto;
+    margin: 0 auto; /* Center the image */
 }
 
 .mobile-nav {
@@ -321,8 +313,6 @@
     );
 }
 
-.mobile-nav li a:hover,
-.mobile-nav li a:active,
 .mobile-nav li a.active {
     background: linear-gradient(
         to right,
@@ -333,6 +323,37 @@
     border-left-color: #ffd700;
     padding-left: 2rem;
     text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+[dir="rtl"] .mobile-nav li a {
+    border-left: none;
+    border-right: 3px solid transparent;
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
+}
+
+[dir="rtl"] .mobile-nav li a.active {
+    border-left: none;
+    border-right: 3px solid #ffd700;
+    padding-right: 2rem;
+    padding-left: 1.5rem;
+    background: linear-gradient(
+        to left,
+        rgba(255, 215, 0, 0.1) 0%,
+        rgba(255, 215, 0, 0.05) 100%
+    );
+}
+
+[dir="rtl"] .mobile-nav li a:hover {
+    border-left: none;
+    border-right: 3px solid #ffd700;
+    padding-right: 2rem;
+    padding-left: 1.5rem;
+    background: linear-gradient(
+        to left,
+        rgba(255, 215, 0, 0.1) 0%,
+        rgba(255, 215, 0, 0.05) 100%
+    );
 }
 
 .mobile-nav li a i {
@@ -417,6 +438,10 @@
     .mobile-menu {
         width: 90%;
         max-width: none;
+        border-radius: 0 15px 15px 0;
+    }
+
+    [dir="rtl"] .mobile-menu {
         border-radius: 15px 0 0 15px;
     }
     
@@ -427,6 +452,121 @@
     .mobile-menu-header img {
         height: 42px;
     }
+}
+
+.language-switch {
+    font-family: 'Noto Naskh Arabic', 'Poppins', sans-serif;
+}
+
+.language-switch i {
+    font-size: 1.2em;
+}
+
+/* Urdu Typography Styles */
+[dir="rtl"] .nav-link,
+[dir="rtl"] .mobile-nav li a,
+.language-switch {
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
+    font-size: 1.2rem;
+}
+
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3 {
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
+    line-height: 1.8;
+}
+
+[dir="rtl"] p,
+[dir="rtl"] div,
+[dir="rtl"] span {
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
+    line-height: 1.8;
+}
+
+/* Adjust spacing for Nastaleeq script */
+[dir="rtl"] .nav-link {
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+}
+
+/* Adjust icon positioning for RTL */
+[dir="rtl"] .nav-link i,
+[dir="rtl"] .mobile-nav li a i {
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+/* Font loading */
+@font-face {
+    font-family: 'Mehr Nastaleeq';
+    src: local('Mehr Nastaleeq');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Jameel Noori Nastaleeq';
+    src: local('Jameel Noori Nastaleeq');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Noto Nastaliq Urdu';
+    src: local('Noto Nastaliq Urdu');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Nafees Nastaleeq';
+    src: local('Nafees Nastaleeq');
+    font-display: swap;
+}
+
+/* Adjust vertical alignment for Nastaleeq */
+[dir="rtl"] .navbar-nav {
+    padding-top: 0.5rem;
+}
+
+[dir="rtl"] .mobile-nav {
+    padding-top: 0.3rem;
+}
+
+/* Increase line height for better readability */
+[dir="rtl"] {
+    line-height: 1.8;
+}
+
+/* Adjust mobile menu toggle position in RTL */
+[dir="rtl"] .mobile-menu-toggle {
+    margin-right: auto;
+    margin-left: 1rem;
+}
+
+[dir="rtl"] .mobile-menu-header {
+    flex-direction: row; /* Reset to default */
+    justify-content: center;
+}
+
+[dir="rtl"] .mobile-menu-close {
+    display: none;
+}
+
+/* Mobile Menu Styles */
+.mobile-menu-toggle {
+    background: none;
+    border: none;
+    color: #ffd700;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 1001;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobile-menu-toggle.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
 }
 </style>
 
