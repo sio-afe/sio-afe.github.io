@@ -488,49 +488,94 @@
     padding-top: 0.3rem;
 }
 
-/* Font loading */
+/* Font loading with web fonts as fallback */
 @font-face {
     font-family: 'Mehr Nastaleeq';
-    src: local('Mehr Nastaleeq');
+    src: local('Mehr Nastaleeq'),
+         url('https://fonts.cdnfonts.com/css/mehr-nastaliq') format('woff2');
     font-display: swap;
 }
 
 @font-face {
     font-family: 'Jameel Noori Nastaleeq';
-    src: local('Jameel Noori Nastaleeq');
+    src: local('Jameel Noori Nastaleeq'),
+         url('https://fonts.cdnfonts.com/css/jameel-noori-nastaleeq') format('woff2');
     font-display: swap;
 }
 
 @font-face {
     font-family: 'Noto Nastaliq Urdu';
-    src: local('Noto Nastaliq Urdu');
+    src: local('Noto Nastaliq Urdu'),
+         url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap') format('woff2');
     font-display: swap;
 }
 
-@font-face {
-    font-family: 'Nafees Nastaleeq';
-    src: local('Nafees Nastaleeq');
-    font-display: swap;
+/* Mobile Urdu Typography */
+@media (max-width: 991px) {
+    [dir="rtl"] .mobile-nav li a {
+        font-family: 'Noto Nastaliq Urdu', 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Naskh Arabic', sans-serif;
+        font-size: 1.1rem;
+        line-height: 2;
+        padding: 1rem 1.5rem;
+    }
+
+    [dir="rtl"] .mobile-menu-header {
+        padding: 1.2rem 1rem;
+    }
+
+    [dir="rtl"] .mobile-nav {
+        padding-top: 0.5rem;
+    }
+
+    [dir="rtl"] .mobile-nav li a i {
+        margin-left: 1rem;
+        margin-right: 0;
+        width: 20px;
+        text-align: center;
+    }
 }
 
-/* Adjust mobile menu toggle position in RTL */
-[dir="rtl"] .mobile-menu-toggle {
-    margin-right: auto;
-    margin-left: 1rem;
+/* Ensure proper text rendering */
+[dir="rtl"] {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-[dir="rtl"] .mobile-menu-header {
-    flex-direction: row;
-    justify-content: center;
+/* Mobile Menu Styles */
+.mobile-menu {
+    background: rgba(0, 95, 115, 0.95);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
 }
 
-/* Remove any non-Mehr Nastaleeq font references */
-.language-switch {
-    font-family: inherit;
+/* Adjust mobile menu for better performance */
+@media (max-width: 480px) {
+    .mobile-menu {
+        width: 100%;
+        max-width: none;
+        border-radius: 0;
+        background: #005f73;
+    }
+
+    [dir="rtl"] .mobile-menu {
+        border-radius: 0;
+    }
+    
+    .mobile-nav li a {
+        padding: 1rem;
+    }
 }
 
-[dir="rtl"] .language-switch {
-    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
+/* Optimize mobile animations */
+.mobile-menu {
+    transition: transform 0.3s ease;
+    will-change: transform;
+}
+
+.mobile-nav li a {
+    transition: background-color 0.3s ease;
+    will-change: background-color;
 }
 
 /* Mobile Menu Toggle Button */

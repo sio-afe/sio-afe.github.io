@@ -169,6 +169,64 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #ffed4a;
         }
+
+        /* Global Urdu Typography */
+        [dir="rtl"] {
+            font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
+            line-height: 1.8;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        [dir="rtl"] h1,
+        [dir="rtl"] h2,
+        [dir="rtl"] h3,
+        [dir="rtl"] h4,
+        [dir="rtl"] h5,
+        [dir="rtl"] h6 {
+            font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
+            line-height: 1.8;
+        }
+
+        [dir="rtl"] p,
+        [dir="rtl"] div,
+        [dir="rtl"] span,
+        [dir="rtl"] li,
+        [dir="rtl"] label,
+        [dir="rtl"] input,
+        [dir="rtl"] textarea,
+        [dir="rtl"] button {
+            font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
+        }
+
+        /* Font loading with web fonts as fallback */
+        @font-face {
+            font-family: 'Mehr Nastaleeq';
+            src: local('Mehr Nastaleeq'),
+                 url('https://fonts.cdnfonts.com/css/mehr-nastaliq') format('woff2');
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Jameel Noori Nastaleeq';
+            src: local('Jameel Noori Nastaleeq'),
+                 url('https://fonts.cdnfonts.com/css/jameel-noori-nastaleeq') format('woff2');
+            font-display: swap;
+        }
+
+        /* Mobile Urdu Typography */
+        @media (max-width: 991px) {
+            [dir="rtl"] {
+                font-size: 1.1rem;
+                line-height: 2;
+            }
+            
+            [dir="rtl"] h1 { font-size: 2rem; }
+            [dir="rtl"] h2 { font-size: 1.75rem; }
+            [dir="rtl"] h3 { font-size: 1.5rem; }
+            [dir="rtl"] h4 { font-size: 1.25rem; }
+        }
     </style>
 </head>
 <body>
