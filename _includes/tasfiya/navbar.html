@@ -184,23 +184,49 @@
 }
 
 /* Desktop Menu Styles */
-.desktop-menu .nav-link {
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    transition: all 0.3s ease;
-    color: #fff !important;
+.desktop-menu {
+    display: none;
 }
 
-.desktop-menu .nav-link:hover {
-    color: #ffd700 !important;
-}
-
-.desktop-menu .nav-link i {
-    color: #ffd700;
+@media (min-width: 992px) {
+    .desktop-menu {
+        display: flex !important;
+    }
+    
+    .mobile-menu-toggle {
+        display: none !important;
+    }
+    
+    .mobile-menu {
+        display: none !important;
+    }
 }
 
 /* Mobile Menu Styles */
+@media (max-width: 991px) {
+    .desktop-menu {
+        display: none !important;
+    }
+    
+    .mobile-menu-toggle {
+        display: flex !important;
+    }
+}
+
+/* Ensure desktop menu shows when desktop view is requested */
+@media screen and (min-width: 992px) {
+    .desktop-menu {
+        display: flex !important;
+    }
+    
+    .mobile-menu,
+    .mobile-menu-toggle,
+    .menu-overlay {
+        display: none !important;
+    }
+}
+
+/* Base mobile menu styles */
 .mobile-menu {
     position: fixed;
     top: 0;
@@ -230,6 +256,13 @@
     box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
     border-left: none;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Ensure proper display based on viewport */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+    .mobile-menu {
+        overflow-y: scroll;
+    }
 }
 
 .mobile-menu::before {
@@ -383,7 +416,7 @@
     }
     
     .mobile-menu-toggle {
-        display: block;
+        display: flex;
     }
 
     .container {
