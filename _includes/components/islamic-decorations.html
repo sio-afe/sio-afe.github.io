@@ -1,0 +1,84 @@
+<!-- Islamic Background Component -->
+<div class="islamic-background">
+    <div class="spinning-background"></div>
+</div>
+
+<style>
+.islamic-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.spinning-background {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120vmax;
+    height: 120vmax;
+    background-image: url("{{ '/assets/img/islamic/bckg.png' | relative_url }}");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.25;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.1));
+}
+
+@keyframes gracefulSpin {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .spinning-background {
+        width: 200vmax;  /* Much larger on mobile to ensure coverage */
+        height: 200vmax;
+        opacity: 0.15;  /* Reduced opacity on mobile */
+        animation: gracefulSpin 90s linear infinite; /* Slower spin on mobile */
+    }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+    .spinning-background {
+        width: 250vmax;  /* Even larger for small phones */
+        height: 250vmax;
+    }
+}
+
+/* Performance optimization for devices that prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .spinning-background {
+        animation-duration: 120s;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add smooth parallax effect on mouse move - only for desktop
+    if (!('ontouchstart' in window) && window.innerWidth > 768) {
+        document.addEventListener('mousemove', function(e) {
+            requestAnimationFrame(() => {
+                const mouseX = (e.clientX / window.innerWidth - 0.5) * 10; // Reduced movement
+                const mouseY = (e.clientY / window.innerHeight - 0.5) * 10;
+                
+                const background = document.querySelector('.spinning-background');
+                background.style.marginLeft = `${mouseX}px`;
+                background.style.marginTop = `${mouseY}px`;
+            });
+        });
+    }
+});
+</script> 

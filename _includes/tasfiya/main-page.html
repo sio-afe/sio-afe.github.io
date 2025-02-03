@@ -1,0 +1,24 @@
+<div class="tasfiya-wrapper">
+    {% include tasfiya/navbar.html %}
+    
+    <main class="tasfiya-content">
+        {{ content }}
+    </main>
+</div>
+
+<style>
+.tasfiya-wrapper {
+    min-height: 100vh;
+    background: #f8f9fa;
+}
+
+.tasfiya-content {
+    padding: 2rem 0;
+}
+
+@media (max-width: 768px) {
+    .tasfiya-content {
+        padding: 1.5rem 0;
+    }
+}
+</style> 
