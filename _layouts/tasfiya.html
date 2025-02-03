@@ -107,18 +107,10 @@
             justify-content: center;
             align-items: center;
             z-index: 99999;
-            opacity: 1;
-            visibility: visible;
-            transition: all 0.5s ease;
-            transform: translateZ(0);
-            will-change: opacity, visibility;
         }
 
         .preloader.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            z-index: -1;
+            display: none;
         }
 
         .preloader-content {
@@ -129,26 +121,36 @@
             width: 120px;
             height: auto;
             margin-bottom: 1rem;
-            animation: pulse 2s infinite;
         }
 
         .preloader-text {
             color: #ffd700;
             font-size: 1.2rem;
             font-family: {% if page.url contains '/ur/' %}'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif{% else %}'Poppins', sans-serif{% endif %};
-            animation: fadeInOut 1.5s infinite;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 15px rgba(255, 215, 0, 0.4)); }
-            50% { transform: scale(1.1); filter: brightness(1.2) drop-shadow(0 0 20px rgba(255, 215, 0, 0.6)); }
-            100% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 15px rgba(255, 215, 0, 0.4)); }
-        }
-
-        @keyframes fadeInOut {
-            0% { opacity: 0.3; }
-            50% { opacity: 1; }
-            100% { opacity: 0.3; }
+        /* Desktop-only animations */
+        @media (min-width: 992px) {
+            .preloader {
+                opacity: 1;
+                visibility: visible;
+                transition: opacity 0.5s ease, visibility 0.5s ease;
+            }
+            
+            .preloader.hidden {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+                display: block;
+            }
+            
+            .preloader-logo {
+                animation: pulse 2s infinite;
+            }
+            
+            .preloader-text {
+                animation: fadeInOut 1.5s infinite;
+            }
         }
 
         /* Page Transition */
@@ -260,14 +262,12 @@
 </head>
 <body>
     <!-- Preloader -->
-    {% unless page.url contains '/ur/' %}
     <div class="preloader">
         <div class="preloader-content">
             <img src="{{ '/assets/img/islamic/logo.png' | relative_url }}" alt="Tasfiya Logo" class="preloader-logo">
-            <div class="preloader-text">Loading...</div>
+            <div class="preloader-text">{% if page.url contains '/ur/' %}لوڈ ہو رہا ہے...{% else %}Loading...{% endif %}</div>
         </div>
     </div>
-    {% endunless %}
     <div class="page-transition"></div>
 
     <!-- Include Islamic Decorations -->
@@ -632,14 +632,11 @@
             const preloader = document.querySelector('.preloader');
             const pageTransition = document.querySelector('.page-transition');
             
-            if (preloader && !window.location.pathname.includes('/ur/')) {
+            if (preloader) {
                 setTimeout(() => {
                     preloader.classList.add('hidden');
                     document.body.style.overflow = 'visible';
-                    void preloader.offsetWidth;
                 }, 1000);
-            } else {
-                document.body.style.overflow = 'visible';
             }
 
             // Page transition for links
