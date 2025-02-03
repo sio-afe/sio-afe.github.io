@@ -260,12 +260,14 @@
 </head>
 <body>
     <!-- Preloader -->
+    {% unless page.url contains '/ur/' %}
     <div class="preloader">
         <div class="preloader-content">
             <img src="{{ '/assets/img/islamic/logo.png' | relative_url }}" alt="Tasfiya Logo" class="preloader-logo">
-            <div class="preloader-text">{% if page.url contains '/ur/' %}لوڈ ہو رہا ہے...{% else %}Loading...{% endif %}</div>
+            <div class="preloader-text">Loading...</div>
         </div>
     </div>
+    {% endunless %}
     <div class="page-transition"></div>
 
     <!-- Include Islamic Decorations -->
@@ -630,12 +632,14 @@
             const preloader = document.querySelector('.preloader');
             const pageTransition = document.querySelector('.page-transition');
             
-            if (preloader) {
+            if (preloader && !window.location.pathname.includes('/ur/')) {
                 setTimeout(() => {
                     preloader.classList.add('hidden');
                     document.body.style.overflow = 'visible';
                     void preloader.offsetWidth;
                 }, 1000);
+            } else {
+                document.body.style.overflow = 'visible';
             }
 
             // Page transition for links
