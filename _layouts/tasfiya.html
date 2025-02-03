@@ -106,11 +106,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 99999;
-        }
-
-        .preloader.hidden {
-            display: none !important;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
         }
 
         .preloader-content {
@@ -121,36 +118,26 @@
             width: 120px;
             height: auto;
             margin-bottom: 1rem;
+            animation: pulse 2s infinite;
         }
 
         .preloader-text {
             color: #ffd700;
             font-size: 1.2rem;
             font-family: {% if page.url contains '/ur/' %}'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif{% else %}'Poppins', sans-serif{% endif %};
+            animation: fadeInOut 1.5s infinite;
         }
 
-        /* Desktop-only animations */
-        @media (min-width: 992px) {
-            .preloader {
-                opacity: 1;
-                visibility: visible;
-                transition: opacity 0.5s ease, visibility 0.5s ease;
-            }
-            
-            .preloader.hidden {
-                opacity: 0;
-                visibility: hidden;
-                pointer-events: none;
-                display: block;
-            }
-            
-            .preloader-logo {
-                animation: pulse 2s infinite;
-            }
-            
-            .preloader-text {
-                animation: fadeInOut 1.5s infinite;
-            }
+        @keyframes pulse {
+            0% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 15px rgba(255, 215, 0, 0.4)); }
+            50% { transform: scale(1.1); filter: brightness(1.2) drop-shadow(0 0 20px rgba(255, 215, 0, 0.6)); }
+            100% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 15px rgba(255, 215, 0, 0.4)); }
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
         }
 
         /* Page Transition */
@@ -628,37 +615,28 @@
     <!-- Custom Scripts -->
     <script>
         // Preloader
-        document.addEventListener('DOMContentLoaded', function() {
-            const preloader = document.querySelector('.preloader');
-            if (preloader) {
-                // Force hide preloader after 3 seconds as fallback
-                setTimeout(() => {
-                    preloader.classList.add('hidden');
-                    document.body.style.overflow = 'visible';
-                }, 3000);
-            }
-        });
-
         window.addEventListener('load', function() {
             const preloader = document.querySelector('.preloader');
-            if (preloader) {
-                // Hide preloader immediately after load
-                preloader.classList.add('hidden');
+            const pageTransition = document.querySelector('.page-transition');
+            
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden';
                 document.body.style.overflow = 'visible';
-            }
-        });
+            }, 1000);
 
-        // Page transition for links
-        document.querySelectorAll('a:not([target="_blank"])').forEach(link => {
-            link.addEventListener('click', function(e) {
-                if (this.href && !this.href.includes('#') && !this.href.includes('javascript:')) {
-                    e.preventDefault();
-                    document.querySelector('.page-transition').classList.add('active');
-                    
-                    setTimeout(() => {
-                        window.location = this.href;
-                    }, 500);
-                }
+            // Page transition for links
+            document.querySelectorAll('a:not([target="_blank"])').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (this.href && !this.href.includes('#') && !this.href.includes('javascript:')) {
+                        e.preventDefault();
+                        pageTransition.classList.add('active');
+                        
+                        setTimeout(() => {
+                            window.location = this.href;
+                        }, 500);
+                    }
+                });
             });
         });
 

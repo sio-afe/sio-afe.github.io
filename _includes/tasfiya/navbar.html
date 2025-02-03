@@ -32,11 +32,6 @@
                         <i class="fas fa-envelope me-1"></i>{% if page.url contains '/ur/' %}رابطہ کریں{% else %}Contact Us{% endif %}
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link language-switch" href="{% if page.url contains '/ur/' %}{{ page.url | replace: '/ur/', '/' }}{% else %}{{ page.url | replace: '/tasfiya', '/tasfiya/ur' }}{% endif %}">
-                        <i class="fas fa-language me-1"></i>{% if page.url contains '/ur/' %}English{% else %}اردو{% endif %}
-                    </a>
-                </li>
             </ul>
         </div>
 
@@ -75,11 +70,6 @@
                     <a href="{% if page.url contains '/ur/' %}{{ '/tasfiya/ur/contact' | relative_url }}{% else %}{{ '/tasfiya/contact' | relative_url }}{% endif %}"
                        class="{% if page.url contains '/contact' %}active{% endif %}">
                         <i class="fas fa-envelope me-2"></i>{% if page.url contains '/ur/' %}رابطہ کریں{% else %}Contact Us{% endif %}
-                    </a>
-                </li>
-                <li>
-                    <a href="{% if page.url contains '/ur/' %}{{ page.url | replace: '/ur/', '/' }}{% else %}{{ page.url | replace: '/tasfiya', '/tasfiya/ur' }}{% endif %}">
-                        <i class="fas fa-language me-2"></i>{% if page.url contains '/ur/' %}English{% else %}اردو{% endif %}
                     </a>
                 </li>
             </ul>
@@ -216,12 +206,12 @@
     top: 0;
     right: 0;
     bottom: 0;
-    width: 85%;
-    max-width: 360px;
+    width: 75%;
+    max-width: 300px;
     height: 100vh;
-    background: rgba(0, 95, 115, 0.85);
-    -webkit-backdrop-filter: blur(20px);
-    backdrop-filter: blur(20px);
+    background: rgba(0, 95, 115, 0.95);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     z-index: 1000;
     transform: translateX(100%);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -240,10 +230,6 @@
     box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
     border-left: none;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-[dir="rtl"] .mobile-menu.active {
-    transform: translateX(0);
 }
 
 .mobile-menu::before {
@@ -436,8 +422,8 @@
 
 @media (max-width: 480px) {
     .mobile-menu {
-        width: 90%;
-        max-width: none;
+        width: 75% !important; /* Force 75% width */
+        max-width: 300px !important;
         border-radius: 0 15px 15px 0;
     }
 
