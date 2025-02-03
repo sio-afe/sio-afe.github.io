@@ -465,27 +465,9 @@
 /* Urdu Typography Styles */
 [dir="rtl"] .nav-link,
 [dir="rtl"] .mobile-nav li a,
-.language-switch {
+[dir="rtl"] .language-switch {
     font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
     font-size: 1.2rem;
-}
-
-[dir="rtl"] h1,
-[dir="rtl"] h2,
-[dir="rtl"] h3 {
-    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
-    line-height: 1.8;
-}
-
-[dir="rtl"] p,
-[dir="rtl"] div,
-[dir="rtl"] span {
-    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
-    line-height: 1.8;
-}
-
-/* Adjust spacing for Nastaleeq script */
-[dir="rtl"] .nav-link {
     padding-top: 0.7rem;
     padding-bottom: 0.7rem;
 }
@@ -495,6 +477,15 @@
 [dir="rtl"] .mobile-nav li a i {
     margin-left: 0.5rem;
     margin-right: 0;
+}
+
+/* Adjust vertical alignment for Nastaleeq */
+[dir="rtl"] .navbar-nav {
+    padding-top: 0.5rem;
+}
+
+[dir="rtl"] .mobile-nav {
+    padding-top: 0.3rem;
 }
 
 /* Font loading */
@@ -522,20 +513,6 @@
     font-display: swap;
 }
 
-/* Adjust vertical alignment for Nastaleeq */
-[dir="rtl"] .navbar-nav {
-    padding-top: 0.5rem;
-}
-
-[dir="rtl"] .mobile-nav {
-    padding-top: 0.3rem;
-}
-
-/* Increase line height for better readability */
-[dir="rtl"] {
-    line-height: 1.8;
-}
-
 /* Adjust mobile menu toggle position in RTL */
 [dir="rtl"] .mobile-menu-toggle {
     margin-right: auto;
@@ -543,15 +520,20 @@
 }
 
 [dir="rtl"] .mobile-menu-header {
-    flex-direction: row; /* Reset to default */
+    flex-direction: row;
     justify-content: center;
 }
 
-[dir="rtl"] .mobile-menu-close {
-    display: none;
+/* Remove any non-Mehr Nastaleeq font references */
+.language-switch {
+    font-family: inherit;
 }
 
-/* Mobile Menu Styles */
+[dir="rtl"] .language-switch {
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
+}
+
+/* Mobile Menu Toggle Button */
 .mobile-menu-toggle {
     background: none;
     border: none;
@@ -559,14 +541,50 @@
     font-size: 1.5rem;
     cursor: pointer;
     padding: 0.5rem;
-    z-index: 1001;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    margin-right: 0.5rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 215, 0, 0.2);
 }
 
-.mobile-menu-toggle.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
+.mobile-menu-toggle:hover {
+    background: rgba(255, 215, 0, 0.1);
+    transform: scale(1.05);
+}
+
+.mobile-menu-toggle:active {
+    transform: scale(0.95);
+}
+
+/* RTL specific toggle button styles */
+[dir="rtl"] .mobile-menu-toggle {
+    margin-right: auto;
+    margin-left: 0.5rem;
+}
+
+@media (max-width: 991px) {
+    .mobile-menu-toggle {
+        display: flex;
+        margin-left: auto;
+    }
+    
+    [dir="rtl"] .mobile-menu-toggle {
+        margin-left: 0.5rem;
+        margin-right: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .mobile-menu-toggle {
+        width: 36px;
+        height: 36px;
+        font-size: 1.3rem;
+    }
 }
 </style>
 

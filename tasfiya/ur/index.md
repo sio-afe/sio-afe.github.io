@@ -86,7 +86,7 @@ dir: rtl
     line-height: 1.8;
     text-align: center;
     color: rgba(255, 255, 255, 0.9);
-    font-family: 'Noto Naskh Arabic', sans-serif;
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
 }
 
 .feature-card {
@@ -106,7 +106,7 @@ dir: rtl
     font-size: 1.5rem;
     margin-bottom: 1rem;
     text-align: center;
-    font-family: 'Noto Naskh Arabic', sans-serif;
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
 }
 
 .feature-card p {
@@ -115,6 +115,6 @@ dir: rtl
     text-align: center;
     line-height: 1.6;
     font-size: 1.1rem;
-    font-family: 'Noto Naskh Arabic', sans-serif;
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
 }
 </style> 

@@ -104,30 +104,21 @@ dir: rtl
 
 .content-section {
     margin-bottom: 3rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
-}
-
-.content-section:last-child {
-    border-bottom: none;
 }
 
 .content-section h2 {
     color: #ffd700;
-    font-size: 1.8rem;
     margin-bottom: 1.5rem;
-    position: relative;
-    font-family: 'Noto Naskh Arabic', sans-serif;
-    text-align: right;
+    font-size: 2rem;
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
 }
 
 .content-section p {
     color: rgba(255, 255, 255, 0.9);
     line-height: 1.8;
     font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-    text-align: justify;
-    font-family: 'Noto Naskh Arabic', sans-serif;
+    margin-bottom: 1rem;
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
 }
 
 .category-list, .prize-list {
@@ -137,31 +128,38 @@ dir: rtl
 }
 
 .category-item, .prize-item {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 1rem;
     color: rgba(255, 255, 255, 0.9);
     font-size: 1.1rem;
-    text-align: right;
-    font-family: 'Noto Naskh Arabic', sans-serif;
+    margin-bottom: 1rem;
+    padding-right: 1rem;
+    position: relative;
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
+}
+
+.category-item:last-child, .prize-item:last-child {
+    margin-bottom: 0;
 }
 
 .category-item i, .prize-item i {
     color: #ffd700;
-    font-size: 1.3rem;
-    width: 24px;
+    margin-left: 1rem;
+    font-size: 1.2em;
+}
+
+.prize-amount {
+    color: #ffd700;
+    font-weight: 500;
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
+}
+
+.lead {
+    font-size: 1.25rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2rem;
     text-align: center;
-    order: 2;
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
 }
-
-.category-item span, .prize-item span {
-    order: 1;
-}
-
-.prize-item i.gold { color: #ffd700; }
-.prize-item i.silver { color: #C0C0C0; }
-.prize-item i.bronze { color: #CD7F32; }
 
 .criteria-container {
     display: grid;
