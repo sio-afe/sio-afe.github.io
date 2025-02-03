@@ -106,16 +106,19 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
+            z-index: 99999;
             opacity: 1;
             visibility: visible;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            transition: all 0.5s ease;
+            transform: translateZ(0);
+            will-change: opacity, visibility;
         }
 
         .preloader.hidden {
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
+            z-index: -1;
         }
 
         .preloader-content {
@@ -631,6 +634,7 @@
                 setTimeout(() => {
                     preloader.classList.add('hidden');
                     document.body.style.overflow = 'visible';
+                    void preloader.offsetWidth;
                 }, 1000);
             }
 
