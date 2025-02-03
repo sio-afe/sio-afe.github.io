@@ -110,7 +110,7 @@
         }
 
         .preloader.hidden {
-            display: none;
+            display: none !important;
         }
 
         .preloader-content {
@@ -628,29 +628,37 @@
     <!-- Custom Scripts -->
     <script>
         // Preloader
-        window.addEventListener('load', function() {
+        document.addEventListener('DOMContentLoaded', function() {
             const preloader = document.querySelector('.preloader');
-            const pageTransition = document.querySelector('.page-transition');
-            
             if (preloader) {
+                // Force hide preloader after 3 seconds as fallback
                 setTimeout(() => {
                     preloader.classList.add('hidden');
                     document.body.style.overflow = 'visible';
-                }, 1000);
+                }, 3000);
             }
+        });
 
-            // Page transition for links
-            document.querySelectorAll('a:not([target="_blank"])').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    if (this.href && !this.href.includes('#') && !this.href.includes('javascript:')) {
-                        e.preventDefault();
-                        pageTransition.classList.add('active');
-                        
-                        setTimeout(() => {
-                            window.location = this.href;
-                        }, 500);
-                    }
-                });
+        window.addEventListener('load', function() {
+            const preloader = document.querySelector('.preloader');
+            if (preloader) {
+                // Hide preloader immediately after load
+                preloader.classList.add('hidden');
+                document.body.style.overflow = 'visible';
+            }
+        });
+
+        // Page transition for links
+        document.querySelectorAll('a:not([target="_blank"])').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (this.href && !this.href.includes('#') && !this.href.includes('javascript:')) {
+                    e.preventDefault();
+                    document.querySelector('.page-transition').classList.add('active');
+                    
+                    setTimeout(() => {
+                        window.location = this.href;
+                    }, 500);
+                }
             });
         });
 
