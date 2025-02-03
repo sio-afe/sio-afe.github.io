@@ -114,7 +114,7 @@ title: FAQ - Tasfiya
     border-top: 1px solid rgba(255, 215, 0, 0.1);
     line-height: 1.8;
     font-size: 1.1rem;
-    text-align: left;
+    text-align: center;
     background: rgba(0, 0, 0, 0.1);
 }
 

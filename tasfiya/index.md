@@ -33,7 +33,7 @@ title: Tasfiya - Qur'an Recitation Competition
     font-size: 1.25rem;
     font-weight: 300;
     line-height: 1.8;
-    text-align: left;
+    text-align: center;
     color: rgba(255, 255, 255, 0.9);
 }
 

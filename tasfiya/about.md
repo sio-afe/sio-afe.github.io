@@ -122,7 +122,7 @@ title: About Competition - Tasfiya
     line-height: 1.8;
     font-size: 1.1rem;
     margin-bottom: 1.5rem;
-    text-align: left;
+    text-align: center;
 }
 
 .category-list, .prize-list {
@@ -134,10 +134,11 @@ title: About Competition - Tasfiya
 .category-item, .prize-item {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
     color: rgba(255, 255, 255, 0.9);
     font-size: 1.1rem;
-    text-align: left;
+    text-align: center;
 }
 
 .category-item i, .prize-item i {
@@ -161,27 +162,26 @@ title: About Competition - Tasfiya
     color: #ffd700;
     font-size: 1.3rem;
     margin-bottom: 1rem;
+    text-align: center;
 }
 
 .criteria-section ul {
     list-style: none;
     padding: 0;
     margin: 0;
+    text-align: center;
 }
 
 .criteria-section ul li {
     color: rgba(255, 255, 255, 0.9);
     margin-bottom: 0.8rem;
-    padding-left: 1.5rem;
+    padding-left: 0;
     position: relative;
-    text-align: left;
+    text-align: center;
 }
 
 .criteria-section ul li:before {
-    content: '•';
-    color: #ffd700;
-    position: absolute;
-    left: 0;
+    display: none;
 }
 
 @media (min-width: 768px) {
