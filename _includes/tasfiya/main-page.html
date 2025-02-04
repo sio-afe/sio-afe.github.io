@@ -6,6 +6,20 @@
     </main>
 </div>
 
+<div class="register-cta-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="mb-4">{% if page.url contains '/ur/' %}اب رجسٹر کریں{% else %}Register Now{% endif %}</h2>
+                <p class="mb-4">{% if page.url contains '/ur/' %}إتقان مقابلے میں شرکت کے لیے آج ہی رجسٹر کریں۔{% else %}Register today to participate in the Itqan competition.{% endif %}</p>
+                <div class="register-cta-button">
+                    {% include components/register-button.html %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
 .tasfiya-wrapper {
     min-height: 100vh;
@@ -19,6 +33,69 @@
 @media (max-width: 768px) {
     .tasfiya-content {
         padding: 1.5rem 0;
+    }
+}
+
+.register-cta-section {
+    padding: 4rem 0;
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(223, 180, 86, 0.1);
+    margin-top: 3rem;
+}
+
+.register-cta-section h2 {
+    color: #dfb456;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.register-cta-section p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.register-cta-button {
+    transform: scale(1.2);
+}
+
+[dir="rtl"] .register-cta-section h2 {
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', sans-serif;
+    font-size: 2.8rem;
+    line-height: 1.8;
+}
+
+[dir="rtl"] .register-cta-section p {
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', sans-serif;
+    font-size: 1.4rem;
+    line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+    .register-cta-section {
+        padding: 3rem 0;
+    }
+    
+    .register-cta-section h2 {
+        font-size: 2rem;
+    }
+    
+    .register-cta-section p {
+        font-size: 1.1rem;
+    }
+    
+    [dir="rtl"] .register-cta-section h2 {
+        font-size: 2.2rem;
+    }
+    
+    [dir="rtl"] .register-cta-section p {
+        font-size: 1.2rem;
+    }
+    
+    .register-cta-button {
+        transform: scale(1.1);
     }
 }
 </style> 
