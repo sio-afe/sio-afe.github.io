@@ -1,64 +1,49 @@
 ---
 layout: tasfiya
-title: رابطہ کریں - تصفیہ
-dir: rtl
+title: Contact إتقان
 ---
 
+<style>
+/* Add Thuluth font */
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+
+.thuluth-text {
+    font-family: 'Amiri', serif;
+    font-size: 1.8em;
+    background: linear-gradient(45deg, #dfb456, #e6c172);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+    display: inline-block;
+}
+
+@media (max-width: 768px) {
+    .thuluth-text {
+        font-size: 1.5em;
+    }
+}
+</style>
+
 <div class="islamic-decoration">
-    <h1>رابطہ کریں</h1>
+    <h1>Contact</h1>
 </div>
 
 <div class="contact-content">
     <div class="contact-info">
         <div class="contact-card">
             <i class="fas fa-map-marker-alt"></i>
-            <h3>ہمارا مقام</h3>
-            <p>ایس آئی او ابوالفضل دفتر<br>ابوالفضل انکلیو، جامعہ نگر<br>نئی دہلی، انڈیا</p>
+            <h3>Our Location</h3>
+            <p>SIO Abul Fazal Office<br>Abul Fazal Enclave, Jamia Nagar<br>New Delhi, India</p>
         </div>
 
         <div class="contact-card">
             <i class="fas fa-phone"></i>
-            <h3>فون</h3>
+            <h3>Phone</h3>
             <p>+91 XXX XXX XXXX<br>+91 XXX XXX XXXX</p>
         </div>
 
-        <div class="contact-card">
-            <i class="fas fa-envelope"></i>
-            <h3>ای میل</h3>
-            <p>info@tasfiya.org<br>support@tasfiya.org</p>
-        </div>
-    </div>
-
-    <div class="contact-form">
-        <h2>ہمیں پیغام بھیجیں</h2>
-        <form id="contactForm" onsubmit="return false;">
-            <div class="form-group">
-                <label for="name">نام</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-
-            <div class="form-group">
-                <label for="email">ای میل</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-
-            <div class="form-group">
-                <label for="subject">موضوع</label>
-                <input type="text" id="subject" name="subject" required>
-            </div>
-
-            <div class="form-group">
-                <label for="message">پیغام</label>
-                <textarea id="message" name="message" rows="5" required></textarea>
-            </div>
-
-            <button type="submit" class="submit-btn">
-                <i class="fas fa-paper-plane"></i>
-                <span class="btn-text">پیغام بھیجیں</span>
-                <span class="loading-spinner"><i class="fas fa-circle-notch fa-spin"></i></span>
-            </button>
-        </form>
-    </div>
 </div>
 
 <style>
@@ -66,7 +51,6 @@ dir: rtl
     max-width: 1000px;
     margin: 0 auto;
     padding: 0 1rem;
-    font-family: 'Noto Naskh Arabic', sans-serif;
 }
 
 .contact-info {
@@ -92,7 +76,6 @@ dir: rtl
     color: #ffd700;
     margin-bottom: 1rem;
     font-size: 1.3rem;
-    font-family: 'Noto Naskh Arabic', sans-serif;
 }
 
 .contact-card p {
@@ -100,7 +83,6 @@ dir: rtl
     line-height: 1.8;
     font-size: 1.1rem;
     text-align: center;
-    font-family: 'Noto Naskh Arabic', sans-serif;
 }
 
 .contact-form {
@@ -114,7 +96,6 @@ dir: rtl
     margin-bottom: 2rem;
     text-align: center;
     font-size: 1.8rem;
-    font-family: 'Noto Naskh Arabic', sans-serif;
 }
 
 .form-group {
@@ -126,8 +107,6 @@ dir: rtl
     color: rgba(255, 255, 255, 0.9);
     margin-bottom: 0.5rem;
     font-size: 1.1rem;
-    text-align: right;
-    font-family: 'Noto Naskh Arabic', sans-serif;
 }
 
 .form-group input,
@@ -140,8 +119,6 @@ dir: rtl
     color: white;
     font-size: 1.1rem;
     transition: border-color 0.3s ease;
-    text-align: right;
-    font-family: 'Noto Naskh Arabic', sans-serif;
 }
 
 .submit-btn {
@@ -158,7 +135,6 @@ dir: rtl
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    font-family: 'Noto Naskh Arabic', sans-serif;
 }
 
 .submit-btn:hover {
@@ -197,7 +173,6 @@ dir: rtl
     border-radius: 8px;
     margin-top: 1rem;
     text-align: center;
-    font-family: 'Noto Naskh Arabic', sans-serif;
 }
 
 .success-message {
@@ -210,58 +185,6 @@ dir: rtl
     background: rgba(255, 0, 0, 0.1);
     border: 1px solid rgba(255, 0, 0, 0.3);
     color: #FFB6C1;
-}
-
-/* Typography for Urdu text */
-[dir="rtl"] {
-    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
-    line-height: 1.8;
-}
-
-[dir="rtl"] h1,
-[dir="rtl"] h2,
-[dir="rtl"] h3,
-[dir="rtl"] h4,
-[dir="rtl"] h5,
-[dir="rtl"] h6 {
-    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
-    line-height: 1.8;
-}
-
-[dir="rtl"] p,
-[dir="rtl"] div,
-[dir="rtl"] span,
-[dir="rtl"] li,
-[dir="rtl"] label,
-[dir="rtl"] input,
-[dir="rtl"] textarea {
-    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
-    line-height: 1.8;
-}
-
-/* Font loading */
-@font-face {
-    font-family: 'Mehr Nastaleeq';
-    src: local('Mehr Nastaleeq');
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Jameel Noori Nastaleeq';
-    src: local('Jameel Noori Nastaleeq');
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Noto Nastaliq Urdu';
-    src: local('Noto Nastaliq Urdu');
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Nafees Nastaleeq';
-    src: local('Nafees Nastaleeq');
-    font-display: swap;
 }
 </style>
 
@@ -295,7 +218,7 @@ ${message}`
         // Show success message and reset form
         setTimeout(() => {
             submitBtn.classList.remove('loading');
-            showMessage('success', 'نئی ونڈو میں ای میل کلائنٹ کھل رہا ہے...');
+            showMessage('success', 'Opening email client in new window...');
             contactForm.reset();
         }, 1000);
     });
@@ -314,8 +237,9 @@ ${message}`
         messageDiv.style.display = 'block';
         
         setTimeout(() => {
-            messageDiv.style.display = 'none';
-            setTimeout(() => messageDiv.remove(), 300);
+            messageDiv.style.opacity = '0';
+            messageDiv.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => messageDiv.remove(), 500);
         }, 3000);
     }
 });

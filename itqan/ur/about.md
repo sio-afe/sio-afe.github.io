@@ -1,11 +1,34 @@
 ---
 layout: tasfiya
-title: مقابلے کے بارے میں - تصفیہ
+title: إتقان کے بارے میں
 dir: rtl
 ---
 
+<style>
+/* Add Thuluth font */
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+
+.thuluth-text {
+    font-family: 'Amiri', serif;
+    font-size: 1.8em;
+    background: linear-gradient(45deg, #dfb456, #e6c172);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+    display: inline-block;
+}
+
+@media (max-width: 768px) {
+    .thuluth-text {
+        font-size: 1.5em;
+    }
+}
+</style>
+
 <div class="islamic-decoration">
-    <h1>مقابلے کے بارے میں</h1>
+    <h1><span class="thuluth-text">إتقان</span> کے بارے میں</h1>
 </div>
 
 <div class="about-content">

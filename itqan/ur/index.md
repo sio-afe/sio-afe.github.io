@@ -1,15 +1,38 @@
 ---
 layout: tasfiya
-title: تصفیہ - قرآن تلاوت مقابلہ
+title: إتقان - قرآن تلاوت مقابلہ
 dir: rtl
 ---
+
+<style>
+/* Add Thuluth font */
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+
+.thuluth-text {
+    font-family: 'Amiri', serif;
+    font-size: 1.8em;
+    background: linear-gradient(45deg, #dfb456, #e6c172);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+    display: inline-block;
+}
+
+@media (max-width: 768px) {
+    .thuluth-text {
+        font-size: 1.5em;
+    }
+}
+</style>
 
 <div class="islamic-decoration">
     <h1>قرآن تلاوت اور اذان مقابلہ</h1>
 </div>
 
 <p class="lead mb-5">
-    ایس آئی او ابوالفضل انکلیو پیش کرتا ہے تصفیہ مقابلہ کا پہلا ایڈیشن، جو دہلی میں قرآن تلاوت اور اذان میں خوبصورت اور دل کو چھونے والی آوازوں کو ایک ساتھ لاتا ہے، جس کا مقصد قرآن تلاوت اور اذان میں سب سے خوبصورت آوازوں کو اعزاز دینا ہے۔
+    ایس آئی او ابوالفضل پیش کرتا ہے <span class="thuluth-text">إتقان</span> کا پہلا ایڈیشن، جو دہلی میں قرآن تلاوت اور اذان میں خوبصورت اور متاثر کن آوازوں کو ایک ساتھ لاتا ہے، جس کا مقصد قرآن تلاوت اور اذان میں سب سے خوبصورت آوازوں کو اعزاز دینا ہے۔
 </p>
 
 <div class="row justify-content-center mt-5">

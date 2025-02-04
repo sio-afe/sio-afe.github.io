@@ -1,10 +1,34 @@
 ---
 layout: tasfiya
-title: FAQ - Tasfiya
+title: إتقان - عمومی سوالات
+dir: rtl
 ---
 
+<style>
+/* Add Thuluth font */
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+
+.thuluth-text {
+    font-family: 'Amiri', serif;
+    font-size: 1.8em;
+    background: linear-gradient(45deg, #dfb456, #e6c172);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+    display: inline-block;
+}
+
+@media (max-width: 768px) {
+    .thuluth-text {
+        font-size: 1.5em;
+    }
+}
+</style>
+
 <div class="islamic-decoration">
-    <h1>Frequently Asked Questions</h1>
+    <h1><span class="thuluth-text">إتقان</span> - عمومی سوالات</h1>
 </div>
 
 <div class="faq-content">
@@ -14,12 +38,12 @@ title: FAQ - Tasfiya
             <h2 class="faq-header" id="headingOne">
                 <button class="faq-btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
                     <i class="fas fa-question-circle me-2"></i>
-                    How do I register for the competition?
+                    میں مقابلے کے لیے رجسٹریشن کیسے کروں؟
                 </button>
             </h2>
             <div id="collapseOne" class="collapse show" data-bs-parent="#faqAccordion">
                 <div class="faq-body">
-                    Registration can be done online through our website or in person at the SIO Abul Fazal office. You'll need to provide basic information and choose your competition category.
+                    رجسٹریشن ہماری ویب سائٹ کے ذریعے آن لائن یا ایس آئی او ابوالفضل دفتر میں ذاتی طور پر کی جا سکتی ہے۔ آپ کو بنیادی معلومات فراہم کرنی ہوں گی اور اپنی مقابلے کی قسم کا انتخاب کرنا ہوگا۔
                 </div>
             </div>
         </div>
@@ -29,12 +53,12 @@ title: FAQ - Tasfiya
             <h2 class="faq-header" id="headingTwo">
                 <button class="faq-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
                     <i class="fas fa-user-check me-2"></i>
-                    Who is eligible to participate?
+                    کون شرکت کر سکتا ہے؟
                 </button>
             </h2>
             <div id="collapseTwo" class="collapse" data-bs-parent="#faqAccordion">
                 <div class="faq-body">
-                    The competition is open to all residents of Delhi. Age categories are: Junior (under 15) and Senior (15 and above). Participants must be able to recite the Qur'an with proper Tajweed.
+                    مقابلہ دہلی کے تمام رہائشیوں کے لیے کھلا ہے۔ عمر کی اقسام ہیں: جونیئر (15 سال سے کم) اور سینئر (15 سال اور اس سے زیادہ)۔ شرکاء کو قرآن پاک کی تلاوت درست تجوید کے ساتھ کرنے کی صلاحیت ہونی چاہیے۔
                 </div>
             </div>
         </div>
@@ -44,12 +68,12 @@ title: FAQ - Tasfiya
             <h2 class="faq-header" id="headingThree">
                 <button class="faq-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
                     <i class="fas fa-clipboard-list me-2"></i>
-                    What is the competition format?
+                    مقابلے کا فارمیٹ کیا ہے؟
                 </button>
             </h2>
             <div id="collapseThree" class="collapse" data-bs-parent="#faqAccordion">
                 <div class="faq-body">
-                    The competition consists of multiple rounds: Preliminary, Semi-Final, and Final. Each round will have specific Surahs assigned for recitation. Athan competition will be conducted separately.
+                    مقابلہ متعدد راؤنڈز پر مشتمل ہے: ابتدائی، سیمی فائنل، اور فائنل۔ ہر راؤنڈ میں تلاوت کے لیے مخصوص سورتیں مقرر کی جائیں گی۔ اذان کا مقابلہ علیحدہ منعقد کیا جائے گا۔
                 </div>
             </div>
         </div>
@@ -59,12 +83,12 @@ title: FAQ - Tasfiya
             <h2 class="faq-header" id="headingFour">
                 <button class="faq-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
                     <i class="fas fa-gavel me-2"></i>
-                    How is the judging conducted?
+                    جج کرنے کا طریقہ کیا ہے؟
                 </button>
             </h2>
             <div id="collapseFour" class="collapse" data-bs-parent="#faqAccordion">
                 <div class="faq-body">
-                    A panel of qualified judges will evaluate participants based on Tajweed, pronunciation, voice quality, and overall presentation. Detailed scoring criteria will be provided to all participants.
+                    قابل ججوں کا ایک پینل شرکاء کی تجوید، تلفظ، آواز کے معیار، اور مجموعی پیشکش کی بنیاد پر تشخیص کرے گا۔ تمام شرکاء کو تفصیلی اسکورنگ کے معیار فراہم کیے جائیں گے۔
                 </div>
             </div>
         </div>
@@ -86,7 +110,7 @@ title: FAQ - Tasfiya
 .faq-btn {
     width: 100%;
     padding: 1.2rem 1.5rem;
-    text-align: left;
+    text-align: right;
     background: none;
     border: none;
     color: #ffd700;
@@ -95,6 +119,8 @@ title: FAQ - Tasfiya
     display: flex;
     align-items: center;
     transition: background 0.3s ease;
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
+    flex-direction: row-reverse;
 }
 
 .faq-btn:hover, .faq-btn:not(.collapsed) {
@@ -103,7 +129,7 @@ title: FAQ - Tasfiya
 
 .faq-btn i {
     color: #ffd700;
-    margin-right: 1rem;
+    margin-left: 1rem;
     width: 24px;
     text-align: center;
 }
@@ -114,8 +140,9 @@ title: FAQ - Tasfiya
     border-top: 1px solid rgba(255, 215, 0, 0.1);
     line-height: 1.8;
     font-size: 1.1rem;
-    text-align: center;
+    text-align: right;
     background: rgba(0, 0, 0, 0.1);
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
 }
 
 @media (max-width: 768px) {
@@ -158,22 +185,59 @@ title: FAQ - Tasfiya
 }
 
 .islamic-decoration h1 {
-    color: #ffd700;
-    font-size: 2.5rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    background: linear-gradient(45deg, #ffd700, #ffed4a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+    letter-spacing: 1px;
     position: relative;
-    z-index: 1;
+    display: inline-block;
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
 }
 
-.islamic-decoration::before {
+.islamic-decoration h1::after {
     content: '';
     position: absolute;
-    top: 0;
+    bottom: -10px;
     left: 0;
-    right: 0;
-    bottom: 0;
-    opacity: 0.1;
-    z-index: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        transparent,
+        #ffd700,
+        transparent
+    );
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { opacity: 0.3; }
+    50% { opacity: 1; }
+    100% { opacity: 0.3; }
+}
+
+[dir="rtl"] {
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
+}
+
+[dir="rtl"] h1 {
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Noto Naskh Arabic', sans-serif;
+}
+
+/* Font loading */
+@font-face {
+    font-family: 'Mehr Nastaleeq';
+    src: local('Mehr Nastaleeq');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Jameel Noori Nastaleeq';
+    src: local('Jameel Noori Nastaleeq');
+    font-display: swap;
 }
 </style>
 

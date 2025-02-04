@@ -1,5 +1,13 @@
+// Singleton pattern to prevent multiple instances
+let mobileMenuInstance = null;
+
 class MobileMenu {
     constructor() {
+        // Return existing instance if already initialized
+        if (mobileMenuInstance) {
+            return mobileMenuInstance;
+        }
+        
         this.menu = document.querySelector('.mobile-menu');
         this.overlay = document.querySelector('.menu-overlay');
         this.toggleButton = document.querySelector('.mobile-menu-toggle');
@@ -8,6 +16,9 @@ class MobileMenu {
         
         this.init();
         this.setActiveMenuItem();
+        
+        // Store instance
+        mobileMenuInstance = this;
     }
     
     init() {
@@ -109,7 +120,9 @@ class MobileMenu {
     }
 }
 
-// Initialize mobile menu
+// Initialize mobile menu only if not already initialized
 document.addEventListener('DOMContentLoaded', () => {
-    new MobileMenu();
+    if (!mobileMenuInstance) {
+        new MobileMenu();
+    }
 }); 

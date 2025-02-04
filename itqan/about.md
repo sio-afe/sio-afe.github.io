@@ -1,10 +1,33 @@
 ---
 layout: tasfiya
-title: About Competition - Tasfiya
+title: About إتقان
 ---
 
+<style>
+/* Add Thuluth font */
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+
+.thuluth-text {
+    font-family: 'Amiri', serif;
+    font-size: 1.8em;
+    background: linear-gradient(45deg, #dfb456, #e6c172);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+    display: inline-block;
+}
+
+@media (max-width: 768px) {
+    .thuluth-text {
+        font-size: 1.5em;
+    }
+}
+</style>
+
 <div class="islamic-decoration">
-    <h1>About the Competition</h1>
+    <h1>About </h1>
 </div>
 
 <div class="about-content">
@@ -12,7 +35,7 @@ title: About Competition - Tasfiya
         <h2>Overview</h2>
         <p>
             Muslims voices are unified from all around the islamic world raising the call to prayer (Adhan) and reciting verses from the holy Quran in aesthetics, precised and special voices and maqamat.
-            To spread the holy Quran knowledge and glorify the call to prayer through #Tasfiya competition
+            To spread the holy Quran knowledge and glorify the call to prayer through <span class="thuluth-text">إتقان</span> competition
             And to raise the competitive soul between the contestants whom gifted with the best voices, reciting and maqamat talents.
         </p>
     </section>
