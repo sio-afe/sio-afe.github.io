@@ -48,7 +48,7 @@ function createUpdateNotification(onUpdate) {
     notification.innerHTML = `
         <div class="update-content">
             <span>A new version is available!</span>
-            <button onclick="location.reload()">Update Now</button>
+            <button>Update Now</button>
         </div>
     `;
 
