@@ -34,7 +34,7 @@ title: Qur'an Recitation Competition
         <div class="row justify-content-center">
             <div class="col-lg-10 text-center">
                 <div class="register-content">
-                    <h2 class="mb-4">Join the Itqan Competition</h2>
+                    <h2 class="mb-4">Join the <span class="thuluth-text">إتقان</span> Competition</h2>
                     <p class="lead mb-4">Showcase your talent in Quran recitation and Adhan. Register now to be part of this blessed journey.</p>
                     <div class="register-hero-button">
                         {% include components/register-button.html %}

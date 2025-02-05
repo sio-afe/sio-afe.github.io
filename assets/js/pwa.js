@@ -47,7 +47,7 @@ function createUpdateNotification(onUpdate) {
     notification.className = 'update-notification';
     notification.innerHTML = `
         <div class="update-content">
-            <span>A new version is available!</span>
+            <span>إتقان has been updated!</span>
             <button>Update Now</button>
         </div>
     `;
@@ -68,11 +68,16 @@ function createUpdateNotification(onUpdate) {
             z-index: 9999;
             backdrop-filter: blur(10px);
             animation: slideUp 0.3s ease-out;
+            font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', sans-serif;
         }
         .update-content {
             display: flex;
             align-items: center;
             gap: 16px;
+        }
+        .update-notification span {
+            font-size: 1.2rem;
+            line-height: 2;
         }
         .update-notification button {
             background: #ffd700;
@@ -83,6 +88,7 @@ function createUpdateNotification(onUpdate) {
             cursor: pointer;
             font-weight: bold;
             transition: all 0.2s ease;
+            font-family: 'Poppins', sans-serif;
         }
         .update-notification button:hover {
             transform: scale(1.05);
