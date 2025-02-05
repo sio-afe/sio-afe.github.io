@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark moroccan-nav">
     <div class="container">
-        <a class="navbar-brand" href="{% if page.url contains '/ur/' %}{{ '/itqan/ur' | relative_url }}{% else %}{{ '/itqan' | relative_url }}{% endif %}">
+        <a class="navbar-brand" href="{{ '/itqan' | relative_url }}">
             <img src="{{ '/assets/img/islamic/banner1.png' | relative_url }}" alt="itqan">
         </a>
         
@@ -13,23 +13,23 @@
         <div class="desktop-menu d-none d-lg-flex">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link {% if page.url == '/itqan/' or page.url == '/itqan/ur/' %}active{% endif %}" href="{% if page.url contains '/ur/' %}{{ '/itqan/ur' | relative_url }}{% else %}{{ '/itqan' | relative_url }}{% endif %}">
-                        <i class="fas fa-home me-1"></i>{% if page.url contains '/ur/' %}ہوم{% else %}Home{% endif %}
+                    <a class="nav-link {% if page.url == '/itqan/' %}active{% endif %}" href="{{ '/itqan' | relative_url }}">
+                        <i class="fas fa-home me-1"></i>Home
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if page.url contains '/about' %}active{% endif %}" href="{% if page.url contains '/ur/' %}{{ '/itqan/ur/about' | relative_url }}{% else %}{{ '/itqan/about' | relative_url }}{% endif %}">
-                        <i class="fas fa-info-circle me-1"></i>{% if page.url contains '/ur/' %}مقابلے کے بارے میں{% else %}About Competition{% endif %}
+                    <a class="nav-link {% if page.url contains '/about' %}active{% endif %}" href="{{ '/itqan/about' | relative_url }}">
+                        <i class="fas fa-info-circle me-1"></i>About Competition
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if page.url contains '/faq' %}active{% endif %}" href="{% if page.url contains '/ur/' %}{{ '/itqan/ur/faq' | relative_url }}{% else %}{{ '/itqan/faq' | relative_url }}{% endif %}">
-                        <i class="fas fa-question-circle me-1"></i>{% if page.url contains '/ur/' %}عمومی سوالات{% else %}FAQ{% endif %}
+                    <a class="nav-link {% if page.url contains '/faq' %}active{% endif %}" href="{{ '/itqan/faq' | relative_url }}">
+                        <i class="fas fa-question-circle me-1"></i>FAQ
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if page.url contains '/contact' %}active{% endif %}" href="{% if page.url contains '/ur/' %}{{ '/itqan/ur/contact' | relative_url }}{% else %}{{ '/itqan/contact' | relative_url }}{% endif %}">
-                        <i class="fas fa-envelope me-1"></i>{% if page.url contains '/ur/' %}رابطہ کریں{% else %}Contact Us{% endif %}
+                    <a class="nav-link {% if page.url contains '/contact' %}active{% endif %}" href="{{ '/itqan/contact' | relative_url }}">
+                        <i class="fas fa-envelope me-1"></i>Contact Us
                     </a>
                 </li>
                 <li class="nav-item ms-2">
@@ -42,8 +42,8 @@
         <div class="mobile-menu">
             <div class="mobile-menu-header">
                 <div class="d-flex align-items-center">
-                    <a href="{% if page.url contains '/ur/' %}{{ '/itqan/ur' | relative_url }}{% else %}{{ '/itqan' | relative_url }}{% endif %}">
-                    <img src="{{ '/assets/img/islamic/banner1.png' | relative_url }}" alt="itqan">
+                    <a href="{{ '/itqan' | relative_url }}">
+                        <img src="{{ '/assets/img/islamic/banner1.png' | relative_url }}" alt="itqan">
                     </a>
                 </div>
                 <button class="mobile-menu-close">
@@ -52,23 +52,23 @@
             </div>
             <ul class="mobile-nav">
                 <li>
-                    <a class="{% if page.url == '/itqan/' or page.url == '/itqan/ur/' %}active{% endif %}" href="{% if page.url contains '/ur/' %}{{ '/itqan/ur' | relative_url }}{% else %}{{ '/itqan' | relative_url }}{% endif %}">
-                        <i class="fas fa-home me-1"></i>{% if page.url contains '/ur/' %}ہوم{% else %}Home{% endif %}
+                    <a class="{% if page.url == '/itqan/' %}active{% endif %}" href="{{ '/itqan' | relative_url }}">
+                        <i class="fas fa-home me-1"></i>Home
                     </a>
                 </li>
                 <li>
-                    <a class="{% if page.url contains '/about' %}active{% endif %}" href="{% if page.url contains '/ur/' %}{{ '/itqan/ur/about' | relative_url }}{% else %}{{ '/itqan/about' | relative_url }}{% endif %}">
-                        <i class="fas fa-info-circle me-1"></i>{% if page.url contains '/ur/' %}مقابلے کے بارے میں{% else %}About Competition{% endif %}
+                    <a class="{% if page.url contains '/about' %}active{% endif %}" href="{{ '/itqan/about' | relative_url }}">
+                        <i class="fas fa-info-circle me-1"></i>About Competition
                     </a>
                 </li>
                 <li>
-                    <a class="{% if page.url contains '/faq' %}active{% endif %}" href="{% if page.url contains '/ur/' %}{{ '/itqan/ur/faq' | relative_url }}{% else %}{{ '/itqan/faq' | relative_url }}{% endif %}">
-                        <i class="fas fa-question-circle me-1"></i>{% if page.url contains '/ur/' %}عمومی سوالات{% else %}FAQ{% endif %}
+                    <a class="{% if page.url contains '/faq' %}active{% endif %}" href="{{ '/itqan/faq' | relative_url }}">
+                        <i class="fas fa-question-circle me-1"></i>FAQ
                     </a>
                 </li>
                 <li>
-                    <a class="{% if page.url contains '/contact' %}active{% endif %}" href="{% if page.url contains '/ur/' %}{{ '/itqan/ur/contact' | relative_url }}{% else %}{{ '/itqan/contact' | relative_url }}{% endif %}">
-                        <i class="fas fa-envelope me-1"></i>{% if page.url contains '/ur/' %}رابطہ کریں{% else %}Contact Us{% endif %}
+                    <a class="{% if page.url contains '/contact' %}active{% endif %}" href="{{ '/itqan/contact' | relative_url }}">
+                        <i class="fas fa-envelope me-1"></i>Contact Us
                     </a>
                 </li>
                 <li class="mobile-register-item">
