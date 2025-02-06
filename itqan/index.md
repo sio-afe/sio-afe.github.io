@@ -9,6 +9,7 @@ title: Qur'an Recitation Competition
 
 <p class="lead mb-5">
     SIO Abul Fazal presents the first edition of <span class="thuluth-text">إتقان</span> competition, which brings together all those with beautiful and touching voices in the Qur'an Recitation and the Athan from all over the place, in Delhi, which aims to honor the most beautiful voices in Qur'an Recitation and Athan raising.
+    
 </p>
 
 <div class="row justify-content-center mt-5">
