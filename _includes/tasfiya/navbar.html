@@ -84,7 +84,11 @@
     background: #005f73;
     padding: 0.5rem 0;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    position: relative;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
 /* Remove the complex background pattern to improve performance */
@@ -774,6 +778,11 @@
 
 .mobile-nav {
     padding-bottom: 2rem;
+}
+
+/* Add padding to body to prevent content from hiding under navbar */
+body {
+    padding-top: 80px; /* Adjust this value based on your navbar height */
 }
 </style>
 
