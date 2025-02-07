@@ -47,11 +47,14 @@ title: About إتقان
 
 .category-box {
     background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 215, 0, 0.1) 100%);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
     border: 1px solid rgba(255, 215, 0, 0.15);
-    transition: all 0.3s ease;
+    width: 100%;
     position: relative;
-    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
 .category-box::before {
@@ -552,6 +555,113 @@ title: About إتقان
         font-size: 0.85rem;
     }
 }
+
+/* Add connecting lines for desktop */
+@media (min-width: 769px) {
+    .tree-level.main-categories {
+        position: relative;
+        margin-top: 30px;
+    }
+
+    .tree-level.main-categories::before {
+        content: '';
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+    }
+
+    .category-column {
+        position: relative;
+        margin-top: 30px;
+    }
+
+    .category-column::before {
+        content: '';
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 2px;
+        height: 30px;
+        background: linear-gradient(180deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
+    }
+
+    .category-box::after {
+        content: '';
+        position: absolute;
+        bottom: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 2px;
+        height: 30px;
+        background: linear-gradient(180deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
+    }
+
+    .subcategories {
+        position: relative;
+        margin-top: 30px;
+    }
+
+    .subcategories::before {
+        content: '';
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+    }
+
+    .subcategory-box {
+        position: relative;
+        margin-bottom: 30px;
+    }
+
+    .subcategory-box:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        bottom: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 2px;
+        height: 30px;
+        background: linear-gradient(180deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
+    }
+
+    /* Add animation for the lines */
+    .tree-level.main-categories::before,
+    .category-column::before,
+    .category-box::after,
+    .subcategories::before,
+    .subcategory-box:not(:last-child)::after {
+        animation: lineGlow 2s infinite alternate;
+    }
+
+    @keyframes lineGlow {
+        from {
+            opacity: 0.3;
+        }
+        to {
+            opacity: 0.6;
+        }
+    }
+}
+
+/* Hide lines for mobile */
+@media (max-width: 768px) {
+    .tree-level.main-categories::before,
+    .category-column::before,
+    .category-box::after,
+    .subcategories::before,
+    .subcategory-box::after {
+        display: none;
+    }
+}
 </style>
 
 <div class="islamic-decoration">
@@ -560,19 +670,25 @@ title: About إتقان
 
 <div class="about-content">
     <section class="content-section">
-        <h2>Overview</h2>
-        <p>
-            Muslims voices are unified from all around the islamic world raising the call to prayer (Adhan) and reciting verses from the holy Quran in aesthetics, precised and special voices and maqamat.
-            To spread the holy Quran knowledge and glorify the call to prayer through <span class="thuluth-text">إتقان</span> competition
-            And to raise the competitive soul between the contestants whom gifted with the best voices, reciting and maqamat talents.
-        </p>
+        <div class="category-box overview-box">
+            <i class="fas fa-info-circle"></i>
+            <h2>Overview</h2>
+            <p>
+                Muslims voices are unified from all around the islamic world raising the call to prayer (Adhan) and reciting verses from the holy Quran in aesthetics, precised and special voices and maqamat.
+                To spread the holy Quran knowledge and glorify the call to prayer through <span class="thuluth-text">إتقان</span> competition
+                And to raise the competitive soul between the contestants whom gifted with the best voices, reciting and maqamat talents.
+            </p>
+        </div>
     </section>
 
     <section class="content-section">
-        <h2>Goal of the Competition</h2>
-        <p>
-            The competition, aims to highlight the beautiful voices in reciting the Holy Quran and raising the call to prayer. It is also part of the initiative that seeks to highlight talents in their fields. This competition specifically stems from the principle of glorifying the Holy Quran and the call to prayer and highlighting the aesthetics of the voices and maqamat (a system of scales, habitual melodic phrases, modulation possibilities, ornamentation norms, and aesthetic conventions) for Quran reciters and muezzins.
-        </p>
+        <div class="category-box goal-box">
+            <i class="fas fa-bullseye"></i>
+            <h2>Goal of the Competition</h2>
+            <p>
+                The competition, aims to highlight the beautiful voices in reciting the Holy Quran and raising the call to prayer. It is also part of the initiative that seeks to highlight talents in their fields. This competition specifically stems from the principle of glorifying the Holy Quran and the call to prayer and highlighting the aesthetics of the voices and maqamat (a system of scales, habitual melodic phrases, modulation possibilities, ornamentation norms, and aesthetic conventions) for Quran reciters and muezzins.
+            </p>
+        </div>
     </section>
 
     <section class="content-section">
@@ -888,13 +1004,15 @@ title: About إتقان
 }
 
 .category-box {
-    background: rgba(255, 215, 0, 0.05);
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 215, 0, 0.1) 100%);
     padding: 1rem;
     border-radius: 10px;
     text-align: center;
-    border: 1px solid rgba(255, 215, 0, 0.1);
+    border: 1px solid rgba(255, 215, 0, 0.15);
     width: 100%;
     position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
 .category-box::after {
@@ -1156,6 +1274,63 @@ title: About إتقان
 
     .primary-node {
         width: 100%;
+    }
+}
+
+.overview-box, .goal-box {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 215, 0, 0.1) 100%);
+    padding: 2rem;
+    margin: 1rem auto;
+    max-width: 800px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.overview-box:hover, .goal-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.15);
+}
+
+.overview-box h2, .goal-box h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: #ffd700;
+    margin: 0 0 1.5rem 0;
+    font-size: 1.8rem;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+    padding-bottom: 0.8rem;
+}
+
+.overview-box i, .goal-box i {
+    font-size: 1.8rem;
+    color: #ffd700;
+    margin-right: 0.5rem;
+}
+
+.overview-box p, .goal-box p {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.8;
+    font-size: 1.1rem;
+    margin: 0;
+    text-align: left;
+}
+
+@media (max-width: 768px) {
+    .overview-box, .goal-box {
+        padding: 1.5rem;
+    }
+    
+    .overview-box h2, .goal-box h2 {
+        font-size: 1.5rem;
+    }
+    
+    .overview-box i, .goal-box i {
+        font-size: 1.5rem;
+    }
+    
+    .overview-box p, .goal-box p {
+        font-size: 1rem;
     }
 }
 </style> 
