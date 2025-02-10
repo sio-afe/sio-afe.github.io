@@ -32,6 +32,9 @@ title: About إتقان
     border: 1px solid rgba(255, 215, 0, 0.2);
     position: relative;
     overflow: hidden;
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.3s ease;
 }
 
 .tree-root::before {
@@ -43,6 +46,7 @@ title: About إتقان
     bottom: 0;
     background: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm10 17.5c4.142 0 7.5-3.358 7.5-7.5S14.142 2.5 10 2.5 2.5 5.858 2.5 10s3.358 7.5 7.5 7.5z' fill='%23ffd700' fill-opacity='0.05'/%3E%3C/svg%3E");
     opacity: 0.3;
+    z-index: 1;
 }
 
 .category-box {
@@ -55,6 +59,8 @@ title: About إتقان
     position: relative;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .category-box::before {
@@ -66,6 +72,7 @@ title: About إتقان
     bottom: 0;
     background: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm10 17.5c4.142 0 7.5-3.358 7.5-7.5S14.142 2.5 10 2.5 2.5 5.858 2.5 10s3.358 7.5 7.5 7.5z' fill='%23ffd700' fill-opacity='0.05'/%3E%3C/svg%3E");
     opacity: 0.1;
+    z-index: 1;
 }
 
 .category-box:hover {
@@ -78,6 +85,8 @@ title: About إتقان
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(255, 215, 0, 0.1);
     transition: all 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .subcategory-box:hover {
@@ -94,6 +103,8 @@ title: About إتقان
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(255, 215, 0, 0.15);
     transition: all 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .badge:hover {
@@ -205,8 +216,8 @@ title: About إتقان
     .category-box,
     .subcategory-box,
     .stage-box {
-        backdrop-filter: blur(5px);
-        -webkit-backdrop-filter: blur(5px);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
     }
     
     .category-column:not(:last-child) {
@@ -439,13 +450,17 @@ title: About إتقان
 
     .flow-path {
         width: 100%;
-        animation: slideUp 0.3s ease-out forwards;
-        opacity: 0;
+        animation: none;
+        opacity: 1;
+        transform: translateY(0);
     }
 
-    .flow-path:nth-child(1) { animation-delay: 0.1s; }
-    .flow-path:nth-child(2) { animation-delay: 0.2s; }
-    .flow-path:nth-child(3) { animation-delay: 0.3s; }
+    .flow-path:nth-child(1),
+    .flow-path:nth-child(2),
+    .flow-path:nth-child(3) {
+        animation: none;
+        opacity: 1;
+    }
 
     .primary-node {
         background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
@@ -662,6 +677,56 @@ title: About إتقان
         display: none;
     }
 }
+
+.important-note {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 215, 0, 0.1) 100%);
+    border-left: 4px solid #ffd700;
+    padding: 1rem;
+    margin: 1.5rem auto;
+    border-radius: 0 8px 8px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    max-width: 90%;
+}
+
+.important-note i {
+    color: #ffd700;
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+}
+
+.important-note strong {
+    color: #ffd700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.important-note p {
+    margin: 0;
+    text-align: center;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .important-note {
+        padding: 1rem;
+        margin: 1rem auto;
+        font-size: 0.9rem;
+        max-width: 95%;
+    }
+    
+    .important-note i {
+        font-size: 1rem;
+    }
+
+    .important-note p {
+        text-align: center;
+        line-height: 1.4;
+    }
+}
 </style>
 
 <div class="islamic-decoration">
@@ -678,6 +743,10 @@ title: About إتقان
                 To spread the holy Quran knowledge and glorify the call to prayer through <span class="thuluth-text">إتقان</span> competition
                 And to raise the competitive soul between the contestants whom gifted with the best voices, reciting and maqamat talents.
             </p>
+            <div class="important-note">
+                <strong><i class="fas fa-exclamation-circle"></i>Important:</strong>
+                <p>Each participant can only register and compete in one category of their choice.</p>
+            </div>
         </div>
     </section>
 
@@ -883,7 +952,9 @@ title: About إتقان
                                 <div class="comp-type">
                                     <span class="badge">Participants</span>
                                     <div class="prize-list">
-                                        <div><i class="fas fa-users"></i> 20 Max per Category</div>
+                                        <div><i class="fas fa-users"></i> 24 Max per Category</div>
+                                        <div><i class="fas fa-school"></i> 20 from Schools</div>
+                                        <div><i class="fas fa-user"></i> 4 from Individual</div>
                                     </div>
                                 </div>
                             </div>
@@ -1013,6 +1084,8 @@ title: About إتقان
     position: relative;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .category-box::after {
@@ -1283,7 +1356,11 @@ title: About إتقان
     margin: 1rem auto;
     max-width: 800px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
+    position: relative;
+    z-index: 1;
 }
 
 .overview-box:hover, .goal-box:hover {
@@ -1309,11 +1386,8 @@ title: About إتقان
 }
 
 .overview-box p, .goal-box p {
-    color: rgba(255, 255, 255, 0.9);
-    line-height: 1.8;
-    font-size: 1.1rem;
-    margin: 0;
-    text-align: left;
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 768px) {
