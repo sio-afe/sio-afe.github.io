@@ -57,7 +57,7 @@ title: FAQ - إتقان
             </h2>
             <div id="collapseTwo" class="collapse" data-bs-parent="#faqAccordion">
                 <div class="faq-body">
-                    The competition is open to all residents of Delhi. Age categories are: Junior (under 15) and Senior (15 and above). Participants must be able to recite the Qur'an with proper Tajweed.
+                    The competition is open to all residents of Delhi. Age categories are: Junior (under 12) and Open Age. Participants must be able to recite the Qur'an with proper Tajweed.
                 </div>
             </div>
         </div>
@@ -72,7 +72,7 @@ title: FAQ - إتقان
             </h2>
             <div id="collapseThree" class="collapse" data-bs-parent="#faqAccordion">
                 <div class="faq-body">
-                    The competition consists of multiple rounds: Preliminary, Semi-Final, and Final. Each round will have specific Surahs assigned for recitation. Athan competition will be conducted separately.
+                    The competition consists of two stages: Preliminary Rounds and Finals. In the Preliminary Rounds, participants come through either School Track (10 Islamic Schools with internal selection, 2 best per category) or Individual Track (open registration). For Finals, Hifz category will have maximum 24 participants per category (20 from schools, 4 from individual), while Tarteel & Azan will have 12 participants each (10 from schools, 2 from individual).
                 </div>
             </div>
         </div>

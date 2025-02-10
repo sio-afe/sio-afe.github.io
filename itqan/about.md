@@ -739,7 +739,7 @@ title: About إتقان
             <i class="fas fa-info-circle"></i>
             <h2>Overview</h2>
             <p>
-                Muslims voices are unified from all around the islamic world raising the call to prayer (Adhan) and reciting verses from the holy Quran in aesthetics, precised and special voices and maqamat.
+                Muslims voices are unified from all around the islamic world raising the call to prayer (Azan) and reciting verses from the holy Quran in aesthetics, precised and special voices and maqamat.
                 To spread the holy Quran knowledge and glorify the call to prayer through <span class="thuluth-text">إتقان</span> competition
                 And to raise the competitive soul between the contestants whom gifted with the best voices, reciting and maqamat talents.
             </p>
@@ -786,7 +786,7 @@ title: About إتقان
                             </div>
                             <div class="competition-details">
                                 <div class="comp-type">
-                                    <span class="badge">1 Juz</span>
+                                    <span class="badge">Juz 30</span>
                                     <div class="prize-list">
                                         <div><i class="fas fa-trophy gold"></i> First Prize</div>
                                         <div><i class="fas fa-trophy silver"></i> Second Prize</div>
@@ -804,7 +804,7 @@ title: About إتقان
                             </div>
                             <div class="competition-details">
                                 <div class="comp-type">
-                                    <span class="badge">2 Juz</span>
+                                    <span class="badge">Juz 30 and Juz 29</span>
                                     <div class="prize-list">
                                         <div><i class="fas fa-trophy gold"></i> First Prize</div>
                                         <div><i class="fas fa-trophy silver"></i> Second Prize</div>
@@ -850,11 +850,11 @@ title: About إتقان
                     </div>
             </div>
 
-                <!-- Adhan Category -->
+                <!-- Azan Category -->
                 <div class="category-column">
                     <div class="category-box">
                 <i class="fas fa-mosque"></i>
-                        <h3>Adhan Competition</h3>
+                        <h3>Azan Competition</h3>
                     </div>
                     
                     <div class="subcategories">
@@ -960,11 +960,11 @@ title: About إتقان
                             </div>
                         </div>
 
-                        <!-- Tarteel & Adhan Finals -->
+                        <!-- Tarteel & Azan Finals -->
                         <div class="subcategory-box">
                             <div class="subcategory-header">
                                 <i class="fas fa-microphone"></i>
-                                <h4>Tarteel & Adhan Finals</h4>
+                                <h4>Tarteel & Azan Finals</h4>
                             </div>
                             <div class="competition-details">
                                 <div class="comp-type">
