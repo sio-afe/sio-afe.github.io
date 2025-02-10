@@ -20,6 +20,10 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="{{ '/assets/js/supabase-client.js' | relative_url }}"></script>
+    
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -876,6 +880,24 @@
                     behavior: 'smooth'
                 });
             });
+        });
+    </script>
+
+    <!-- Page Details Update Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Wait for Supabase to be ready
+                await window.waitForSupabase();
+                
+                // Initialize dynamic functionality
+                if (window.dynamicClient) {
+                    // Subscribe to real-time updates
+                    window.dynamicClient.subscribeToChannel('page_updates');
+                }
+            } catch (error) {
+                console.error('Failed to initialize application:', error);
+            }
         });
     </script>
 </body>
