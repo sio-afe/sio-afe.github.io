@@ -1369,9 +1369,8 @@ title: About إتقان
 }
 
 .overview-box h2, .goal-box h2 {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
+    display: block;
+    text-align: center;
     color: #ffd700;
     margin: 0 0 1.5rem 0;
     font-size: 1.8rem;
@@ -1380,14 +1379,17 @@ title: About إتقان
 }
 
 .overview-box i, .goal-box i {
+    display: block;
+    text-align: center;
+    margin: 0 auto 0.5rem auto;
     font-size: 1.8rem;
     color: #ffd700;
-    margin-right: 0.5rem;
 }
 
 .overview-box p, .goal-box p {
     color: rgba(255, 255, 255, 0.95);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
 @media (max-width: 768px) {
