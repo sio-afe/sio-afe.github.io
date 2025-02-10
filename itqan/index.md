@@ -116,7 +116,6 @@ title: Qur'an Recitation Competition
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('/assets/img/islamic/pattern.png') center/cover;
     opacity: 0.05;
     animation: slowMove 20s linear infinite;
 }

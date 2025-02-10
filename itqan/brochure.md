@@ -98,7 +98,7 @@ title: إتقان Competition Brochure
                                 <h4><i class="fas fa-user"></i> Individual Track</h4>
                                 <ul>
                                     <li>Open Registration</li>
-                                    <li>Preliminary by إتقان Organization</li>
+                                    <li>Preliminary by Itqan Organization</li>
                                 </ul>
                             </div>
                         </div>
@@ -136,7 +136,7 @@ title: إتقان Competition Brochure
                     <div class="date-venue">
                         <p class="detail-item">
                             <i class="fas fa-calendar-alt"></i>
-                            <span>26 February 2024</span>
+                            <span>09 March 2025</span>
                         </p>
                         <p class="detail-item">
                             <i class="fas fa-mosque"></i>
