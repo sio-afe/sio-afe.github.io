@@ -4,32 +4,32 @@ title: Qur'an Recitation Competition
 ---
 
 <div class="islamic-decoration">
-    <h1>Qur'an Recitation and Azan Competition</h1>
+    <h1>Quran Recitation and Azan Competition</h1>
 </div>
 
 <p class="lead mb-5">
-    SIO Abul Fazal presents the first edition of <span class="thuluth-text">إتقان</span> competition, which brings together all those with beautiful and touching voices in the Qur'an Recitation and the Azan from all over the place, in Delhi, which aims to honor the most beautiful voices in Qur'an Recitation and Azan raising.
+    SIO Abul Fazal presents the first edition of <span class="thuluth-text">إتقان</span> competition, which brings together all those with beautiful and touching voices in the Quran Recitation and the Azan from all over Delhi, it aims to honor the most beautiful voices in Quran Recitation and Azan raising.
     
 </p>
 
 <div class="row justify-content-center mt-5">
     <div class="col-md-4 mb-4">
         <div class="feature-card">
-            <i class="fas fa-quran fa-3x mb-3" style="color: #dfb456;"></i>
+            <i class="fas fa-quran fa-3x mb-3"></i>
             <h3>Hifz Competition</h3>
             <p>Demonstrate your memorization of the Holy Qur'an with proper Tajweed and perfect recall</p>
         </div>
     </div>
     <div class="col-md-4 mb-4">
         <div class="feature-card">
-            <i class="fas fa-microphone-alt fa-3x mb-3" style="color: #dfb456;"></i>
+            <i class="fas fa-microphone-alt fa-3x mb-3"></i>
             <h3>Tarteel Competition</h3>
             <p>Showcase your talent in beautiful recitation of the Holy Qur'an with proper Tajweed</p>
         </div>
     </div>
     <div class="col-md-4 mb-4">
         <div class="feature-card">
-            <i class="fas fa-mosque fa-3x mb-3" style="color: #dfb456;"></i>
+            <i class="fas fa-mosque fa-3x mb-3"></i>
             <h3>Azan Competition</h3>
             <p>Present the call to prayer with your melodious voice and perfect pronunciation</p>
         </div>
@@ -60,12 +60,86 @@ title: Qur'an Recitation Competition
 .thuluth-text {
     font-family: 'Amiri', serif;
     font-size: 1.8em;
-    background: linear-gradient(45deg, #dfb456, #e6c172);
+    background: linear-gradient(45deg, #957718, #e2c27d);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    display: inline-block;
     font-weight: 700;
-    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(2px 2px 4px rgba(149, 119, 24, 0.3));
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    padding: 2rem;
+    transition: background 0.3s ease;
+    border: 1px solid rgba(223, 180, 86, 0.1);
+    height: 100%;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.feature-card i {
+    margin-bottom: 1.5rem;
+    flex-shrink: 0;
+    font-size: 3rem;
+    background: linear-gradient(45deg, #957718, #e2c27d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    filter: drop-shadow(0 0 8px rgba(149, 119, 24, 0.3));
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover i {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 15px rgba(149, 119, 24, 0.6));
+    animation: iconFlare 2s infinite ease-in-out;
+}
+
+@keyframes iconFlare {
+    0%, 100% { 
+        filter: drop-shadow(0 0 8px rgba(149, 119, 24, 0.3));
+        transform: scale(1.1);
+    }
+    50% { 
+        filter: drop-shadow(0 0 20px rgba(226, 194, 125, 0.8));
+        transform: scale(1.15);
+    }
+}
+
+.feature-card h3 {
+    color: #07002c;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.feature-card p {
+    color: #07002c;
+    margin-bottom: 0;
+    text-align: center;
+    line-height: 1.6;
+    font-size: 1.1rem;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+}
+
+.feature-card:hover {
+    background: rgba(223, 180, 86, 0.05);
+}
+
+.feature-card i.fa-quran,
+.feature-card i.fa-microphone-alt,
+.feature-card i.fa-mosque {
+    background: linear-gradient(45deg, #957718, #e2c27d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     display: inline-block;
 }
 
@@ -77,43 +151,34 @@ title: Qur'an Recitation Competition
     color: rgba(255, 255, 255, 0.9);
 }
 
-.feature-card {
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 8px;
-    padding: 2rem;
-    transition: background 0.3s ease;
-    border: 1px solid rgba(223, 180, 86, 0.1);
-}
-
-.feature-card:hover {
-    background: rgba(223, 180, 86, 0.05);
-}
-
-.feature-card h3 {
-    color: #dfb456;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    text-align: center;
-}
-
-.feature-card p {
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 0;
-    text-align: center;
-    line-height: 1.6;
-    font-size: 1.1rem;
-}
-
 @media (max-width: 768px) {
     .thuluth-text {
         font-size: 1.5em;
+    }
+    
+    .feature-card {
+        min-height: 240px;
+        padding: 1.5rem;
+    }
+    
+    .feature-card h3 {
+        font-size: 1.3rem;
+    }
+    
+    .feature-card p {
+        font-size: 1rem;
+    }
+    
+    .register-hero-section {
+        padding: 3rem 0;
+        margin-top: 1.5rem;
     }
 }
 
 .register-hero-section {
     position: relative;
-    padding: 6rem 0;
-    margin-top: 4rem;
+    padding: 4rem 0;
+    margin-top: 2rem;
     overflow: hidden;
 }
 
@@ -138,46 +203,109 @@ title: Qur'an Recitation Competition
     z-index: 1;
     padding: 3rem;
     border-radius: 20px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(223, 180, 86, 0.15);
-}
-
-.register-content::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 20px;
-    padding: 2px;
-    background: linear-gradient(45deg, #dfb456, transparent, #e6c172);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+    background: #ffffff;
+    border: 1px solid rgba(16, 3, 47, 0.1);
+    box-shadow: 0 8px 32px rgba(16, 3, 47, 0.05);
 }
 
 .register-content h2 {
-    color: #dfb456;
-    font-size: 3rem;
+    color: #07002c;
+    font-size: 2.5rem;
     margin-bottom: 1.5rem;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-shadow: none;
 }
 
 .register-content .lead {
-    color: rgba(255, 255, 255, 0.9);
+    color: #07002c;
     font-size: 1.4rem;
     line-height: 1.6;
     margin-bottom: 2rem;
 }
 
 .register-hero-button {
-    transform: scale(1.2);
     margin: 2rem 0 1rem;
 }
 
 .register-hero-button .register-button {
-    padding: 1rem 2.5rem;
-    font-size: 1.2rem;
-    box-shadow: 0 8px 25px rgba(223, 180, 86, 0.3);
+    background: linear-gradient(45deg, #957718, #e2c27d) !important;
+    color: #ffffff !important;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    font-family: 'Almarena Mono', monospace;
+    text-transform: none;
+    letter-spacing: normal;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+}
+
+.register-hero-button .register-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(149, 119, 24, 0.3);
+    background: linear-gradient(45deg, #8b6e17, #d4b76f) !important;
+}
+
+.register-hero-button .register-button:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    .register-hero-section {
+        padding: 2rem 0;
+        margin-top: 1rem;
+    }
+
+    .register-content {
+        padding: 1.5rem;
+        margin: 0 1rem;
+    }
+
+    .register-content h2 {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .register-content .lead {
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .register-hero-button .register-button {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        max-width: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .register-hero-section {
+        padding: 1.5rem 0;
+    }
+
+    .register-content {
+        padding: 1.25rem;
+        margin: 0 0.5rem;
+    }
+
+    .register-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .register-content .lead {
+        font-size: 1rem;
+    }
+
+    .register-hero-button .register-button {
+        padding: 0.7rem 1.2rem;
+        max-width: 220px;
+    }
 }
 
 /* Decorative elements */
@@ -187,43 +315,16 @@ title: Qur'an Recitation Competition
     top: -1rem;
     right: -1rem;
     font-size: 2rem;
-    color: #dfb456;
+    background: linear-gradient(45deg, #957718, #e2c27d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     animation: rotate 10s linear infinite;
+    filter: drop-shadow(2px 2px 4px rgba(149, 119, 24, 0.3));
 }
 
 @keyframes rotate {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
-}
-
-/* Mobile responsive */
-@media (max-width: 768px) {
-    .register-hero-section {
-        padding: 4rem 0;
-        margin-top: 3rem;
-    }
-    
-    .register-content {
-        padding: 2rem;
-    }
-    
-    .register-content h2 {
-        font-size: 2rem;
-    }
-    
-    .register-content .lead {
-        font-size: 1.1rem;
-    }
-    
-    .register-hero-button {
-        transform: scale(1.1);
-        margin: 1.5rem 0 0.5rem;
-    }
-    
-    .register-hero-button .register-button {
-        padding: 0.8rem 2rem;
-        font-size: 1.1rem;
-    }
 }
 </style>
 

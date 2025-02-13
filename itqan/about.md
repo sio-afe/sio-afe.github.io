@@ -4,19 +4,57 @@ title: About إتقان
 ---
 
 <style>
+/* Lead paragraph styles */
+.lead {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: #07002c;
+    text-align: center;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.mb-5 {
+    margin-bottom: 3rem;
+}
+
+@media (max-width: 768px) {
+    .lead {
+        font-size: 1.1rem;
+        padding: 0 1rem;
+    }
+    
+    .mb-5 {
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .lead {
+        font-size: 1rem;
+        padding: 0 0.8rem;
+    }
+    
+    .mb-5 {
+        margin-bottom: 1.5rem;
+    }
+}
+
 /* Add Thuluth font */
 @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
 
 .thuluth-text {
     font-family: 'Amiri', serif;
     font-size: 1.8em;
-    background: linear-gradient(45deg, #dfb456, #e6c172);
+    background: linear-gradient(45deg, #957718, #e2c27d);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    font-weight: 700;
-    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
     display: inline-block;
+    font-weight: 700;
+    filter: drop-shadow(2px 2px 4px rgba(149, 119, 24, 0.3));
 }
 
 @media (max-width: 768px) {
@@ -27,14 +65,16 @@ title: About إتقان
 
 /* Add these new decorative styles */
 .tree-root {
-    background: linear-gradient(45deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.2));
-    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.1);
-    border: 1px solid rgba(255, 215, 0, 0.2);
+    background: #ffffff;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    color: #07002c;
+    font-size: 1.5rem;
+    text-align: center;
+    border: 1px solid rgba(16, 3, 47, 0.1);
     position: relative;
-    overflow: hidden;
-    opacity: 1;
-    transform: translateY(0);
-    transition: all 0.3s ease;
+    font-family: 'Almarena Mono', monospace;
+    box-shadow: 0 4px 15px rgba(16, 3, 47, 0.05);
 }
 
 .tree-root::before {
@@ -50,17 +90,16 @@ title: About إتقان
 }
 
 .category-box {
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 215, 0, 0.1) 100%);
-    padding: 1rem;
-    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(16, 3, 47, 0.02) 0%, rgba(16, 3, 47, 0.05) 100%);
+    padding: 1.5rem;
+    border-radius: 15px;
     text-align: center;
-    border: 1px solid rgba(255, 215, 0, 0.15);
+    border: 2px solid rgba(16, 3, 47, 0.1);
     width: 100%;
     position: relative;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    opacity: 1;
-    transform: translateY(0);
+    box-shadow: 0 10px 30px rgba(16, 3, 47, 0.08);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
 }
 
 .category-box::before {
@@ -70,661 +109,594 @@ title: About إتقان
     left: 0;
     right: 0;
     bottom: 0;
-    background: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm10 17.5c4.142 0 7.5-3.358 7.5-7.5S14.142 2.5 10 2.5 2.5 5.858 2.5 10s3.358 7.5 7.5 7.5z' fill='%23ffd700' fill-opacity='0.05'/%3E%3C/svg%3E");
-    opacity: 0.1;
-    z-index: 1;
+    background: radial-gradient(circle at top right, rgba(16, 3, 47, 0.05), transparent);
+    z-index: 0;
 }
 
 .category-box:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.15);
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(16, 3, 47, 0.3);
+    box-shadow: 0 15px 35px rgba(16, 3, 47, 0.15);
+}
+
+.category-box i {
+    font-size: 2.5rem;
+    color: #07002c;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(135deg, #07002c, rgba(16, 3, 47, 0.8));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 4px 6px rgba(16, 3, 47, 0.2));
+    transition: all 0.3s ease;
+}
+
+.category-box:hover i {
+    transform: scale(1.1) rotate(5deg);
+    filter: drop-shadow(0 6px 12px rgba(16, 3, 47, 0.3));
+}
+
+.category-box h3 {
+    font-family: 'Almarena Mono', monospace;
+    color: #ffffff;
+    margin: 0.5rem 0 1rem 0;
+    font-size: 1.4rem;
+    background: #07002c;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(16, 3, 47, 0.15);
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.category-box:hover h3 {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(16, 3, 47, 0.2);
+    background: linear-gradient(135deg, #07002c, rgba(16, 3, 47, 0.9));
 }
 
 .subcategory-box {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 100%);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 215, 0, 0.1);
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(16, 3, 47, 0.15);
+    box-shadow: 0 8px 20px rgba(16, 3, 47, 0.08);
     transition: all 0.3s ease;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.subcategory-box:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.1);
-}
-
-.badge {
-    background: linear-gradient(45deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.2));
-    padding: 0.4rem 1.2rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 215, 0, 0.15);
-    transition: all 0.3s ease;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.badge:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.15);
-}
-
-.prize-list div {
-    transition: all 0.3s ease;
-}
-
-.prize-list div:hover {
-    transform: translateX(5px);
-}
-
-.prize-list div i {
-    transition: all 0.3s ease;
-}
-
-.prize-list div:hover i {
-    transform: rotate(360deg);
-}
-
-.stage-box {
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 215, 0, 0.1) 100%);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 215, 0, 0.15);
     position: relative;
     overflow: hidden;
 }
 
-.stage-box::before {
+.subcategory-box::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm10 17.5c4.142 0 7.5-3.358 7.5-7.5S14.142 2.5 10 2.5 2.5 5.858 2.5 10s3.358 7.5 7.5 7.5z' fill='%23ffd700' fill-opacity='0.05'/%3E%3C/svg%3E");
-    opacity: 0.1;
+    height: 4px;
+    background: linear-gradient(90deg, #07002c, rgba(16, 3, 47, 0.5));
+    border-radius: 4px 4px 0 0;
 }
 
-.stage-box:hover {
+.subcategory-box:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.15);
+    box-shadow: 0 12px 30px rgba(16, 3, 47, 0.12);
+    border-color: rgba(16, 3, 47, 0.25);
 }
 
-.stage-header i {
-    transition: all 0.3s ease;
+.subcategory-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid rgba(16, 3, 47, 0.1);
 }
 
-.stage-box:hover .stage-header i {
-    transform: scale(1.1);
-}
-
-.stage-group ul li {
-    transition: all 0.3s ease;
-}
-
-.stage-group ul li:hover {
-    transform: translateX(5px);
-    color: rgba(255, 255, 255, 1);
-}
-
-.stage-group ul li::before {
-    transition: all 0.3s ease;
-}
-
-.stage-group ul li:hover::before {
-    transform: scale(1.5);
-}
-
-/* Add decorative connectors */
-.tree-level::before {
-    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
-}
-
-.category-box::after {
-    background: linear-gradient(180deg, rgba(255, 215, 0, 0.3), transparent);
-}
-
-.tree-root::after {
-    background: linear-gradient(180deg, rgba(255, 215, 0, 0.3), transparent);
-}
-
-/* Add glowing effect to icons */
-.category-box i,
-.stage-header i,
 .subcategory-header i {
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    color: #07002c;
+    font-size: 1.4rem;
+    background: linear-gradient(135deg, #07002c, rgba(16, 3, 47, 0.8));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 4px rgba(16, 3, 47, 0.2));
 }
 
-/* Add shimmer animation to borders */
-@keyframes borderShimmer {
-    0% { border-color: rgba(255, 215, 0, 0.1); }
-    50% { border-color: rgba(255, 215, 0, 0.3); }
-    100% { border-color: rgba(255, 215, 0, 0.1); }
+.subcategory-header h4 {
+    font-family: 'Almarena Mono', monospace;
+    color: #07002c;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
 }
 
-.category-box,
-.subcategory-box,
-.stage-box {
-    animation: borderShimmer 3s infinite;
+.badge {
+    background: linear-gradient(135deg, rgba(16, 3, 47, 0.05) 0%, rgba(16, 3, 47, 0.1) 100%);
+    padding: 0.6rem 1.4rem;
+    border-radius: 25px;
+    font-size: 1rem;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 4px 12px rgba(16, 3, 47, 0.08);
+    border: 1px solid rgba(16, 3, 47, 0.15);
+    transition: all 0.3s ease;
+    color: #07002c;
+    font-weight: 500;
+    display: inline-block;
 }
 
-/* Enhance mobile styles */
+.badge:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(16, 3, 47, 0.12);
+    background: linear-gradient(135deg, rgba(16, 3, 47, 0.08) 0%, rgba(16, 3, 47, 0.15) 100%);
+}
+
+.prize-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 1rem;
+    padding-left: 1.2rem;
+}
+
+.prize-list div {
+    color: #07002c;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    transition: all 0.3s ease;
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    background: rgba(16, 3, 47, 0.02);
+}
+
+.prize-list div:hover {
+    transform: translateX(8px);
+    background: rgba(16, 3, 47, 0.05);
+}
+
+.prize-list div i {
+    font-size: 1.2rem;
+    transition: all 0.4s ease;
+    color: #07002c;
+}
+
+.prize-list div:hover i {
+    transform: rotate(360deg) scale(1.2);
+}
+
+/* Add distinctive styles for each competition type */
+.category-box:nth-child(1) i {
+    background: linear-gradient(135deg, #07002c, #2a1164);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.category-box:nth-child(2) i {
+    background: linear-gradient(135deg, #07002c, #1e0d4a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.category-box:nth-child(3) i {
+    background: linear-gradient(135deg, #07002c, #150830);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Add animation for icons */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.category-box i {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Mobile optimizations */
 @media (max-width: 768px) {
-    .tree-root,
-    .category-box,
-    .subcategory-box,
-    .stage-box {
-        backdrop-filter: none;
-        -webkit-backdrop-filter: none;
+    .category-box {
+        padding: 1.2rem;
     }
     
-    .category-column:not(:last-child) {
-        border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-        position: relative;
+    .category-box i {
+        font-size: 2rem;
     }
     
-    .category-column:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        bottom: -1px;
-        left: 0;
-        width: 100%;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
-    }
-}
-
-@media (max-width: 768px) {
-    .content-section {
-        margin-bottom: 2rem;
-        padding-bottom: 1.5rem;
-    }
-
-    .content-section h2 {
-        font-size: 1.5rem;
-        text-align: center;
-    }
-
-    .content-section p {
-        font-size: 1rem;
-        padding: 0 0.5rem;
-    }
-
-    /* Tree Structure Mobile Fixes */
-    .vertical-tree, .flow-tree {
-        padding: 1rem 0.5rem;
-        gap: 1.5rem;
-    }
-
-    .tree-root, .flow-root {
+    .category-box h3 {
         font-size: 1.2rem;
-        padding: 0.8rem 1.5rem;
-        width: 85%;
+        padding: 0.8rem 1.2rem;
     }
-
-    .tree-level, .flow-split {
-        flex-direction: column;
-        align-items: center;
-        gap: 2.5rem;
-        padding: 0 1rem;
-    }
-
-    .category-column, .flow-path {
-        width: 100%;
-        max-width: none;
-        margin-bottom: 1rem;
-    }
-
-    .category-box, .flow-node {
-        max-width: 300px;
-        margin: 0 auto;
-    }
-
-    .subcategories {
-        max-width: 300px;
-        margin: 0 auto;
-    }
-
-    /* Improve connecting lines for mobile */
-    .tree-level::before,
-    .flow-split::before {
-        width: 2px;
-        height: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        top: -1.5rem;
-    }
-
-    .category-box::after,
-    .flow-path::before {
-        height: 1.5rem;
-        bottom: -1.5rem;
-    }
-
-    /* Improve node styling for mobile */
-    .subcategory-box, .flow-node {
-        padding: 1rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .subcategory-header {
-        margin-bottom: 0.8rem;
-    }
-
-    .subcategory-header h4,
-    .flow-node h4 {
-        font-size: 1rem;
-    }
-
-    .competition-details,
-    .node-details {
-        padding-left: 0.5rem;
-    }
-
-    .comp-type {
-        margin-bottom: 1rem;
-    }
-
-    .badge {
-        font-size: 0.85rem;
-        padding: 0.3rem 1rem;
-    }
-
-    .prize-list {
-        gap: 0.4rem;
-        padding-left: 0.5rem;
-    }
-
-    .prize-list div {
-        font-size: 0.85rem;
-    }
-
-    /* Fix flow tree specific mobile issues */
-    .flow-node {
-        margin-bottom: 0;
-    }
-
-    .primary-node {
-        margin-bottom: 1rem;
-    }
-
-    .node-details ul li {
-        font-size: 0.85rem;
-        margin: 0.4rem 0;
-    }
-
-    /* Add better spacing between sections */
-    .category-column:not(:last-child),
-    .flow-path:not(:last-child) {
-        margin-bottom: 2.5rem;
-    }
-
-    /* Improve visual hierarchy */
-    .category-box i,
-    .flow-node i {
-        font-size: 1.3rem;
-        margin-bottom: 0.3rem;
-    }
-
-    .category-box h3,
-    .flow-node h3 {
-        font-size: 1.1rem;
-    }
-}
-
-/* Extra small screens */
-@media (max-width: 380px) {
-    .tree-root, .flow-root {
-        font-size: 1.1rem;
-        padding: 0.7rem 1.2rem;
-        width: 90%;
-    }
-
-    .category-box, .flow-node {
-        padding: 0.8rem;
-    }
-
-    .subcategory-header h4,
-    .flow-node h4 {
-        font-size: 0.9rem;
-    }
-
-    .badge {
-        font-size: 0.8rem;
-        padding: 0.25rem 0.8rem;
-    }
-
-    .prize-list div,
-    .node-details ul li {
-        font-size: 0.8rem;
-    }
-
-    .category-box i,
-    .flow-node i {
-        font-size: 1.2rem;
-    }
-
-    .category-box h3,
-    .flow-node h3 {
-        font-size: 1rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .flow-tree {
-        padding: 0;
-    }
-
-    /* Remove all connecting lines */
-    .flow-root::after,
-    .flow-split::before,
-    .flow-path::before,
-    .tree-root::after,
-    .tree-level::before,
-    .category-box::after {
-        display: none;
-    }
-
-    .flow-root {
-        width: 100%;
-        background: linear-gradient(45deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.2));
-        margin: 0;
-        padding: 1.5rem;
-        text-align: center;
-        border-radius: 0;
-    }
-
-    .flow-branch {
-        padding: 1rem;
-        margin: 0;
-    }
-
-    .flow-split {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-        padding: 0.5rem;
-    }
-
-    .flow-path {
-        width: 100%;
-        animation: none;
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    .flow-path:nth-child(1),
-    .flow-path:nth-child(2),
-    .flow-path:nth-child(3) {
-        animation: none;
-        opacity: 1;
-    }
-
-    .primary-node {
-        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
-        border-radius: 15px;
-        padding: 1.2rem;
-        margin: 1rem auto;
-        border: 1px solid rgba(255, 215, 0, 0.2);
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        max-width: 350px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .flow-node {
-        background: rgba(255, 215, 0, 0.05);
-        border-radius: 15px;
-        padding: 1.5rem;
-        border: 1px solid rgba(255, 215, 0, 0.1);
-        position: relative;
-        overflow: hidden;
-        transition: transform 0.3s ease;
-        margin: 0 auto;
-        max-width: 350px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .flow-node:active {
-        transform: scale(0.98);
-    }
-
-    .node-details {
-        background: rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-        padding: 1rem;
-        margin-top: 1rem;
-    }
-
-    .node-details ul {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-    }
-
-    .node-details ul li {
-        position: relative;
-        padding-left: 1.2rem;
-        margin: 0.5rem 0;
-        font-size: 0.9rem;
-        color: rgba(255, 255, 255, 0.9);
-    }
-
-    .node-details ul li::before {
-        content: '→';
-        position: absolute;
-        left: 0;
-        color: #ffd700;
-    }
-
-    /* Add section separators */
-    .flow-branch:not(:last-child) {
-        border-bottom: 1px solid rgba(255, 215, 0, 0.1);
-        margin-bottom: 1.5rem;
-        padding-bottom: 1.5rem;
-    }
-
-    /* Enhance card appearance */
-    .flow-node::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(to right, #ffd700, transparent);
-    }
-
-    .flow-node h4 {
-        display: flex;
-        align-items: center;
-        gap: 0.8rem;
-        color: #ffd700;
-        margin: 0 0 1rem 0;
-        font-size: 1.1rem;
-        border-bottom: 1px solid rgba(255, 215, 0, 0.1);
-        padding-bottom: 0.8rem;
-    }
-}
-
-/* Extra small screens */
-@media (max-width: 380px) {
-    .primary-node {
-        padding: 1rem;
-        margin: 0.5rem auto;
-    }
-
-    .flow-node {
-        padding: 1.2rem;
-        margin: 0 auto;
-    }
-
-    .node-details {
-        padding: 0.8rem;
-    }
-
-    .node-details ul li {
-        font-size: 0.85rem;
-    }
-}
-
-/* Add connecting lines for desktop */
-@media (min-width: 769px) {
-    .tree-level.main-categories {
-        position: relative;
-        margin-top: 30px;
-    }
-
-    .tree-level.main-categories::before {
-        content: '';
-        position: absolute;
-        top: -30px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80%;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
-    }
-
-    .category-column {
-        position: relative;
-        margin-top: 30px;
-    }
-
-    .category-column::before {
-        content: '';
-        position: absolute;
-        top: -30px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 2px;
-        height: 30px;
-        background: linear-gradient(180deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
-    }
-
-    .category-box::after {
-        content: '';
-        position: absolute;
-        bottom: -30px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 2px;
-        height: 30px;
-        background: linear-gradient(180deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
-    }
-
-    .subcategories {
-        position: relative;
-        margin-top: 30px;
-    }
-
-    .subcategories::before {
-        content: '';
-        position: absolute;
-        top: -30px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80%;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
-    }
-
+    
     .subcategory-box {
-        position: relative;
-        margin-bottom: 30px;
+        padding: 1.2rem;
     }
-
-    .subcategory-box:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        bottom: -30px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 2px;
-        height: 30px;
-        background: linear-gradient(180deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
+    
+    .badge {
+        padding: 0.5rem 1.2rem;
+        font-size: 0.9rem;
     }
-
-    /* Add animation for the lines */
-    .tree-level.main-categories::before,
-    .category-column::before,
-    .category-box::after,
-    .subcategories::before,
-    .subcategory-box:not(:last-child)::after {
-        animation: lineGlow 2s infinite alternate;
-    }
-
-    @keyframes lineGlow {
-        from {
-            opacity: 0.3;
-        }
-        to {
-            opacity: 0.6;
-        }
+    
+    .prize-list div {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.6rem;
     }
 }
 
-/* Hide lines for mobile */
-@media (max-width: 768px) {
-    .tree-level.main-categories::before,
-    .category-column::before,
+/* Add animation for the lines */
+.tree-level.main-categories::before,
+.category-column::before,
     .category-box::after,
-    .subcategories::before,
-    .subcategory-box::after {
-        display: none;
+.subcategories::before,
+.subcategory-box:not(:last-child)::after {
+    animation: lineGlow 2s infinite alternate;
+}
+
+@keyframes lineGlow {
+    from {
+        opacity: 0.3;
     }
+    to {
+        opacity: 0.6;
+    }
+}
+
+.overview-box, .goal-box {
+    background: #ffffff;
+    padding: 3rem;
+    margin: 1rem auto;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(16, 3, 47, 0.05);
+    transition: transform 0.3s ease;
+    position: relative;
+    border: 1px solid rgba(16, 3, 47, 0.1);
+    border-radius: 8px;
+}
+
+.overview-box:hover, .goal-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(16, 3, 47, 0.05);
+}
+
+.overview-box h2, .goal-box h2 {
+    font-family: 'Almarena Mono', monospace;
+    color: #07002c;
+    margin: 0 0 1.5rem 0;
+    font-size: 1.8rem;
+    padding: 0.8rem;
+    background: rgba(16, 3, 47, 0.03);
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(16, 3, 47, 0.05);
+    border: 1px solid rgba(16, 3, 47, 0.1);
+}
+
+.overview-box p, .goal-box p {
+    font-family: 'Open Sans', sans-serif;
+    color: #07002c;
+    text-shadow: none;
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.overview-box i, .goal-box i {
+    color: #07002c;
+    font-size: 1.8rem;
+        margin-bottom: 1rem;
+    display: block;
+    text-align: center;
 }
 
 .important-note {
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 215, 0, 0.1) 100%);
-    border-left: 4px solid #ffd700;
-    padding: 1rem;
-    margin: 1.5rem auto;
+    background: rgba(16, 3, 47, 0.03);
+    border-left: 4px solid #07002c;
+    padding: 1.5rem;
+    margin: 2rem auto;
     border-radius: 0 8px 8px 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-    max-width: 90%;
+    box-shadow: 0 4px 15px rgba(16, 3, 47, 0.08);
+    transition: all 0.3s ease;
+}
+
+.important-note:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 3, 47, 0.12);
+    background: rgba(16, 3, 47, 0.05);
 }
 
 .important-note i {
-    color: #ffd700;
+    color: #07002c;
     font-size: 1.2rem;
     margin-right: 0.5rem;
+    animation: pulse 2s infinite;
 }
 
 .important-note strong {
-    color: #ffd700;
+    font-family: 'Almarena Mono', monospace;
+    color: #07002c;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+        font-size: 1.1rem;
+    margin-bottom: 0.5rem;
 }
 
 .important-note p {
-    margin: 0;
-    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+    margin: 0.5rem 0 0 0;
+    text-align: left;
     width: 100%;
+    color: #07002c;
+        font-size: 1rem;
+    line-height: 1.6;
+    padding-left: 1.7rem;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
 }
 
 @media (max-width: 768px) {
     .important-note {
         padding: 1rem;
-        margin: 1rem auto;
-        font-size: 0.9rem;
-        max-width: 95%;
+        margin: 1.5rem auto;
     }
     
-    .important-note i {
+    .important-note strong {
         font-size: 1rem;
     }
 
     .important-note p {
-        text-align: center;
-        line-height: 1.4;
+        font-size: 0.9rem;
+        padding-left: 1.5rem;
+    }
+}
+
+.content-section h2 {
+    font-family: 'Almarena Mono', monospace;
+    color: #07002c;
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    background: #ffffff;
+    padding: 1.2rem 2rem;
+        border-radius: 15px;
+        position: relative;
+    border: 2px solid #07002c;
+    box-shadow: 0 4px 15px rgba(16, 3, 47, 0.08);
+        overflow: hidden;
+}
+
+.content-section h2::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+    width: 6px;
+    height: 100%;
+    background: #07002c;
+    border-radius: 3px 0 0 3px;
+}
+
+.content-section h2::after {
+        content: '';
+        position: absolute;
+    bottom: 0;
+    left: 6px;
+    width: calc(100% - 6px);
+        height: 2px;
+    background: linear-gradient(90deg, #07002c, rgba(16, 3, 47, 0.1));
+}
+
+.content-section p {
+    font-family: 'Open Sans', sans-serif;
+    color: #07002c;
+    line-height: 1.8;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .content-section h2 {
+        font-size: 1.4rem;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .content-section h2 {
+        font-size: 1.2rem;
+        padding: 0.8rem 1.2rem;
+        margin-bottom: 1rem;
+    }
+}
+
+/* Add styles for Juz names and text */
+.juz-name, 
+.juz-text,
+.category-name,
+.subcategory-name,
+.node-content,
+.flow-text {
+    color: #07002c;
+}
+
+.node-title,
+.node-description,
+.flow-node-text {
+    color: #07002c;
+}
+
+.tree-node h3,
+.tree-node h4,
+.tree-node p {
+    color: #07002c;
+}
+
+/* Update text colors for competition details */
+.competition-details {
+    color: #07002c;
+}
+
+.comp-type {
+    color: #07002c;
+}
+
+.prize-list div {
+    color: #07002c;
+}
+
+/* Add margin utility classes */
+.mt-5 {
+    margin-top: 3rem !important;
+}
+
+.mb-5 {
+    margin-bottom: 3rem !important;
+}
+
+.mb-4 {
+    margin-bottom: 2rem !important;
+}
+
+@media (max-width: 768px) {
+    .mt-5 {
+        margin-top: 2rem !important;
+    }
+    
+    .mb-5 {
+        margin-bottom: 2rem !important;
+    }
+    
+    .mb-4 {
+        margin-bottom: 1.5rem !important;
+    }
+}
+
+/* Add styles for the goal section */
+.goal-highlight {
+    background: linear-gradient(135deg, rgba(16, 3, 47, 0.02) 0%, rgba(16, 3, 47, 0.05) 100%);
+    border: 2px solid rgba(16, 3, 47, 0.1);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin: 3rem auto;
+    max-width: 1000px;
+        position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(16, 3, 47, 0.08);
+}
+
+.goal-highlight::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+    width: 6px;
+    height: 100%;
+    background: #07002c;
+    border-radius: 3px 0 0 3px;
+}
+
+.goal-highlight h2 {
+    font-family: 'Almarena Mono', monospace;
+    color: #07002c;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+        display: flex;
+    flex-direction: column;
+        align-items: center;
+    gap: 1rem;
+    justify-content: center;
+    text-align: center;
+}
+
+.goal-highlight h2 i {
+    font-size: 2.5rem;
+    background: linear-gradient(45deg, #957718, #e2c27d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(2px 2px 4px rgba(149, 119, 24, 0.3));
+    margin-bottom: 0.5rem;
+}
+
+.goal-highlight p {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #07002c;
+    margin: 0;
+    text-align: center;
+}
+
+.goal-points {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem auto 0;
+    max-width: 800px;
+}
+
+.goal-points li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-left: 1rem;
+        position: relative;
+}
+
+.goal-points li i {
+    color: #957718;
+    font-size: 1.2rem;
+    margin-top: 0.2rem;
+}
+
+.goal-points li span {
+    flex: 1;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .goal-highlight {
+        padding: 2rem;
+        margin: 2rem auto;
+    }
+    
+    .goal-highlight h2 {
+        font-size: 1.5rem;
+    }
+    
+    .goal-highlight p {
+        font-size: 1.1rem;
+    }
+    
+    .goal-points li span {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .goal-highlight {
+        padding: 1.5rem;
+    margin: 1.5rem auto;
+    }
+    
+    .goal-highlight h2 {
+        font-size: 1.3rem;
+    }
+    
+    .goal-highlight p {
+        font-size: 1rem;
+    }
+
+    .goal-points li span {
+        font-size: 0.95rem;
     }
 }
 </style>
@@ -734,31 +706,39 @@ title: About إتقان
 </div>
 
 <div class="about-content">
-    <section class="content-section">
-        <div class="category-box overview-box">
-            <i class="fas fa-info-circle"></i>
-            <h2>Overview</h2>
-            <p>
-                Muslims voices are unified from all around the islamic world raising the call to prayer (Azan) and reciting verses from the holy Quran in aesthetics, precised and special voices and maqamat.
-                To spread the holy Quran knowledge and glorify the call to prayer through <span class="thuluth-text">إتقان</span> competition
-                And to raise the competitive soul between the contestants whom gifted with the best voices, reciting and maqamat talents.
-            </p>
+    <p class="lead mb-5">
+        Muslims voices are unified from all around the islamic world raising the call to prayer (Azan) and reciting verses from the holy Quran in aesthetics, precised and special voices and maqamat. To spread the holy Quran knowledge and glorify the call to prayer through <span class="thuluth-text">إتقان</span> competition And to raise the competitive soul between the contestants whom gifted with the best voices, reciting and maqamat talents.
+    </p>
+
+    <div class="goal-highlight">
+        <h2><i class="fas fa-bullseye"></i>  Goals</h2>
+        <p>The <span class="thuluth-text">إتقان</span> competition aims to achieve several noble objectives:</p>
+        <ul class="goal-points">
+            <li>
+                <i class="fas fa-star"></i>
+                <span>Highlight beautiful voices in reciting the Holy Quran and raising the call to prayer</span>
+            </li>
+            <li>
+                <i class="fas fa-star"></i>
+                <span>Glorify the Holy Quran and the call to prayer through aesthetic recitation</span>
+            </li>
+            <li>
+                <i class="fas fa-star"></i>
+                <span>Highlight talents in the field of Quranic recitation and maqamat</span>
+            </li>
+            <li>
+                <i class="fas fa-star"></i>
+                <span>Enhance the aesthetics of voices and maqamat for Quran reciters and muezzins</span>
+            </li>
+        </ul>
+    </div>
+
             <div class="important-note">
                 <strong><i class="fas fa-exclamation-circle"></i>Important:</strong>
                 <p>Each participant can only register and compete in one category of their choice.</p>
             </div>
-        </div>
-    </section>
 
-    <section class="content-section">
-        <div class="category-box goal-box">
-            <i class="fas fa-bullseye"></i>
-            <h2>Goal of the Competition</h2>
-            <p>
-                The competition, aims to highlight the beautiful voices in reciting the Holy Quran and raising the call to prayer. It is also part of the initiative that seeks to highlight talents in their fields. This competition specifically stems from the principle of glorifying the Holy Quran and the call to prayer and highlighting the aesthetics of the voices and maqamat (a system of scales, habitual melodic phrases, modulation possibilities, ornamentation norms, and aesthetic conventions) for Quran reciters and muezzins.
-            </p>
-        </div>
-    </section>
+   
 
     <section class="content-section">
         <h2>Competition Structure</h2>
@@ -824,14 +804,15 @@ title: About إتقان
                     </div>
                 </div>
 
-                <!-- Tarteel Category -->
+                <!-- Tarteel and Azan Category -->
                 <div class="category-column">
-                    <div class="category-box">
+                    <!-- Tarteel Competition -->
+                    <div class="category-box mb-4">
                         <i class="fas fa-microphone"></i>
                         <h3>Tarteel Competition</h3>
                     </div>
                     
-                    <div class="subcategories">
+                    <div class="subcategories mb-5">
                         <div class="subcategory-box">
                             <div class="subcategory-header">
                                 <i class="fas fa-users"></i>
@@ -843,16 +824,14 @@ title: About إتقان
                                     <div class="prize-list">
                                         <div><i class="fas fa-trophy gold"></i> First Prize</div>
                                         <div><i class="fas fa-trophy silver"></i> Second Prize</div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
             </div>
 
-                <!-- Azan Category -->
-                <div class="category-column">
-                    <div class="category-box">
+                    <!-- Azan Competition -->
+                    <div class="category-box mt-5">
                 <i class="fas fa-mosque"></i>
                         <h3>Azan Competition</h3>
                     </div>
@@ -950,7 +929,7 @@ title: About إتقان
                             </div>
                             <div class="competition-details">
                                 <div class="comp-type">
-                                    <span class="badge">Participants</span>
+                                    <span class="badge">Finalists</span>
                                     <div class="prize-list">
                                         <div><i class="fas fa-users"></i> 24 Max per Category</div>
                                         <div><i class="fas fa-school"></i> 20 from Schools</div>
@@ -968,7 +947,7 @@ title: About إتقان
                             </div>
                             <div class="competition-details">
                                 <div class="comp-type">
-                                    <span class="badge">Participants</span>
+                                    <span class="badge">Finalists</span>
                                     <div class="prize-list">
                                         <div><i class="fas fa-users"></i> 12 Participants Each</div>
                                         <div><i class="fas fa-school"></i> 10 from Schools</div>
@@ -986,54 +965,135 @@ title: About إتقان
 
 <style>
 .about-content {
-    max-width: 800px;
+    max-width: 1140px;
     margin: 0 auto;
     padding: 0 1rem;
+    overflow-x: hidden;
 }
 
 .content-section {
-    margin-bottom: 3rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
-}
-
-.content-section:last-child {
-    border-bottom: none;
-}
-
-.content-section h2 {
-    color: #ffd700;
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    position: relative;
-}
-
-.content-section p {
-    color: rgba(255, 255, 255, 0.9);
-    line-height: 1.8;
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
+    width: 100%;
+    max-width: 100%;
+    margin: 4rem 0;
+    padding: 0;
 }
 
 .vertical-tree {
+    width: 100%;
+    max-width: 100%;
+    padding: 1rem;
+    margin: 0;
+    overflow: visible;
+}
+
+.tree-level.main-categories {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+.category-column {
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
+    margin: 0;
+    padding: 0.5rem;
+}
+
+.category-box {
+    width: 100%;
+    margin: 0 0 2.5rem 0;
+    padding: 2rem;
+}
+
+.subcategories {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 2rem;
-    padding: 2rem 1rem;
-    position: relative;
+}
+
+.subcategory-box {
+    margin: 0;
+    padding: 2rem;
 }
 
 .tree-root {
-    background: rgba(255, 215, 0, 0.1);
+    margin-bottom: 3rem;
+}
+
+@media (max-width: 768px) {
+    .tree-level.main-categories {
+        gap: 2rem;
+        padding: 1rem 0;
+    }
+
+    .category-column {
+        padding: 0.25rem;
+        min-width: 280px;
+    }
+
+    .category-box {
+        padding: 1.5rem;
+        margin: 0 0 2rem 0;
+    }
+
+    .subcategories {
+        gap: 1.5rem;
+    }
+
+    .subcategory-box {
+        padding: 1.5rem;
+    }
+
+    .content-section {
+        margin: 3rem 0;
+    }
+
+    .tree-root {
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .tree-level.main-categories {
+        gap: 1.5rem;
+        padding: 0.5rem 0;
+    }
+
+    .category-box {
+        padding: 1.25rem;
+        margin: 0 0 1.5rem 0;
+    }
+
+    .subcategories {
+        gap: 1.25rem;
+    }
+
+    .subcategory-box {
+        padding: 1.25rem;
+    }
+
+    .content-section {
+        margin: 2rem 0;
+    }
+}
+
+.tree-root {
+    background: #ffffff;
     padding: 1rem 2rem;
-    border-radius: 50px;
-    color: #ffd700;
+    border-radius: 8px;
+    color: #07002c;
     font-size: 1.5rem;
     text-align: center;
-    border: 1px solid rgba(255, 215, 0, 0.2);
+    border: 1px solid rgba(16, 3, 47, 0.1);
     position: relative;
+    font-family: 'Almarena Mono', monospace;
+    box-shadow: 0 4px 15px rgba(16, 3, 47, 0.05);
 }
 
 .tree-root::after {
@@ -1043,7 +1103,7 @@ title: About إتقان
     left: 50%;
     width: 2px;
     height: 2rem;
-    background: rgba(255, 215, 0, 0.3);
+    background: rgba(16, 3, 47, 0.3);
 }
 
 .tree-level {
@@ -1062,86 +1122,129 @@ title: About إتقان
     transform: translateX(-50%);
     width: 80%;
     height: 2px;
-    background: rgba(255, 215, 0, 0.3);
-}
-
-.category-column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-    flex: 1;
-    position: relative;
+    background: rgba(16, 3, 47, 0.3);
 }
 
 .category-box {
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 215, 0, 0.1) 100%);
-    padding: 1rem;
-    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(16, 3, 47, 0.02) 0%, rgba(16, 3, 47, 0.05) 100%);
+    padding: 1.5rem;
+    border-radius: 15px;
     text-align: center;
-    border: 1px solid rgba(255, 215, 0, 0.15);
+    border: 2px solid rgba(16, 3, 47, 0.1);
     width: 100%;
     position: relative;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    opacity: 1;
-    transform: translateY(0);
+    box-shadow: 0 10px 30px rgba(16, 3, 47, 0.08);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
 }
 
-.category-box::after {
+.category-box::before {
     content: '';
     position: absolute;
-    bottom: -2rem;
-    left: 50%;
-    width: 2px;
-    height: 2rem;
-    background: rgba(255, 215, 0, 0.3);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at top right, rgba(16, 3, 47, 0.05), transparent);
+    z-index: 0;
+}
+
+.category-box:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(16, 3, 47, 0.3);
+    box-shadow: 0 15px 35px rgba(16, 3, 47, 0.15);
 }
 
 .category-box i {
-    font-size: 1.5rem;
-    color: #ffd700;
-    margin-bottom: 0.5rem;
+    font-size: 2.5rem;
+    color: #07002c;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(135deg, #07002c, rgba(16, 3, 47, 0.8));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 4px 6px rgba(16, 3, 47, 0.2));
+    transition: all 0.3s ease;
+}
+
+.category-box:hover i {
+    transform: scale(1.1) rotate(5deg);
+    filter: drop-shadow(0 6px 12px rgba(16, 3, 47, 0.3));
 }
 
 .category-box h3 {
-    color: #ffd700;
-    margin: 0;
-    font-size: 1.2rem;
+    font-family: 'Almarena Mono', monospace;
+    color: #ffffff;
+    margin: 0.5rem 0 1rem 0;
+    font-size: 1.4rem;
+    background: #07002c;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(16, 3, 47, 0.15);
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
 }
 
-.subcategories {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    width: 100%;
+.category-box:hover h3 {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(16, 3, 47, 0.2);
+    background: linear-gradient(135deg, #07002c, rgba(16, 3, 47, 0.9));
 }
 
 .subcategory-box {
-    background: rgba(255, 255, 255, 0.03);
-    padding: 1rem;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 215, 0, 0.1);
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(16, 3, 47, 0.15);
+    box-shadow: 0 8px 20px rgba(16, 3, 47, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.subcategory-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #07002c, rgba(16, 3, 47, 0.5));
+    border-radius: 4px 4px 0 0;
+}
+
+.subcategory-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(16, 3, 47, 0.12);
+    border-color: rgba(16, 3, 47, 0.25);
 }
 
 .subcategory-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid rgba(16, 3, 47, 0.1);
 }
 
 .subcategory-header i {
-    color: #ffd700;
-    font-size: 1rem;
+    color: #07002c;
+    font-size: 1.4rem;
+    background: linear-gradient(135deg, #07002c, rgba(16, 3, 47, 0.8));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 4px rgba(16, 3, 47, 0.2));
 }
 
 .subcategory-header h4 {
-    color: #ffd700;
+    font-family: 'Almarena Mono', monospace;
+    color: #07002c;
     margin: 0;
-    font-size: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
 }
 
 .competition-details {
@@ -1159,17 +1262,37 @@ title: About إتقان
 .prize-list {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-    padding-left: 1rem;
+    gap: 0.8rem;
+    margin-top: 1rem;
+    padding-left: 1.2rem;
 }
 
 .prize-list div {
+    font-family: 'Open Sans', sans-serif;
+    color: #07002c;
+    font-size: 1rem;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.9rem;
+    gap: 0.8rem;
+    transition: all 0.3s ease;
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    background: rgba(16, 3, 47, 0.02);
+}
+
+.prize-list div:hover {
+    transform: translateX(8px);
+    background: rgba(16, 3, 47, 0.05);
+}
+
+.prize-list div i {
+    font-size: 1.2rem;
+    transition: all 0.4s ease;
+    color: #07002c;
+}
+
+.prize-list div:hover i {
+    transform: rotate(360deg) scale(1.2);
 }
 
 .flow-tree {
@@ -1182,14 +1305,14 @@ title: About إتقان
 }
 
 .flow-root {
-    background: linear-gradient(45deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.2));
+    background: linear-gradient(45deg, rgba(16, 3, 47, 0.1), rgba(16, 3, 47, 0.2));
     padding: 1rem 2rem;
     border-radius: 50px;
-    color: #ffd700;
+    color: #07002c;
     font-size: 1.5rem;
     text-align: center;
-    border: 1px solid rgba(255, 215, 0, 0.2);
-    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.1);
+    border: 1px solid rgba(16, 3, 47, 0.2);
+    box-shadow: 0 4px 15px rgba(16, 3, 47, 0.1);
     position: relative;
     max-width: 400px;
     width: 90%;
@@ -1202,7 +1325,7 @@ title: About إتقان
     left: 50%;
     width: 2px;
     height: 3rem;
-    background: linear-gradient(180deg, rgba(255, 215, 0, 0.3), transparent);
+    background: linear-gradient(180deg, rgba(16, 3, 47, 0.3), transparent);
 }
 
 .flow-branch {
@@ -1231,7 +1354,7 @@ title: About إتقان
     transform: translateX(-50%);
     width: 80%;
     height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(16, 3, 47, 0.3), transparent);
 }
 
 .flow-path {
@@ -1251,34 +1374,33 @@ title: About إتقان
     left: 50%;
     width: 2px;
     height: 2rem;
-    background: linear-gradient(180deg, rgba(255, 215, 0, 0.3), transparent);
+    background: linear-gradient(180deg, rgba(16, 3, 47, 0.3), transparent);
 }
 
 .flow-node {
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 215, 0, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(16, 3, 47, 0.05) 0%, rgba(16, 3, 47, 0.1) 100%);
     padding: 1.5rem;
     border-radius: 15px;
     text-align: center;
-    border: 1px solid rgba(255, 215, 0, 0.15);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(16, 3, 47, 0.15);
+    box-shadow: 0 4px 15px rgba(16, 3, 47, 0.1);
     width: 100%;
     transition: all 0.3s ease;
 }
 
 .flow-node:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.15);
+    box-shadow: 0 8px 25px rgba(16, 3, 47, 0.15);
 }
 
 .flow-node i {
     font-size: 1.5rem;
-    color: #ffd700;
+    color: #07002c;
     margin-bottom: 0.5rem;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
 }
 
 .flow-node h3, .flow-node h4 {
-    color: #ffd700;
+    color: #07002c;
     margin: 0.5rem 0;
 }
 
@@ -1291,7 +1413,7 @@ title: About إتقان
 }
 
 .primary-node {
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.15) 100%);
+    background: linear-gradient(135deg, rgba(16, 3, 47, 0.1) 0%, rgba(16, 3, 47, 0.15) 100%);
     max-width: 400px;
     width: 90%;
 }
@@ -1308,7 +1430,8 @@ title: About إتقان
 }
 
 .node-details ul li {
-    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Open Sans', sans-serif;
+    color: #07002c;
     margin: 0.5rem 0;
     font-size: 0.9rem;
     position: relative;
@@ -1317,7 +1440,7 @@ title: About إتقان
 
 .node-details ul li::before {
     content: '•';
-    color: #ffd700;
+    color: #07002c;
     position: absolute;
     left: 0;
 }
@@ -1337,7 +1460,7 @@ title: About إتقان
         width: 2px;
         height: 100%;
         top: 0;
-        background: linear-gradient(180deg, rgba(255, 215, 0, 0.3), transparent);
+        background: linear-gradient(180deg, rgba(16, 3, 47, 0.3), transparent);
     }
 
     .flow-path::before {
@@ -1350,63 +1473,24 @@ title: About إتقان
     }
 }
 
-.overview-box, .goal-box {
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 215, 0, 0.1) 100%);
-    padding: 2rem;
-    margin: 1rem auto;
-    max-width: 800px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-    opacity: 1;
-    transform: translateY(0);
+.section-title {
+    color: #07002c;
+    font-family: 'Almarena Mono', monospace;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
     position: relative;
-    z-index: 1;
+    display: inline-block;
 }
 
-.overview-box:hover, .goal-box:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.15);
-}
-
-.overview-box h2, .goal-box h2 {
-    display: block;
-    text-align: center;
-    color: #ffd700;
-    margin: 0 0 1.5rem 0;
-    font-size: 1.8rem;
-    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
-    padding-bottom: 0.8rem;
-}
-
-.overview-box i, .goal-box i {
-    display: block;
-    text-align: center;
-    margin: 0 auto 0.5rem auto;
-    font-size: 1.8rem;
-    color: #ffd700;
-}
-
-.overview-box p, .goal-box p {
-    color: rgba(255, 255, 255, 0.95);
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-
-@media (max-width: 768px) {
-    .overview-box, .goal-box {
-        padding: 1.5rem;
-    }
-    
-    .overview-box h2, .goal-box h2 {
-        font-size: 1.5rem;
-    }
-    
-    .overview-box i, .goal-box i {
-        font-size: 1.5rem;
-    }
-    
-    .overview-box p, .goal-box p {
-        font-size: 1rem;
-    }
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: rgba(16, 3, 47, 0.1);
+    border-radius: 2px;
 }
 </style> 

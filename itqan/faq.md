@@ -10,13 +10,12 @@ title: FAQ - إتقان
 .thuluth-text {
     font-family: 'Amiri', serif;
     font-size: 1.8em;
-    background: linear-gradient(45deg, #dfb456, #e6c172);
+    background: linear-gradient(45deg, #957718, #e2c27d);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    font-weight: 700;
-    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
     display: inline-block;
+    font-weight: 700;
+    filter: drop-shadow(2px 2px 4px rgba(149, 119, 24, 0.3));
 }
 
 @media (max-width: 768px) {
@@ -99,7 +98,9 @@ title: FAQ - إتقان
     margin-bottom: 1.5rem;
     border-radius: 8px;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.02);
+    background: #ffffff;
+    border: 1px solid rgba(16, 3, 47, 0.1);
+    box-shadow: 0 4px 15px rgba(16, 3, 47, 0.05);
 }
 
 .faq-header {
@@ -112,33 +113,38 @@ title: FAQ - إتقان
     text-align: left;
     background: none;
     border: none;
-    color: #ffd700;
+    color: #07002c;
     font-size: 1.2rem;
     font-weight: 500;
+    font-family: 'Almarena Mono', monospace;
     display: flex;
     align-items: center;
     transition: background 0.3s ease;
 }
 
 .faq-btn:hover, .faq-btn:not(.collapsed) {
-    background: rgba(255, 215, 0, 0.05);
+    background: rgba(16, 3, 47, 0.02);
 }
 
 .faq-btn i {
-    color: #ffd700;
+    color: #957718;
     margin-right: 1rem;
     width: 24px;
     text-align: center;
+    background: linear-gradient(45deg, #957718, #e2c27d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .faq-body {
     padding: 1.5rem;
-    color: rgba(255, 255, 255, 0.9);
-    border-top: 1px solid rgba(255, 215, 0, 0.1);
+    color: #07002c;
+    border-top: 1px solid rgba(16, 3, 47, 0.1);
     line-height: 1.8;
     font-size: 1.1rem;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.1);
+    font-family: 'Open Sans', sans-serif;
+    text-align: left;
+    background: #ffffff;
 }
 
 @media (max-width: 768px) {
@@ -169,7 +175,7 @@ title: FAQ - إتقان
 // Add focus styles for accessibility
 .faq-btn:focus {
     outline: none;
-    box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.5);
+    box-shadow: 0 0 0 2px rgba(149, 119, 24, 0.3);
 }
 
 .islamic-decoration {
@@ -181,11 +187,12 @@ title: FAQ - إتقان
 }
 
 .islamic-decoration h1 {
-    color: #ffd700;
+    color: #07002c;
     font-size: 2.5rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-family: 'Almarena Mono', monospace;
     position: relative;
     z-index: 1;
+    margin-bottom: 0;
 }
 
 .islamic-decoration::before {

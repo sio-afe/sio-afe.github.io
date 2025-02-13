@@ -13,8 +13,7 @@
     pointer-events: none;
     z-index: -2;
     overflow: hidden;
-    background: linear-gradient(-45deg, #005f73, #0a9396, #094c59, #083c48);
-    background-size: 400% 400%;
+    background: #07002c;
 }
 
 .spinning-background {
@@ -27,10 +26,12 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    opacity: 0.25;
+    opacity: 0.15;
     transform: translate(-50%, -50%);
-    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.1));
+    filter: sepia(100%) saturate(400%) hue-rotate(-15deg) brightness(180%) contrast(95%);
     z-index: -1;
+    mix-blend-mode: screen;
+    animation: gracefulSpin 120s linear infinite;
 }
 
 @keyframes gracefulSpin {
@@ -38,25 +39,26 @@
         transform: translate(-50%, -50%) rotate(0deg);
     }
     to {
-        transform: translate(-50%, -50%) rotate(0deg);
+        transform: translate(-50%, -50%) rotate(360deg);
     }
 }
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .spinning-background {
-        width: 200vmax;  /* Much larger on mobile to ensure coverage */
+        width: 200vmax;
         height: 200vmax;
-        opacity: 0.15;  /* Reduced opacity on mobile */
-        animation: gracefulSpin 90s linear infinite; /* Slower spin on mobile */
+        opacity: 0.12;
+        animation: gracefulSpin 90s linear infinite;
     }
 }
 
 /* Small phones */
 @media (max-width: 480px) {
     .spinning-background {
-        width: 250vmax;  /* Even larger for small phones */
+        width: 250vmax;
         height: 250vmax;
+        opacity: 0.1;
     }
 }
 
@@ -74,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!('ontouchstart' in window) && window.innerWidth > 768) {
         document.addEventListener('mousemove', function(e) {
             requestAnimationFrame(() => {
-                const mouseX = (e.clientX / window.innerWidth - 0.5) * 10; // Reduced movement
+                const mouseX = (e.clientX / window.innerWidth - 0.5) * 10;
                 const mouseY = (e.clientY / window.innerHeight - 0.5) * 10;
                 
                 const background = document.querySelector('.spinning-background');
