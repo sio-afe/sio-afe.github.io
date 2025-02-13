@@ -1,17 +1,11 @@
+import { supabaseReady } from './supabase-init.js';
+
 export let supabaseClient = null;
 
 // Export the async getter function
 export async function getClient() {
     try {
-        // Wait for Supabase to be ready
-        if (window.waitForSupabase) {
-            await window.waitForSupabase();
-        }
-        
-        if (!window.supabaseClient) {
-            throw new Error('Supabase client not initialized');
-        }
-        return window.supabaseClient;
+        return await supabaseReady;
     } catch (error) {
         console.error('Error getting Supabase client:', error);
         throw error;
@@ -126,6 +120,43 @@ export async function signIn(email, password) {
 export async function signOut() {
     const client = await getClient();
     return client.auth.signOut();
+}
+
+// Function to submit registration
+export async function submitRegistration(registrationData) {
+    try {
+        const client = await getClient();
+        const { data, error } = await client
+            .from('registrations')
+            .insert([registrationData])
+            .select()
+            .single();
+        
+        if (error) throw error;
+        return { data, error: null };
+    } catch (error) {
+        console.error('Error submitting registration:', error);
+        return { data: null, error };
+    }
+}
+
+// Function to check if email already registered
+export async function checkEmailExists(email, category) {
+    try {
+        const client = await getClient();
+        const { data, error } = await client
+            .from('registrations')
+            .select('email')
+            .eq('email', email)
+            .eq('category', category)
+            .maybeSingle();
+        
+        if (error) throw error;
+        return { exists: !!data, error: null };
+    } catch (error) {
+        console.error('Error checking email:', error);
+        return { exists: false, error };
+    }
 }
 
 // State management

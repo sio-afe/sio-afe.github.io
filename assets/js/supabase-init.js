@@ -2,38 +2,32 @@
 const supabaseUrl = 'https://efirvmzdioizosdcnasg.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmaXJ2bXpkaW9pem9zZGNuYXNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYzNTk4MTAsImV4cCI6MjA1MTkzNTgxMH0.uckyGkQeUm6e5SvOu3BC_zdrzUVcLr2e9ItlaUuKFCg';
 
-// Initialize Supabase immediately when this script loads
-const initSupabase = async () => {
-    const maxAttempts = 10;
-    let attempts = 0;
+let client = null;
 
-    while (attempts < maxAttempts) {
-        attempts++;
-        console.log(`Attempting to initialize Supabase (attempt ${attempts}/${maxAttempts})...`);
+export async function initSupabase() {
+    if (client) return client;
 
+    try {
+        // Wait for Supabase to be available
+        let attempts = 0;
+        while (typeof supabase === 'undefined' && attempts < 10) {
+            await new Promise(r => setTimeout(r, 500));
+            attempts++;
+        }
+        
         if (typeof supabase === 'undefined') {
-            console.log('Supabase not loaded yet, retrying in 500ms...');
-            await new Promise(resolve => setTimeout(resolve, 500));
-            continue;
+            throw new Error('Supabase library not loaded');
         }
-
-        try {
-            window.supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
-            console.log('Supabase client initialized successfully');
-            return window.supabaseClient;
-        } catch (error) {
-            console.error('Error creating Supabase client:', error);
-            if (attempts === maxAttempts) throw error;
-        }
+        
+        // Create client
+        client = supabase.createClient(supabaseUrl, supabaseAnonKey);
+        console.log('Supabase client initialized successfully');
+        return client;
+    } catch (error) {
+        console.error('Error initializing Supabase client:', error);
+        throw error;
     }
-    throw new Error('Failed to load Supabase after multiple attempts');
-};
+}
 
-// Create a promise that resolves when Supabase is ready
-window.supabaseReady = initSupabase();
-
-// Export a function to wait for Supabase initialization
-window.waitForSupabase = () => window.supabaseReady;
-
-// Export the client for modules that need direct access
-export default window.supabaseReady; 
+// Initialize immediately and export the promise
+export const supabaseReady = initSupabase(); 

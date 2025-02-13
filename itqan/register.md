@@ -1,6 +1,11 @@
 ---
 layout: tasfiya
 title: Register - Itqan
+scripts:
+  - src: https://unpkg.com/@supabase/supabase-js@2.39.7/dist/umd/supabase.js
+  - src: /assets/js/supabase-init.js
+  - src: /assets/js/supabase-client.js
+  - src: /assets/js/register.js
 ---
 
 <div class="register-page">
@@ -9,8 +14,8 @@ title: Register - Itqan
     <div class="register-form-container">
         <form id="registrationForm" class="registration-form">
             <div class="form-group">
-                <label for="category">Competition Category*</label>
-                <select id="category" name="category" class="form-control" required onchange="updateSubcategories()">
+                <label for="category">Competition Category</label>
+                <select id="category" name="category" class="form-control" required>
                     <option value="">Select Category</option>
                     <option value="hifz">Hifz Competition</option>
                     <option value="tarteel">Tarteel Competition</option>
@@ -18,15 +23,8 @@ title: Register - Itqan
                 </select>
             </div>
 
-            <div class="form-group" id="subcategoryGroup" style="display: none;">
-                <label for="subcategory">Competition Level*</label>
-                <select id="subcategory" name="subcategory" class="form-control" required>
-                    <option value="">Select Level</option>
-                </select>
-            </div>
-
             <div class="form-group">
-                <label for="participant_type">Participant Type*</label>
+                <label for="participant_type">Participant Type</label>
                 <select id="participant_type" name="participant_type" class="form-control" required>
                     <option value="">Select Type</option>
                     <option value="school">School Student</option>
@@ -35,37 +33,57 @@ title: Register - Itqan
             </div>
 
             <div class="form-group" id="schoolGroup" style="display: none;">
-                <label for="school_name">School Name*</label>
+                <label for="school_name">School Name</label>
                 <input type="text" id="school_name" name="school_name" class="form-control">
             </div>
 
             <div class="form-group">
-                <label for="fullName">Full Name*</label>
+                <label for="fullName">Full Name</label>
                 <input type="text" id="fullName" name="fullName" class="form-control" required>
             </div>
             
             <div class="form-group">
-                <label for="email">Email*</label>
+                <label for="email">Email</label>
                 <input type="email" id="email" name="email" class="form-control" required>
             </div>
             
             <div class="form-group">
-                <label for="phone">Phone Number*</label>
+                <label for="phone">Phone Number</label>
                 <input type="tel" id="phone" name="phone" class="form-control" required>
             </div>
             
             <div class="form-group">
-                <label for="age">Age*</label>
+                <label for="age">Age</label>
                 <input type="number" id="age" name="age" class="form-control" required min="5" max="100">
+            </div>
+
+            <div class="form-group" id="subcategoryGroup" style="display: none;">
+                <label for="subcategory">Competition Level </label>
+                <select id="subcategory" name="subcategory" class="form-control" required>
+                    <option value="">Select Level</option>
+                </select>
             </div>
             
             <div class="form-group">
-                <label for="address">Address*</label>
+                <label for="address">Address</label>
                 <textarea id="address" name="address" class="form-control" required rows="3"></textarea>
             </div>
             
-            <button type="submit" class="register-submit-btn">Submit Registration</button>
+            <button type="submit" class="register-submit-btn">Submit</button>
+            <p class="help-text">Having trouble submitting? Please contact us at <a href="tel:+918826340784">+91 88263 40784</a></p>
         </form>
+    </div>
+</div>
+
+<!-- Add success/error message container -->
+<div class="message-container">
+    <div class="success-message" style="display: none;">
+        <i class="fas fa-check-circle"></i>
+        <span class="message-text"></span>
+    </div>
+    <div class="error-message" style="display: none;">
+        <i class="fas fa-exclamation-circle"></i>
+        <span class="message-text"></span>
     </div>
 </div>
 
@@ -74,11 +92,13 @@ title: Register - Itqan
     max-width: 800px;
     margin: 2rem auto;
     padding: 2rem;
+    position: relative;
+    background: #ffffff;
 }
 
 .register-page h1 {
-    color: #dfb456;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #07002c;
+    text-shadow: none;
 }
 
 /* Add Thuluth font */
@@ -87,12 +107,12 @@ title: Register - Itqan
 .thuluth-text {
     font-family: 'Amiri', serif;
     font-size: 1.8em;
-    background: linear-gradient(45deg, #dfb456, #e6c172);
+    background: linear-gradient(45deg, #957718, #e2c27d);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: none;
     font-weight: 700;
-    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(2px 2px 4px rgba(149, 119, 24, 0.3));
     display: inline-block;
 }
 
@@ -103,12 +123,11 @@ title: Register - Itqan
 }
 
 .register-form-container {
-    background: rgba(255, 255, 255, 0.05);
+    background: #ffffff;
     padding: 2rem;
     border-radius: 15px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(223, 180, 86, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(16, 3, 47, 0.1);
+    box-shadow: 0 8px 32px rgba(16, 3, 47, 0.05);
 }
 
 .registration-form {
@@ -132,35 +151,35 @@ title: Register - Itqan
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    color: #dfb456;
+    color: #07002c;
     font-weight: 500;
 }
 
 .form-control {
     width: 100%;
     padding: 0.75rem 1rem;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(223, 180, 86, 0.2);
+    background: #ffffff;
+    border: 1px solid rgba(16, 3, 47, 0.1);
     border-radius: 8px;
-    color: #fff;
+    color: #07002c;
     transition: all 0.3s ease;
 }
 
 .form-control:focus {
     outline: none;
-    border-color: #dfb456;
-    box-shadow: 0 0 0 2px rgba(223, 180, 86, 0.2);
-    background: rgba(255, 255, 255, 0.15);
+    border-color: #957718;
+    box-shadow: 0 0 0 2px rgba(149, 119, 24, 0.2);
+    background: #ffffff;
 }
 
 .form-control:disabled {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(16, 3, 47, 0.05);
     cursor: not-allowed;
 }
 
 select.form-control {
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23dfb456' viewBox='0 0 16 16'%3E%3Cpath d='M8 11l-7-7h14l-7 7z'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23957718' viewBox='0 0 16 16'%3E%3Cpath d='M8 11l-7-7h14l-7 7z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 1rem center;
     padding-right: 2.5rem;
@@ -173,22 +192,24 @@ select.form-control {
 }
 
 .register-submit-btn {
-    background: linear-gradient(45deg, #dfb456, #e6c172);
-    color: #005f73;
+    background: linear-gradient(45deg, #957718, #e2c27d);
+    color: #ffffff;
     border: none;
     padding: 1rem 2rem;
-    border-radius: 8px;
+    border-radius: 50px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     width: 100%;
     margin-top: 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: 0.5px;
 }
 
 .register-submit-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(223, 180, 86, 0.3);
-    background: linear-gradient(45deg, #e6c172, #dfb456);
+    box-shadow: 0 6px 20px rgba(149, 119, 24, 0.3);
+    background: linear-gradient(45deg, #8b6e17, #d4b76f);
 }
 
 .register-submit-btn:active {
@@ -236,11 +257,130 @@ select.form-control {
 .form-group {
     animation: slideDown 0.3s ease-out forwards;
 }
+
+/* Add styles for success/error messages */
+.message-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    width: 300px;
+}
+
+.success-message,
+.error-message {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    animation: fadeIn 0.3s ease-out;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.success-message {
+    background: rgba(40, 167, 69, 0.95);
+    border: 1px solid rgba(40, 167, 69, 0.2);
+    color: white;
+}
+
+.error-message {
+    background: rgba(220, 53, 69, 0.95);
+    border: 1px solid rgba(220, 53, 69, 0.2);
+    color: white;
+}
+
+.success-message i,
+.error-message i {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .message-container {
+        width: calc(100% - 40px);
+        max-width: 300px;
+    }
+}
+
+/* Add these new styles for better form appearance */
+.form-control::placeholder {
+    color: rgba(7, 0, 44, 0.5);
+}
+
+.form-control:hover {
+    border-color: rgba(149, 119, 24, 0.3);
+}
+
+/* Style for required field indicator */
+.form-group label::after {
+    content: '*';
+    color: #957718;
+    margin-left: 4px;
+}
+
+/* Remove asterisk from optional fields */
+.form-group:has(input:not([required])) label::after,
+.form-group:has(select:not([required])) label::after,
+.form-group:has(textarea:not([required])) label::after {
+    display: none;
+}
+
+/* Add focus ring for better accessibility */
+.form-control:focus-visible {
+    outline: 2px solid rgba(149, 119, 24, 0.4);
+    outline-offset: 1px;
+}
+
+/* Style for disabled state */
+.form-control:disabled {
+    background-color: rgba(7, 0, 44, 0.05);
+    color: rgba(7, 0, 44, 0.6);
+}
+
+/* Add transition for smooth hover effects */
+.form-control {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Add styles for help text */
+.help-text {
+    text-align: center;
+    margin-top: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.help-text a {
+    color: #957718;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.help-text a:hover {
+    text-decoration: underline;
+}
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-function updateSubcategories() {
+<script type="module">
+import { getClient, submitRegistration, checkEmailExists } from '/assets/js/supabase-client.js';
+
+// Make updateSubcategories available globally
+window.updateSubcategories = function() {
     const category = document.getElementById('category').value;
     const subcategoryGroup = document.getElementById('subcategoryGroup');
     const subcategory = document.getElementById('subcategory');
@@ -265,61 +405,134 @@ function updateSubcategories() {
     } else {
         subcategoryGroup.style.display = 'none';
     }
+};
+
+async function initializeForm() {
+    try {
+        // Wait for Supabase to be initialized
+        const supabaseClient = await getClient();
+        if (!supabaseClient) {
+            throw new Error('Failed to get Supabase client');
+        }
+
+        // Add event listeners
+        const form = document.getElementById('registrationForm');
+        const ageInput = document.getElementById('age');
+        const participantTypeInput = document.getElementById('participant_type');
+        const successMessage = document.querySelector('.success-message');
+        const errorMessage = document.querySelector('.error-message');
+
+        if (!form || !ageInput || !participantTypeInput) {
+            throw new Error('Required form elements not found');
+        }
+
+        // Add event listeners
+        ageInput.addEventListener('change', window.updateSubcategories);
+        participantTypeInput.addEventListener('change', function() {
+            const schoolGroup = document.getElementById('schoolGroup');
+            schoolGroup.style.display = this.value === 'school' ? 'block' : 'none';
+            document.getElementById('school_name').required = this.value === 'school';
+        });
+
+        function showMessage(type, text) {
+            const messageElement = type === 'success' ? successMessage : errorMessage;
+            const otherMessage = type === 'success' ? errorMessage : successMessage;
+            
+            messageElement.querySelector('.message-text').textContent = text;
+            messageElement.style.display = 'flex';
+            otherMessage.style.display = 'none';
+            
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 5000);
+        }
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = form.querySelector('.register-submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            
+            try {
+                // Validate required fields
+                const requiredFields = form.querySelectorAll('[required]');
+                for (const field of requiredFields) {
+                    if (!field.value) {
+                        throw new Error(`${field.name} is required`);
+                    }
+                }
+                
+                // Validate age
+                const age = parseInt(form.age.value);
+                if (age < 5 || age > 100) {
+                    throw new Error('Age must be between 5 and 100');
+                }
+                
+                // Validate phone number format
+                const phone = form.phone.value;
+                if (!/^\+?[\d\s-]{10,}$/.test(phone)) {
+                    throw new Error('Please enter a valid phone number');
+                }
+                
+                // Validate email format
+                const email = form.email.value;
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    throw new Error('Please enter a valid email address');
+                }
+
+                // Check if email already exists for this category
+                const { exists, error: emailCheckError } = await checkEmailExists(email, form.category.value);
+                if (emailCheckError) throw emailCheckError;
+                if (exists) {
+                    throw new Error('You have already registered for this category');
+                }
+                
+                const formData = {
+                    full_name: form.fullName.value,
+                    email: email,
+                    phone: phone,
+                    age: age,
+                    category: form.category.value,
+                    subcategory: form.subcategory.value,
+                    participant_type: form.participant_type.value,
+                    school_name: form.school_name.value || null,
+                    address: form.address.value
+                };
+                
+                // Submit registration
+                const { data, error } = await submitRegistration(formData);
+                if (error) throw error;
+                
+                showMessage('success', 'Registration successful! We will contact you soon.');
+                form.reset();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('error', error.message || 'Registration failed. Please try again later.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Submit';
+            }
+        });
+
+        console.log('Registration form initialized successfully');
+    } catch (error) {
+        console.error('Failed to initialize registration form:', error);
+        throw error;
+    }
 }
 
-document.getElementById('age').addEventListener('change', updateSubcategories);
-document.getElementById('participant_type').addEventListener('change', function() {
-    const schoolGroup = document.getElementById('schoolGroup');
-    schoolGroup.style.display = this.value === 'school' ? 'block' : 'none';
-    document.getElementById('school_name').required = this.value === 'school';
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Supabase client
-    const supabaseUrl = 'YOUR_SUPABASE_URL';
-    const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-    
-    const form = document.getElementById('registrationForm');
-    
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const submitBtn = form.querySelector('.register-submit-btn');
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Submitting...';
-        
-        try {
-            const formData = {
-                full_name: form.fullName.value,
-                email: form.email.value,
-                phone: form.phone.value,
-                age: parseInt(form.age.value),
-                category: form.category.value,
-                subcategory: form.subcategory.value,
-                participant_type: form.participant_type.value,
-                school_name: form.school_name.value || null,
-                address: form.address.value,
-                registration_date: new Date().toISOString()
-            };
-            
-            const { data, error } = await supabase
-                .from('registrations')
-                .insert([formData]);
-                
-            if (error) throw error;
-            
-            // Show success message
-            alert('Registration successful! We will contact you soon.');
-            form.reset();
-            
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Registration failed. Please try again later.');
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Submit Registration';
-        }
+// Initialize when DOM is loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        initializeForm().catch(error => {
+            console.error('Failed to initialize application:', error);
+        });
     });
-});
+} else {
+    initializeForm().catch(error => {
+        console.error('Failed to initialize application:', error);
+    });
+}
 </script> 
