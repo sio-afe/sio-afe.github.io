@@ -804,12 +804,12 @@ title: About إتقان
                     </div>
                 </div>
 
-                <!-- Tarteel and Azan Category -->
+                <!-- Tilawat and Azan Category -->
                 <div class="category-column">
-                    <!-- Tarteel Competition -->
+                    <!-- Tilawat Competition -->
                     <div class="category-box mb-4">
                         <i class="fas fa-microphone"></i>
-                        <h3>Tarteel Competition</h3>
+                        <h3>Tilawat Competition</h3>
                     </div>
                     
                     <div class="subcategories mb-5">
@@ -939,11 +939,11 @@ title: About إتقان
                             </div>
                         </div>
 
-                        <!-- Tarteel & Azan Finals -->
+                        <!-- Tilawat & Azan Finals -->
                         <div class="subcategory-box">
                             <div class="subcategory-header">
                                 <i class="fas fa-microphone"></i>
-                                <h4>Tarteel & Azan Finals</h4>
+                                <h4>Tilawat & Azan Finals</h4>
                             </div>
                             <div class="competition-details">
                                 <div class="comp-type">

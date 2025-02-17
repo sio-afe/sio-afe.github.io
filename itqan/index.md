@@ -23,7 +23,7 @@ title: Qur'an Recitation Competition
     <div class="col-md-4 mb-4">
         <div class="feature-card">
             <i class="fas fa-microphone-alt fa-3x mb-3"></i>
-            <h3>Tarteel Competition</h3>
+            <h3>Tilawat Competition</h3>
             <p>Showcase your talent in beautiful recitation of the Holy Qur'an with proper Tajweed</p>
         </div>
     </div>

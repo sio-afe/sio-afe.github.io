@@ -41,7 +41,52 @@ title: FAQ - إتقان
             </h2>
             <div id="collapseOne" class="collapse show" data-bs-parent="#faqAccordion">
                 <div class="faq-body">
-                    Registration can be done online through our website or in person at the SIO Abul Fazal office. You'll need to provide basic information and choose your competition category.
+                    Registration can be done online through our website or calling on the number provided on the website. You'll need to provide basic information and choose your competition category.
+                </div>
+            </div>
+        </div>
+
+        <!-- Competition Structure -->
+        <div class="faq-item mb-4">
+            <h2 class="faq-header" id="headingStructure">
+                <button class="faq-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseStructure">
+                    <i class="fas fa-layer-group me-2"></i>
+                    What is the structure for each competition category?
+                </button>
+            </h2>
+            <div id="collapseStructure" class="collapse" data-bs-parent="#faqAccordion">
+                <div class="faq-body">
+                    <strong>1. Hifz Competition (Three-Round Format)</strong>
+                    <ul>
+                        <li>Initial Round: Quranic recitation of four consecutive verses</li>
+                        <li>Secondary Round: Quranic recitation of four consecutive verses with Surah identification</li>
+                        <li>Final Round: Quranic recitation of four consecutive verses, Surah identification, and demonstration of Surah knowledge (reciting opening and closing verses)</li>
+                    </ul>
+
+                    <strong>2. Full Quran Competition</strong>
+                    <ul>
+                        <li>Participants shall demonstrate their memorization through recitation of four consecutive verses from any part of the Holy Quran</li>
+                    </ul>
+
+                    <strong>3. Tilawat Competition</strong>
+                    <ul>
+                        <li>Participants shall present a three-minute recitation of their chosen verse from the Holy Quran</li>
+                        <li>Emphasis will be placed on Tajweed rules and proper pronunciation</li>
+                    </ul>
+
+                    <strong>4. Azan Competition</strong>
+                    <ul>
+                        <li>Participants shall present the complete Azan</li>
+                        <li>Assessment Criteria:
+                            <ul>
+                                <li>Adherence to proper pronunciation and traditional sequence</li>
+                                <li>Excellence in vocal quality and melodic presentation</li>
+                                <li>Mastery of breath control and appropriate pauses</li>
+                                <li>Effectiveness in conveying spiritual significance</li>
+                            </ul>
+                        </li>
+                        <li>Duration: Three to five minutes</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -71,7 +116,7 @@ title: FAQ - إتقان
             </h2>
             <div id="collapseThree" class="collapse" data-bs-parent="#faqAccordion">
                 <div class="faq-body">
-                    The competition consists of two stages: Preliminary Rounds and Finals. In the Preliminary Rounds, participants come through either School Track (10 Islamic Schools with internal selection, 2 best per category) or Individual Track (open registration). For Finals, Hifz category will have maximum 24 participants per category (20 from schools, 4 from individual), while Tarteel & Azan will have 12 participants each (10 from schools, 2 from individual).
+                    The competition consists of two stages: Preliminary Rounds and Finals. In the Preliminary Rounds, participants come through either School Track (10 Islamic Schools with internal selection, 2 best per category) or Individual Track (open registration). For Finals, Hifz category will have maximum 24 participants per category (20 from schools, 4 from individual), while Tilawat & Azan will have 12 participants each (10 from schools, 2 from individual).
                 </div>
             </div>
         </div>

@@ -11,6 +11,21 @@ scripts:
 <div class="register-page">
     <h1 class="text-center mb-4">Register for <span class="thuluth-text">إتقان</span> </h1>
     
+    <!-- Add payment info box -->
+    <div class="payment-info-box">
+        <h3><i class="fas fa-info-circle"></i> Registration Process</h3>
+        <ol>
+            <li>Fill and submit this registration form</li>
+            <li>You will receive a WhatsApp message with payment details on the registered number</li>
+            <li>Complete the payment via UPI and send the screenshot</li>
+            <li>On Verification, You will be conveyed further details</li>
+        </ol>
+        <div class="fee-info">
+            <p><strong>Registration Fee:</strong> ₹80</p>
+            <p><small>* Payment instructions will be shared via WhatsApp after registration</small></p>
+        </div>
+    </div>
+
     <div class="register-form-container">
         <form id="registrationForm" class="registration-form">
             <div class="form-group">
@@ -18,23 +33,9 @@ scripts:
                 <select id="category" name="category" class="form-control" required>
                     <option value="">Select Category</option>
                     <option value="hifz">Hifz Competition</option>
-                    <option value="tarteel">Tarteel Competition</option>
+                    <option value="tilawat">Tilawat Competition</option>
                     <option value="adhan">Adhan Competition</option>
                 </select>
-            </div>
-
-            <div class="form-group">
-                <label for="participant_type">Participant Type</label>
-                <select id="participant_type" name="participant_type" class="form-control" required>
-                    <option value="">Select Type</option>
-                    <option value="school">School Student</option>
-                    <option value="individual">Individual Participant</option>
-                </select>
-            </div>
-
-            <div class="form-group" id="schoolGroup" style="display: none;">
-                <label for="school_name">School Name</label>
-                <input type="text" id="school_name" name="school_name" class="form-control">
             </div>
 
             <div class="form-group">
@@ -374,6 +375,63 @@ select.form-control {
 .help-text a:hover {
     text-decoration: underline;
 }
+
+/* Add styles for payment info box */
+.payment-info-box {
+    background: rgba(149, 119, 24, 0.05);
+    border: 1px solid rgba(149, 119, 24, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.payment-info-box h3 {
+    color: #957718;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.payment-info-box ol {
+    margin: 0;
+    padding-left: 1.5rem;
+    color: #333;
+}
+
+.payment-info-box li {
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.fee-info {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed rgba(149, 119, 24, 0.2);
+}
+
+.fee-info p {
+    margin: 0.25rem 0;
+    color: #333;
+}
+
+.fee-info small {
+    color: #666;
+    font-style: italic;
+}
+
+/* RTL support for payment info box */
+[dir="rtl"] .payment-info-box ol {
+    padding-right: 1.5rem;
+    padding-left: 0;
+}
+
+[dir="rtl"] .payment-info-box h3 i {
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
 </style>
 
 <script type="module">
@@ -399,7 +457,7 @@ window.updateSubcategories = function() {
                 <option value="full">Full Quran</option>
             `;
         }
-    } else if (category === 'tarteel' || category === 'adhan') {
+    } else if (category === 'tilawat' || category === 'adhan') {
         subcategoryGroup.style.display = 'block';
         subcategory.innerHTML += '<option value="open">Open Age</option>';
     } else {
@@ -418,33 +476,30 @@ async function initializeForm() {
         // Add event listeners
         const form = document.getElementById('registrationForm');
         const ageInput = document.getElementById('age');
-        const participantTypeInput = document.getElementById('participant_type');
         const successMessage = document.querySelector('.success-message');
         const errorMessage = document.querySelector('.error-message');
 
-        if (!form || !ageInput || !participantTypeInput) {
+        if (!form || !ageInput) {
             throw new Error('Required form elements not found');
         }
 
         // Add event listeners
         ageInput.addEventListener('change', window.updateSubcategories);
-        participantTypeInput.addEventListener('change', function() {
-            const schoolGroup = document.getElementById('schoolGroup');
-            schoolGroup.style.display = this.value === 'school' ? 'block' : 'none';
-            document.getElementById('school_name').required = this.value === 'school';
-        });
 
-        function showMessage(type, text) {
+        function showMessage(type, text, isPersistent = false) {
             const messageElement = type === 'success' ? successMessage : errorMessage;
             const otherMessage = type === 'success' ? errorMessage : successMessage;
             
-            messageElement.querySelector('.message-text').textContent = text;
+            messageElement.querySelector('.message-text').innerHTML = text;
             messageElement.style.display = 'flex';
             otherMessage.style.display = 'none';
             
-            setTimeout(() => {
-                messageElement.style.display = 'none';
-            }, 5000);
+            // Only set timeout for error messages
+            if (!isPersistent && type === 'error') {
+                setTimeout(() => {
+                    messageElement.style.display = 'none';
+                }, 5000);
+            }
         }
 
         form.addEventListener('submit', async function(e) {
@@ -495,16 +550,43 @@ async function initializeForm() {
                     age: age,
                     category: form.category.value,
                     subcategory: form.subcategory.value,
-                    participant_type: form.participant_type.value,
-                    school_name: form.school_name.value || null,
-                    address: form.address.value
+                    address: form.address.value,
+                    participant_type: 'individual'
                 };
                 
                 // Submit registration
                 const { data, error } = await submitRegistration(formData);
                 if (error) throw error;
+
+                // Create WhatsApp link with payment details
+                const message = encodeURIComponent(
+                    `Subject: Registration for *${formData.category.charAt(0).toUpperCase() + formData.category.slice(1)} Competition* in Itqan\n\n` +
+                    `Assalamu,\n\n` +
+                    `I am ${formData.full_name}, registering for ${formData.category.charAt(0).toUpperCase() + formData.category.slice(1)} Competition in Itqan.\n\n` +
+                    `Please provide the payment details for registration fee of ₹80.`
+                );
+                const whatsappLink = `https://wa.me/918826340784?text=${message}`;
                 
-                showMessage('success', 'Registration successful! We will contact you soon.');
+                // Create success message with click handler
+                const successHtml = `
+                    <div style="text-align: left; line-height: 1.5;">
+                        <p style="margin-bottom: 10px;">Registration process started! Please complete these steps:</p>
+                        <ol style="margin: 0; padding-left: 20px;">
+                            <li style="margin-bottom: 8px;">Use your registered phone number (${formData.phone})</li>
+                            <li style="margin-bottom: 8px;">
+                                <a href="${whatsappLink}" 
+                                   target="_blank" 
+                                   onclick="document.querySelector('.success-message').style.display='none';" 
+                                   style="color: white; text-decoration: underline;">
+                                    Click here to send WhatsApp message
+                                </a>
+                            </li>
+                            <li style="margin-bottom: 8px;">Wait for payment details and follow the instructions</li>
+                        </ol>
+                    </div>
+                `;
+                
+                showMessage('success', successHtml, true);
                 form.reset();
                 
             } catch (error) {
