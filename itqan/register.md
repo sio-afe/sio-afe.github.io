@@ -927,6 +927,57 @@ select.form-control {
         font-size: 0.9rem;
     }
 }
+
+.payment-instructions {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.payment-instructions h4 {
+    color: #957718;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.payment-instructions ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.payment-instructions li {
+    margin-bottom: 0.8rem;
+    color: #333;
+    line-height: 1.5;
+}
+
+.alternative-method {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(204, 140, 37, 0.2);
+    text-align: center;
+}
+
+.alternative-method p {
+    margin-bottom: 1rem;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .payment-instructions {
+        padding: 1rem;
+    }
+
+    .payment-instructions h4 {
+        font-size: 1.1rem;
+    }
+
+    .payment-instructions li {
+        font-size: 0.95rem;
+        margin-bottom: 0.6rem;
+    }
+}
 </style>
 
 <script type="module">
@@ -1255,7 +1306,7 @@ window.showQRAndOpenUPI = async function(upiString) {
     const qrContainer = document.getElementById('qrCodeContainer');
     qrContainer.classList.add('active');
     
-    // Show instructions for better UX
+    // Show instructions for manual scanning
     const messageContainer = document.querySelector('.message-container');
     const successMessage = document.querySelector('.success-message');
     successMessage.querySelector('.message-text').innerHTML = `
@@ -1263,85 +1314,41 @@ window.showQRAndOpenUPI = async function(upiString) {
             <h4>Payment Instructions</h4>
             <ol>
                 <li>Take a screenshot of the QR code</li>
-                <li>Open your UPI app (GPay, PhonePe, etc.)</li>
-                <li>Select "Scan QR" or "Pay from Gallery"</li>
-                <li>Select the screenshot you just took</li>
-                <li>Complete the payment</li>
+                <li>Open your UPI app (GPay, PhonePe, Paytm, etc.)</li>
+                <li>Select 'Scan QR' or 'Upload QR'</li>
+                <li>Choose the screenshot from your gallery</li>
+                <li>Verify the payment details and proceed</li>
             </ol>
-            <p class="mt-3"><small>* If direct QR scan doesn't work, please use the screenshot method as described above.</small></p>
+            <div class="alternative-method">
+                <p>Alternatively, you can:</p>
+                <button onclick="window.openUPIApp('${upiString}')" class="upi-app-button">
+                    Try Direct UPI App Launch
+                </button>
+            </div>
         </div>
     `;
     messageContainer.style.display = 'flex';
     successMessage.style.display = 'block';
     document.querySelector('.error-message').style.display = 'none';
 
-    // Try to open UPI app after a delay
-    setTimeout(() => {
-        // Try to open the UPI app
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        if (isMobile) {
-            // For mobile devices, try multiple approaches
-            const intent = `intent://${upiString.replace('upi://', '')}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
-            const fallbackUrl = upiString;
-            
-            // Create an invisible iframe to try handling the UPI intent
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            document.body.appendChild(iframe);
-            
-            try {
-                // Try the Android intent first
-                window.location.href = intent;
-                
-                // Fallback to direct UPI URL after a short delay
-                setTimeout(() => {
-                    window.location.href = fallbackUrl;
-                }, 100);
-            } catch (e) {
-                // If intent fails, try direct UPI URL
-                window.location.href = fallbackUrl;
-            }
-        } else {
-            // For desktop, just show the instructions
-            console.log('Desktop device detected, showing QR instructions only');
+    try {
+        // Try to load jsQR if not already loaded
+        if (!jsQRLoaded) {
+            await loadJsQR();
         }
-    }, 1000);
+        
+        // Get the QR code image and make it more prominent
+        const qrImage = qrContainer.querySelector('img');
+        qrImage.style.width = '250px';
+        qrImage.style.height = '250px';
+        qrImage.style.margin = '1rem auto';
+        
+    } catch (error) {
+        console.error('Failed to initialize QR scanner:', error);
+        // Even if jsQR fails to load, we still show the QR for manual scanning
+        // No need to show error message as the QR is still visible for screenshot
+    }
 };
-
-// Add styles for payment instructions
-const style = document.createElement('style');
-style.textContent = `
-    .payment-instructions {
-        background: #fff;
-        padding: 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    
-    .payment-instructions h4 {
-        color: #957718;
-        margin-bottom: 1rem;
-        font-size: 1.2rem;
-    }
-    
-    .payment-instructions ol {
-        padding-left: 1.5rem;
-        margin-bottom: 1rem;
-    }
-    
-    .payment-instructions li {
-        margin-bottom: 0.8rem;
-        color: #333;
-        line-height: 1.4;
-    }
-    
-    .payment-instructions p {
-        color: #666;
-        margin-top: 1rem;
-        font-size: 0.9rem;
-    }
-`;
-document.head.appendChild(style);
 
 window.openUPIApp = function(upiString) {
     window.location.href = upiString;
