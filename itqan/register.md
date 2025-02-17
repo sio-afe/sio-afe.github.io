@@ -4,6 +4,7 @@ title: Register - Itqan
 scripts:
   - src: https://unpkg.com/@supabase/supabase-js@2.39.7/dist/umd/supabase.js
   - src: https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js
+  - src: https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js
   - src: /assets/js/supabase-init.js
   - src: /assets/js/supabase-client.js
   - src: /assets/js/register.js
@@ -931,6 +932,30 @@ select.form-control {
 <script type="module">
 import { getClient, submitRegistration, checkEmailExists } from '/assets/js/supabase-client.js';
 
+// First ensure jsQR is loaded
+let jsQRLoaded = false;
+
+function loadJsQR() {
+    return new Promise((resolve, reject) => {
+        if (typeof jsQR !== 'undefined') {
+            jsQRLoaded = true;
+            resolve();
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';
+        script.onload = () => {
+            jsQRLoaded = true;
+            resolve();
+        };
+        script.onerror = () => {
+            reject(new Error('Failed to load jsQR library'));
+        };
+        document.head.appendChild(script);
+    });
+}
+
 // Make updateSubcategories available globally
 window.updateSubcategories = function() {
     const category = document.getElementById('category').value;
@@ -973,8 +998,6 @@ async function handleUPIPayment(formData) {
         pn: "Adnan Shakeel Ahmed",
         am: "80",
         cu: "INR",
-        mc: "0000",
-        tr: "ITQAN" + Date.now(),
         tn: "Registration Fee by " + formData.full_name + " for " + formData.category.toUpperCase() + " category"
     };
     
@@ -1228,14 +1251,92 @@ if (document.readyState === 'loading') {
 }
 
 // Update the global functions to use the passed UPI string
-window.showQRAndOpenUPI = function(upiString) {
+window.showQRAndOpenUPI = async function(upiString) {
     const qrContainer = document.getElementById('qrCodeContainer');
     qrContainer.classList.add('active');
     
-    // Open UPI app after a short delay
-    setTimeout(() => {
-        window.location.href = upiString;
-    }, 300); // Reduced delay
+    try {
+        // Try to load jsQR if not already loaded
+        if (!jsQRLoaded) {
+            await loadJsQR();
+        }
+        
+        // Get the QR code image
+        const qrImage = qrContainer.querySelector('img');
+        
+        // Create a canvas to read the QR code
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        
+        // Create a new image to ensure it's loaded
+        const img = new Image();
+        img.crossOrigin = "Anonymous";  // Handle CORS issues
+        img.src = qrImage.src;
+        
+        img.onload = function() {
+            // Set canvas size to match image
+            canvas.width = img.width;
+            canvas.height = img.height;
+            
+            // Draw image onto canvas
+            context.drawImage(img, 0, 0, canvas.width, canvas.height);
+            
+            // Get image data for QR code reading
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            
+            try {
+                // Read QR code
+                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                
+                if (code) {
+                    // Use the QR code data which should contain the UPI string
+                    setTimeout(() => {
+                        window.location.href = code.data;
+                    }, 300);
+                } else {
+                    throw new Error('Failed to read QR code');
+                }
+            } catch (error) {
+                console.error('QR Code Error:', error);
+                // Show error message
+                const messageContainer = document.querySelector('.message-container');
+                const errorMessage = document.querySelector('.error-message');
+                errorMessage.querySelector('.message-text').innerHTML = 'Failed to read QR code. Please try using the UPI button below instead.';
+                messageContainer.style.display = 'flex';
+                errorMessage.style.display = 'block';
+                document.querySelector('.success-message').style.display = 'none';
+                
+                // Remove the active state from QR container
+                qrContainer.classList.remove('active');
+            }
+        };
+        
+        img.onerror = function() {
+            console.error('Failed to load QR image');
+            // Show error message
+            const messageContainer = document.querySelector('.message-container');
+            const errorMessage = document.querySelector('.error-message');
+            errorMessage.querySelector('.message-text').innerHTML = 'Failed to load QR code image. Please try using the UPI button below instead.';
+            messageContainer.style.display = 'flex';
+            errorMessage.style.display = 'block';
+            document.querySelector('.success-message').style.display = 'none';
+            
+            // Remove the active state from QR container
+            qrContainer.classList.remove('active');
+        };
+    } catch (error) {
+        console.error('Failed to initialize QR scanner:', error);
+        // Show error message
+        const messageContainer = document.querySelector('.message-container');
+        const errorMessage = document.querySelector('.error-message');
+        errorMessage.querySelector('.message-text').innerHTML = 'QR code scanner is not available. Please try using the UPI button below instead.';
+        messageContainer.style.display = 'flex';
+        errorMessage.style.display = 'block';
+        document.querySelector('.success-message').style.display = 'none';
+        
+        // Remove the active state from QR container
+        qrContainer.classList.remove('active');
+    }
 };
 
 window.openUPIApp = function(upiString) {
