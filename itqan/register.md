@@ -3,6 +3,7 @@ layout: tasfiya
 title: Register - Itqan
 scripts:
   - src: https://unpkg.com/@supabase/supabase-js@2.39.7/dist/umd/supabase.js
+  - src: https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js
   - src: /assets/js/supabase-init.js
   - src: /assets/js/supabase-client.js
   - src: /assets/js/register.js
@@ -690,6 +691,20 @@ select.form-control {
     margin-top: 1rem;
     text-align: left;
 }
+
+.qr-container {
+    text-align: center;
+    margin: 1rem 0;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.qr-container canvas {
+    max-width: 200px;
+    margin: 0 auto;
+    display: block;
+}
 </style>
 
 <script type="module">
@@ -727,26 +742,15 @@ window.updateSubcategories = function() {
 async function handleUPIPayment(formData) {
     const timestamp = Date.now().toString().slice(-8);
     const transactionId = `IT${timestamp}`; // Shorter transaction ID
-    const upiId = "adnanshakeel@sbi";
-    const amount = "1";
-    const merchantName = "Adnan Shakeel Ahmed";
+    const amount = "1.00"; // Registration fee in INR with 2 decimal places
     
-    // Generate different UPI app links with proper encoding and formatting
-    const commonParams = [
-        `pa=${encodeURIComponent(upiId)}`,
-        `pn=${encodeURIComponent(merchantName)}`,
-        `am=${amount}`,
-        `tr=${transactionId}`,
-        `tn=${encodeURIComponent('Registration_' + formData.full_name.replace(/ /g, '_'))}`,
-        'cu=INR',
-        'mc=ITQAN',  // Merchant code (optional but recommended)
-        'tid=ITQAN'   // Terminal ID (optional but recommended)
-    ].join('&');
-
-    // Proper UPI deep link formats
-    const gpayLink = `gpay://upi/pay?${commonParams}`;
-    const phonepeLink = `phonepe://upi/pay?${commonParams}`;
-    const paytmLink = `paytmmp://upi/pay?${commonParams}`;
+    // Use the exact UPI string format
+    const baseUpiString = `upi://pay?pa=adnanshakeelahmed99@oksbi&pn=Adnan%20Shakeel%20Ahmed&am=${amount}&cu=INR&aid=uGICAgIC1mJGvGQ`;
+    
+    // Create payment links for different UPI apps (using the same exact format)
+    const gpayLink = baseUpiString;
+    const phonepeLink = baseUpiString;
+    const paytmLink = baseUpiString;
     
     // Create payment module HTML
     const paymentHtml = `
@@ -754,6 +758,9 @@ async function handleUPIPayment(formData) {
             <div class="payment-module-header">
                 <h3>Complete Your Payment</h3>
                 <div class="payment-module-amount">₹${amount}</div>
+            </div>
+            <div id="qr-container" class="qr-container">
+                <!-- QR code will be generated here -->
             </div>
             <div class="upi-buttons-container">
                 <a href="${gpayLink}" class="upi-app-button gpay-button">
@@ -776,13 +783,17 @@ async function handleUPIPayment(formData) {
                 </div>
                 <div class="transaction-info">
                     <span>UPI ID:</span>
-                    <span>${upiId}</span>
+                    <span>adnanshakeelahmed99@oksbi</span>
+                </div>
+                <div class="transaction-info">
+                    <span>Amount:</span>
+                    <span>₹${amount}</span>
                 </div>
             </div>
         </div>
     `;
     
-    return { paymentHtml, transactionId };
+    return { paymentHtml, transactionId, upiString: baseUpiString };
 }
 
 async function initializeForm() {
@@ -888,10 +899,28 @@ async function initializeForm() {
                 };
 
                 // Generate UPI payment
-                const { paymentHtml, transactionId } = await handleUPIPayment(formData);
+                const { paymentHtml, transactionId, upiString } = await handleUPIPayment(formData);
                 
                 // Show payment UI
                 showMessage('success', paymentHtml, true);
+                
+                // Generate QR code after payment UI is shown
+                const qrContainer = document.getElementById('qr-container');
+                if (qrContainer) {
+                    try {
+                        await QRCode.toCanvas(qrContainer, upiString, {
+                            width: 200,
+                            margin: 1,
+                            color: {
+                                dark: '#000000',
+                                light: '#ffffff'
+                            }
+                        });
+                    } catch (qrError) {
+                        console.error('Failed to generate QR code:', qrError);
+                        qrContainer.innerHTML = '<p class="text-danger">Failed to generate QR code. Please use the UPI app buttons below.</p>';
+                    }
+                }
                 
                 // Store form data temporarily
                 sessionStorage.setItem('pendingRegistration', JSON.stringify({
