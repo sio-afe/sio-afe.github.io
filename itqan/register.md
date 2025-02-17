@@ -810,7 +810,8 @@ window.updateSubcategories = function() {
 
 // Function to handle UPI payment
 async function handleUPIPayment(formData) {
-    const upiString = `upi://pay?pa=adnanshakeelahmed99@oksbi&pn=Adnan%20Shakeel%20Ahmed&am=1.00&cu=INR&aid=uGICAgIC1mJGvGQ`;
+    const upiString = `upi://pay?pa=adnanshakeelahmed99@oksbi&pn=Adnan%20Shakeel%20Ahmed&am=80.00&cu=INR&aid=uGICAgIC1mJGvGQ`;
+    console.log('Generated UPI String:', upiString);
     
     // Create payment module HTML
     const paymentHtml = `
@@ -821,19 +822,19 @@ async function handleUPIPayment(formData) {
             </div>
             
             <div class="upi-buttons-container">
-                <a href="${upiString}" class="upi-app-button gpay-button" onclick="startPaymentVerification(event)">
+                <a href="${upiString}" class="upi-app-button gpay-button" onclick="startPaymentVerification(event, '${upiString}', 'Google Pay')">
                     <div class="upi-icon gpay-icon"></div>
                     <span>Google Pay</span>
                 </a>
-                <a href="${upiString}" class="upi-app-button phonepe-button" onclick="startPaymentVerification(event)">
+                <a href="${upiString}" class="upi-app-button phonepe-button" onclick="startPaymentVerification(event, '${upiString}', 'PhonePe')">
                     <div class="upi-icon phonepe-icon"></div>
                     <span>PhonePe</span>
                 </a>
-                <a href="${upiString}" class="upi-app-button paytm-button" onclick="startPaymentVerification(event)">
+                <a href="${upiString}" class="upi-app-button paytm-button" onclick="startPaymentVerification(event, '${upiString}', 'Paytm')">
                     <div class="upi-icon paytm-icon"></div>
                     <span>Paytm</span>
                 </a>
-                <a href="${upiString}" class="upi-app-button other-upi-button" onclick="startPaymentVerification(event)">
+                <a href="${upiString}" class="upi-app-button other-upi-button" onclick="startPaymentVerification(event, '${upiString}', 'Other UPI App')">
                     <div class="upi-icon other-upi-icon"></div>
                     <span>Other UPI Apps</span>
                 </a>
@@ -873,7 +874,11 @@ async function handleUPIPayment(formData) {
 }
 
 // Add this to your global scope
-window.startPaymentVerification = function(event) {
+window.startPaymentVerification = function(event, upiString, appName) {
+    console.log('Payment button clicked:', appName);
+    console.log('UPI String:', upiString);
+    console.log('Full href value:', event.currentTarget.href);
+    
     // Don't show verification form immediately as user is being redirected to UPI app
     const verificationSection = document.getElementById('verificationSection');
     if (verificationSection) {

@@ -1035,18 +1035,6 @@
                     }
                 });
             });
-
-            // Handle page visibility changes
-            try {
-                document.addEventListener('visibilitychange', () => {
-                    if (!document.hidden) {
-                        // Refresh data when page becomes visible
-                        window.location.reload();
-                    }
-                });
-            } catch (error) {
-                console.error('Failed to initialize page visibility handling:', error);
-            }
         });
 
         // Initialize Bootstrap components
