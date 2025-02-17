@@ -725,17 +725,18 @@ window.updateSubcategories = function() {
 
 // Function to handle UPI payment
 async function handleUPIPayment(formData) {
-    const transactionId = 'ITQ' + Date.now();
-    const upiId = "adnanshakeel@sbi"; // Fixed UPI ID format (changed hyphen to dot)
-    const amount = "1";
+    const timestamp = Date.now().toString().slice(-8);
+    const transactionId = `IT${timestamp}`; // Shorter transaction ID
+    const upiId = "adnanshakeel@sbi";
+    const amount = "80";
     const merchantName = "Adnan Shakeel Ahmed";
     
     // Generate different UPI app links with proper encoding and formatting
     const commonParams = `pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(merchantName)}&am=${amount}&tr=${transactionId}&tn=${encodeURIComponent('Registration for ' + formData.full_name)}&cu=INR`;
     
-    const gpayLink = `gpay://upi/pay?${commonParams}&mode=00&purpose=00`;
-    const phonepeLink = `phonepe://pay?${commonParams}&mode=00&purpose=00`;
-    const paytmLink = `paytmmp://pay?${commonParams}&mode=00&purpose=00`;
+    const gpayLink = `gpay://upi/pay?${commonParams}`;
+    const phonepeLink = `phonepe://pay?${commonParams}`;
+    const paytmLink = `paytmmp://pay?${commonParams}`;
     
     // Create payment module HTML
     const paymentHtml = `
