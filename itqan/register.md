@@ -262,24 +262,28 @@ select.form-control {
 /* Add styles for success/error messages */
 .message-container {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
     z-index: 1000;
-    width: 300px;
+    padding: 1rem;
 }
 
 .success-message,
 .error-message {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    animation: fadeIn 0.3s ease-out;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .success-message {
@@ -469,11 +473,12 @@ select.form-control {
 }
 
 .upi-icon {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
+    transition: transform 0.3s ease;
 }
 
 .gpay-icon {
@@ -522,38 +527,41 @@ select.form-control {
 /* Add styles for payment module */
 .payment-module {
     background: white;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 16px;
+    border-radius: 20px;
     padding: 2rem;
+    width: 100%;
     max-width: 400px;
-    margin: 2rem auto;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    margin: 0 auto;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .payment-module-header {
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .payment-module-header h3 {
     color: #333;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     margin: 0;
-    font-weight: 500;
+    font-weight: 600;
+    margin-bottom: 1rem;
 }
 
 .payment-module-amount {
-    font-size: 2.5rem;
-    color: #1a1a1a;
-    font-weight: 600;
-    margin: 1rem 0;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #1a73e8;
+    margin: 1.5rem 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 .upi-buttons-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin: 1.5rem 0;
+    gap: 1.2rem;
+    margin: 1.5rem auto;
 }
 
 .upi-app-button {
@@ -561,21 +569,23 @@ select.form-control {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 1rem;
-    border-radius: 12px;
+    gap: 0.8rem;
+    padding: 1.2rem 1rem;
+    border-radius: 16px;
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s ease;
     border: 1px solid rgba(0, 0, 0, 0.08);
     background: white;
     color: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .upi-app-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    background: #fafafa;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    background: #f8f9fa;
+    border-color: rgba(0, 0, 0, 0.12);
 }
 
 .upi-app-button:active {
@@ -583,10 +593,11 @@ select.form-control {
 }
 
 .upi-app-button span {
-    font-size: 0.85em;
+    font-size: 0.9em;
     text-align: center;
     line-height: 1.2;
-    color: #666;
+    color: #333;
+    font-weight: 500;
 }
 
 .upi-icon {
@@ -595,173 +606,173 @@ select.form-control {
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
+    transition: transform 0.3s ease;
+}
+
+.upi-app-button:hover .upi-icon {
+    transform: scale(1.1);
 }
 
 .payment-module-footer {
-    margin-top: 1.5rem;
-    padding-top: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
     border-top: 1px solid rgba(0, 0, 0, 0.08);
-    font-size: 0.9em;
-    color: #666;
+}
+
+.transaction-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.transaction-info span {
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.transaction-info span:first-child {
+    font-weight: 500;
+    color: #333;
+}
+
+@media (max-width: 600px) {
+    .payment-module {
+        margin: 0.5rem;
+        padding: 1.5rem;
+        border-radius: 16px;
+    }
+
+    .payment-module-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .payment-module-amount {
+        font-size: 2.5rem;
+        margin: 1rem 0;
+    }
+
+    .upi-buttons-container {
+        gap: 1rem;
+    }
+
+    .upi-app-button {
+        padding: 1rem;
+    }
+
+    .upi-icon {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+@media (max-width: 360px) {
+    .upi-buttons-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .payment-module {
+        padding: 1.2rem;
+    }
+}
+
+/* Message container backdrop */
+.message-container {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+}
+
+/* Add these styles for a better payment experience */
+.payment-module {
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Add styles for the amount display */
+.payment-module-amount {
+    position: relative;
+    display: inline-block;
+    padding: 0.5rem 2rem;
+    background: linear-gradient(135deg, #f6f9ff 0%, #f0f4ff 100%);
+    border-radius: 12px;
+    border: 1px solid rgba(26, 115, 232, 0.1);
+}
+
+.payment-module-amount::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(26, 115, 232, 0.1), transparent);
+    border-radius: inherit;
+    z-index: -1;
+}
+
+/* Success message styles */
+.payment-success {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    color: #333;
+}
+
+.payment-success i {
+    font-size: 4rem;
+    color: #2e7d32;
+    margin-bottom: 1rem;
+}
+
+.payment-success h3 {
+    font-size: 1.5rem;
+    color: #2e7d32;
+    margin-bottom: 1rem;
+}
+
+.payment-success p {
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.payment-success .transaction-details {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    text-align: left;
 }
 
 .transaction-info {
     display: flex;
     justify-content: space-between;
     margin-bottom: 0.5rem;
-    font-size: 0.9em;
+    color: #333;
+}
+
+.transaction-info span {
+    color: #333;
 }
 
 .transaction-info span:first-child {
-    color: #666;
-}
-
-.transaction-info span:last-child {
-    color: #333;
     font-weight: 500;
-}
-
-@media (max-width: 600px) {
-    .payment-module {
-        margin: 1rem;
-        padding: 1.5rem;
-    }
-    
-    .upi-buttons-container {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0.8rem;
-    }
-    
-    .upi-app-button {
-        padding: 0.8rem;
-    }
-    
-    .upi-icon {
-        width: 32px;
-        height: 32px;
-    }
-    
-    .payment-module-amount {
-        font-size: 2rem;
-    }
-}
-
-@media (max-width: 360px) {
-    .upi-buttons-container {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0.5rem;
-    }
-    
-    .upi-app-button span {
-        font-size: 0.8em;
-    }
-}
-
-/* Success message styles */
-.payment-success {
-    background: linear-gradient(135deg, #f8fdfb 0%, #e8f5e9 100%);
-    border: none;
-    border-radius: 20px;
-    padding: 3rem 2rem;
-    text-align: center;
-    margin: 2rem auto;
-    max-width: 500px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    position: relative;
-    overflow: hidden;
-}
-
-.payment-success::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 6px;
-    background: linear-gradient(90deg, #43a047, #66bb6a);
-}
-
-.payment-success i {
-    color: #43a047;
-    font-size: 4rem;
-    margin-bottom: 1.5rem;
-    display: inline-block;
-    animation: scaleIn 0.5s ease-out;
-}
-
-.payment-success h3 {
-    color: #1b5e20;
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-    font-weight: 600;
-}
-
-.payment-success p {
-    color: #2e7d32;
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
-    line-height: 1.5;
-}
-
-.payment-success .transaction-details {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 12px;
-    margin-top: 1.5rem;
-    text-align: left;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-}
-
-.payment-success .transaction-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.8rem 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.payment-success .transaction-info:last-child {
-    border-bottom: none;
-}
-
-.payment-success .transaction-info span:first-child {
-    color: #666;
-    font-size: 0.95rem;
-}
-
-.payment-success .transaction-info span:last-child {
-    color: #1b5e20;
-    font-weight: 600;
-    font-size: 1rem;
-}
-
-@keyframes scaleIn {
-    0% {
-        transform: scale(0);
-        opacity: 0;
-    }
-    50% {
-        transform: scale(1.2);
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-@media (max-width: 600px) {
-    .payment-success {
-        margin: 1rem;
-        padding: 2rem 1.5rem;
-    }
-    
-    .payment-success h3 {
-        font-size: 1.5rem;
-    }
-    
-    .payment-success p {
-        font-size: 1rem;
-    }
 }
 </style>
 
@@ -866,16 +877,29 @@ async function initializeForm() {
         ageInput.addEventListener('change', window.updateSubcategories);
 
         function showMessage(type, text, isPersistent = false) {
+            const messageContainer = document.querySelector('.message-container');
             const messageElement = type === 'success' ? successMessage : errorMessage;
             const otherMessage = type === 'success' ? errorMessage : successMessage;
             
             messageElement.querySelector('.message-text').innerHTML = text;
-            messageElement.style.display = 'flex';
+            messageContainer.style.display = 'flex';
+            messageElement.style.display = 'block';
             otherMessage.style.display = 'none';
+            
+            // Add click event listener to close on outside click
+            messageContainer.onclick = function(e) {
+                if (e.target === messageContainer) {
+                    messageContainer.style.display = 'none';
+                    if (!isPersistent) {
+                        messageElement.style.display = 'none';
+                    }
+                }
+            };
             
             // Only set timeout for error messages
             if (!isPersistent && type === 'error') {
                 setTimeout(() => {
+                    messageContainer.style.display = 'none';
                     messageElement.style.display = 'none';
                 }, 5000);
             }
@@ -961,6 +985,8 @@ async function initializeForm() {
                 const { formData, transactionId } = JSON.parse(pendingReg);
                 
                 // Clear any existing messages
+                const messageContainer = document.querySelector('.message-container');
+                messageContainer.style.display = 'none';
                 document.querySelector('.success-message').style.display = 'none';
                 document.querySelector('.error-message').style.display = 'none';
                 
@@ -975,34 +1001,37 @@ async function initializeForm() {
                             <div class="payment-success">
                                 <i class="fas fa-check-circle"></i>
                                 <h3>Registration Successful!</h3>
-                                <p>Thank you for registering for Itqan. Your payment has been received and your registration is now complete.</p>
+                                <p>Your payment has been received and registration is complete.</p>
                                 <div class="transaction-details">
                                     <div class="transaction-info">
-                                        <span>Transaction ID</span>
+                                        <span>Transaction ID:</span>
                                         <span>${transactionId}</span>
                                     </div>
                                     <div class="transaction-info">
-                                        <span>Amount Paid</span>
+                                        <span>Amount Paid:</span>
                                         <span>₹1</span>
                                     </div>
                                     <div class="transaction-info">
-                                        <span>Category</span>
-                                        <span>${formData.category.charAt(0).toUpperCase() + formData.category.slice(1)}</span>
-                                    </div>
-                                    <div class="transaction-info">
-                                        <span>Name</span>
-                                        <span>${formData.full_name}</span>
+                                        <span>Category:</span>
+                                        <span>${formData.category}</span>
                                     </div>
                                 </div>
                             </div>
                         `;
+                        messageContainer.style.display = 'flex';
                         successMessage.style.display = 'block';
                         sessionStorage.removeItem('pendingRegistration');
+                        
+                        // Add click event listener to close on outside click
+                        messageContainer.onclick = function(e) {
+                            if (e.target === messageContainer) {
+                                messageContainer.style.display = 'none';
+                                successMessage.style.display = 'none';
+                            }
+                        };
                     })
                     .catch(error => {
-                        const errorMessage = document.querySelector('.error-message');
-                        errorMessage.querySelector('.message-text').textContent = error.message || 'Failed to complete registration';
-                        errorMessage.style.display = 'flex';
+                        showMessage('error', error.message || 'Failed to complete registration');
                     });
             }
         });
