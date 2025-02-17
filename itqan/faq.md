@@ -101,7 +101,7 @@ title: FAQ - إتقان
             </h2>
             <div id="collapseTwo" class="collapse" data-bs-parent="#faqAccordion">
                 <div class="faq-body">
-                    The competition is open to all residents of Delhi. Age categories are: Junior (under 12) and Open Age. Participants must be able to recite the Qur'an with proper Tajweed.
+                    The competition is open to all residents of Delhi. Age categories are: Junior (under 17) and Open Age. Participants must be able to recite the Qur'an with proper Tajweed.
                 </div>
             </div>
         </div>

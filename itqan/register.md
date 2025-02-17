@@ -449,7 +449,7 @@ window.updateSubcategories = function() {
 
     if (category === 'hifz') {
         subcategoryGroup.style.display = 'block';
-        if (age && parseInt(age) < 12) {
+        if (age && parseInt(age) < 17) {
             subcategory.innerHTML += '<option value="1juz">1 Juz</option>';
         } else {
             subcategory.innerHTML += `
@@ -561,13 +561,14 @@ async function initializeForm() {
                 // Create WhatsApp link with payment details
                 const message = encodeURIComponent(
                     `Subject: Registration for *${formData.category.charAt(0).toUpperCase() + formData.category.slice(1)} Competition* in Itqan\n\n` +
-                    `Assalamu,\n\n` +
+                    `Salam!,\n\n` +
                     `I am ${formData.full_name}, registering for ${formData.category.charAt(0).toUpperCase() + formData.category.slice(1)} Competition in Itqan.\n\n` +
                     `Please provide the payment details for registration fee of ₹80.`
                 );
-                const whatsappLink = `https://wa.me/918826340784?text=${message}`;
+                const whatsappLink = `whatsapp://send?phone=918826340784&text=${message}`;
+                const webWhatsappLink = `https://wa.me/918826340784?text=${message}`;
                 
-                // Create success message with click handler
+                // Create success message with click handler and fallback
                 const successHtml = `
                     <div style="text-align: left; line-height: 1.5;">
                         <p style="margin-bottom: 10px;">Registration process started! Please complete these steps:</p>
@@ -575,8 +576,8 @@ async function initializeForm() {
                             <li style="margin-bottom: 8px;">Use your registered phone number (${formData.phone})</li>
                             <li style="margin-bottom: 8px;">
                                 <a href="${whatsappLink}" 
+                                   onclick="window.location.href='${webWhatsappLink}';return false;" 
                                    target="_blank" 
-                                   onclick="document.querySelector('.success-message').style.display='none';" 
                                    style="color: white; text-decoration: underline;">
                                     Click here to send WhatsApp message
                                 </a>

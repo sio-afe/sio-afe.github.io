@@ -758,11 +758,11 @@ title: About إتقان
                     </div>
                     
                     <div class="subcategories">
-                        <!-- Under 12 -->
+                        <!-- Under 17 -->
                         <div class="subcategory-box">
                             <div class="subcategory-header">
                 <i class="fas fa-child"></i>
-                                <h4>Under 12</h4>
+                                <h4>Under 17</h4>
                             </div>
                             <div class="competition-details">
                                 <div class="comp-type">
