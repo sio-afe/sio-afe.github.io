@@ -690,53 +690,6 @@ select.form-control {
     margin-top: 1rem;
     text-align: left;
 }
-
-/* Add styles for share buttons */
-.share-payment {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-
-.share-payment p {
-    margin-bottom: 0.5rem;
-    color: #666;
-}
-
-.share-buttons {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: center;
-}
-
-.share-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 0.9em;
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s ease;
-}
-
-.share-button.whatsapp {
-    background: #25D366;
-    color: white;
-}
-
-.share-button.copy {
-    background: #f0f0f0;
-    color: #333;
-}
-
-.share-button:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-}
 </style>
 
 <script type="module">
@@ -772,38 +725,30 @@ window.updateSubcategories = function() {
 
 // Function to handle UPI payment
 async function handleUPIPayment(formData) {
+    const timestamp = Date.now().toString().slice(-8);
+    const transactionId = `IT${timestamp}`; // Shorter transaction ID
     const upiId = "adnanshakeel@sbi";
-    const amount = "80";  // Amount without decimals as per spec
-    const merchantName = "Adnan Shakeel Ahmed".replace(/ /g, "%20");  // Proper space encoding
-    const timestamp = Date.now().toString();
-    const transactionId = `IT${timestamp.slice(-8)}`;  // Transaction ID
-    const transactionRef = `REG${timestamp.slice(-12)}`;  // Transaction reference
+    const amount = "1";
+    const merchantName = "Adnan Shakeel Ahmed";
     
-    // Create UPI parameters according to NPCI specifications
-    const commonParams = new URLSearchParams({
-        pa: upiId,                    // Payee address (VPA) - Mandatory
-        pn: merchantName,             // Payee name - Mandatory
-        tr: transactionRef,           // Transaction reference - Conditional, mandatory for merchant transactions
-        am: amount,                   // Amount - Mandatory for dynamic QR/intent
-        cu: "INR",                    // Currency - Optional, only INR supported
-        mc: "0000",                   // Merchant code - Optional
-        tid: transactionId,           // Transaction ID - Optional
-        tn: `Itqan%20Registration%20-%20${formData.category}`,  // Transaction note - Optional
-        url: "https://sio-afe.github.io/register",  // URL for transaction details - Optional
-        mode: "04",                   // Mode - Mandatory (04 for Intent)
-        sign: "NPCI",                 // Signature - Mandatory
-        orgid: "000000",             // Organization ID - Mandatory (000000 for merchant)
-        mid: "000000",               // Merchant ID - Optional
-        msid: "000000",              // Store ID - Optional
-        mtid: "000000",              // Terminal ID - Optional
-        mam: "null"                  // Minimum amount - Optional
-    });
+    // Generate different UPI app links with proper encoding and formatting
+    const commonParams = [
+        `pa=${encodeURIComponent(upiId)}`,
+        `pn=${encodeURIComponent(merchantName)}`,
+        `am=${amount}`,
+        `tr=${transactionId}`,
+        `tn=${encodeURIComponent('Registration_' + formData.full_name.replace(/ /g, '_'))}`,
+        'cu=INR',
+        'mc=ITQAN',  // Merchant code (optional but recommended)
+        'tid=ITQAN'   // Terminal ID (optional but recommended)
+    ].join('&');
+
+    // Proper UPI deep link formats
+    const gpayLink = `gpay://upi/pay?${commonParams}`;
+    const phonepeLink = `phonepe://upi/pay?${commonParams}`;
+    const paytmLink = `paytmmp://upi/pay?${commonParams}`;
     
-    // Create UPI deep links with the standard format
-    const upiLink = `upi://pay?${commonParams.toString()}`;
-    const whatsappLink = `https://wa.me/?text=${encodeURIComponent('Please complete your registration payment using this link: ' + upiLink)}`;
-    
-    // Create payment module HTML with sharing options
+    // Create payment module HTML
     const paymentHtml = `
         <div class="payment-module">
             <div class="payment-module-header">
@@ -811,32 +756,33 @@ async function handleUPIPayment(formData) {
                 <div class="payment-module-amount">₹${amount}</div>
             </div>
             <div class="upi-buttons-container">
-                <a href="${upiLink}" class="upi-app-button">
+                <a href="${gpayLink}" class="upi-app-button gpay-button">
                     <div class="upi-icon gpay-icon"></div>
-                    <span>Pay with UPI</span>
+                    <span>Google Pay</span>
+                </a>
+                <a href="${phonepeLink}" class="upi-app-button phonepe-button">
+                    <div class="upi-icon phonepe-icon"></div>
+                    <span>PhonePe</span>
+                </a>
+                <a href="${paytmLink}" class="upi-app-button paytm-button">
+                    <div class="upi-icon paytm-icon"></div>
+                    <span>Paytm</span>
                 </a>
             </div>
             <div class="payment-module-footer">
                 <div class="transaction-info">
+                    <span>Transaction ID:</span>
+                    <span>${transactionId}</span>
+                </div>
+                <div class="transaction-info">
                     <span>UPI ID:</span>
                     <span>${upiId}</span>
-                </div>
-                <div class="share-payment">
-                    <p>Or share payment link via:</p>
-                    <div class="share-buttons">
-                        <a href="${whatsappLink}" target="_blank" class="share-button whatsapp">
-                            <i class="fab fa-whatsapp"></i> WhatsApp
-                        </a>
-                        <button onclick="navigator.clipboard.writeText('${upiLink}').then(() => alert('Payment link copied!'))" class="share-button copy">
-                            <i class="fas fa-copy"></i> Copy Link
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
     `;
     
-    return { paymentHtml };
+    return { paymentHtml, transactionId };
 }
 
 async function initializeForm() {
@@ -942,14 +888,15 @@ async function initializeForm() {
                 };
 
                 // Generate UPI payment
-                const { paymentHtml } = await handleUPIPayment(formData);
+                const { paymentHtml, transactionId } = await handleUPIPayment(formData);
                 
                 // Show payment UI
                 showMessage('success', paymentHtml, true);
                 
                 // Store form data temporarily
                 sessionStorage.setItem('pendingRegistration', JSON.stringify({
-                    formData
+                    formData,
+                    transactionId
                 }));
                 
             } catch (error) {
@@ -965,7 +912,7 @@ async function initializeForm() {
         window.addEventListener('pageshow', function() {
             const pendingReg = sessionStorage.getItem('pendingRegistration');
             if (pendingReg) {
-                const { formData } = JSON.parse(pendingReg);
+                const { formData, transactionId } = JSON.parse(pendingReg);
                 
                 // Hide payment UI if it's showing
                 const messageContainer = document.querySelector('.message-container');
@@ -982,6 +929,10 @@ async function initializeForm() {
                                 <h3>Registration Successful!</h3>
                                 <p>Your payment has been received and registration is complete.</p>
                                 <div class="transaction-details">
+                                    <div class="transaction-info">
+                                        <span>Transaction ID:</span>
+                                        <span>${transactionId}</span>
+                                    </div>
                                     <div class="transaction-info">
                                         <span>Amount Paid:</span>
                                         <span>₹80</span>
