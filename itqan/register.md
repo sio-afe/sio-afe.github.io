@@ -973,7 +973,6 @@ async function handleUPIPayment(formData) {
         pn: "Adnan Shakeel Ahmed",
         am: "80.00",
         cu: "INR",
-        tn: "Itqan Registration"
     };
     
     // Construct UPI string with proper encoding
