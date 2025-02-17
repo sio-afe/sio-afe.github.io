@@ -834,11 +834,8 @@ window.updateSubcategories = function() {
 
 // Function to handle UPI payment
 async function handleUPIPayment(formData) {
-    const timestamp = Date.now().toString().slice(-8);
-    const transactionId = `IT${timestamp}`; // Shorter transaction ID
-    
     // Use the exact UPI string format provided
-    const upiString = `upi://pay?pa=adnanshakeel@sbi&pn=Adnan%20Shakeel%20Ahmed&am=80.00&cu=INR`;
+    const upiString = `upi://pay?pa=adnanshakeelahmed99@oksbi&pn=Adnan%20Shakeel%20Ahmed&am=80.00&cu=INR`;
     
     // Create payment module HTML
     const paymentHtml = `
@@ -886,10 +883,6 @@ async function handleUPIPayment(formData) {
 
             <div class="payment-module-footer">
                 <div class="transaction-info">
-                    <span>Transaction ID:</span>
-                    <span>${transactionId}</span>
-                </div>
-                <div class="transaction-info">
                     <span>UPI ID:</span>
                     <span>adnanshakeelahmed99@oksbi</span>
                 </div>
@@ -901,7 +894,7 @@ async function handleUPIPayment(formData) {
         </div>
     `;
     
-    return { paymentHtml, transactionId, upiString };
+    return { paymentHtml, upiString };
 }
 
 async function initializeForm() {
@@ -1007,7 +1000,7 @@ async function initializeForm() {
                 };
 
                 // Generate UPI payment
-                const { paymentHtml, transactionId, upiString } = await handleUPIPayment(formData);
+                const { paymentHtml, upiString } = await handleUPIPayment(formData);
                 
                 // Show payment UI
                 showMessage('success', paymentHtml, true);
@@ -1037,8 +1030,7 @@ async function initializeForm() {
                 
                 // Store form data temporarily
                 sessionStorage.setItem('pendingRegistration', JSON.stringify({
-                    formData,
-                    transactionId
+                    formData
                 }));
                 
             } catch (error) {
@@ -1054,7 +1046,7 @@ async function initializeForm() {
         window.addEventListener('pageshow', function() {
             const pendingReg = sessionStorage.getItem('pendingRegistration');
             if (pendingReg) {
-                const { formData, transactionId } = JSON.parse(pendingReg);
+                const { formData } = JSON.parse(pendingReg);
                 
                 // Hide payment UI if it's showing
                 const messageContainer = document.querySelector('.message-container');
@@ -1071,10 +1063,6 @@ async function initializeForm() {
                                 <h3>Registration Successful!</h3>
                                 <p>Your payment has been received and registration is complete.</p>
                                 <div class="transaction-details">
-                                    <div class="transaction-info">
-                                        <span>Transaction ID:</span>
-                                        <span>${transactionId}</span>
-                                    </div>
                                     <div class="transaction-info">
                                         <span>Amount Paid:</span>
                                         <span>₹80</span>
