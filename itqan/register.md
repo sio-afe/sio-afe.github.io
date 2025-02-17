@@ -640,15 +640,27 @@ select.form-control {
 
 .qr-code-container {
     text-align: center;
-    margin: 1rem 0;
-    padding: 1.5rem;
-    border: 1px solid rgba(204, 140, 37, 0.2);
+    padding: 2rem;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.8);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(149, 119, 24, 0.1);
     position: relative;
-    cursor: pointer;
     overflow: hidden;
+    max-width: 350px;
+    margin: 0 auto;
+}
+
+.qr-code-container img {
+    display: block;
+    width: 250px;
+    height: 250px;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+    filter: blur(5px);
+}
+
+.qr-code-container.active img {
+    filter: blur(0);
 }
 
 .qr-code-blur {
@@ -657,12 +669,11 @@ select.form-control {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(3px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background: rgba(255, 255, 255, 0.9);
     transition: all 0.3s ease;
 }
 
@@ -672,311 +683,183 @@ select.form-control {
 }
 
 .qr-code-blur-text {
-    font-size: 1.1rem;
-    color: #333;
+    font-size: 1.2rem;
+    color: #957718;
     margin-bottom: 1rem;
+    font-weight: 500;
 }
 
 .qr-code-blur-button {
-    background: linear-gradient(45deg, #cc8c25, #e2c27d);
+    background: linear-gradient(45deg, #957718, #e2c27d);
     color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
+    padding: 0.75rem 2rem;
+    border-radius: 50px;
     font-weight: 500;
     cursor: pointer;
-    transition: transform 0.2s ease;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(149, 119, 24, 0.15);
 }
 
 .qr-code-blur-button:hover {
     transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(149, 119, 24, 0.25);
+    background: linear-gradient(45deg, #8b6e17, #d4b76f);
 }
 
-.qr-code-container img {
-    width: 200px;
-    height: 200px;
-    margin: 0 auto;
-    display: block;
+.qr-actions {
+    margin: 1.5rem auto;
+    text-align: center;
+    max-width: 350px;
 }
 
-.qr-code-text {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    color: #666;
-}
-
-.payment-divider {
-    display: flex;
+.download-qr-btn {
+    background: linear-gradient(45deg, #957718, #e2c27d);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 50px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
     align-items: center;
-    width: 100%;
-    margin: 1rem 0;
-    gap: 1rem;
+    gap: 0.75rem;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(149, 119, 24, 0.15);
 }
 
-.payment-divider::before,
-.payment-divider::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: rgba(204, 140, 37, 0.2);
+.download-qr-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(149, 119, 24, 0.25);
+    background: linear-gradient(45deg, #8b6e17, #d4b76f);
 }
 
-.payment-divider-text {
-    color: #666;
-    font-size: 0.9rem;
-    white-space: nowrap;
+.download-qr-btn:active {
+    transform: translateY(0);
 }
 
-/* Mobile adjustments */
-@media (max-width: 480px) {
+.download-qr-btn i {
+    font-size: 1.2rem;
+}
+
+.payment-instructions {
+    margin: 1.5rem auto;
+    padding: 1.5rem;
+    border-radius: 12px;
+    background: #f8f9fa;
+    border: 1px solid rgba(204, 140, 37, 0.2);
+    max-width: 350px;
+}
+
+.payment-instructions h4 {
+    color: #957718;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.payment-instructions ol {
+    padding-left: 1.5rem;
+    margin-bottom: 0;
+    list-style-position: outside;
+}
+
+.payment-instructions li {
+    margin-bottom: 1rem;
+    color: #333;
+    line-height: 1.6;
+    padding-left: 0.5rem;
+}
+
+.payment-instructions li:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+    .qr-code-container {
+        padding: 1.5rem;
+        margin: 0 1rem;
+    }
+
     .qr-code-container img {
-        width: 180px;
-        height: 180px;
+        width: 200px;
+        height: 200px;
+    }
+
+    .qr-actions {
+        margin: 1.25rem 1rem;
+    }
+
+    .payment-instructions {
+        margin: 1.25rem 1rem;
+        padding: 1.25rem;
+    }
+
+    .payment-instructions h4 {
+        font-size: 1.1rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .payment-instructions li {
+        font-size: 0.95rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .download-qr-btn {
+        padding: 0.7rem 1.75rem;
+        font-size: 0.95rem;
     }
 }
 
-.verification-section {
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(204, 140, 37, 0.2);
-    display: block;
-}
-
-.verification-section h4 {
-    color: #957718;
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-    text-align: center;
-}
-
-.verification-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.verification-form .form-group {
-    margin-bottom: 1rem;
-}
-
-.verification-form label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #333;
-    font-weight: 500;
-    font-size: 0.95rem;
-}
-
-.verification-form .form-control {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid rgba(204, 140, 37, 0.3);
-    border-radius: 4px;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-}
-
-.verification-form .register-submit-btn {
-    margin-top: 1rem;
-    width: 100%;
-    padding: 0.75rem;
-}
-
-.verification-form .form-control:focus {
-    border-color: #cc8c25;
-    box-shadow: 0 0 0 2px rgba(204, 140, 37, 0.1);
-    outline: none;
-}
-
-.upi-button-container {
-    display: flex;
-    justify-content: center;
-    margin: 2rem 0;
-}
-
-.upi-app-button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1.5rem;
+.payment-info-box {
+    background: linear-gradient(to bottom, rgba(255, 248, 225, 0.5), rgba(255, 248, 225, 0.8));
     border: 1px solid rgba(204, 140, 37, 0.2);
     border-radius: 12px;
-    background: white;
-    transition: all 0.3s ease;
-    width: 100%;
-    max-width: 300px;
-    cursor: pointer;
-}
-
-.upi-app-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    background: #f8f9fa;
-}
-
-.pay-using-text {
-    font-size: 1rem;
-    color: #333;
-    margin-bottom: 0.5rem;
-}
-
-.upi-logo {
-    height: 40px;
-    width: auto;
-    margin-top: 0.5rem;
-    object-fit: contain;
-}
-
-/* Add styles for payment info box */
-.payment-info-box {
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.98));
-    border: 1px solid rgba(204, 140, 37, 0.2);
-    border-radius: 15px;
-    padding: 2rem;
+    padding: 1.5rem;
     margin-bottom: 2rem;
-    box-shadow: 0 4px 12px rgba(204, 140, 37, 0.1);
+    box-shadow: 0 4px 12px rgba(149, 119, 24, 0.1);
 }
 
 .payment-info-box h3 {
     color: #957718;
     font-size: 1.3rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
 .payment-info-box h3 i {
-    color: #cc8c25;
-    font-size: 1.2rem;
+    color: #957718;
 }
 
 .payment-info-box ol {
-    list-style-position: outside;
     padding-left: 1.5rem;
     margin-bottom: 1.5rem;
 }
 
 .payment-info-box li {
-    margin-bottom: 0.8rem;
     color: #333;
-    padding-left: 0.5rem;
-    line-height: 1.5;
-}
-
-/* Remove the golden circle counter styles */
-.payment-info-box li::before {
-    display: none;
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
 }
 
 .fee-info {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
     border-top: 1px solid rgba(204, 140, 37, 0.2);
 }
 
 .fee-info p {
-    margin-bottom: 0.5rem;
+    margin: 0.25rem 0;
     color: #333;
 }
 
 .fee-info p strong {
     color: #957718;
-    font-weight: 600;
-}
-
-.fee-info p small {
-    color: #666;
-    font-size: 0.9rem;
-}
-
-/* Mobile adjustments for payment info box */
-@media (max-width: 768px) {
-    .payment-info-box {
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .payment-info-box h3 {
-        font-size: 1.2rem;
-        margin-bottom: 1.2rem;
-    }
-
-    .payment-info-box li {
-        font-size: 0.95rem;
-        margin-bottom: 0.6rem;
-    }
-
-    .fee-info {
-        margin-top: 1.2rem;
-        padding-top: 1.2rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .payment-info-box {
-        padding: 1.2rem;
-        margin-bottom: 1.2rem;
-    }
-
-    .payment-info-box h3 {
-        font-size: 1.1rem;
-    }
-
-    .payment-info-box li {
-        font-size: 0.9rem;
-    }
-}
-
-.payment-instructions {
-    background: #fff;
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.payment-instructions h4 {
-    color: #957718;
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-}
-
-.payment-instructions ol {
-    padding-left: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.payment-instructions li {
-    margin-bottom: 0.8rem;
-    color: #333;
-    line-height: 1.5;
-}
-
-.alternative-method {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(204, 140, 37, 0.2);
-    text-align: center;
-}
-
-.alternative-method p {
-    margin-bottom: 1rem;
-    color: #666;
-}
-
-@media (max-width: 768px) {
-    .payment-instructions {
-        padding: 1rem;
-    }
-
-    .payment-instructions h4 {
-        font-size: 1.1rem;
-    }
-
-    .payment-instructions li {
-        font-size: 0.95rem;
-        margin-bottom: 0.6rem;
-    }
 }
 </style>
 
@@ -1041,47 +924,21 @@ window.updateSubcategories = function() {
     }
 };
 
-// Function to handle UPI payment
-async function handleUPIPayment(formData) {
-    // Properly encode the UPI parameters
-    const upiParams = {
-        pa: "adnanshakeelahmed99@oksbi",
-        pn: "Adnan Shakeel Ahmed",
-        am: "80",
-        cu: "INR",
-        tn: "Registration Fee by " + formData.full_name + " for " + formData.category.toUpperCase() + " category"
-    };
-    
-    // Construct UPI string with proper encoding
-    const upiString = `upi://pay?${Object.entries(upiParams)
-        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
-        .join('&')}`;
-    
-    // Create payment module HTML
+// Function to handle payment display
+async function handlePaymentDisplay(formData) {
     const paymentHtml = `
         <div class="payment-module">
             <div class="payment-header">
                 <h3>Complete Your Payment</h3>
+                <div class="payment-module-amount">₹80.00</div>
             </div>
             <div class="payment-options">
                 <div class="qr-code-container" id="qrCodeContainer">
+                    <img src="/assets/img/islamic/payment-qr.svg" alt="UPI QR Code">
                     <div class="qr-code-blur">
                         <p class="qr-code-blur-text">Pay using QR Code</p>
-                        <button class="qr-code-blur-button" onclick="showQRAndOpenUPI('${upiString}')">View & Pay</button>
+                        <button class="qr-code-blur-button" onclick="showQRAndPay()">View & Pay</button>
                     </div>
-                    <img src="/assets/img/islamic/payment-qr.svg" alt="UPI QR Code">
-                    <p class="qr-code-text">Scan QR code with any UPI app</p>
-                </div>
-                
-                <div class="payment-divider">
-                    <span class="payment-divider-text">OR</span>
-                </div>
-
-                <div class="upi-button-container">
-                    <button class="upi-app-button" onclick="openUPIApp('${upiString}')">
-                        <span class="pay-using-text">Pay using</span>
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" class="upi-logo">
-                    </button>
                 </div>
             </div>
             
@@ -1099,8 +956,53 @@ async function handleUPIPayment(formData) {
         </div>
     `;
     
-    return { paymentHtml, upiString };
+    return { paymentHtml };
 }
+
+// Update the global functions to handle QR display
+window.showQRAndPay = function() {
+    const qrContainer = document.getElementById('qrCodeContainer');
+    qrContainer.classList.add('active');
+    
+    // Add download button and instructions after QR becomes visible
+    const instructionsHtml = `
+        <div class="qr-actions">
+            <button onclick="downloadQR()" class="download-qr-btn">
+                <i class="fas fa-download"></i>
+                <span>Download QR</span>
+            </button>
+        </div>
+        <div class="payment-instructions">
+            <h4>Payment Instructions</h4>
+            <ol>
+                <li>Download or screenshot the QR code above</li>
+                <li>Open your UPI app (GPay, PhonePe, Paytm, etc.)</li>
+                <li>Select 'Scan QR' or 'Upload QR'</li>
+                <li>Choose the downloaded QR from your gallery</li>
+                <li>Verify the payment details and proceed</li>
+                <li>After successful payment, enter the UPI reference ID below</li>
+            </ol>
+        </div>
+    `;
+    
+    // Insert instructions after the QR container
+    qrContainer.insertAdjacentHTML('afterend', instructionsHtml);
+};
+
+// Add function to download QR code
+window.downloadQR = function() {
+    const qrImage = document.querySelector('#qrCodeContainer img');
+    
+    // Create a temporary link
+    const link = document.createElement('a');
+    link.href = qrImage.src;
+    link.download = 'payment-qr.png';
+    
+    // Programmatically click the link
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
 
 // Initialize form
 async function initializeForm() {
@@ -1200,10 +1102,8 @@ async function initializeForm() {
                     participant_type: 'individual'
                 };
 
-                // Generate UPI payment
-                const { paymentHtml } = await handleUPIPayment(formData);
-                
                 // Show payment UI
+                const { paymentHtml } = await handlePaymentDisplay(formData);
                 showMessage('success', paymentHtml, true);
                 
                 // Store form data temporarily
@@ -1300,71 +1200,4 @@ if (document.readyState === 'loading') {
         console.error('Failed to initialize application:', error);
     });
 }
-
-// Update the global functions to use the passed UPI string
-window.showQRAndOpenUPI = async function(upiString) {
-    const qrContainer = document.getElementById('qrCodeContainer');
-    qrContainer.classList.add('active');
-    
-    // Show instructions for manual scanning
-    const messageContainer = document.querySelector('.message-container');
-    const successMessage = document.querySelector('.success-message');
-    successMessage.querySelector('.message-text').innerHTML = `
-        <div class="payment-instructions">
-            <h4>Payment Instructions</h4>
-            <ol>
-                <li>Take a screenshot of the QR code</li>
-                <li>Open your UPI app (GPay, PhonePe, Paytm, etc.)</li>
-                <li>Select 'Scan QR' or 'Upload QR'</li>
-                <li>Choose the screenshot from your gallery</li>
-                <li>Verify the payment details and proceed</li>
-            </ol>
-            <div class="alternative-method">
-                <p>Alternatively, you can:</p>
-                <button onclick="window.openUPIApp('${upiString}')" class="upi-app-button">
-                    Try Direct UPI App Launch
-                </button>
-            </div>
-        </div>
-    `;
-    messageContainer.style.display = 'flex';
-    successMessage.style.display = 'block';
-    document.querySelector('.error-message').style.display = 'none';
-
-    try {
-        // Try to load jsQR if not already loaded
-        if (!jsQRLoaded) {
-            await loadJsQR();
-        }
-        
-        // Get the QR code image and make it more prominent
-        const qrImage = qrContainer.querySelector('img');
-        qrImage.style.width = '250px';
-        qrImage.style.height = '250px';
-        qrImage.style.margin = '1rem auto';
-        
-    } catch (error) {
-        console.error('Failed to initialize QR scanner:', error);
-        // Even if jsQR fails to load, we still show the QR for manual scanning
-        // No need to show error message as the QR is still visible for screenshot
-    }
-};
-
-window.openUPIApp = function(upiString) {
-    // For Android - use intent URL
-    if (/android/i.test(navigator.userAgent)) {
-        const intentUrl = `intent://pay/${encodeURIComponent(upiString)}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
-        window.location.href = intentUrl;
-    }
-    // For iOS - use fallback to web interface
-    else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
-        window.open(`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiString)}`, '_blank');
-    }
-    // Desktop fallback
-    else {
-        const qrContainer = document.getElementById('qrCodeContainer');
-        QRCode.toCanvas(qrContainer, upiString);
-        qrContainer.style.display = 'block';
-    }
-};
 </script> 
