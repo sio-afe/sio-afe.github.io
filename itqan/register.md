@@ -332,9 +332,9 @@ select.form-control {
 
 .upi-buttons-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.75rem;
-    margin: 0.75rem auto;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 1rem auto;
 }
 
 .upi-app-button {
@@ -496,7 +496,7 @@ select.form-control {
 /* Updated styles for UPI payment buttons */
 .upi-buttons-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     margin: 1rem auto;
 }
@@ -506,12 +506,12 @@ select.form-control {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 1rem;
-    border-radius: 12px;
+    gap: 0.25rem;
+    padding: 0.75rem;
+    border-radius: 8px;
     text-decoration: none;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     border: 1px solid rgba(0, 0, 0, 0.1);
     background: white;
     color: #333;
@@ -532,10 +532,6 @@ select.form-control {
     .upi-buttons-container {
         grid-template-columns: repeat(2, 1fr);
         gap: 0.8rem;
-    }
-    
-    .upi-app-button {
-        padding: 0.8rem;
     }
 }
 
@@ -578,7 +574,7 @@ select.form-control {
 
 .upi-buttons-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     margin: 1rem auto;
 }
@@ -588,12 +584,12 @@ select.form-control {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 1rem;
-    border-radius: 12px;
+    gap: 0.25rem;
+    padding: 0.75rem;
+    border-radius: 8px;
     text-decoration: none;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     border: 1px solid rgba(0, 0, 0, 0.1);
     background: white;
     color: #333;
@@ -732,7 +728,7 @@ async function handleUPIPayment(formData) {
     const transactionId = 'ITQ' + Date.now();
     const upiId = "adnanshakeel@sbi"; // Fixed UPI ID format (changed hyphen to dot)
     const amount = "1";
-    const merchantName = "Itqan Registration";
+    const merchantName = "Adnan Shakeel Ahmed";
     
     // Generate different UPI app links with proper encoding and formatting
     const commonParams = `pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(merchantName)}&am=${amount}&tr=${transactionId}&tn=${encodeURIComponent('Registration for ' + formData.full_name)}&cu=INR`;
@@ -740,7 +736,6 @@ async function handleUPIPayment(formData) {
     const gpayLink = `gpay://upi/pay?${commonParams}&mode=00&purpose=00`;
     const phonepeLink = `phonepe://pay?${commonParams}&mode=00&purpose=00`;
     const paytmLink = `paytmmp://pay?${commonParams}&mode=00&purpose=00`;
-    const genericUpiLink = `upi://pay?${commonParams}`;
     
     // Create payment module HTML
     const paymentHtml = `
@@ -762,10 +757,6 @@ async function handleUPIPayment(formData) {
                     <div class="upi-icon paytm-icon"></div>
                     <span>Paytm</span>
                 </a>
-                <a href="${genericUpiLink}" class="upi-app-button other-upi-button">
-                    <div class="upi-icon other-upi-icon"></div>
-                    <span>Other UPI</span>
-                </a>
             </div>
             <div class="payment-module-footer">
                 <div class="transaction-info">
@@ -776,7 +767,6 @@ async function handleUPIPayment(formData) {
                     <span>UPI ID:</span>
                     <span>${upiId}</span>
                 </div>
-                <p class="payment-note">* If one app doesn't work, please try another UPI app</p>
             </div>
         </div>
     `;
