@@ -1067,7 +1067,7 @@ window.updateSubcategories = function() {
 
 // Function to handle UPI payment
 async function handleUPIPayment(formData) {
-    const upiString = `upi://pay?pa=adnanshakeelahmed99@oksbi&pn=Adnan%20Shakeel%20Ahmed&am=80.00&cu=INR&aid=uGICAgIC1mJGvGQ`;
+    const upiString = `upi://pay?pa=adnanshakeelahmed99@oksbi&pn=Adnan%20Shakeel%20Ahmed&am=1.00&cu=INR&aid=uGICAgIC1mJGvGQ`;
     console.log('Generated UPI String:', upiString);
     
     // Create payment module HTML
