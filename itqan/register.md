@@ -838,7 +838,7 @@ async function handleUPIPayment(formData) {
     const transactionId = `IT${timestamp}`; // Shorter transaction ID
     
     // Use the exact UPI string format provided
-    const upiString = `upi://pay?pa=adnanshakeelahmed99@oksbi&pn=Adnan%20Shakeel%20Ahmed&am=80.00&cu=INR`;
+    const upiString = `upi://pay?pa=adnanshakeel@sbi&pn=Adnan%20Shakeel%20Ahmed&am=80.00&cu=INR`;
     
     // Create payment module HTML
     const paymentHtml = `
