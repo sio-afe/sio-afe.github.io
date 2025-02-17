@@ -993,15 +993,44 @@ window.showQRAndPay = function() {
 window.downloadQR = function() {
     const qrImage = document.querySelector('#qrCodeContainer img');
     
-    // Create a temporary link
-    const link = document.createElement('a');
-    link.href = qrImage.src;
-    link.download = 'payment-qr.png';
+    // Create a canvas element
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
     
-    // Programmatically click the link
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Create a new image to properly load the SVG
+    const img = new Image();
+    img.crossOrigin = 'anonymous';  // Handle CORS if needed
+    
+    img.onload = function() {
+        // Set canvas size to match image
+        canvas.width = img.width;
+        canvas.height = img.height;
+        
+        // Draw image on canvas
+        ctx.drawImage(img, 0, 0);
+        
+        // Convert to PNG and download
+        try {
+            const pngUrl = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.href = pngUrl;
+            link.download = 'payment-qr.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error('Error converting to PNG:', error);
+            alert('Failed to download QR code. Please try taking a screenshot instead.');
+        }
+    };
+    
+    img.onerror = function() {
+        console.error('Error loading image');
+        alert('Failed to load QR code. Please try taking a screenshot instead.');
+    };
+    
+    // Set source to trigger loading
+    img.src = qrImage.src;
 };
 
 // Initialize form
