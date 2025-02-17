@@ -690,6 +690,53 @@ select.form-control {
     margin-top: 1rem;
     text-align: left;
 }
+
+/* Add styles for share buttons */
+.share-payment {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.share-payment p {
+    margin-bottom: 0.5rem;
+    color: #666;
+}
+
+.share-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.share-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9em;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.share-button.whatsapp {
+    background: #25D366;
+    color: white;
+}
+
+.share-button.copy {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.share-button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
 </style>
 
 <script type="module">
@@ -707,7 +754,7 @@ window.updateSubcategories = function() {
 
     if (category === 'hifz') {
         subcategoryGroup.style.display = 'block';
-        if (age && parseInt(age) < 12) {
+        if (age && parseInt(age) < 17) {
             subcategory.innerHTML += '<option value="1juz">1 Juz</option>';
         } else {
             subcategory.innerHTML += `
@@ -725,20 +772,28 @@ window.updateSubcategories = function() {
 
 // Function to handle UPI payment
 async function handleUPIPayment(formData) {
-    const timestamp = Date.now().toString().slice(-8);
-    const transactionId = `IT${timestamp}`; // Shorter transaction ID
     const upiId = "adnanshakeel@sbi";
-    const amount = "80";
+    const amount = "1.00";
     const merchantName = "Adnan Shakeel Ahmed";
+    const mcc = "5734"; // Category code for educational services
+    const note = `Registration for ${formData.category} - ${formData.full_name}`;
     
-    // Generate different UPI app links with proper encoding and formatting
-    const commonParams = `pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(merchantName)}&am=${amount}&tr=${transactionId}&tn=${encodeURIComponent('Registration for ' + formData.full_name)}&cu=INR`;
+    // Include all recommended UPI parameters
+    const commonParams = new URLSearchParams({
+        pa: upiId,           // Payee address (UPI ID)
+        pn: merchantName,     // Payee name
+        tn: note,            // Transaction note
+        am: amount,          // Amount
+        cu: 'INR',           // Currency
+        mc: mcc,             // Merchant category code
+        mode: '04'           // UPI payment mode (04 for collect)
+    }).toString();
     
-    const gpayLink = `gpay://upi/pay?${commonParams}`;
-    const phonepeLink = `phonepe://pay?${commonParams}`;
-    const paytmLink = `paytmmp://pay?${commonParams}`;
+    // Create UPI deep links
+    const upiLink = `upi://pay?${commonParams}`;
+    const whatsappLink = `https://wa.me/?text=${encodeURIComponent('Please complete your registration payment using this link: ' + upiLink)}`;
     
-    // Create payment module HTML
+    // Create payment module HTML with sharing options
     const paymentHtml = `
         <div class="payment-module">
             <div class="payment-module-header">
@@ -746,33 +801,40 @@ async function handleUPIPayment(formData) {
                 <div class="payment-module-amount">₹${amount}</div>
             </div>
             <div class="upi-buttons-container">
-                <a href="${gpayLink}" class="upi-app-button gpay-button">
+                <a href="${upiLink}" class="upi-app-button gpay-button">
                     <div class="upi-icon gpay-icon"></div>
                     <span>Google Pay</span>
                 </a>
-                <a href="${phonepeLink}" class="upi-app-button phonepe-button">
+                <a href="${upiLink}" class="upi-app-button phonepe-button">
                     <div class="upi-icon phonepe-icon"></div>
                     <span>PhonePe</span>
                 </a>
-                <a href="${paytmLink}" class="upi-app-button paytm-button">
+                <a href="${upiLink}" class="upi-app-button paytm-button">
                     <div class="upi-icon paytm-icon"></div>
                     <span>Paytm</span>
                 </a>
             </div>
             <div class="payment-module-footer">
                 <div class="transaction-info">
-                    <span>Transaction ID:</span>
-                    <span>${transactionId}</span>
-                </div>
-                <div class="transaction-info">
                     <span>UPI ID:</span>
                     <span>${upiId}</span>
+                </div>
+                <div class="share-payment">
+                    <p>Or share payment link via:</p>
+                    <div class="share-buttons">
+                        <a href="${whatsappLink}" target="_blank" class="share-button whatsapp">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </a>
+                        <button onclick="navigator.clipboard.writeText('${upiLink}').then(() => alert('Payment link copied!'))" class="share-button copy">
+                            <i class="fas fa-copy"></i> Copy Link
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     `;
     
-    return { paymentHtml, transactionId };
+    return { paymentHtml };
 }
 
 async function initializeForm() {
@@ -878,15 +940,14 @@ async function initializeForm() {
                 };
 
                 // Generate UPI payment
-                const { paymentHtml, transactionId } = await handleUPIPayment(formData);
+                const { paymentHtml } = await handleUPIPayment(formData);
                 
                 // Show payment UI
                 showMessage('success', paymentHtml, true);
                 
                 // Store form data temporarily
                 sessionStorage.setItem('pendingRegistration', JSON.stringify({
-                    formData,
-                    transactionId
+                    formData
                 }));
                 
             } catch (error) {
@@ -902,7 +963,7 @@ async function initializeForm() {
         window.addEventListener('pageshow', function() {
             const pendingReg = sessionStorage.getItem('pendingRegistration');
             if (pendingReg) {
-                const { formData, transactionId } = JSON.parse(pendingReg);
+                const { formData } = JSON.parse(pendingReg);
                 
                 // Hide payment UI if it's showing
                 const messageContainer = document.querySelector('.message-container');
@@ -919,10 +980,6 @@ async function initializeForm() {
                                 <h3>Registration Successful!</h3>
                                 <p>Your payment has been received and registration is complete.</p>
                                 <div class="transaction-details">
-                                    <div class="transaction-info">
-                                        <span>Transaction ID:</span>
-                                        <span>${transactionId}</span>
-                                    </div>
                                     <div class="transaction-info">
                                         <span>Amount Paid:</span>
                                         <span>₹80</span>
