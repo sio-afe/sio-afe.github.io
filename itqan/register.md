@@ -810,7 +810,7 @@ window.updateSubcategories = function() {
 
 // Function to handle UPI payment
 async function handleUPIPayment(formData) {
-    const upiString = `upi://pay?pa=adnanshakeelahmed99@oksbi&pn=Adnan%20Shakeel%20Ahmed&am=80.00&cu=INR&aid=uGICAgIC1mJGvGQ`;
+    const upiString = `upi://pay?pa=adnanshakeelahmed99@oksbi&pn=Adnan%20Shakeel%20Ahmed&am=1.00&cu=INR&aid=uGICAgIC1mJGvGQ`;
     
     // Create payment module HTML
     const paymentHtml = `
@@ -821,19 +821,19 @@ async function handleUPIPayment(formData) {
             </div>
             
             <div class="upi-buttons-container">
-                <a href="${upiString}" class="upi-app-button gpay-button" onclick="startPaymentVerification()">
+                <a href="${upiString}" class="upi-app-button gpay-button" onclick="startPaymentVerification(event)">
                     <div class="upi-icon gpay-icon"></div>
                     <span>Google Pay</span>
                 </a>
-                <a href="${upiString}" class="upi-app-button phonepe-button" onclick="startPaymentVerification()">
+                <a href="${upiString}" class="upi-app-button phonepe-button" onclick="startPaymentVerification(event)">
                     <div class="upi-icon phonepe-icon"></div>
                     <span>PhonePe</span>
                 </a>
-                <a href="${upiString}" class="upi-app-button paytm-button" onclick="startPaymentVerification()">
+                <a href="${upiString}" class="upi-app-button paytm-button" onclick="startPaymentVerification(event)">
                     <div class="upi-icon paytm-icon"></div>
                     <span>Paytm</span>
                 </a>
-                <a href="${upiString}" class="upi-app-button other-upi-button" onclick="startPaymentVerification()">
+                <a href="${upiString}" class="upi-app-button other-upi-button" onclick="startPaymentVerification(event)">
                     <div class="upi-icon other-upi-icon"></div>
                     <span>Other UPI Apps</span>
                 </a>
@@ -858,7 +858,12 @@ async function handleUPIPayment(formData) {
                         <input type="text" id="upiReference" class="form-control" required 
                                placeholder="Enter the UPI reference ID from your payment">
                     </div>
-                    <button type="submit" class="register-submit-btn">Verify Payment</button>
+                    <div class="form-group">
+                        <label for="upiPhone">Phone Number Used for Payment</label>
+                        <input type="tel" id="upiPhone" class="form-control" required 
+                               placeholder="Enter the phone number used for payment">
+                    </div>
+                    <button type="submit" class="register-submit-btn">Complete Registration</button>
                 </form>
             </div>
         </div>
@@ -868,70 +873,15 @@ async function handleUPIPayment(formData) {
 }
 
 // Add this to your global scope
-window.startPaymentVerification = function() {
-    // Show verification section after a short delay to allow UPI app to open
-    setTimeout(() => {
-        const verificationSection = document.getElementById('verificationSection');
-        if (verificationSection) {
-            verificationSection.style.display = 'block';
-            
-            // Add event listener for verification form
-            const verificationForm = document.getElementById('paymentVerificationForm');
-            if (verificationForm) {
-                verificationForm.addEventListener('submit', async function(e) {
-                    e.preventDefault();
-                    const upiReference = document.getElementById('upiReference').value;
-                    
-                    try {
-                        // Get the pending registration data
-                        const pendingReg = sessionStorage.getItem('pendingRegistration');
-                        if (!pendingReg) throw new Error('No pending registration found');
-                        
-                        const { formData } = JSON.parse(pendingReg);
-                        
-                        // Add the UPI reference to the form data
-                        formData.upi_reference = upiReference;
-                        
-                        // Submit the registration with payment details
-                        const { data, error } = await submitRegistration(formData);
-                        if (error) throw error;
-                        
-                        // Show success message
-                        showMessage('success', `
-                            <div class="payment-success">
-                                <i class="fas fa-check-circle"></i>
-                                <h3>Registration Successful!</h3>
-                                <p>Your payment has been verified and registration is complete.</p>
-                                <div class="transaction-details">
-                                    <div class="transaction-info">
-                                        <span>UPI Reference:</span>
-                                        <span>${upiReference}</span>
-                                    </div>
-                                    <div class="transaction-info">
-                                        <span>Amount Paid:</span>
-                                        <span>₹80.00</span>
-                                    </div>
-                                    <div class="transaction-info">
-                                        <span>Category:</span>
-                                        <span>${formData.category}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        `, true);
-                        
-                        // Clear the pending registration
-                        sessionStorage.removeItem('pendingRegistration');
-                        
-                    } catch (error) {
-                        console.error('Verification error:', error);
-                        showMessage('error', error.message || 'Failed to verify payment. Please contact support.');
-                    }
-                });
-            }
-        }
-    }, 1000);
+window.startPaymentVerification = function(event) {
+    // Don't show verification form immediately as user is being redirected to UPI app
+    const verificationSection = document.getElementById('verificationSection');
+    if (verificationSection) {
+        verificationSection.style.display = 'block';
+    }
 };
 
+// Initialize form
 async function initializeForm() {
     try {
         // Wait for Supabase to be initialized
@@ -1044,6 +994,69 @@ async function initializeForm() {
                 sessionStorage.setItem('pendingRegistration', JSON.stringify({
                     formData
                 }));
+
+                // Add event listener for verification form
+                const verificationForm = document.getElementById('paymentVerificationForm');
+                if (verificationForm) {
+                    verificationForm.addEventListener('submit', async function(e) {
+                        e.preventDefault();
+                        const verifyBtn = verificationForm.querySelector('button[type="submit"]');
+                        verifyBtn.disabled = true;
+                        verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+
+                        try {
+                            const upiReference = document.getElementById('upiReference').value;
+                            const upiPhone = document.getElementById('upiPhone').value;
+                            
+                            // Get the pending registration data
+                            const pendingReg = sessionStorage.getItem('pendingRegistration');
+                            if (!pendingReg) throw new Error('No pending registration found');
+                            
+                            const { formData } = JSON.parse(pendingReg);
+                            
+                            // Add the payment verification details
+                            formData.upi_reference = upiReference;
+                            formData.upi_phone = upiPhone;
+                            
+                            // Submit the registration with payment details
+                            const { data, error } = await submitRegistration(formData);
+                            if (error) throw error;
+                            
+                            // Show success message
+                            showMessage('success', `
+                                <div class="payment-success">
+                                    <i class="fas fa-check-circle"></i>
+                                    <h3>Registration Successful!</h3>
+                                    <p>Your payment has been verified and registration is complete.</p>
+                                    <div class="transaction-details">
+                                        <div class="transaction-info">
+                                            <span>UPI Reference:</span>
+                                            <span>${upiReference}</span>
+                                        </div>
+                                        <div class="transaction-info">
+                                            <span>Amount Paid:</span>
+                                            <span>₹80.00</span>
+                                        </div>
+                                        <div class="transaction-info">
+                                            <span>Category:</span>
+                                            <span>${formData.category}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `, true);
+                            
+                            // Clear the pending registration
+                            sessionStorage.removeItem('pendingRegistration');
+                            
+                        } catch (error) {
+                            console.error('Verification error:', error);
+                            showMessage('error', error.message || 'Failed to verify payment. Please contact support.');
+                        } finally {
+                            verifyBtn.disabled = false;
+                            verifyBtn.innerHTML = 'Complete Registration';
+                        }
+                    });
+                }
                 
             } catch (error) {
                 console.error('Error:', error);
@@ -1051,51 +1064,6 @@ async function initializeForm() {
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'Submit';
-            }
-        });
-
-        // Check for pending registration on page load
-        window.addEventListener('pageshow', function() {
-            const pendingReg = sessionStorage.getItem('pendingRegistration');
-            if (pendingReg) {
-                const { formData } = JSON.parse(pendingReg);
-                
-                // Hide payment UI if it's showing
-                const messageContainer = document.querySelector('.message-container');
-                messageContainer.style.display = 'none';
-                
-                // Submit registration and show success message
-                submitRegistration(formData)
-                    .then(({ data, error }) => {
-                        if (error) throw error;
-                        
-                        showMessage('success', `
-                            <div class="payment-success">
-                                <i class="fas fa-check-circle"></i>
-                                <h3>Registration Successful!</h3>
-                                <p>Your payment has been received and registration is complete.</p>
-                                <div class="transaction-details">
-                                    <div class="transaction-info">
-                                        <span>Transaction ID:</span>
-                                        <span>${data.transaction_id}</span>
-                                    </div>
-                                    <div class="transaction-info">
-                                        <span>Amount Paid:</span>
-                                        <span>₹80</span>
-                                    </div>
-                                    <div class="transaction-info">
-                                        <span>Category:</span>
-                                        <span>${formData.category}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        `, true);
-                        
-                        sessionStorage.removeItem('pendingRegistration');
-                    })
-                    .catch(error => {
-                        showMessage('error', error.message || 'Failed to complete registration');
-                    });
             }
         });
 
