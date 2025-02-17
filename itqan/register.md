@@ -1255,89 +1255,93 @@ window.showQRAndOpenUPI = async function(upiString) {
     const qrContainer = document.getElementById('qrCodeContainer');
     qrContainer.classList.add('active');
     
-    try {
-        // Try to load jsQR if not already loaded
-        if (!jsQRLoaded) {
-            await loadJsQR();
-        }
-        
-        // Get the QR code image
-        const qrImage = qrContainer.querySelector('img');
-        
-        // Create a canvas to read the QR code
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        
-        // Create a new image to ensure it's loaded
-        const img = new Image();
-        img.crossOrigin = "Anonymous";  // Handle CORS issues
-        img.src = qrImage.src;
-        
-        img.onload = function() {
-            // Set canvas size to match image
-            canvas.width = img.width;
-            canvas.height = img.height;
+    // Show instructions for better UX
+    const messageContainer = document.querySelector('.message-container');
+    const successMessage = document.querySelector('.success-message');
+    successMessage.querySelector('.message-text').innerHTML = `
+        <div class="payment-instructions">
+            <h4>Payment Instructions</h4>
+            <ol>
+                <li>Take a screenshot of the QR code</li>
+                <li>Open your UPI app (GPay, PhonePe, etc.)</li>
+                <li>Select "Scan QR" or "Pay from Gallery"</li>
+                <li>Select the screenshot you just took</li>
+                <li>Complete the payment</li>
+            </ol>
+            <p class="mt-3"><small>* If direct QR scan doesn't work, please use the screenshot method as described above.</small></p>
+        </div>
+    `;
+    messageContainer.style.display = 'flex';
+    successMessage.style.display = 'block';
+    document.querySelector('.error-message').style.display = 'none';
+
+    // Try to open UPI app after a delay
+    setTimeout(() => {
+        // Try to open the UPI app
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobile) {
+            // For mobile devices, try multiple approaches
+            const intent = `intent://${upiString.replace('upi://', '')}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
+            const fallbackUrl = upiString;
             
-            // Draw image onto canvas
-            context.drawImage(img, 0, 0, canvas.width, canvas.height);
-            
-            // Get image data for QR code reading
-            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            // Create an invisible iframe to try handling the UPI intent
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
             
             try {
-                // Read QR code
-                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                // Try the Android intent first
+                window.location.href = intent;
                 
-                if (code) {
-                    // Use the QR code data which should contain the UPI string
-                    setTimeout(() => {
-                        window.location.href = code.data;
-                    }, 300);
-                } else {
-                    throw new Error('Failed to read QR code');
-                }
-            } catch (error) {
-                console.error('QR Code Error:', error);
-                // Show error message
-                const messageContainer = document.querySelector('.message-container');
-                const errorMessage = document.querySelector('.error-message');
-                errorMessage.querySelector('.message-text').innerHTML = 'Failed to read QR code. Please try using the UPI button below instead.';
-                messageContainer.style.display = 'flex';
-                errorMessage.style.display = 'block';
-                document.querySelector('.success-message').style.display = 'none';
-                
-                // Remove the active state from QR container
-                qrContainer.classList.remove('active');
+                // Fallback to direct UPI URL after a short delay
+                setTimeout(() => {
+                    window.location.href = fallbackUrl;
+                }, 100);
+            } catch (e) {
+                // If intent fails, try direct UPI URL
+                window.location.href = fallbackUrl;
             }
-        };
-        
-        img.onerror = function() {
-            console.error('Failed to load QR image');
-            // Show error message
-            const messageContainer = document.querySelector('.message-container');
-            const errorMessage = document.querySelector('.error-message');
-            errorMessage.querySelector('.message-text').innerHTML = 'Failed to load QR code image. Please try using the UPI button below instead.';
-            messageContainer.style.display = 'flex';
-            errorMessage.style.display = 'block';
-            document.querySelector('.success-message').style.display = 'none';
-            
-            // Remove the active state from QR container
-            qrContainer.classList.remove('active');
-        };
-    } catch (error) {
-        console.error('Failed to initialize QR scanner:', error);
-        // Show error message
-        const messageContainer = document.querySelector('.message-container');
-        const errorMessage = document.querySelector('.error-message');
-        errorMessage.querySelector('.message-text').innerHTML = 'QR code scanner is not available. Please try using the UPI button below instead.';
-        messageContainer.style.display = 'flex';
-        errorMessage.style.display = 'block';
-        document.querySelector('.success-message').style.display = 'none';
-        
-        // Remove the active state from QR container
-        qrContainer.classList.remove('active');
-    }
+        } else {
+            // For desktop, just show the instructions
+            console.log('Desktop device detected, showing QR instructions only');
+        }
+    }, 1000);
 };
+
+// Add styles for payment instructions
+const style = document.createElement('style');
+style.textContent = `
+    .payment-instructions {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .payment-instructions h4 {
+        color: #957718;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+    }
+    
+    .payment-instructions ol {
+        padding-left: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .payment-instructions li {
+        margin-bottom: 0.8rem;
+        color: #333;
+        line-height: 1.4;
+    }
+    
+    .payment-instructions p {
+        color: #666;
+        margin-top: 1rem;
+        font-size: 0.9rem;
+    }
+`;
+document.head.appendChild(style);
 
 window.openUPIApp = function(upiString) {
     window.location.href = upiString;
