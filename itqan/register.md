@@ -436,7 +436,7 @@ select.form-control {
 /* Updated styles for UPI payment buttons */
 .upi-buttons-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     margin: 1rem auto;
     max-width: 600px;
@@ -518,6 +518,251 @@ select.form-control {
         grid-template-columns: 1fr;
     }
 }
+
+/* Add styles for payment module */
+.payment-module {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 400px;
+    margin: 2rem auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.payment-module-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.payment-module-header h3 {
+    color: #333;
+    font-size: 1.2rem;
+    margin: 0;
+    font-weight: 500;
+}
+
+.payment-module-amount {
+    font-size: 2.5rem;
+    color: #1a1a1a;
+    font-weight: 600;
+    margin: 1rem 0;
+}
+
+.upi-buttons-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.upi-app-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: white;
+    color: #333;
+}
+
+.upi-app-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    background: #fafafa;
+}
+
+.upi-app-button:active {
+    transform: translateY(0);
+}
+
+.upi-app-button span {
+    font-size: 0.85em;
+    text-align: center;
+    line-height: 1.2;
+    color: #666;
+}
+
+.upi-icon {
+    width: 40px;
+    height: 40px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.payment-module-footer {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    font-size: 0.9em;
+    color: #666;
+}
+
+.transaction-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.9em;
+}
+
+.transaction-info span:first-child {
+    color: #666;
+}
+
+.transaction-info span:last-child {
+    color: #333;
+    font-weight: 500;
+}
+
+@media (max-width: 600px) {
+    .payment-module {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .upi-buttons-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.8rem;
+    }
+    
+    .upi-app-button {
+        padding: 0.8rem;
+    }
+    
+    .upi-icon {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .payment-module-amount {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .upi-buttons-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .upi-app-button span {
+        font-size: 0.8em;
+    }
+}
+
+/* Success message styles */
+.payment-success {
+    background: linear-gradient(135deg, #f8fdfb 0%, #e8f5e9 100%);
+    border: none;
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    text-align: center;
+    margin: 2rem auto;
+    max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.payment-success::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #43a047, #66bb6a);
+}
+
+.payment-success i {
+    color: #43a047;
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    animation: scaleIn 0.5s ease-out;
+}
+
+.payment-success h3 {
+    color: #1b5e20;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.payment-success p {
+    color: #2e7d32;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+.payment-success .transaction-details {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-top: 1.5rem;
+    text-align: left;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.payment-success .transaction-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.payment-success .transaction-info:last-child {
+    border-bottom: none;
+}
+
+.payment-success .transaction-info span:first-child {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.payment-success .transaction-info span:last-child {
+    color: #1b5e20;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+@keyframes scaleIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 600px) {
+    .payment-success {
+        margin: 1rem;
+        padding: 2rem 1.5rem;
+    }
+    
+    .payment-success h3 {
+        font-size: 1.5rem;
+    }
+    
+    .payment-success p {
+        font-size: 1rem;
+    }
+}
 </style>
 
 <script type="module">
@@ -554,19 +799,21 @@ window.updateSubcategories = function() {
 // Function to handle UPI payment
 async function handleUPIPayment(formData) {
     const transactionId = 'ITQ' + Date.now();
-    const upiId = "adnanshakeelahmed99-1@oksbi"; // Your UPI ID
+    const upiId = "adnanshakeelahmed99@oksbi"; // Your UPI ID
     const amount = "1";
     
     // Generate different UPI app links
-    const genericUpiLink = `upi://pay?pa=${upiId}&pn=Itqan%20Registration&am=${amount}&tr=${transactionId}&tn=Registration%20for%20${encodeURIComponent(formData.full_name)}`;
     const gpayLink = `gpay://upi/pay?pa=${upiId}&pn=Itqan%20Registration&am=${amount}&tr=${transactionId}&tn=Registration%20for%20${encodeURIComponent(formData.full_name)}`;
     const phonepeLink = `phonepe://pay?pa=${upiId}&pn=Itqan%20Registration&am=${amount}&tr=${transactionId}&tn=Registration%20for%20${encodeURIComponent(formData.full_name)}`;
     const paytmLink = `paytmmp://pay?pa=${upiId}&pn=Itqan%20Registration&am=${amount}&tr=${transactionId}&tn=Registration%20for%20${encodeURIComponent(formData.full_name)}`;
     
-    // Create payment button HTML with multiple UPI options
+    // Create payment module HTML
     const paymentHtml = `
-        <div style="text-align: center;">
-            <p style="margin-bottom: 20px; color: #333; font-size: 1.1em;">Choose your preferred payment method</p>
+        <div class="payment-module">
+            <div class="payment-module-header">
+                <h3>Complete Your Payment</h3>
+                <div class="payment-module-amount">₹${amount}</div>
+            </div>
             <div class="upi-buttons-container">
                 <a href="${gpayLink}" class="upi-app-button gpay-button">
                     <div class="upi-icon gpay-icon"></div>
@@ -580,14 +827,16 @@ async function handleUPIPayment(formData) {
                     <div class="upi-icon paytm-icon"></div>
                     <span>Paytm</span>
                 </a>
-                <a href="${genericUpiLink}" class="upi-app-button other-upi-button">
-                    <div class="upi-icon other-upi-icon"></div>
-                    <span>Other<br>UPI Apps</span>
-                </a>
             </div>
-            <div style="margin-top: 20px; padding: 10px; background: rgba(0,0,0,0.03); border-radius: 8px;">
-                <p style="margin: 5px 0; color: #666;">Transaction ID: ${transactionId}</p>
-                <p style="margin: 5px 0; color: #666;">Amount: ₹${amount}</p>
+            <div class="payment-module-footer">
+                <div class="transaction-info">
+                    <span>Transaction ID:</span>
+                    <span>${transactionId}</span>
+                </div>
+                <div class="transaction-info">
+                    <span>UPI ID:</span>
+                    <span>${upiId}</span>
+                </div>
             </div>
         </div>
     `;
@@ -711,22 +960,49 @@ async function initializeForm() {
             if (pendingReg) {
                 const { formData, transactionId } = JSON.parse(pendingReg);
                 
-                // Here you would typically verify the payment status
-                // For now, we'll assume payment is successful if they return to the page
+                // Clear any existing messages
+                document.querySelector('.success-message').style.display = 'none';
+                document.querySelector('.error-message').style.display = 'none';
+                
+                // Submit registration and show success message
                 submitRegistration(formData)
                     .then(({ data, error }) => {
                         if (error) throw error;
-                        showMessage('success', `
-                            <div style="text-align: center;">
-                                <i class="fas fa-check-circle" style="font-size: 2em; margin-bottom: 10px;"></i>
-                                <p>Registration Successful!</p>
-                                <p style="font-size: 0.9em;">Transaction ID: ${transactionId}</p>
+                        
+                        // Show success message
+                        const successMessage = document.querySelector('.success-message');
+                        successMessage.innerHTML = `
+                            <div class="payment-success">
+                                <i class="fas fa-check-circle"></i>
+                                <h3>Registration Successful!</h3>
+                                <p>Thank you for registering for Itqan. Your payment has been received and your registration is now complete.</p>
+                                <div class="transaction-details">
+                                    <div class="transaction-info">
+                                        <span>Transaction ID</span>
+                                        <span>${transactionId}</span>
+                                    </div>
+                                    <div class="transaction-info">
+                                        <span>Amount Paid</span>
+                                        <span>₹1</span>
+                                    </div>
+                                    <div class="transaction-info">
+                                        <span>Category</span>
+                                        <span>${formData.category.charAt(0).toUpperCase() + formData.category.slice(1)}</span>
+                                    </div>
+                                    <div class="transaction-info">
+                                        <span>Name</span>
+                                        <span>${formData.full_name}</span>
+                                    </div>
+                                </div>
                             </div>
-                        `, true);
+                        `;
+                        successMessage.style.display = 'block';
                         sessionStorage.removeItem('pendingRegistration');
                     })
                     .catch(error => {
-                        showMessage('error', error.message || 'Failed to complete registration');
+                        const errorMessage = document.querySelector('.error-message');
+                        errorMessage.querySelector('.message-text').textContent = error.message || 'Failed to complete registration';
+                        errorMessage.style.display = 'flex';
                     });
             }
         });
