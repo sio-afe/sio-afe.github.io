@@ -967,7 +967,19 @@ window.updateSubcategories = function() {
 
 // Function to handle UPI payment
 async function handleUPIPayment(formData) {
-    const upiString = `upi://pay?pa=adnanshakeelahmed99@oksbi&pn=Adnan%20Shakeel%20Ahmed&am=80.00&cu=INR`;
+    // Properly encode the UPI parameters
+    const upiParams = {
+        pa: "adnanshakeelahmed99@oksbi",
+        pn: "Adnan Shakeel Ahmed",
+        am: "80.00",
+        cu: "INR",
+        tn: "Itqan Registration"
+    };
+    
+    // Construct UPI string with proper encoding
+    const upiString = `upi://pay?${Object.entries(upiParams)
+        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+        .join('&')}`;
     
     // Create payment module HTML
     const paymentHtml = `
