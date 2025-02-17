@@ -705,6 +705,100 @@ select.form-control {
     margin: 0 auto;
     display: block;
 }
+
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.qr-section, .upi-buttons-section {
+    text-align: center;
+}
+
+.qr-section h4, .upi-buttons-section h4 {
+    margin-bottom: 1rem;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+.qr-container {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    display: inline-block;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.qr-hint {
+    margin-top: 0.5rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.or-divider {
+    position: relative;
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.or-divider::before,
+.or-divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background: rgba(0,0,0,0.1);
+}
+
+.or-divider::before {
+    left: 0;
+}
+
+.or-divider::after {
+    right: 0;
+}
+
+.or-divider span {
+    background: #f8f9fa;
+    padding: 0.5rem 1rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+@media (min-width: 768px) {
+    .payment-options {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .qr-section, .upi-buttons-section {
+        flex: 1;
+    }
+    
+    .or-divider {
+        margin: 0 2rem;
+    }
+    
+    .or-divider::before,
+    .or-divider::after {
+        width: 1px;
+        height: 45%;
+        left: 50%;
+    }
+    
+    .or-divider::before {
+        top: 0;
+    }
+    
+    .or-divider::after {
+        top: auto;
+        bottom: 0;
+    }
+}
 </style>
 
 <script type="module">
@@ -742,36 +836,54 @@ window.updateSubcategories = function() {
 async function handleUPIPayment(formData) {
     const timestamp = Date.now().toString().slice(-8);
     const transactionId = `IT${timestamp}`; // Shorter transaction ID
-    const amount = "1.00"; // Registration fee in INR with 2 decimal places
     
-    // Use the exact UPI string format
-    const baseUpiString = `upi://pay?pa=adnanshakeelahmed99@oksbi&pn=Adnan%20Shakeel%20Ahmed&am=1.00&cu=INR&aid=uGICAgIC1mJGvGQ`;
+    // Use the exact UPI string format provided
+    const upiString = `upi://pay?pa=adnanshakeelahmed99@oksbi&pn=Adnan%20Shakeel%20Ahmed&am=80.00&cu=INR`;
     
     // Create payment module HTML
     const paymentHtml = `
         <div class="payment-module">
             <div class="payment-module-header">
                 <h3>Complete Your Payment</h3>
-                <div class="payment-module-amount">₹${amount}</div>
+                <div class="payment-module-amount">₹80.00</div>
             </div>
-            <div class="upi-buttons-container">
-                <a href="${baseUpiString}" class="upi-app-button gpay-button">
-                    <div class="upi-icon gpay-icon"></div>
-                    <span>Google Pay</span>
-                </a>
-                <a href="${baseUpiString}" class="upi-app-button phonepe-button">
-                    <div class="upi-icon phonepe-icon"></div>
-                    <span>PhonePe</span>
-                </a>
-                <a href="${baseUpiString}" class="upi-app-button paytm-button">
-                    <div class="upi-icon paytm-icon"></div>
-                    <span>Paytm</span>
-                </a>
-                <a href="${baseUpiString}" class="upi-app-button other-upi-button">
-                    <div class="upi-icon other-upi-icon"></div>
-                    <span>Other UPI Apps</span>
-                </a>
+            
+            <div class="payment-options">
+                <div class="qr-section">
+                    <h4>Scan QR Code</h4>
+                    <div class="qr-container">
+                        <canvas id="qr-canvas"></canvas>
+                    </div>
+                    <p class="qr-hint">Scan with any UPI app</p>
+                </div>
+                
+                <div class="or-divider">
+                    <span>OR</span>
+                </div>
+                
+                <div class="upi-buttons-section">
+                    <h4>Pay using UPI Apps</h4>
+                    <div class="upi-buttons-container">
+                        <a href="${upiString}" class="upi-app-button gpay-button">
+                            <div class="upi-icon gpay-icon"></div>
+                            <span>Google Pay</span>
+                        </a>
+                        <a href="${upiString}" class="upi-app-button phonepe-button">
+                            <div class="upi-icon phonepe-icon"></div>
+                            <span>PhonePe</span>
+                        </a>
+                        <a href="${upiString}" class="upi-app-button paytm-button">
+                            <div class="upi-icon paytm-icon"></div>
+                            <span>Paytm</span>
+                        </a>
+                        <a href="${upiString}" class="upi-app-button other-upi-button">
+                            <div class="upi-icon other-upi-icon"></div>
+                            <span>Other UPI Apps</span>
+                        </a>
+                    </div>
+                </div>
             </div>
+
             <div class="payment-module-footer">
                 <div class="transaction-info">
                     <span>Transaction ID:</span>
@@ -783,13 +895,13 @@ async function handleUPIPayment(formData) {
                 </div>
                 <div class="transaction-info">
                     <span>Amount:</span>
-                    <span>₹${amount}</span>
+                    <span>₹80.00</span>
                 </div>
             </div>
         </div>
     `;
     
-    return { paymentHtml, transactionId };
+    return { paymentHtml, transactionId, upiString };
 }
 
 async function initializeForm() {
@@ -895,10 +1007,33 @@ async function initializeForm() {
                 };
 
                 // Generate UPI payment
-                const { paymentHtml, transactionId } = await handleUPIPayment(formData);
+                const { paymentHtml, transactionId, upiString } = await handleUPIPayment(formData);
                 
                 // Show payment UI
                 showMessage('success', paymentHtml, true);
+                
+                // Generate QR code after payment UI is shown
+                setTimeout(async () => {
+                    const canvas = document.getElementById('qr-canvas');
+                    if (canvas) {
+                        try {
+                            await QRCode.toCanvas(canvas, upiString, {
+                                width: 200,
+                                margin: 1,
+                                color: {
+                                    dark: '#000000',
+                                    light: '#ffffff'
+                                }
+                            });
+                        } catch (qrError) {
+                            console.error('Failed to generate QR code:', qrError);
+                            const qrContainer = canvas.parentElement;
+                            if (qrContainer) {
+                                qrContainer.innerHTML = '<p class="text-danger">Failed to generate QR code. Please use the UPI app buttons below.</p>';
+                            }
+                        }
+                    }
+                }, 100);
                 
                 // Store form data temporarily
                 sessionStorage.setItem('pendingRegistration', JSON.stringify({
