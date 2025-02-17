@@ -244,18 +244,19 @@ scripts:
 
     /* Success/Error messages mobile adjustments */
     .message-container {
-        padding: 0.5rem;
+        padding: 60px 0.5rem 0.5rem 0.5rem; /* Adjusted top padding for mobile */
     }
 
     .success-message,
     .error-message {
-        padding: 1rem;
-        margin: 1rem;
+        padding: 1.25rem;
+        margin: 0 auto 0.5rem auto;
         width: calc(100% - 2rem);
     }
 
     .payment-success {
-        padding: 1rem;
+        padding: 1.5rem;
+        margin: 0 auto 0.5rem auto;
     }
 
     .payment-success i {
@@ -444,7 +445,7 @@ select.form-control {
     align-items: flex-start;
     justify-content: center;
     z-index: 1000;
-    padding: 1rem;
+    padding: 76px 1rem 1rem 1rem; /* Added top padding to account for navbar */
     overflow-y: auto;
 }
 
@@ -457,7 +458,7 @@ select.form-control {
     padding: 1.5rem;
     width: 100%;
     max-width: 400px;
-    margin: 1rem auto;
+    margin: 0 auto;
     animation: slideIn 0.3s ease-out;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
@@ -479,7 +480,7 @@ select.form-control {
     padding: 1.5rem;
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin: 0 auto;
+    margin: 0 auto 1rem auto; /* Added bottom margin */
     width: calc(100% - 2rem);
     max-width: 400px;
     position: relative;
@@ -830,7 +831,7 @@ select.form-control {
     border-radius: 12px;
     padding: 2rem;
     text-align: center;
-    margin: 2rem auto;
+    margin: 0 auto 1rem auto; /* Added bottom margin */
     max-width: 600px;
 }
 
@@ -1273,7 +1274,7 @@ async function initializeForm() {
                                 <div class="payment-success">
                                     <i class="fas fa-check-circle"></i>
                                     <h3>Registration Successful!</h3>
-                                    <p>Your payment has been verified and registration is complete.</p>
+                                    <p>Your details have been registered successfully. The team will contact you soon after verification.</p>
                                     <div class="transaction-details">
                                         <div class="transaction-info">
                                             <span>UPI Reference:</span>
