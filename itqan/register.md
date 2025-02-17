@@ -1351,6 +1351,20 @@ window.showQRAndOpenUPI = async function(upiString) {
 };
 
 window.openUPIApp = function(upiString) {
-    window.location.href = upiString;
+    // For Android - use intent URL
+    if (/android/i.test(navigator.userAgent)) {
+        const intentUrl = `intent://pay/${encodeURIComponent(upiString)}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
+        window.location.href = intentUrl;
+    }
+    // For iOS - use fallback to web interface
+    else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+        window.open(`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiString)}`, '_blank');
+    }
+    // Desktop fallback
+    else {
+        const qrContainer = document.getElementById('qrCodeContainer');
+        QRCode.toCanvas(qrContainer, upiString);
+        qrContainer.style.display = 'block';
+    }
 };
 </script> 
