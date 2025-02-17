@@ -449,7 +449,7 @@ window.updateSubcategories = function() {
 
     if (category === 'hifz') {
         subcategoryGroup.style.display = 'block';
-        if (age && parseInt(age) < 17) {
+        if (age && parseInt(age) < 12) {
             subcategory.innerHTML += '<option value="1juz">1 Juz</option>';
         } else {
             subcategory.innerHTML += `
@@ -560,8 +560,7 @@ async function initializeForm() {
 
                 // Create WhatsApp link with payment details
                 const message = encodeURIComponent(
-                    `Subject: Registration for *${formData.category.charAt(0).toUpperCase() + formData.category.slice(1)} Competition* in Itqan\n\n` +
-                    `Salam!,\n\n` +
+                    `Salam!\n\n` +
                     `I am ${formData.full_name}, registering for ${formData.category.charAt(0).toUpperCase() + formData.category.slice(1)} Competition in Itqan.\n\n` +
                     `Please provide the payment details for registration fee of ₹80.`
                 );
