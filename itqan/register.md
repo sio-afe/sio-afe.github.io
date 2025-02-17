@@ -480,21 +480,26 @@ select.form-control {
     padding: 1.5rem;
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin: 0 auto 1rem auto; /* Added bottom margin */
+    margin: 0 auto 1rem auto;
     width: calc(100% - 2rem);
     max-width: 400px;
     position: relative;
+    border: 1px solid rgba(204, 140, 37, 0.2);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.98));
 }
 
-.payment-module-header {
+.payment-header {
     text-align: center;
     margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(204, 140, 37, 0.2);
 }
 
-.payment-module-header h3 {
-    color: #333;
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
+.payment-header h3 {
+    color: #957718;
+    font-size: 1.3rem;
+    margin: 0;
+    font-weight: 600;
 }
 
 .payment-module-amount {
@@ -506,290 +511,46 @@ select.form-control {
 
 .upi-button-container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     margin: 1.5rem 0;
-    padding: 0;
+    text-align: center;
 }
 
 .upi-app-button {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1rem;
+    justify-content: center;
+    padding: 1.5rem;
+    border: 1px solid rgba(204, 140, 37, 0.2);
     border-radius: 12px;
-    text-decoration: none;
     background: white;
     transition: all 0.3s ease;
     width: 100%;
-    max-width: 280px;
-    margin: 0 auto;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    cursor: pointer;
+    gap: 0.75rem;
 }
 
 .upi-app-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: #f8f9fa;
 }
 
-.upi-icon {
-    width: 40px;
+.pay-using-text {
+    font-size: 1rem;
+    color: #333;
+    margin: 0;
+}
+
+.upi-logo {
     height: 40px;
-    margin-bottom: 0.5rem;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-.payment-module-footer {
-    margin-top: 1.5rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.transaction-info {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-    color: #666;
-}
-
-@media (max-width: 480px) {
-    .payment-module {
-        padding: 1.25rem;
-        margin: 0.5rem auto;
-        width: calc(100% - 1rem);
-    }
-
-    .payment-module-header h3 {
-        font-size: 1.1rem;
-    }
-
-    .payment-module-amount {
-        font-size: 1.6rem;
-    }
-
-    .upi-app-button {
-        padding: 0.875rem;
-    }
-
-    .pay-using-text {
-        font-size: 0.95rem;
-    }
-
-    .upi-logo {
-        height: 28px;
-    }
-
-    .verification-form {
-        padding: 1rem;
-    }
-
-    .verification-form label {
-        font-size: 0.9rem;
-    }
-
-    .verification-form .form-control {
-        padding: 0.625rem;
-        font-size: 0.9rem;
-    }
-
-    .transaction-info {
-        font-size: 0.85rem;
-    }
-}
-
-/* Add styles for payment info box */
-.payment-info-box {
-    background: rgba(149, 119, 24, 0.05);
-    border: 1px solid rgba(149, 119, 24, 0.2);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-}
-
-.payment-info-box h3 {
-    color: #957718;
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.payment-info-box ol {
+    width: auto;
+    object-fit: contain;
     margin: 0;
-    padding-left: 1.5rem;
-    color: #333;
-}
-
-.payment-info-box li {
-    margin-bottom: 0.5rem;
-    line-height: 1.4;
-}
-
-.fee-info {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px dashed rgba(149, 119, 24, 0.2);
-}
-
-.fee-info p {
-    margin: 0.25rem 0;
-    color: #333;
-}
-
-.fee-info small {
-    color: #666;
-    font-style: italic;
-}
-
-/* RTL support for payment info box */
-[dir="rtl"] .payment-info-box ol {
-    padding-right: 1.5rem;
-    padding-left: 0;
-}
-
-[dir="rtl"] .payment-info-box h3 i {
-    margin-left: 0.5rem;
-    margin-right: 0;
-}
-
-/* Updated styles for UPI payment buttons */
-.upi-buttons-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin: 1rem auto;
-}
-
-.upi-app-button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    padding: 0.75rem;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    background: white;
-    color: #333;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.upi-app-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    background: #f8f9fa;
-}
-
-.upi-app-button:active {
-    transform: translateY(0);
-}
-
-@media (max-width: 600px) {
-    .upi-buttons-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.8rem;
-    }
-}
-
-@media (max-width: 360px) {
-    .upi-buttons-container {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Add styles for payment module */
-.payment-module {
-    background: #f8f9fa;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 16px;
-    padding: 2rem;
-    max-width: 600px;
-    margin: 2rem auto;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.payment-module-header {
-    text-align: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.payment-module-header h3 {
-    color: #333;
-    font-size: 1.2rem;
-    margin: 0;
-}
-
-.payment-module-amount {
-    font-size: 2rem;
-    color: #333;
-    font-weight: 600;
-    margin: 1rem 0;
-}
-
-.upi-buttons-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin: 1rem auto;
-}
-
-.upi-app-button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    padding: 0.75rem;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    background: white;
-    color: #333;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.upi-app-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    background: #f8f9fa;
-}
-
-.upi-app-button:active {
-    transform: translateY(0);
-}
-
-.upi-app-button span {
-    font-size: 0.85em;
-    text-align: center;
-    line-height: 1.2;
-    color: #666;
-}
-
-.gpay-icon {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' width='100' height='100' viewBox='0 0 48 48'%3E%3Cpath fill='%23e64a19' d='M42.858,11.975c-4.546-2.624-10.359-1.065-12.985,3.481L23.25,26.927 c-1.916,3.312,0.551,4.47,3.301,6.119l6.372,3.678c2.158,1.245,4.914,0.506,6.158-1.649l6.807-11.789 C48.176,19.325,46.819,14.262,42.858,11.975z'%3E%3C/path%3E%3Cpath fill='%23fbc02d' d='M35.365,16.723l-6.372-3.678c-3.517-1.953-5.509-2.082-6.954,0.214l-9.398,16.275 c-2.624,4.543-1.062,10.353,3.481,12.971c3.961,2.287,9.024,0.93,11.311-3.031l9.578-16.59 C38.261,20.727,37.523,17.968,35.365,16.723z'%3E%3C/path%3E%3Cpath fill='%2343a047' d='M36.591,8.356l-4.476-2.585c-4.95-2.857-11.28-1.163-14.137,3.787L9.457,24.317 c-1.259,2.177-0.511,4.964,1.666,6.22l5.012,2.894c2.475,1.43,5.639,0.582,7.069-1.894l9.735-16.86 c2.017-3.492,6.481-4.689,9.974-2.672L36.591,8.356z'%3E%3C/path%3E%3Cpath fill='%231e88e5' d='M19.189,13.781l-4.838-2.787c-2.158-1.242-4.914-0.506-6.158,1.646l-5.804,10.03 c-2.857,4.936-1.163,11.252,3.787,14.101l3.683,2.121l4.467,2.573l1.939,1.115c-3.442-2.304-4.535-6.92-2.43-10.555l1.503-2.596 l5.504-9.51C22.083,17.774,21.344,15.023,19.189,13.781z'%3E%3C/path%3E%3C/svg%3E");
-}
-
-.phonepe-icon {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' width='100' height='100' viewBox='0 0 48 48'%3E%3Cpath fill='%234527a0' d='M42,37c0,2.762-2.238,5-5,5H11c-2.761,0-5-2.238-5-5V11c0-2.762,2.239-5,5-5h26c2.762,0,5,2.238,5,5 V37z'%3E%3C/path%3E%3Cpath fill='%23fff' d='M32.267,20.171c0-0.681-0.584-1.264-1.264-1.264h-2.334l-5.35-6.25 c-0.486-0.584-1.264-0.778-2.043-0.584l-1.848,0.584c-0.292,0.097-0.389,0.486-0.195,0.681l5.836,5.666h-8.851 c-0.292,0-0.486,0.195-0.486,0.486v0.973c0,0.681,0.584,1.506,1.264,1.506h1.972v4.305c0,3.502,1.611,5.544,4.723,5.544 c0.973,0,1.378-0.097,2.35-0.486v3.112c0,0.875,0.681,1.556,1.556,1.556h0.786c0.292,0,0.584-0.292,0.584-0.584V21.969h2.812 c0.292,0,0.486-0.195,0.486-0.486V20.171z M26.043,28.413c-0.584,0.292-1.362,0.389-1.945,0.389c-1.556,0-2.097-0.778-2.097-2.529 v-4.305h4.043V28.413z'%3E%3C/path%3E%3C/svg%3E");
-}
-
-.paytm-icon {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' width='100' height='100' viewBox='0 0 48 48'%3E%3Cpath fill='%230d47a1' d='M5.446 18.01H.548c-.277 0-.502.167-.503.502L0 30.519c-.001.3.196.45.465.45.735 0 1.335 0 2.07 0C2.79 30.969 3 30.844 3 30.594 3 29.483 3 28.111 3 27l2.126.009c1.399-.092 2.335-.742 2.725-2.052.117-.393.14-.733.14-1.137l.11-2.862C7.999 18.946 6.949 18.181 5.446 18.01zM4.995 23.465C4.995 23.759 4.754 24 4.461 24H3v-3h1.461c.293 0 .534.24.534.535V23.465zM13.938 18h-3.423c-.26 0-.483.08-.483.351 0 .706 0 1.495 0 2.201C10.06 20.846 10.263 21 10.552 21h2.855c.594 0 .532.972 0 1H11.84C10.101 22 9 23.562 9 25.137c0 .42.005 1.406 0 1.863-.008.651-.014 1.311.112 1.899C9.336 29.939 10.235 31 11.597 31h4.228c.541 0 1.173-.474 1.173-1.101v-8.274C17.026 19.443 15.942 18.117 13.938 18zM14 27.55c0 .248-.202.45-.448.45h-1.105C12.201 28 12 27.798 12 27.55v-2.101C12 25.202 12.201 25 12.447 25h1.105C13.798 25 14 25.202 14 25.449V27.55zM18 18.594v5.608c.124 1.6 1.608 2.798 3.171 2.798h1.414c.597 0 .561.969 0 .969H19.49c-.339 0-.462.177-.462.476v2.152c0 .226.183.396.422.396h2.959c2.416 0 3.592-1.159 3.591-3.757v-8.84c0-.276-.175-.383-.342-.383h-2.302c-.224 0-.355.243-.355.422v5.218c0 .199-.111.316-.29.316H21.41c-.264 0-.409-.143-.409-.396v-5.058C21 18.218 20.88 18 20.552 18c-.778 0-1.442 0-2.22 0C18.067 18 18 18.263 18 18.594L18 18.594z'%3E%3C/path%3E%3Cpath fill='%2300adee' d='M27.038 20.569v-2.138c0-.237.194-.431.43-.431H28c1.368-.285 1.851-.62 2.688-1.522.514-.557.966-.704 1.298-.113L32 18h1.569C33.807 18 34 18.194 34 18.431v2.138C34 20.805 33.806 21 33.569 21H32v9.569C32 30.807 31.806 31 31.57 31h-2.14C29.193 31 29 30.807 29 30.569V21h-1.531C27.234 21 27.038 20.806 27.038 20.569L27.038 20.569zM42.991 30.465c0 .294-.244.535-.539.535h-1.91c-.297 0-.54-.241-.54-.535v-6.623-1.871c0-1.284-2.002-1.284-2.002 0v8.494C38 30.759 37.758 31 37.461 31H35.54C35.243 31 35 30.759 35 30.465V18.537C35 18.241 35.243 18 35.54 18h1.976c.297 0 .539.241.539.537v.292c1.32-1.266 3.302-.973 4.416.228 2.097-2.405 5.69-.262 5.523 2.375 0 2.916-.026 6.093-.026 9.033 0 .294-.244.535-.538.535h-1.891C45.242 31 45 30.759 45 30.465c0-2.786 0-5.701 0-8.44 0-1.307-2-1.37-2 0v8.44H42.991z'%3E%3C/path%3E%3C/svg%3E");
-}
-
-.other-upi-icon {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' width='100' height='100' viewBox='0 0 48 48'%3E%3Cpath fill='%230d47a1' d='M5.446 18.01H.548c-.277 0-.502.167-.503.502L0 30.519c-.001.3.196.45.465.45.735 0 1.335 0 2.07 0C2.79 30.969 3 30.844 3 30.594 3 29.483 3 28.111 3 27l2.126.009c1.399-.092 2.335-.742 2.725-2.052.117-.393.14-.733.14-1.137l.11-2.862C7.999 18.946 6.949 18.181 5.446 18.01zM4.995 23.465C4.995 23.759 4.754 24 4.461 24H3v-3h1.461c.293 0 .534.24.534.535V23.465zM13.938 18h-3.423c-.26 0-.483.08-.483.351 0 .706 0 1.495 0 2.201C10.06 20.846 10.263 21 10.552 21h2.855c.594 0 .532.972 0 1H11.84C10.101 22 9 23.562 9 25.137c0 .42.005 1.406 0 1.863-.008.651-.014 1.311.112 1.899C9.336 29.939 10.235 31 11.597 31h4.228c.541 0 1.173-.474 1.173-1.101v-8.274C17.026 19.443 15.942 18.117 13.938 18zM14 27.55c0 .248-.202.45-.448.45h-1.105C12.201 28 12 27.798 12 27.55v-2.101C12 25.202 12.201 25 12.447 25h1.105C13.798 25 14 25.202 14 25.449V27.55zM18 18.594v5.608c.124 1.6 1.608 2.798 3.171 2.798h1.414c.597 0 .561.969 0 .969H19.49c-.339 0-.462.177-.462.476v2.152c0 .226.183.396.422.396h2.959c2.416 0 3.592-1.159 3.591-3.757v-8.84c0-.276-.175-.383-.342-.383h-2.302c-.224 0-.355.243-.355.422v5.218c0 .199-.111.316-.29.316H21.41c-.264 0-.409-.143-.409-.396v-5.058C21 18.218 20.88 18 20.552 18c-.778 0-1.442 0-2.22 0C18.067 18 18 18.263 18 18.594L18 18.594z'%3E%3C/path%3E%3Cpath fill='%2300adee' d='M27.038 20.569v-2.138c0-.237.194-.431.43-.431H28c1.368-.285 1.851-.62 2.688-1.522.514-.557.966-.704 1.298-.113L32 18h1.569C33.807 18 34 18.194 34 18.431v2.138C34 20.805 33.806 21 33.569 21H32v9.569C32 30.807 31.806 31 31.57 31h-2.14C29.193 31 29 30.807 29 30.569V21h-1.531C27.234 21 27.038 20.806 27.038 20.569L27.038 20.569zM42.991 30.465c0 .294-.244.535-.539.535h-1.91c-.297 0-.54-.241-.54-.535v-6.623-1.871c0-1.284-2.002-1.284-2.002 0v8.494C38 30.759 37.758 31 37.461 31H35.54C35.243 31 35 30.759 35 30.465V18.537C35 18.241 35.243 18 35.54 18h1.976c.297 0 .539.241.539.537v.292c1.32-1.266 3.302-.973 4.416.228 2.097-2.405 5.69-.262 5.523 2.375 0 2.916-.026 6.093-.026 9.033 0 .294-.244.535-.538.535h-1.891C45.242 31 45 30.759 45 30.465c0-2.786 0-5.701 0-8.44 0-1.307-2-1.37-2 0v8.44H42.991z'%3E%3C/path%3E%3C/svg%3E");
+    display: block;
 }
 
 .payment-module-footer {
@@ -871,103 +632,126 @@ select.form-control {
 .payment-options {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 1.5rem;
-    margin: 1.5rem 0;
+    margin-top: 1rem;
 }
 
-.qr-section, .upi-buttons-section {
-    text-align: center;
-}
-
-.qr-section h4, .upi-buttons-section h4 {
-    margin-bottom: 1rem;
-    color: #333;
-    font-size: 1.1rem;
-}
-
-.qr-container {
-    background: white;
-    padding: 1rem;
-    border-radius: 8px;
-    display: inline-block;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.qr-hint {
-    margin-top: 0.5rem;
-    color: #666;
-    font-size: 0.9rem;
-}
-
-.or-divider {
-    position: relative;
+.qr-code-container {
     text-align: center;
     margin: 1rem 0;
+    padding: 1.5rem;
+    border: 1px solid rgba(204, 140, 37, 0.2);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
 }
 
-.or-divider::before,
-.or-divider::after {
-    content: '';
+.qr-code-blur {
     position: absolute;
-    top: 50%;
-    width: 45%;
-    height: 1px;
-    background: rgba(0,0,0,0.1);
-}
-
-.or-divider::before {
+    top: 0;
     left: 0;
-}
-
-.or-divider::after {
     right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(3px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
 }
 
-.or-divider span {
-    background: #f8f9fa;
-    padding: 0.5rem 1rem;
+.qr-code-container.active .qr-code-blur {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.qr-code-blur-text {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.qr-code-blur-button {
+    background: linear-gradient(45deg, #cc8c25, #e2c27d);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.qr-code-blur-button:hover {
+    transform: translateY(-2px);
+}
+
+.qr-code-container img {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    display: block;
+}
+
+.qr-code-text {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.payment-divider {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 1rem 0;
+    gap: 1rem;
+}
+
+.payment-divider::before,
+.payment-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: rgba(204, 140, 37, 0.2);
+}
+
+.payment-divider-text {
     color: #666;
     font-size: 0.9rem;
+    white-space: nowrap;
 }
 
-@media (min-width: 768px) {
-    .payment-options {
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
+/* Mobile adjustments */
+@media (max-width: 480px) {
+    .qr-code-container img {
+        width: 180px;
+        height: 180px;
     }
-    
-    .qr-section, .upi-buttons-section {
-        flex: 1;
-    }
-    
-    .or-divider {
-        margin: 0 2rem;
-    }
-    
-    .or-divider::before,
-    .or-divider::after {
-        width: 1px;
-        height: 45%;
-        left: 50%;
-    }
-    
-    .or-divider::before {
-        top: 0;
-    }
-    
-    .or-divider::after {
-        top: auto;
-        bottom: 0;
-    }
+}
+
+.verification-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(204, 140, 37, 0.2);
+    display: block;
+}
+
+.verification-section h4 {
+    color: #957718;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    text-align: center;
 }
 
 .verification-form {
-    background: #f8f9fa;
-    padding: 1.25rem;
-    border-radius: 8px;
-    border: 1px solid rgba(0,0,0,0.1);
-    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .verification-form .form-group {
@@ -985,15 +769,22 @@ select.form-control {
 .verification-form .form-control {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid rgba(0,0,0,0.1);
+    border: 1px solid rgba(204, 140, 37, 0.3);
     border-radius: 4px;
     font-size: 0.95rem;
+    transition: all 0.3s ease;
 }
 
 .verification-form .register-submit-btn {
     margin-top: 1rem;
     width: 100%;
     padding: 0.75rem;
+}
+
+.verification-form .form-control:focus {
+    border-color: #cc8c25;
+    box-shadow: 0 0 0 2px rgba(204, 140, 37, 0.1);
+    outline: none;
 }
 
 .upi-button-container {
@@ -1007,13 +798,13 @@ select.form-control {
     flex-direction: column;
     align-items: center;
     padding: 1.5rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(204, 140, 37, 0.2);
     border-radius: 12px;
-    text-decoration: none;
     background: white;
     transition: all 0.3s ease;
     width: 100%;
     max-width: 300px;
+    cursor: pointer;
 }
 
 .upi-app-button:hover {
@@ -1029,9 +820,111 @@ select.form-control {
 }
 
 .upi-logo {
-    height: 32px;
+    height: 40px;
     width: auto;
     margin-top: 0.5rem;
+    object-fit: contain;
+}
+
+/* Add styles for payment info box */
+.payment-info-box {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.98));
+    border: 1px solid rgba(204, 140, 37, 0.2);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(204, 140, 37, 0.1);
+}
+
+.payment-info-box h3 {
+    color: #957718;
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.payment-info-box h3 i {
+    color: #cc8c25;
+    font-size: 1.2rem;
+}
+
+.payment-info-box ol {
+    list-style-position: outside;
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.payment-info-box li {
+    margin-bottom: 0.8rem;
+    color: #333;
+    padding-left: 0.5rem;
+    line-height: 1.5;
+}
+
+/* Remove the golden circle counter styles */
+.payment-info-box li::before {
+    display: none;
+}
+
+.fee-info {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(204, 140, 37, 0.2);
+}
+
+.fee-info p {
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.fee-info p strong {
+    color: #957718;
+    font-weight: 600;
+}
+
+.fee-info p small {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Mobile adjustments for payment info box */
+@media (max-width: 768px) {
+    .payment-info-box {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .payment-info-box h3 {
+        font-size: 1.2rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .payment-info-box li {
+        font-size: 0.95rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .fee-info {
+        margin-top: 1.2rem;
+        padding-top: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .payment-info-box {
+        padding: 1.2rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .payment-info-box h3 {
+        font-size: 1.1rem;
+    }
+
+    .payment-info-box li {
+        font-size: 0.9rem;
+    }
 }
 </style>
 
@@ -1045,60 +938,67 @@ window.updateSubcategories = function() {
     const subcategory = document.getElementById('subcategory');
     const age = document.getElementById('age').value;
 
+    // Initially hide the subcategory group
+    subcategoryGroup.style.display = 'none';
+    
     // Clear existing options
     subcategory.innerHTML = '<option value="">Select Level</option>';
 
-    if (category === 'hifz') {
-        subcategoryGroup.style.display = 'block';
-        if (age && parseInt(age) < 17) {
-            subcategory.innerHTML += '<option value="1juz">1 Juz</option>';
-        } else {
-            subcategory.innerHTML += `
-                <option value="2juz">2 Juz</option>
-                <option value="full">Full Quran</option>
-            `;
+    // Only proceed if both category and age are selected
+    if (category && age) {
+        const ageNum = parseInt(age);
+        
+        if (category === 'hifz') {
+            subcategoryGroup.style.display = 'block';
+            if (ageNum < 17) {
+                subcategory.innerHTML += '<option value="1juz">1 Juz</option>';
+            } else {
+                subcategory.innerHTML += `
+                    <option value="2juz">2 Juz</option>
+                    <option value="full">Full Quran</option>
+                `;
+            }
+        } else if (category === 'tilawat' || category === 'adhan') {
+            subcategoryGroup.style.display = 'block';
+            subcategory.innerHTML += '<option value="open">Open Age</option>';
         }
-    } else if (category === 'tilawat' || category === 'adhan') {
-        subcategoryGroup.style.display = 'block';
-        subcategory.innerHTML += '<option value="open">Open Age</option>';
-    } else {
-        subcategoryGroup.style.display = 'none';
     }
 };
 
 // Function to handle UPI payment
 async function handleUPIPayment(formData) {
-    const upiString = `upi://pay?pa=adnanshakeelahmed99@oksbi&pn=Adnan%20Shakeel%20Ahmed&am=1.00&cu=INR&aid=uGICAgIC1mJGvGQ`;
-    console.log('Generated UPI String:', upiString);
+    const upiString = `upi://pay?pa=adnanshakeelahmed99@oksbi&pn=Adnan%20Shakeel%20Ahmed&am=80.00&cu=INR`;
     
     // Create payment module HTML
     const paymentHtml = `
         <div class="payment-module">
-            <div class="payment-module-header">
+            <div class="payment-header">
                 <h3>Complete Your Payment</h3>
-                <div class="payment-module-amount">₹80.00</div>
+            </div>
+            <div class="payment-options">
+                <div class="qr-code-container" id="qrCodeContainer">
+                    <div class="qr-code-blur">
+                        <p class="qr-code-blur-text">Pay using QR Code</p>
+                        <button class="qr-code-blur-button" onclick="showQRAndOpenUPI('${upiString}')">View & Pay</button>
+                    </div>
+                    <img src="/assets/img/islamic/payment-qr.svg" alt="UPI QR Code">
+                    <p class="qr-code-text">Scan QR code with any UPI app</p>
+                </div>
+                
+                <div class="payment-divider">
+                    <span class="payment-divider-text">OR</span>
+                </div>
+
+                <div class="upi-button-container">
+                    <button class="upi-app-button" onclick="openUPIApp('${upiString}')">
+                        <span class="pay-using-text">Pay using</span>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" class="upi-logo">
+                    </button>
+                </div>
             </div>
             
-            <div class="upi-button-container">
-                <a href="${upiString}" class="upi-app-button" onclick="startPaymentVerification(event, '${upiString}', 'UPI')">
-                    <div class="pay-using-text">Pay using</div>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" class="upi-logo">
-                </a>
-            </div>
-
-            <div class="payment-module-footer">
-                <div class="transaction-info">
-                    <span>UPI ID:</span>
-                    <span>adnanshakeelahmed99@oksbi</span>
-                </div>
-                <div class="transaction-info">
-                    <span>Amount:</span>
-                    <span>₹80.00</span>
-                </div>
-            </div>
-
-            <div id="verificationSection" style="display: none; margin-top: 2rem;">
-                <h4 style="text-align: center; margin-bottom: 1rem;">Verify Your Payment</h4>
+            <div class="verification-section">
+                <h4>Verify Your Payment</h4>
                 <form id="paymentVerificationForm" class="verification-form">
                     <div class="form-group">
                         <label for="upiReference" class="required">UPI Transaction Reference ID</label>
@@ -1113,19 +1013,6 @@ async function handleUPIPayment(formData) {
     
     return { paymentHtml, upiString };
 }
-
-// Add this to your global scope
-window.startPaymentVerification = function(event, upiString, appName) {
-    console.log('Payment button clicked:', appName);
-    console.log('UPI String:', upiString);
-    console.log('Full href value:', event.currentTarget.href);
-    
-    // Don't show verification form immediately as user is being redirected to UPI app
-    const verificationSection = document.getElementById('verificationSection');
-    if (verificationSection) {
-        verificationSection.style.display = 'block';
-    }
-};
 
 // Initialize form
 async function initializeForm() {
@@ -1171,14 +1058,6 @@ async function initializeForm() {
                     }
                 }
             };
-            
-            // Only set timeout for error messages
-            if (!isPersistent && type === 'error') {
-                setTimeout(() => {
-                    messageContainer.style.display = 'none';
-                    messageElement.style.display = 'none';
-                }, 5000);
-            }
         }
 
         form.addEventListener('submit', async function(e) {
@@ -1333,4 +1212,19 @@ if (document.readyState === 'loading') {
         console.error('Failed to initialize application:', error);
     });
 }
+
+// Update the global functions to use the passed UPI string
+window.showQRAndOpenUPI = function(upiString) {
+    const qrContainer = document.getElementById('qrCodeContainer');
+    qrContainer.classList.add('active');
+    
+    // Open UPI app after a short delay
+    setTimeout(() => {
+        window.location.href = upiString;
+    }, 300); // Reduced delay
+};
+
+window.openUPIApp = function(upiString) {
+    window.location.href = upiString;
+};
 </script> 
