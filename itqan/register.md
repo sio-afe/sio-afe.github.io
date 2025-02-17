@@ -30,7 +30,7 @@ scripts:
     <div class="register-form-container">
         <form id="registrationForm" class="registration-form">
             <div class="form-group">
-                <label for="category">Competition Category</label>
+                <label for="category" class="required">Competition Category</label>
                 <select id="category" name="category" class="form-control" required>
                     <option value="">Select Category</option>
                     <option value="hifz">Hifz Competition</option>
@@ -40,34 +40,34 @@ scripts:
             </div>
 
             <div class="form-group">
-                <label for="fullName">Full Name</label>
+                <label for="fullName" class="required">Full Name</label>
                 <input type="text" id="fullName" name="fullName" class="form-control" required>
             </div>
             
             <div class="form-group">
-                <label for="email">Email</label>
+                <label for="email" class="required">Email</label>
                 <input type="email" id="email" name="email" class="form-control" required>
             </div>
             
             <div class="form-group">
-                <label for="phone">Phone Number</label>
+                <label for="phone" class="required">Phone Number</label>
                 <input type="tel" id="phone" name="phone" class="form-control" required>
             </div>
             
             <div class="form-group">
-                <label for="age">Age</label>
+                <label for="age" class="required">Age</label>
                 <input type="number" id="age" name="age" class="form-control" required min="5" max="100">
             </div>
 
             <div class="form-group" id="subcategoryGroup" style="display: none;">
-                <label for="subcategory">Competition Level </label>
+                <label for="subcategory" class="required">Competition Level</label>
                 <select id="subcategory" name="subcategory" class="form-control" required>
                     <option value="">Select Level</option>
                 </select>
             </div>
             
             <div class="form-group">
-                <label for="address">Address</label>
+                <label for="address" class="required">Address</label>
                 <textarea id="address" name="address" class="form-control" required rows="3"></textarea>
             </div>
             
@@ -119,8 +119,180 @@ scripts:
 }
 
 @media (max-width: 768px) {
+    .register-page {
+        padding: 1rem;
+        margin: 1rem;
+        width: calc(100% - 2rem);
+    }
+    
+    .register-form-container {
+        padding: 1rem;
+    }
+
+    .register-page h1 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
     .thuluth-text {
-        font-size: 1.5em;
+        font-size: 1.3em;
+    }
+
+    .payment-info-box {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .payment-info-box h3 {
+        font-size: 1.1rem;
+    }
+
+    .payment-info-box ol {
+        padding-left: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .payment-info-box li {
+        font-size: 0.9rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .fee-info {
+        margin-top: 0.8rem;
+        padding-top: 0.8rem;
+    }
+
+    .fee-info p {
+        font-size: 0.9rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-group label {
+        font-size: 0.95rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .form-control {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.95rem;
+    }
+
+    .register-submit-btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.95rem;
+    }
+
+    .help-text {
+        font-size: 0.85rem;
+        margin-top: 0.8rem;
+    }
+
+    /* Payment module mobile adjustments */
+    .payment-module {
+        padding: 1rem;
+        margin: 1rem auto;
+        width: calc(100% - 2rem);
+    }
+
+    .payment-module-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .payment-module-amount {
+        font-size: 1.6rem;
+    }
+
+    .upi-button-container {
+        margin: 1rem 0;
+    }
+
+    .upi-app-button {
+        padding: 1rem;
+    }
+
+    .pay-using-text {
+        font-size: 1rem;
+    }
+
+    .upi-logo {
+        height: 32px;
+    }
+
+    .transaction-info {
+        font-size: 0.85rem;
+    }
+
+    /* Verification form mobile adjustments */
+    #verificationSection {
+        margin-top: 1rem;
+    }
+
+    #verificationSection h4 {
+        font-size: 1.1rem;
+    }
+
+    .verification-form {
+        padding: 1rem;
+    }
+
+    .verification-form .form-control {
+        padding: 0.6rem;
+    }
+
+    /* Success/Error messages mobile adjustments */
+    .message-container {
+        padding: 0.5rem;
+    }
+
+    .success-message,
+    .error-message {
+        padding: 1rem;
+        margin: 1rem;
+        width: calc(100% - 2rem);
+    }
+
+    .payment-success {
+        padding: 1rem;
+    }
+
+    .payment-success i {
+        font-size: 2.5rem;
+    }
+
+    .payment-success h3 {
+        font-size: 1.2rem;
+    }
+
+    .transaction-details {
+        padding: 0.8rem;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+    .register-page h1 {
+        font-size: 1.3rem;
+    }
+
+    .thuluth-text {
+        font-size: 1.2em;
+    }
+
+    .payment-module-amount {
+        font-size: 1.4rem;
+    }
+
+    .form-control {
+        padding: 0.5rem 0.7rem;
+        font-size: 0.9rem;
+    }
+
+    .register-submit-btn {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
     }
 }
 
@@ -155,6 +327,17 @@ scripts:
     margin-bottom: 0.5rem;
     color: #07002c;
     font-weight: 500;
+}
+
+.form-group label.required::after {
+    content: '*';
+    color: #957718;
+    margin-left: 4px;
+    font-size: 1.2em;
+    background: linear-gradient(45deg, #957718, #e2c27d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0px 0px 1px rgba(149, 119, 24, 0.3));
 }
 
 .form-control {
@@ -233,17 +416,6 @@ select.form-control {
     line-height: 1.8;
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    .register-page {
-        padding: 1rem;
-    }
-    
-    .register-form-container {
-        padding: 1.5rem;
-    }
-}
-
 /* Add animation for form groups */
 @keyframes slideDown {
     from {
@@ -269,10 +441,11 @@ select.form-control {
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
     display: none;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     z-index: 1000;
     padding: 1rem;
+    overflow-y: auto;
 }
 
 .success-message,
@@ -281,10 +454,10 @@ select.form-control {
     position: relative;
     background: white;
     border-radius: 16px;
-    padding: 2rem;
+    padding: 1.5rem;
     width: 100%;
-    max-width: 500px;
-    margin: auto;
+    max-width: 400px;
+    margin: 1rem auto;
     animation: slideIn 0.3s ease-out;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
@@ -292,7 +465,7 @@ select.form-control {
 @keyframes slideIn {
     from {
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -303,34 +476,38 @@ select.form-control {
 /* Payment module specific styles */
 .payment-module {
     background: #ffffff;
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin: 1rem auto;
-    max-width: 500px;
+    margin: 0 auto;
+    width: calc(100% - 2rem);
+    max-width: 400px;
+    position: relative;
 }
 
 .payment-module-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .payment-module-header h3 {
     color: #333;
+    font-size: 1.2rem;
     margin-bottom: 0.5rem;
 }
 
 .payment-module-amount {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 600;
     color: #07002c;
+    margin: 0.5rem 0;
 }
 
-.upi-buttons-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+.upi-button-container {
+    display: flex;
+    justify-content: center;
     margin: 1.5rem 0;
+    padding: 0;
 }
 
 .upi-app-button {
@@ -338,12 +515,14 @@ select.form-control {
     flex-direction: column;
     align-items: center;
     padding: 1rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    border-radius: 12px;
     text-decoration: none;
-    color: #333;
     background: white;
     transition: all 0.3s ease;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .upi-app-button:hover {
@@ -362,7 +541,7 @@ select.form-control {
 
 .payment-module-footer {
     margin-top: 1.5rem;
-    padding-top: 1.5rem;
+    padding-top: 1rem;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
@@ -370,17 +549,52 @@ select.form-control {
     display: flex;
     justify-content: space-between;
     margin-bottom: 0.5rem;
+    font-size: 0.9rem;
     color: #666;
 }
 
 @media (max-width: 480px) {
-    .upi-buttons-container {
-        grid-template-columns: 1fr;
-    }
-    
     .payment-module {
-        margin: 1rem;
-        padding: 1.5rem;
+        padding: 1.25rem;
+        margin: 0.5rem auto;
+        width: calc(100% - 1rem);
+    }
+
+    .payment-module-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .payment-module-amount {
+        font-size: 1.6rem;
+    }
+
+    .upi-app-button {
+        padding: 0.875rem;
+    }
+
+    .pay-using-text {
+        font-size: 0.95rem;
+    }
+
+    .upi-logo {
+        height: 28px;
+    }
+
+    .verification-form {
+        padding: 1rem;
+    }
+
+    .verification-form label {
+        font-size: 0.9rem;
+    }
+
+    .verification-form .form-control {
+        padding: 0.625rem;
+        font-size: 0.9rem;
+    }
+
+    .transaction-info {
+        font-size: 0.85rem;
     }
 }
 
@@ -749,9 +963,10 @@ select.form-control {
 
 .verification-form {
     background: #f8f9fa;
-    padding: 1.5rem;
+    padding: 1.25rem;
     border-radius: 8px;
     border: 1px solid rgba(0,0,0,0.1);
+    margin: 0;
 }
 
 .verification-form .form-group {
@@ -763,6 +978,7 @@ select.form-control {
     margin-bottom: 0.5rem;
     color: #333;
     font-weight: 500;
+    font-size: 0.95rem;
 }
 
 .verification-form .form-control {
@@ -770,9 +986,50 @@ select.form-control {
     padding: 0.75rem;
     border: 1px solid rgba(0,0,0,0.1);
     border-radius: 4px;
+    font-size: 0.95rem;
 }
 
 .verification-form .register-submit-btn {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 0.75rem;
+}
+
+.upi-button-container {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+.upi-app-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    text-decoration: none;
+    background: white;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 300px;
+}
+
+.upi-app-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: #f8f9fa;
+}
+
+.pay-using-text {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.upi-logo {
+    height: 32px;
+    width: auto;
     margin-top: 0.5rem;
 }
 </style>
@@ -821,22 +1078,10 @@ async function handleUPIPayment(formData) {
                 <div class="payment-module-amount">₹80.00</div>
             </div>
             
-            <div class="upi-buttons-container">
-                <a href="${upiString}" class="upi-app-button gpay-button" onclick="startPaymentVerification(event, '${upiString}', 'Google Pay')">
-                    <div class="upi-icon gpay-icon"></div>
-                    <span>Google Pay</span>
-                </a>
-                <a href="${upiString}" class="upi-app-button phonepe-button" onclick="startPaymentVerification(event, '${upiString}', 'PhonePe')">
-                    <div class="upi-icon phonepe-icon"></div>
-                    <span>PhonePe</span>
-                </a>
-                <a href="${upiString}" class="upi-app-button paytm-button" onclick="startPaymentVerification(event, '${upiString}', 'Paytm')">
-                    <div class="upi-icon paytm-icon"></div>
-                    <span>Paytm</span>
-                </a>
-                <a href="${upiString}" class="upi-app-button other-upi-button" onclick="startPaymentVerification(event, '${upiString}', 'Other UPI App')">
-                    <div class="upi-icon other-upi-icon"></div>
-                    <span>Other UPI Apps</span>
+            <div class="upi-button-container">
+                <a href="${upiString}" class="upi-app-button" onclick="startPaymentVerification(event, '${upiString}', 'UPI')">
+                    <div class="pay-using-text">Pay using</div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" class="upi-logo">
                 </a>
             </div>
 
@@ -855,14 +1100,9 @@ async function handleUPIPayment(formData) {
                 <h4 style="text-align: center; margin-bottom: 1rem;">Verify Your Payment</h4>
                 <form id="paymentVerificationForm" class="verification-form">
                     <div class="form-group">
-                        <label for="upiReference">UPI Transaction Reference ID</label>
+                        <label for="upiReference" class="required">UPI Transaction Reference ID</label>
                         <input type="text" id="upiReference" class="form-control" required 
                                placeholder="Enter the UPI reference ID from your payment">
-                    </div>
-                    <div class="form-group">
-                        <label for="upiPhone">Phone Number Used for Payment</label>
-                        <input type="tel" id="upiPhone" class="form-control" required 
-                               placeholder="Enter the phone number used for payment">
                     </div>
                     <button type="submit" class="register-submit-btn">Complete Registration</button>
                 </form>
@@ -898,15 +1138,18 @@ async function initializeForm() {
         // Add event listeners
         const form = document.getElementById('registrationForm');
         const ageInput = document.getElementById('age');
+        const categorySelect = document.getElementById('category');
         const successMessage = document.querySelector('.success-message');
         const errorMessage = document.querySelector('.error-message');
 
-        if (!form || !ageInput) {
+        if (!form || !ageInput || !categorySelect) {
             throw new Error('Required form elements not found');
         }
 
-        // Add event listeners
+        // Add event listeners for both age and category changes
         ageInput.addEventListener('change', window.updateSubcategories);
+        ageInput.addEventListener('input', window.updateSubcategories);
+        categorySelect.addEventListener('change', window.updateSubcategories);
 
         function showMessage(type, text, isPersistent = false) {
             const messageContainer = document.querySelector('.message-container');
@@ -1011,7 +1254,6 @@ async function initializeForm() {
 
                         try {
                             const upiReference = document.getElementById('upiReference').value;
-                            const upiPhone = document.getElementById('upiPhone').value;
                             
                             // Get the pending registration data
                             const pendingReg = sessionStorage.getItem('pendingRegistration');
@@ -1021,7 +1263,6 @@ async function initializeForm() {
                             
                             // Add the payment verification details
                             formData.upi_reference = upiReference;
-                            formData.upi_phone = upiPhone;
                             
                             // Submit the registration with payment details
                             const { data, error } = await submitRegistration(formData);
