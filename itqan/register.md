@@ -656,7 +656,7 @@ select.form-control {
     height: 250px;
     margin: 0 auto;
     transition: all 0.3s ease;
-    filter: blur(5px);
+    filter: blur(3px);
 }
 
 .qr-code-container.active img {
