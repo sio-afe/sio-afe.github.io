@@ -773,23 +773,20 @@ window.updateSubcategories = function() {
 // Function to handle UPI payment
 async function handleUPIPayment(formData) {
     const upiId = "adnanshakeel@sbi";
-    const amount = "1.00";
+    const amount = "80";  // Removed decimal as it's not required
     const merchantName = "Adnan Shakeel Ahmed";
-    const mcc = "5734"; // Category code for educational services
-    const note = `Registration for ${formData.category} - ${formData.full_name}`;
     
-    // Include all recommended UPI parameters
+    // Create UPI parameters according to NPCI specifications
     const commonParams = new URLSearchParams({
-        pa: upiId,           // Payee address (UPI ID)
-        pn: merchantName,     // Payee name
-        tn: note,            // Transaction note
-        am: amount,          // Amount
-        cu: 'INR',           // Currency
-        mc: mcc,             // Merchant category code
-        mode: '04'           // UPI payment mode (04 for collect)
+        pa: upiId,           // Payee address (VPA) - Mandatory
+        pn: merchantName,     // Payee name - Mandatory
+        am: amount,          // Amount - Mandatory for dynamic mode
+        cu: 'INR',           // Currency - Optional (only INR supported)
+        tn: `Itqan Registration - ${formData.category}`,  // Transaction note - Optional
+        mode: '04'           // Intent mode - Mandatory (04 for Intent)
     }).toString();
     
-    // Create UPI deep links
+    // Create UPI deep links with the standard format
     const upiLink = `upi://pay?${commonParams}`;
     const whatsappLink = `https://wa.me/?text=${encodeURIComponent('Please complete your registration payment using this link: ' + upiLink)}`;
     
