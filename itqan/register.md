@@ -773,21 +773,34 @@ window.updateSubcategories = function() {
 // Function to handle UPI payment
 async function handleUPIPayment(formData) {
     const upiId = "adnanshakeel@sbi";
-    const amount = "80";  // Removed decimal as it's not required
-    const merchantName = "Adnan Shakeel Ahmed";
+    const amount = "80";  // Amount without decimals as per spec
+    const merchantName = "Adnan Shakeel Ahmed".replace(/ /g, "%20");  // Proper space encoding
+    const timestamp = Date.now().toString();
+    const transactionId = `IT${timestamp.slice(-8)}`;  // Transaction ID
+    const transactionRef = `REG${timestamp.slice(-12)}`;  // Transaction reference
     
     // Create UPI parameters according to NPCI specifications
     const commonParams = new URLSearchParams({
-        pa: upiId,           // Payee address (VPA) - Mandatory
-        pn: merchantName,     // Payee name - Mandatory
-        am: amount,          // Amount - Mandatory for dynamic mode
-        cu: 'INR',           // Currency - Optional (only INR supported)
-        tn: `Itqan Registration - ${formData.category}`,  // Transaction note - Optional
-        mode: '04'           // Intent mode - Mandatory (04 for Intent)
-    }).toString();
+        pa: upiId,                    // Payee address (VPA) - Mandatory
+        pn: merchantName,             // Payee name - Mandatory
+        tr: transactionRef,           // Transaction reference - Conditional, mandatory for merchant transactions
+        am: amount,                   // Amount - Mandatory for dynamic QR/intent
+        cu: "INR",                    // Currency - Optional, only INR supported
+        mc: "0000",                   // Merchant code - Optional
+        tid: transactionId,           // Transaction ID - Optional
+        tn: `Itqan%20Registration%20-%20${formData.category}`,  // Transaction note - Optional
+        url: "https://sio-afe.github.io/register",  // URL for transaction details - Optional
+        mode: "04",                   // Mode - Mandatory (04 for Intent)
+        sign: "NPCI",                 // Signature - Mandatory
+        orgid: "000000",             // Organization ID - Mandatory (000000 for merchant)
+        mid: "000000",               // Merchant ID - Optional
+        msid: "000000",              // Store ID - Optional
+        mtid: "000000",              // Terminal ID - Optional
+        mam: "null"                  // Minimum amount - Optional
+    });
     
     // Create UPI deep links with the standard format
-    const upiLink = `upi://pay?${commonParams}`;
+    const upiLink = `upi://pay?${commonParams.toString()}`;
     const whatsappLink = `https://wa.me/?text=${encodeURIComponent('Please complete your registration payment using this link: ' + upiLink)}`;
     
     // Create payment module HTML with sharing options
@@ -798,17 +811,9 @@ async function handleUPIPayment(formData) {
                 <div class="payment-module-amount">₹${amount}</div>
             </div>
             <div class="upi-buttons-container">
-                <a href="${upiLink}" class="upi-app-button gpay-button">
+                <a href="${upiLink}" class="upi-app-button">
                     <div class="upi-icon gpay-icon"></div>
-                    <span>Google Pay</span>
-                </a>
-                <a href="${upiLink}" class="upi-app-button phonepe-button">
-                    <div class="upi-icon phonepe-icon"></div>
-                    <span>PhonePe</span>
-                </a>
-                <a href="${upiLink}" class="upi-app-button paytm-button">
-                    <div class="upi-icon paytm-icon"></div>
-                    <span>Paytm</span>
+                    <span>Pay with UPI</span>
                 </a>
             </div>
             <div class="payment-module-footer">
