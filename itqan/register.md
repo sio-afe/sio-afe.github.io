@@ -971,8 +971,11 @@ async function handleUPIPayment(formData) {
     const upiParams = {
         pa: "adnanshakeelahmed99@oksbi",
         pn: "Adnan Shakeel Ahmed",
-        am: "80.00",
+        am: "80",
         cu: "INR",
+        mc: "0000",
+        tr: "ITQAN" + Date.now(),
+        tn: "Registration Fee by " + formData.full_name + " for " + formData.category.toUpperCase() + " category"
     };
     
     // Construct UPI string with proper encoding
