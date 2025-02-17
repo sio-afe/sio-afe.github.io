@@ -433,10 +433,10 @@ select.form-control {
     margin-right: 0;
 }
 
-/* Add styles for UPI payment buttons */
+/* Updated styles for UPI payment buttons */
 .upi-buttons-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
     margin: 1rem auto;
     max-width: 600px;
@@ -445,11 +445,12 @@ select.form-control {
 
 .upi-app-button {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.8rem 1rem;
-    border-radius: 8px;
+    padding: 1rem;
+    border-radius: 12px;
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s ease;
@@ -457,50 +458,64 @@ select.form-control {
     background: white;
     color: #333;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    min-width: 100px;
+}
+
+.upi-app-button span {
+    font-size: 0.9em;
+    text-align: center;
+    line-height: 1.2;
+    color: #333;
+}
+
+.upi-icon {
+    width: 32px;
+    height: 32px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.gpay-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%234285F4' d='M21.5 11.5h-9v3h5.5c-.5 2.5-2.5 4-5.5 4-3.3 0-6-2.7-6-6s2.7-6 6-6c1.5 0 2.9.5 4 1.5l2.3-2.3C17.3 4 15 3 12.5 3 7.8 3 4 6.8 4 11.5s3.8 8.5 8.5 8.5c7 0 8.5-6.5 8.5-8.5 0-.7 0-1.2-.1-1.5z'/%3E%3C/svg%3E");
+}
+
+.phonepe-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%235f259f' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z'/%3E%3C/svg%3E");
+}
+
+.paytm-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2300B9F1' d='M19 5v2h-4v12h-2V7H9V5h10zM5 5v14h14v2H3V5h2z'/%3E%3C/svg%3E");
+}
+
+.other-upi-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23957718' d='M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z'/%3E%3C/svg%3E");
 }
 
 .upi-app-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: #f8f9fa;
 }
 
 .upi-app-button:active {
     transform: translateY(0);
 }
 
-.gpay-button {
-    border-color: #4285f4;
-    color: #4285f4;
-}
-
-.phonepe-button {
-    border-color: #5f259f;
-    color: #5f259f;
-}
-
-.paytm-button {
-    border-color: #00b9f1;
-    color: #00b9f1;
-}
-
-.other-upi-button {
-    border-color: #957718;
-    color: #957718;
-}
-
-.upi-app-button img {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
-}
-
-@media (max-width: 480px) {
+@media (max-width: 600px) {
     .upi-buttons-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
     }
     
     .upi-app-button {
-        padding: 1rem;
+        padding: 0.8rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .upi-buttons-container {
+        grid-template-columns: 1fr;
     }
 }
 </style>
@@ -539,8 +554,8 @@ window.updateSubcategories = function() {
 // Function to handle UPI payment
 async function handleUPIPayment(formData) {
     const transactionId = 'ITQ' + Date.now();
-    const upiId = "your-upi-id@bank"; // Replace with your actual UPI ID
-    const amount = "80";
+    const upiId = "adnanshakeelahmed99-1@oksbi"; // Your UPI ID
+    const amount = "1";
     
     // Generate different UPI app links
     const genericUpiLink = `upi://pay?pa=${upiId}&pn=Itqan%20Registration&am=${amount}&tr=${transactionId}&tn=Registration%20for%20${encodeURIComponent(formData.full_name)}`;
@@ -551,27 +566,29 @@ async function handleUPIPayment(formData) {
     // Create payment button HTML with multiple UPI options
     const paymentHtml = `
         <div style="text-align: center;">
-            <p style="margin-bottom: 15px;">Choose your preferred payment method</p>
+            <p style="margin-bottom: 20px; color: #333; font-size: 1.1em;">Choose your preferred payment method</p>
             <div class="upi-buttons-container">
                 <a href="${gpayLink}" class="upi-app-button gpay-button">
-                    <img src="/assets/img/payment/gpay.png" alt="Google Pay" width="24" height="24">
-                    Google Pay
+                    <div class="upi-icon gpay-icon"></div>
+                    <span>Google<br>Pay</span>
                 </a>
                 <a href="${phonepeLink}" class="upi-app-button phonepe-button">
-                    <img src="/assets/img/payment/phonepe.png" alt="PhonePe" width="24" height="24">
-                    PhonePe
+                    <div class="upi-icon phonepe-icon"></div>
+                    <span>PhonePe</span>
                 </a>
                 <a href="${paytmLink}" class="upi-app-button paytm-button">
-                    <img src="/assets/img/payment/paytm.png" alt="Paytm" width="24" height="24">
-                    Paytm
+                    <div class="upi-icon paytm-icon"></div>
+                    <span>Paytm</span>
                 </a>
                 <a href="${genericUpiLink}" class="upi-app-button other-upi-button">
-                    <img src="/assets/img/payment/upi.png" alt="Other UPI Apps" width="24" height="24">
-                    Other UPI Apps
+                    <div class="upi-icon other-upi-icon"></div>
+                    <span>Other<br>UPI Apps</span>
                 </a>
             </div>
-            <p style="margin-top: 15px; font-size: 0.9em; color: #666;">Transaction ID: ${transactionId}</p>
-            <p style="margin-top: 10px; font-size: 0.8em; color: #666;">Amount: ₹${amount}</p>
+            <div style="margin-top: 20px; padding: 10px; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                <p style="margin: 5px 0; color: #666;">Transaction ID: ${transactionId}</p>
+                <p style="margin: 5px 0; color: #666;">Amount: ₹${amount}</p>
+            </div>
         </div>
     `;
     
