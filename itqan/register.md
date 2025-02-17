@@ -15,14 +15,14 @@ scripts:
     <div class="payment-info-box">
         <h3><i class="fas fa-info-circle"></i> Registration Process</h3>
         <ol>
-            <li>Fill and submit this registration form</li>
-            <li>You will receive a WhatsApp message with payment details on the registered number</li>
-            <li>Complete the payment via UPI and send the screenshot</li>
-            <li>On Verification, You will be conveyed further details</li>
+            <li>Fill the registration form below</li>
+            <li>Click submit to proceed with UPI payment</li>
+            <li>Complete the payment using your preferred UPI app</li>
+            <li>You will receive confirmation on successful registration</li>
         </ol>
         <div class="fee-info">
             <p><strong>Registration Fee:</strong> ₹80</p>
-            <p><small>* Payment instructions will be shared via WhatsApp after registration</small></p>
+            <p><small>* Payment will be processed via UPI</small></p>
         </div>
     </div>
 
@@ -432,6 +432,77 @@ select.form-control {
     margin-left: 0.5rem;
     margin-right: 0;
 }
+
+/* Add styles for UPI payment buttons */
+.upi-buttons-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin: 1rem auto;
+    max-width: 600px;
+    padding: 0 1rem;
+}
+
+.upi-app-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: white;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.upi-app-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.upi-app-button:active {
+    transform: translateY(0);
+}
+
+.gpay-button {
+    border-color: #4285f4;
+    color: #4285f4;
+}
+
+.phonepe-button {
+    border-color: #5f259f;
+    color: #5f259f;
+}
+
+.paytm-button {
+    border-color: #00b9f1;
+    color: #00b9f1;
+}
+
+.other-upi-button {
+    border-color: #957718;
+    color: #957718;
+}
+
+.upi-app-button img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+@media (max-width: 480px) {
+    .upi-buttons-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .upi-app-button {
+        padding: 1rem;
+    }
+}
 </style>
 
 <script type="module">
@@ -464,6 +535,48 @@ window.updateSubcategories = function() {
         subcategoryGroup.style.display = 'none';
     }
 };
+
+// Function to handle UPI payment
+async function handleUPIPayment(formData) {
+    const transactionId = 'ITQ' + Date.now();
+    const upiId = "your-upi-id@bank"; // Replace with your actual UPI ID
+    const amount = "80";
+    
+    // Generate different UPI app links
+    const genericUpiLink = `upi://pay?pa=${upiId}&pn=Itqan%20Registration&am=${amount}&tr=${transactionId}&tn=Registration%20for%20${encodeURIComponent(formData.full_name)}`;
+    const gpayLink = `gpay://upi/pay?pa=${upiId}&pn=Itqan%20Registration&am=${amount}&tr=${transactionId}&tn=Registration%20for%20${encodeURIComponent(formData.full_name)}`;
+    const phonepeLink = `phonepe://pay?pa=${upiId}&pn=Itqan%20Registration&am=${amount}&tr=${transactionId}&tn=Registration%20for%20${encodeURIComponent(formData.full_name)}`;
+    const paytmLink = `paytmmp://pay?pa=${upiId}&pn=Itqan%20Registration&am=${amount}&tr=${transactionId}&tn=Registration%20for%20${encodeURIComponent(formData.full_name)}`;
+    
+    // Create payment button HTML with multiple UPI options
+    const paymentHtml = `
+        <div style="text-align: center;">
+            <p style="margin-bottom: 15px;">Choose your preferred payment method</p>
+            <div class="upi-buttons-container">
+                <a href="${gpayLink}" class="upi-app-button gpay-button">
+                    <img src="/assets/img/payment/gpay.png" alt="Google Pay" width="24" height="24">
+                    Google Pay
+                </a>
+                <a href="${phonepeLink}" class="upi-app-button phonepe-button">
+                    <img src="/assets/img/payment/phonepe.png" alt="PhonePe" width="24" height="24">
+                    PhonePe
+                </a>
+                <a href="${paytmLink}" class="upi-app-button paytm-button">
+                    <img src="/assets/img/payment/paytm.png" alt="Paytm" width="24" height="24">
+                    Paytm
+                </a>
+                <a href="${genericUpiLink}" class="upi-app-button other-upi-button">
+                    <img src="/assets/img/payment/upi.png" alt="Other UPI Apps" width="24" height="24">
+                    Other UPI Apps
+                </a>
+            </div>
+            <p style="margin-top: 15px; font-size: 0.9em; color: #666;">Transaction ID: ${transactionId}</p>
+            <p style="margin-top: 10px; font-size: 0.8em; color: #666;">Amount: ₹${amount}</p>
+        </div>
+    `;
+    
+    return { paymentHtml, transactionId };
+}
 
 async function initializeForm() {
     try {
@@ -507,7 +620,7 @@ async function initializeForm() {
             
             const submitBtn = form.querySelector('.register-submit-btn');
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
             
             try {
                 // Validate required fields
@@ -553,41 +666,18 @@ async function initializeForm() {
                     address: form.address.value,
                     participant_type: 'individual'
                 };
-                
-                // Submit registration
-                const { data, error } = await submitRegistration(formData);
-                if (error) throw error;
 
-                // Create WhatsApp link with payment details
-                const message = encodeURIComponent(
-                    `Salam!\n\n` +
-                    `I am ${formData.full_name}, registering for ${formData.category.charAt(0).toUpperCase() + formData.category.slice(1)} Competition in Itqan.\n\n` +
-                    `Please provide the payment details for registration fee of ₹80.`
-                );
-                const whatsappLink = `whatsapp://send?phone=918826340784&text=${message}`;
-                const webWhatsappLink = `https://wa.me/918826340784?text=${message}`;
+                // Generate UPI payment
+                const { paymentHtml, transactionId } = await handleUPIPayment(formData);
                 
-                // Create success message with click handler and fallback
-                const successHtml = `
-                    <div style="text-align: left; line-height: 1.5;">
-                        <p style="margin-bottom: 10px;">Registration process started! Please complete these steps:</p>
-                        <ol style="margin: 0; padding-left: 20px;">
-                            <li style="margin-bottom: 8px;">Use your registered phone number (${formData.phone})</li>
-                            <li style="margin-bottom: 8px;">
-                                <a href="${whatsappLink}" 
-                                   onclick="window.location.href='${webWhatsappLink}';return false;" 
-                                   target="_blank" 
-                                   style="color: white; text-decoration: underline;">
-                                    Click here to send WhatsApp message
-                                </a>
-                            </li>
-                            <li style="margin-bottom: 8px;">Wait for payment details and follow the instructions</li>
-                        </ol>
-                    </div>
-                `;
+                // Show payment UI
+                showMessage('success', paymentHtml, true);
                 
-                showMessage('success', successHtml, true);
-                form.reset();
+                // Store form data temporarily
+                sessionStorage.setItem('pendingRegistration', JSON.stringify({
+                    formData,
+                    transactionId
+                }));
                 
             } catch (error) {
                 console.error('Error:', error);
@@ -595,6 +685,32 @@ async function initializeForm() {
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'Submit';
+            }
+        });
+
+        // Check for pending registration on page load
+        window.addEventListener('pageshow', function() {
+            const pendingReg = sessionStorage.getItem('pendingRegistration');
+            if (pendingReg) {
+                const { formData, transactionId } = JSON.parse(pendingReg);
+                
+                // Here you would typically verify the payment status
+                // For now, we'll assume payment is successful if they return to the page
+                submitRegistration(formData)
+                    .then(({ data, error }) => {
+                        if (error) throw error;
+                        showMessage('success', `
+                            <div style="text-align: center;">
+                                <i class="fas fa-check-circle" style="font-size: 2em; margin-bottom: 10px;"></i>
+                                <p>Registration Successful!</p>
+                                <p style="font-size: 0.9em;">Transaction ID: ${transactionId}</p>
+                            </div>
+                        `, true);
+                        sessionStorage.removeItem('pendingRegistration');
+                    })
+                    .catch(error => {
+                        showMessage('error', error.message || 'Failed to complete registration');
+                    });
             }
         });
 
