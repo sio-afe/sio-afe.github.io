@@ -743,9 +743,10 @@ async function handleUPIPayment(formData) {
     const timestamp = Date.now().toString().slice(-8);
     const transactionId = `IT${timestamp}`; // Shorter transaction ID
     const amount = "1.00"; // Registration fee in INR with 2 decimal places
+    const upiId = "adnanshakeel@sbi";
     
     // Use the exact UPI string format
-    const baseUpiString = `upi://pay?pa=adnanshakeelahmed99@oksbi&pn=Adnan%20Shakeel%20Ahmed&am=${amount}&cu=INR&aid=uGICAgIC1mJGvGQ`;
+    const baseUpiString = `upi://pay?pa=${upiId}&pn=Adnan%20Shakeel%20Ahmed&am=${amount}&cu=INR&aid=uGICAgIC1mJGvGQ`;
     
     // Create payment links for different UPI apps (using the same exact format)
     const gpayLink = baseUpiString;
@@ -759,8 +760,8 @@ async function handleUPIPayment(formData) {
                 <h3>Complete Your Payment</h3>
                 <div class="payment-module-amount">₹${amount}</div>
             </div>
-            <div id="qr-container" class="qr-container">
-                <!-- QR code will be generated here -->
+            <div class="qr-container">
+                <canvas id="qr-canvas"></canvas>
             </div>
             <div class="upi-buttons-container">
                 <a href="${gpayLink}" class="upi-app-button gpay-button">
@@ -783,7 +784,7 @@ async function handleUPIPayment(formData) {
                 </div>
                 <div class="transaction-info">
                     <span>UPI ID:</span>
-                    <span>adnanshakeelahmed99@oksbi</span>
+                    <span>${upiId}</span>
                 </div>
                 <div class="transaction-info">
                     <span>Amount:</span>
@@ -904,23 +905,28 @@ async function initializeForm() {
                 // Show payment UI
                 showMessage('success', paymentHtml, true);
                 
-                // Generate QR code after payment UI is shown
-                const qrContainer = document.getElementById('qr-container');
-                if (qrContainer) {
-                    try {
-                        await QRCode.toCanvas(qrContainer, upiString, {
-                            width: 200,
-                            margin: 1,
-                            color: {
-                                dark: '#000000',
-                                light: '#ffffff'
+                // Wait for DOM to update before generating QR code
+                setTimeout(async () => {
+                    const canvas = document.getElementById('qr-canvas');
+                    if (canvas) {
+                        try {
+                            await QRCode.toCanvas(canvas, upiString, {
+                                width: 200,
+                                margin: 1,
+                                color: {
+                                    dark: '#000000',
+                                    light: '#ffffff'
+                                }
+                            });
+                        } catch (qrError) {
+                            console.error('Failed to generate QR code:', qrError);
+                            const qrContainer = canvas.parentElement;
+                            if (qrContainer) {
+                                qrContainer.innerHTML = '<p class="text-danger">Failed to generate QR code. Please use the UPI app buttons below.</p>';
                             }
-                        });
-                    } catch (qrError) {
-                        console.error('Failed to generate QR code:', qrError);
-                        qrContainer.innerHTML = '<p class="text-danger">Failed to generate QR code. Please use the UPI app buttons below.</p>';
+                        }
                     }
-                }
+                }, 100); // Small delay to ensure DOM is updated
                 
                 // Store form data temporarily
                 sessionStorage.setItem('pendingRegistration', JSON.stringify({
