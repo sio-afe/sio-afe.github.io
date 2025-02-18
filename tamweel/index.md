@@ -5,9 +5,9 @@ title: Tamweel - Event Funding Initiative
 
 
 <div class="container-fluid px-0">
-    <div class="hero-section">
+<div class="hero-section">
         <div class="hero-particles"></div>
-        <div class="hero-content">
+    <div class="hero-content">
             <div class="hero-badge">
                 <i class="fas fa-star"></i> Islamic Event Funding
                 <span class="badge-highlight"></span>
@@ -16,14 +16,11 @@ title: Tamweel - Event Funding Initiative
                 <span class="title-effect">Tamweel</span>
                 <span class="arabic">تَمْوِيل</span>
             </h1>
-            <p class="hero-subtitle">Empowering Islamic Events Through Community Support</p>
+        <p class="hero-subtitle">Empowering Islamic Events Through Community Support</p>
             <div class="hero-cta">
                 <a href="/tamweel/submit" class="btn btn-glow btn-lg pulse-animation">
                     <i class="fas fa-paper-plane"></i> Submit Your Pitch
                     <span class="btn-effect"></span>
-                </a>
-                <a href="/tamweel/success-stories" class="btn btn-outline-light btn-lg ms-3 hover-float">
-                    <i class="fas fa-book-open"></i> Success Stories
                 </a>
             </div>
             <div class="hero-stats">
@@ -64,65 +61,62 @@ title: Tamweel - Event Funding Initiative
         <div class="section-header text-center mb-5">
             <h2 class="display-4">How We Help You</h2>
             <p class="lead text-muted">Your journey from idea to impactful Islamic event</p>
-        </div>
+</div>
 
-        <div class="feature-grid">
+<div class="feature-grid">
             <div class="feature-card hover-lift">
                 <div class="feature-icon-wrapper">
-                    <div class="feature-icon">
-                        <i class="fas fa-lightbulb"></i>
+        <div class="feature-icon">
+            <i class="fas fa-lightbulb"></i>
                     </div>
-                </div>
-                <h3>Submit Your Idea</h3>
-                <p>Have a vision for an Islamic event? Share your idea with us through our detailed pitch form.</p>
+        </div>
+        <h3>Submit Your Idea</h3>
+        <p>Have a vision for an Islamic event? Share your idea with us through our detailed pitch form.</p>
                 <a href="/tamweel/submit" class="btn btn-primary">
                     <span>Get Started</span>
                     <i class="fas fa-arrow-right ms-2"></i>
                 </a>
-            </div>
-            
+    </div>
+    
             <div class="feature-card hover-lift">
                 <div class="feature-icon-wrapper">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
+        <div class="feature-icon">
+            <i class="fas fa-chart-line"></i>
                     </div>
-                </div>
-                <h3>Get Evaluated</h3>
-                <p>Our committee reviews proposals based on impact, feasibility, and alignment with Islamic values.</p>
-                <a href="/tamweel/guidelines" class="btn btn-primary">
-                    <span>View Criteria</span>
-                    <i class="fas fa-arrow-right ms-2"></i>
-                </a>
-            </div>
-            
-            <div class="feature-card hover-lift">
-                <div class="feature-icon-wrapper">
-                    <div class="feature-icon">
-                        <i class="fas fa-hand-holding-usd"></i>
-                    </div>
-                </div>
-                <h3>Receive Funding</h3>
-                <p>Selected projects receive financial support and guidance to bring their vision to life.</p>
-                <a href="/tamweel/success-stories" class="btn btn-primary">
-                    <span>Success Stories</span>
-                    <i class="fas fa-arrow-right ms-2"></i>
-                </a>
-            </div>
-            
-            <div class="feature-card hover-lift">
-                <div class="feature-icon-wrapper">
-                    <div class="feature-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                </div>
-                <h3>Get Mentorship</h3>
-                <p>Work with experienced mentors who'll guide you through event planning and execution.</p>
-                <a href="/tamweel/mentors" class="btn btn-primary">
-                    <span>Meet Mentors</span>
-                    <i class="fas fa-arrow-right ms-2"></i>
-                </a>
-            </div>
         </div>
+        <h3>Get Evaluated</h3>
+        <p>Our committee reviews proposals based on impact, feasibility, and alignment with Islamic values.</p>
+                <div class="text-muted mt-3">
+                    <i class="fas fa-info-circle"></i> Evaluation criteria details coming soon
+                </div>
+    </div>
+    
+            <div class="feature-card hover-lift">
+                <div class="feature-icon-wrapper">
+        <div class="feature-icon">
+            <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+        </div>
+        <h3>Receive Funding</h3>
+        <p>Selected projects receive financial support and guidance to bring their vision to life.</p>
+                <div class="text-muted mt-3">
+                    <i class="fas fa-info-circle"></i> Success stories coming soon
+                </div>
+    </div>
+    
+            <div class="feature-card hover-lift">
+                <div class="feature-icon-wrapper">
+        <div class="feature-icon">
+            <i class="fas fa-users"></i>
+                    </div>
+        </div>
+        <h3>Get Mentorship</h3>
+        <p>Work with experienced mentors who'll guide you through event planning and execution.</p>
+                <div class="text-muted mt-3">
+                    <i class="fas fa-info-circle"></i> Mentor profiles coming soon
+                </div>
+    </div>
+</div>
 
         <div class="process-section">
             <div class="section-header text-center mb-5">
@@ -130,63 +124,63 @@ title: Tamweel - Event Funding Initiative
                 <p class="lead text-muted">Your path from ideation to successful execution</p>
             </div>
             
-            <div class="timeline">
+    <div class="timeline">
                 <div class="timeline-item fade-in">
-                    <div class="timeline-icon">
-                        <i class="fas fa-file-alt"></i>
-                    </div>
-                    <div class="timeline-content">
+            <div class="timeline-icon">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <div class="timeline-content">
                         <span class="timeline-number">01</span>
                         <h3>Submit Your Pitch</h3>
-                        <p>Fill out our detailed pitch form explaining your event idea, target audience, budget, and expected impact.</p>
-                    </div>
-                </div>
-                
-                <div class="timeline-item fade-in">
-                    <div class="timeline-icon">
-                        <i class="fas fa-search"></i>
-                    </div>
-                    <div class="timeline-content">
-                        <span class="timeline-number">02</span>
-                        <h3>Initial Review</h3>
-                        <p>Our committee evaluates your proposal based on our criteria and may request additional information.</p>
-                    </div>
-                </div>
-                
-                <div class="timeline-item fade-in">
-                    <div class="timeline-icon">
-                        <i class="fas fa-presentation"></i>
-                    </div>
-                    <div class="timeline-content">
-                        <span class="timeline-number">03</span>
-                        <h3>Presentation</h3>
-                        <p>Shortlisted candidates present their detailed plans to the committee.</p>
-                    </div>
-                </div>
-                
-                <div class="timeline-item fade-in">
-                    <div class="timeline-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="timeline-content">
-                        <span class="timeline-number">04</span>
-                        <h3>Funding Decision</h3>
-                        <p>Selected projects receive funding approval and are assigned mentors.</p>
-                    </div>
-                </div>
-                
-                <div class="timeline-item fade-in">
-                    <div class="timeline-icon">
-                        <i class="fas fa-rocket"></i>
-                    </div>
-                    <div class="timeline-content">
-                        <span class="timeline-number">05</span>
-                        <h3>Execute & Report</h3>
-                        <p>Implement your event with our support and document its impact on the community.</p>
-                    </div>
-                </div>
+                <p>Fill out our detailed pitch form explaining your event idea, target audience, budget, and expected impact.</p>
             </div>
         </div>
+        
+                <div class="timeline-item fade-in">
+            <div class="timeline-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="timeline-content">
+                        <span class="timeline-number">02</span>
+                        <h3>Initial Review</h3>
+                <p>Our committee evaluates your proposal based on our criteria and may request additional information.</p>
+            </div>
+        </div>
+        
+                <div class="timeline-item fade-in">
+            <div class="timeline-icon">
+                <i class="fas fa-presentation"></i>
+            </div>
+            <div class="timeline-content">
+                        <span class="timeline-number">03</span>
+                        <h3>Presentation</h3>
+                <p>Shortlisted candidates present their detailed plans to the committee.</p>
+            </div>
+        </div>
+        
+                <div class="timeline-item fade-in">
+            <div class="timeline-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="timeline-content">
+                        <span class="timeline-number">04</span>
+                        <h3>Funding Decision</h3>
+                <p>Selected projects receive funding approval and are assigned mentors.</p>
+            </div>
+        </div>
+        
+                <div class="timeline-item fade-in">
+            <div class="timeline-icon">
+                <i class="fas fa-rocket"></i>
+            </div>
+            <div class="timeline-content">
+                        <span class="timeline-number">05</span>
+                        <h3>Execute & Report</h3>
+                <p>Implement your event with our support and document its impact on the community.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
         <div class="criteria-section">
             <div class="section-header text-center mb-5">
@@ -194,55 +188,55 @@ title: Tamweel - Event Funding Initiative
                 <p class="lead text-muted">What we look for in your proposal</p>
             </div>
             
-            <div class="criteria-grid">
+    <div class="criteria-grid">
                 <div class="criteria-item hover-lift">
                     <div class="criteria-icon">
-                        <i class="fas fa-mosque"></i>
+            <i class="fas fa-mosque"></i>
                     </div>
-                    <h3>Islamic Values</h3>
-                    <p>Event must align with Islamic principles and values</p>
+            <h3>Islamic Values</h3>
+            <p>Event must align with Islamic principles and values</p>
                     <div class="criteria-badge">Essential</div>
-                </div>
-                
-                <div class="criteria-item hover-lift">
-                    <div class="criteria-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h3>Community Impact</h3>
-                    <p>Clear benefit to the student/youth community</p>
-                    <div class="criteria-badge">High Priority</div>
-                </div>
-                
-                <div class="criteria-item hover-lift">
-                    <div class="criteria-icon">
-                        <i class="fas fa-calculator"></i>
-                    </div>
-                    <h3>Realistic Budget</h3>
-                    <p>Well-planned budget and timeline</p>
-                    <div class="criteria-badge">Required</div>
-                </div>
-                
-                <div class="criteria-item hover-lift">
-                    <div class="criteria-icon">
-                        <i class="fas fa-chart-bar"></i>
-                    </div>
-                    <h3>Success Metrics</h3>
-                    <p>Clear goals and measurement criteria</p>
-                    <div class="criteria-badge">Important</div>
-                </div>
-                
-                <div class="criteria-item hover-lift">
-                    <div class="criteria-icon">
-                        <i class="fas fa-seedling"></i>
-                    </div>
-                    <h3>Sustainability</h3>
-                    <p>Long-term impact and growth potential</p>
-                    <div class="criteria-badge">Preferred</div>
-                </div>
-            </div>
         </div>
+        
+                <div class="criteria-item hover-lift">
+                    <div class="criteria-icon">
+            <i class="fas fa-users"></i>
+                    </div>
+            <h3>Community Impact</h3>
+            <p>Clear benefit to the student/youth community</p>
+                    <div class="criteria-badge">High Priority</div>
+        </div>
+        
+                <div class="criteria-item hover-lift">
+                    <div class="criteria-icon">
+            <i class="fas fa-calculator"></i>
+                    </div>
+            <h3>Realistic Budget</h3>
+            <p>Well-planned budget and timeline</p>
+                    <div class="criteria-badge">Required</div>
+        </div>
+        
+                <div class="criteria-item hover-lift">
+                    <div class="criteria-icon">
+            <i class="fas fa-chart-bar"></i>
+                    </div>
+            <h3>Success Metrics</h3>
+            <p>Clear goals and measurement criteria</p>
+                    <div class="criteria-badge">Important</div>
+        </div>
+        
+                <div class="criteria-item hover-lift">
+                    <div class="criteria-icon">
+            <i class="fas fa-seedling"></i>
+                    </div>
+            <h3>Sustainability</h3>
+            <p>Long-term impact and growth potential</p>
+                    <div class="criteria-badge">Preferred</div>
+        </div>
+    </div>
+</div>
 
-        <div class="cta-section">
+<div class="cta-section">
             <div class="cta-pattern"></div>
             <div class="cta-content text-center">
                 <h2 class="display-4 text-white mb-4">Ready to Make an Impact?</h2>
@@ -250,9 +244,6 @@ title: Tamweel - Event Funding Initiative
                 <div class="cta-buttons">
                     <a href="/tamweel/submit" class="btn btn-light btn-lg pulse-animation">
                         <i class="fas fa-paper-plane"></i> Submit Your Pitch
-                    </a>
-                    <a href="/tamweel/contact" class="btn btn-outline-light btn-lg ms-3">
-                        <i class="fas fa-question-circle"></i> Have Questions?
                     </a>
                 </div>
             </div>
@@ -724,7 +715,7 @@ title: Tamweel - Event Funding Initiative
         height: 1px;
     }
 }
-</style>
+</style> 
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
