@@ -227,6 +227,7 @@ title: FAQ - إتقان
     position: relative;
     text-align: center;
     padding: 2rem 0;
+    
     margin-bottom: 2rem;
     overflow: hidden;
 }

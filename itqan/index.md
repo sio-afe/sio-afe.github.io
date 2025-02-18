@@ -23,7 +23,7 @@ title: Qur'an Recitation Competition
     <div class="col-md-4 mb-4">
         <div class="feature-card">
             <i class="fas fa-microphone-alt fa-3x mb-3"></i>
-            <h3>Tilawat Competition</h3>
+            <h3>Tarteel Competition</h3>
             <p>Showcase your talent in beautiful recitation of the Holy Qur'an with proper Tajweed</p>
         </div>
     </div>
@@ -44,6 +44,32 @@ title: Qur'an Recitation Competition
                 <div class="register-content">
                     <h2 class="mb-4">Join the <span class="thuluth-text">إتقان</span> Competition</h2>
                     <p class="lead mb-4">Showcase your talent in Quran recitation and Azan. Register now to be part of this blessed journey.</p>
+                    <div class="event-info-box">
+                        <div class="info-header">
+                            <i class="fas fa-circle-info"></i>
+                            <h3>Event Details</h3>
+                        </div>
+                        <div class="event-details">
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-calendar"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <span class="detail-label">DATE</span>
+                                    <span class="detail-value">9 March 2024</span>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-location-dot"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <span class="detail-label">VENUE</span>
+                                    <span class="detail-value">Scholar School Auditorium</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="register-hero-button">
                         {% include components/register-button.html %}
                     </div>
@@ -223,7 +249,7 @@ title: Qur'an Recitation Competition
 }
 
 .register-hero-button {
-    margin: 2rem 0 1rem;
+    margin-top: 2rem;
 }
 
 .register-hero-button .register-button {
@@ -325,6 +351,144 @@ title: Qur'an Recitation Competition
 @keyframes rotate {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+}
+
+.event-info-box {
+    background: #ffffff;
+    border: 1px solid rgba(7, 0, 44, 0.08);
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 2rem auto;
+    max-width: 500px;
+    box-shadow: 0 8px 30px rgba(7, 0, 44, 0.03);
+    text-align: left;
+}
+
+.info-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(7, 0, 44, 0.06);
+}
+
+.info-header i {
+    color: #07002c;
+    font-size: 1.2rem;
+    opacity: 0.7;
+}
+
+.info-header h3 {
+    margin: 0;
+    color: #07002c;
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: 'Almarena Mono', monospace;
+    letter-spacing: 0.5px;
+}
+
+.event-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1rem 1.25rem;
+    background: rgba(7, 0, 44, 0.015);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.detail-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    background: rgba(7, 0, 44, 0.02);
+    border-radius: 10px;
+}
+
+.detail-icon i {
+    color: #07002c;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+.detail-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.detail-label {
+    font-size: 0.75rem;
+    color: rgba(7, 0, 44, 0.5);
+    font-family: 'Almarena Mono', monospace;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+.detail-value {
+    color: #07002c;
+    font-size: 1.1rem;
+    font-family: 'Almarena Mono', monospace;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+    .event-info-box {
+        margin: 1.5rem auto;
+        padding: 1.5rem;
+    }
+
+    .detail-item {
+        padding: 0.875rem 1rem;
+    }
+
+    .detail-icon {
+        width: 38px;
+        height: 38px;
+    }
+
+    .detail-value {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .event-info-box {
+        margin: 1.25rem auto;
+        padding: 1.25rem;
+    }
+
+    .detail-item {
+        padding: 0.75rem;
+        gap: 1rem;
+    }
+
+    .detail-icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    .detail-value {
+        font-size: 0.95rem;
+    }
+}
+
+[dir="rtl"] .event-info-box {
+    text-align: right;
+}
+
+[dir="rtl"] .detail-content {
+    font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', sans-serif;
 }
 </style>
 

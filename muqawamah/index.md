@@ -61,35 +61,37 @@ permalink: /muqawamah/
     align-items: center;
     justify-content: center;
     padding: 16px 32px;
-    background: linear-gradient(135deg, #4CAF50, #43A047);
-    color: white;
+    background: #808080;
+    color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
     border-radius: 12px;
     font-size: 18px;
     font-weight: 500;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+    transition: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     min-width: 220px;
     border: none;
     position: relative;
     overflow: hidden;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.7;
 }
 
 .tournament-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
-    background: linear-gradient(135deg, #43A047, #388E3C);
+    transform: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background: #808080;
 }
 
 .tournament-button.u17 {
-    background: linear-gradient(135deg, #2196F3, #1976D2);
-    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
-    animation-delay: 0.2s;
+    background: #808080;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .tournament-button.u17:hover {
-    box-shadow: 0 6px 20px rgba(33, 150, 243, 0.3);
-    background: linear-gradient(135deg, #1976D2, #1565C0);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background: #808080;
 }
 
 .cta-section {
@@ -1374,10 +1376,10 @@ permalink: /muqawamah/
 
     <div class="cta-section">
         <h2>View Tournament Details</h2>
-        <p>Check out the fixtures, team standings, match schedules, and all other tournament details for your category below.</p>
+        <p>Tournament registration is currently closed. Details will be available soon.</p>
         <div class="tournament-links">
-            <a href="/muqawamah/open-age" class="tournament-button">Open Age Tournament</a>
-            <a href="/muqawamah/u17" class="tournament-button u17">Under 17 Tournament</a>
+            <span class="tournament-button" aria-disabled="true">Open Age Tournament</span>
+            <span class="tournament-button u17" aria-disabled="true">Under 17 Tournament</span>
         </div>
     </div>
 

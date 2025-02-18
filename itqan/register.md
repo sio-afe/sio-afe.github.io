@@ -11,20 +11,56 @@ scripts:
 ---
 
 <div class="register-page">
-    <h1 class="text-center mb-4">Register for <span class="thuluth-text">إتقان</span> </h1>
+    <div class="register-header">
+        <h1 class="text-center">Register for <span class="thuluth-text">إتقان</span></h1>
+        <div class="header-decoration">
+            <span class="decoration-line"></span>
+            <i class="fas fa-star"></i>
+            <span class="decoration-line"></span>
+        </div>
+    </div>
+    
+    <!-- Add important note -->
+    <div class="important-note">
+        <div class="note-icon">
+            <i class="fas fa-exclamation-circle pulse"></i>
+        </div>
+        <div class="note-content">
+            <strong>Important Note</strong>
+            <p>Participants can register for multiple categories to increase their chances of reaching finals. However, if a participant qualifies in multiple categories, they will need to choose only one category to compete in during the final round.</p>
+        </div>
+    </div>
     
     <!-- Add payment info box -->
     <div class="payment-info-box">
-        <h3><i class="fas fa-info-circle"></i> Registration Process</h3>
-        <ol>
-            <li>Fill the registration form below</li>
-            <li>Click submit to proceed with UPI payment</li>
-            <li>Complete the payment using your preferred UPI app</li>
-            <li>You will receive confirmation on successful registration</li>
-        </ol>
+        <div class="info-header">
+            <i class="fas fa-info-circle"></i>
+            <h3>Registration Process</h3>
+        </div>
+        <div class="process-steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">Fill the registration form below</div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">Click submit to proceed with UPI payment</div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">Complete the payment using your preferred UPI app</div>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">You will receive confirmation on successful registration</div>
+            </div>
+        </div>
         <div class="fee-info">
-            <p><strong>Registration Fee:</strong> ₹80</p>
-            <p><small>* Payment will be processed via UPI</small></p>
+            <div class="fee-amount">
+                <span class="fee-label">Registration Fee:</span>
+                <span class="fee-value">₹80</span>
+            </div>
+            <p class="payment-note"><i class="fas fa-info-circle"></i> Payment will be processed via UPI</p>
         </div>
     </div>
 
@@ -35,7 +71,7 @@ scripts:
                 <select id="category" name="category" class="form-control" required>
                     <option value="">Select Category</option>
                     <option value="hifz">Hifz Competition</option>
-                    <option value="tilawat">Tilawat Competition</option>
+                    <option value="tarteel">Tarteel Competition</option>
                     <option value="adhan">Adhan Competition</option>
                 </select>
             </div>
@@ -94,7 +130,7 @@ scripts:
 .register-page {
     max-width: 800px;
     margin: 2rem auto;
-    padding: 2rem;
+    padding: 2.5rem;
     position: relative;
     background: #ffffff;
 }
@@ -119,52 +155,192 @@ scripts:
     display: inline-block;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 1200px) {
     .register-page {
-        padding: 1rem;
-        margin: 1rem;
-        width: calc(100% - 2rem);
+        max-width: 900px;
+        padding: 3rem;
     }
-    
-    .register-form-container {
+
+    .register-header h1 {
+        font-size: 2.8rem;
+    }
+
+    .thuluth-text {
+        font-size: 2em;
+    }
+
+    .important-note {
+        padding: 2rem;
+    }
+
+    .process-steps {
+        gap: 2rem;
+    }
+
+    .step {
+        padding: 1.5rem;
+    }
+
+    .fee-amount {
+        font-size: 2rem;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .register-page {
+        max-width: 800px;
+        padding: 2.5rem;
+    }
+
+    .register-header h1 {
+        font-size: 2.5rem;
+    }
+
+    .important-note {
+        padding: 1.8rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .register-page {
+        max-width: 700px;
+        padding: 2rem;
+        margin: 1.5rem auto;
+    }
+
+    .register-header h1 {
+        font-size: 2.2rem;
+    }
+
+    .important-note {
+        padding: 1.5rem;
+        margin: 1.5rem auto;
+    }
+
+    .process-steps {
+        gap: 1.2rem;
+    }
+
+    .step {
+        padding: 1.2rem;
+    }
+
+    .fee-amount {
+        font-size: 1.6rem;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+    .register-page {
+        max-width: 100%;
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    .register-header h1 {
+        font-size: 2rem;
+    }
+
+    .thuluth-text {
+        font-size: 1.5em;
+    }
+
+    .important-note {
+        padding: 1.2rem;
+        margin: 1.2rem auto;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .note-icon {
+        margin: 0 auto 1rem;
+    }
+
+    .process-steps {
+        gap: 1rem;
+    }
+
+    .step {
         padding: 1rem;
     }
 
-    .register-page h1 {
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
+    .fee-amount {
+        font-size: 1.4rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.2rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .register-page {
+        max-width: 100%;
+        padding: 1rem;
+        margin: 0.5rem;
+    }
+
+    .register-header h1 {
+        font-size: 1.8rem;
+        text-align: center;
     }
 
     .thuluth-text {
         font-size: 1.3em;
     }
 
-    .payment-info-box {
+    .header-decoration {
+        margin: 0.8rem 0;
+    }
+
+    .decoration-line {
+        width: 60px;
+    }
+
+    .important-note {
         padding: 1rem;
-        margin-bottom: 1rem;
+        margin: 1rem auto;
+        flex-direction: column;
+        text-align: center;
+        gap: 0.8rem;
     }
 
-    .payment-info-box h3 {
-        font-size: 1.1rem;
+    .note-icon {
+        margin: 0 auto 0.8rem;
+        width: 35px;
+        height: 35px;
     }
 
-    .payment-info-box ol {
-        padding-left: 1.2rem;
-        margin-bottom: 0.5rem;
+    .note-content strong {
+        font-size: 1rem;
     }
 
-    .payment-info-box li {
+    .note-content p {
         font-size: 0.9rem;
-        margin-bottom: 0.3rem;
     }
 
-    .fee-info {
-        margin-top: 0.8rem;
-        padding-top: 0.8rem;
+    .process-steps {
+        gap: 0.8rem;
     }
 
-    .fee-info p {
+    .step {
+        padding: 0.8rem;
+    }
+
+    .step-number {
+        width: 30px;
+        height: 30px;
         font-size: 0.9rem;
+    }
+
+    .step-content {
+        font-size: 0.9rem;
+    }
+
+    .fee-amount {
+        font-size: 1.3rem;
+        flex-direction: column;
+        gap: 0.3rem;
     }
 
     .form-group {
@@ -172,128 +348,33 @@ scripts:
     }
 
     .form-group label {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         margin-bottom: 0.3rem;
     }
 
     .form-control {
-        padding: 0.6rem 0.8rem;
-        font-size: 0.95rem;
-    }
-
-    .register-submit-btn {
-        padding: 0.8rem 1.5rem;
-        font-size: 0.95rem;
-    }
-
-    .help-text {
-        font-size: 0.85rem;
-        margin-top: 0.8rem;
-    }
-
-    /* Payment module mobile adjustments */
-    .payment-module {
-        padding: 1rem;
-        margin: 1rem auto;
-        width: calc(100% - 2rem);
-    }
-
-    .payment-module-header h3 {
-        font-size: 1.1rem;
-    }
-
-    .payment-module-amount {
-        font-size: 1.6rem;
-    }
-
-    .upi-button-container {
-        margin: 1rem 0;
-    }
-
-    .upi-app-button {
-        padding: 1rem;
-    }
-
-    .pay-using-text {
-        font-size: 1rem;
-    }
-
-    .upi-logo {
-        height: 32px;
-    }
-
-    .transaction-info {
-        font-size: 0.85rem;
-    }
-
-    /* Verification form mobile adjustments */
-    #verificationSection {
-        margin-top: 1rem;
-    }
-
-    #verificationSection h4 {
-        font-size: 1.1rem;
-    }
-
-    .verification-form {
-        padding: 1rem;
-    }
-
-    .verification-form .form-control {
         padding: 0.6rem;
-    }
-
-    /* Success/Error messages mobile adjustments */
-    .message-container {
-        padding: 60px 0.5rem 0.5rem 0.5rem; /* Adjusted top padding for mobile */
-    }
-
-    .success-message,
-    .error-message {
-        padding: 1.25rem;
-        margin: 0 auto 0.5rem auto;
-        width: calc(100% - 2rem);
-    }
-
-    .payment-success {
-        padding: 1.5rem;
-        margin: 0 auto 0.5rem auto;
-    }
-
-    .payment-success i {
-        font-size: 2.5rem;
-    }
-
-    .payment-success h3 {
-        font-size: 1.2rem;
-    }
-
-    .transaction-details {
-        padding: 0.8rem;
-    }
-}
-
-/* Extra small devices */
-@media (max-width: 360px) {
-    .register-page h1 {
-        font-size: 1.3rem;
-    }
-
-    .thuluth-text {
-        font-size: 1.2em;
-    }
-
-    .payment-module-amount {
-        font-size: 1.4rem;
-    }
-
-    .form-control {
-        padding: 0.5rem 0.7rem;
         font-size: 0.9rem;
     }
 
     .register-submit-btn {
-        padding: 0.7rem 1.2rem;
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .help-text {
+        font-size: 0.8rem;
+        margin-top: 0.8rem;
+    }
+
+    .message-container {
+        padding: 0.5rem;
+    }
+
+    .success-message,
+    .error-message {
+        padding: 1rem;
+        margin: 0.5rem auto;
         font-size: 0.9rem;
     }
 }
@@ -861,6 +942,342 @@ select.form-control {
 .fee-info p strong {
     color: #957718;
 }
+
+/* Enhanced Header Styles */
+.register-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem 0;
+}
+
+.register-header h1 {
+    font-size: 2.5rem;
+    color: #07002c;
+    margin-bottom: 1rem;
+}
+
+.header-decoration {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.decoration-line {
+    height: 2px;
+    width: 100px;
+    background: linear-gradient(90deg, transparent, #957718, transparent);
+}
+
+.header-decoration .fa-star {
+    color: #957718;
+    font-size: 1.2rem;
+}
+
+/* Enhanced Important Note Styles */
+.important-note {
+    background: linear-gradient(135deg, rgba(149, 119, 24, 0.05), rgba(226, 194, 125, 0.1));
+    border: none;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin: 2rem auto;
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    box-shadow: 0 4px 15px rgba(149, 119, 24, 0.1);
+    position: relative;
+    overflow: hidden;
+    max-width: 800px;
+}
+
+.important-note::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, #957718, #e2c27d);
+    border-radius: 4px 0 0 4px;
+}
+
+.note-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(45deg, #957718, #e2c27d);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.note-icon i {
+    color: white;
+    font-size: 1.2rem;
+}
+
+.note-content {
+    flex: 1;
+}
+
+.note-content strong {
+    display: block;
+    color: #957718;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    font-family: 'Almarena Mono', monospace;
+}
+
+.note-content p {
+    color: #07002c;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Enhanced Payment Info Box Styles */
+.payment-info-box {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 2rem auto;
+    box-shadow: 0 8px 25px rgba(149, 119, 24, 0.08);
+    border: 1px solid rgba(149, 119, 24, 0.1);
+    max-width: 800px;
+}
+
+.info-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(149, 119, 24, 0.1);
+}
+
+.info-header i {
+    font-size: 1.8rem;
+    color: #957718;
+}
+
+.info-header h3 {
+    color: #07002c;
+    font-size: 1.5rem;
+    margin: 0;
+    font-family: 'Almarena Mono', monospace;
+}
+
+.process-steps {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(149, 119, 24, 0.03), rgba(226, 194, 125, 0.05));
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.step:hover {
+    transform: translateX(5px);
+    background: linear-gradient(135deg, rgba(149, 119, 24, 0.05), rgba(226, 194, 125, 0.08));
+}
+
+.step-number {
+    width: 35px;
+    height: 35px;
+    background: linear-gradient(45deg, #957718, #e2c27d);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.step-content {
+    color: #07002c;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.fee-info {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(149, 119, 24, 0.1);
+}
+
+.fee-amount {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.fee-label {
+    color: #07002c;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.fee-value {
+    color: #957718;
+    font-size: 1.8rem;
+    font-weight: bold;
+    font-family: 'Almarena Mono', monospace;
+}
+
+.payment-note {
+    text-align: center;
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0.5rem 0 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.payment-note i {
+    color: #957718;
+}
+
+@media (max-width: 768px) {
+    .register-header h1 {
+        font-size: 2rem;
+    }
+
+    .decoration-line {
+        width: 60px;
+    }
+
+    .important-note {
+        padding: 1.25rem;
+        gap: 1rem;
+        margin: 1.5rem 1rem;
+    }
+
+    .note-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+    .note-content strong {
+        font-size: 1rem;
+    }
+
+    .note-content p {
+        font-size: 0.9rem;
+    }
+
+    .payment-info-box {
+        padding: 1.5rem;
+        margin: 1.5rem 1rem;
+    }
+
+    .info-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .info-header i {
+        font-size: 1.5rem;
+    }
+
+    .info-header h3 {
+        font-size: 1.3rem;
+    }
+
+    .step {
+        padding: 0.8rem;
+        gap: 1rem;
+    }
+
+    .step-number {
+        width: 30px;
+        height: 30px;
+        font-size: 1rem;
+    }
+
+    .step-content {
+        font-size: 0.9rem;
+    }
+
+    .fee-amount {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .fee-label {
+        font-size: 1rem;
+    }
+
+    .fee-value {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .register-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .decoration-line {
+        width: 40px;
+    }
+
+    .important-note {
+        padding: 1rem;
+    }
+
+    .payment-info-box {
+        padding: 1.25rem;
+    }
+
+    .step {
+        padding: 0.7rem;
+    }
+
+    .step-content {
+        font-size: 0.85rem;
+    }
+}
+
+/* Additional responsive improvements */
+.register-form-container {
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 2px rgba(149, 119, 24, 0.2);
+}
+
+.register-submit-btn {
+    transition: all 0.3s ease;
+}
+
+.register-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(149, 119, 24, 0.2);
+}
 </style>
 
 <script type="module">
@@ -917,7 +1334,7 @@ window.updateSubcategories = function() {
                     <option value="full">Full Quran</option>
                 `;
             }
-        } else if (category === 'tilawat' || category === 'adhan') {
+        } else if (category === 'tarteel' || category === 'adhan') {
             subcategoryGroup.style.display = 'block';
             subcategory.innerHTML += '<option value="open">Open Age</option>';
         }

@@ -19,7 +19,7 @@ function updateSubcategories() {
                 <option value="full">Full Quran</option>
             `;
         }
-    } else if (category === 'tilawat' || category === 'adhan') {
+    } else if (category === 'tarteel' || category === 'adhan') {
         subcategoryGroup.style.display = 'block';
         subcategory.innerHTML += '<option value="open">Open Age</option>';
     } else {
@@ -60,7 +60,7 @@ async function handleFormSubmit(e, form, successMessage, errorMessage) {
         // Check if subcategory is required but hidden
         const category = form.category.value;
         const subcategoryGroup = document.getElementById('subcategoryGroup');
-        if ((category === 'hifz' || category === 'tilawat' || category === 'adhan') && 
+        if ((category === 'hifz' || category === 'tarteel' || category === 'adhan') && 
             (!form.subcategory.value || subcategoryGroup.style.display === 'none')) {
             updateSubcategories(); // Show the subcategory field
             subcategoryGroup.scrollIntoView({ behavior: 'smooth' });
