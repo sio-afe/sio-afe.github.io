@@ -35,6 +35,17 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script src="{{ '/assets/js/supabase-client.js' | relative_url }}"></script>
     
+    <!-- Web Analytics -->
+    {% if jekyll.environment == 'production' %}
+        {% for analytics in site.analytics %}
+            {% capture str %}{{ analytics }}{% endcapture %}
+            {% assign platform = str | split: '{' | first %}
+            {% if site.analytics[platform].id and site.analytics[platform].id != empty %}
+                {% include analytics/{{ platform }}.html %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    
     <style>
         body {
             font-family: 'Open Sans', sans-serif;

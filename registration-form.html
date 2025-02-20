@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Itqan Registration Form</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #c4a962;
+            --border-color: #bdc3c7;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.4;
+            margin: 0;
+            padding: 20px;
+            color: var(--primary-color);
+            background-color: #f9f9f9;
+        }
+        .form-container {
+            max-width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 15mm;
+            box-sizing: border-box;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--accent-color);
+        }
+        .logo {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+            position: relative;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: var(--secondary-color);
+        }
+        .input-field {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            height: 22px;
+            background-color: #fff;
+            transition: border-color 0.3s ease;
+        }
+        .input-field:hover {
+            border-color: var(--accent-color);
+        }
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                background: none;
+            }
+            .form-container {
+                margin: 0;
+                padding: 15mm;
+                box-shadow: none;
+                border-radius: 0;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+        .footer {
+            margin-top: 25px;
+            border-top: 2px solid var(--accent-color);
+            padding-top: 15px;
+        }
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .signature-box {
+            flex: 0 0 45%;
+        }
+        .signature-line {
+            margin-top: 30px;
+            border-top: 1px solid var(--secondary-color);
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            font-size: 26px;
+            margin: 10px 0;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .print-button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .print-button:hover {
+            background-color: #b39955;
+        }
+        .address-field {
+            height: 60px !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="header">
+            <img src="../assets/img/islamic/banner1.png" alt="SIO x Abul Fazal Area Logo" class="logo">
+            <h1>Itqan Registration Form</h1>
+            <p>Please fill out all required fields marked with an asterisk (*)</p>
+        </div>
+
+        <form>
+            <div class="form-group">
+                <label class="required">Full Name</label>
+                <div class="input-field"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="required">Phone</label>
+                <div class="input-field"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="required">Age</label>
+                <div class="input-field"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="required">Category (Hifz, Tarteel, Azan)</label>
+                <div class="input-field"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="required">Subcategory (U17, OpenAge)</label>
+                <div class="input-field"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="required">Address</label>
+                <div class="input-field address-field"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="required">Payment Method</label>
+                <div class="input-field"></div>
+            </div>
+
+            <div class="footer">
+                <p>By signing below, I confirm that all the information provided above is accurate and complete.</p>
+                
+                <div class="signature-section">
+                    <div class="signature-box">
+                        <div class="signature-line"></div>
+                        <p>Participant's Signature</p>
+                    </div>
+                    
+                    <div class="signature-box">
+                        <div class="signature-line"></div>
+                        <p>Date</p>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="no-print" style="margin-top: 20px; text-align: center;">
+            <button onclick="window.print()" class="print-button">Print Form</button>
+        </div>
+    </div>
+</body>
+</html> 
