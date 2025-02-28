@@ -721,23 +721,24 @@ select.form-control {
 
 .qr-code-container {
     text-align: center;
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 12px;
     background: #ffffff;
     box-shadow: 0 4px 12px rgba(149, 119, 24, 0.1);
     position: relative;
     overflow: hidden;
-    max-width: 350px;
+    max-width: 300px;
     margin: 0 auto;
 }
 
 .qr-code-container img {
     display: block;
-    width: 250px;
-    height: 250px;
+    width: 200px;
+    height: 200px;
     margin: 0 auto;
     transition: all 0.3s ease;
     filter: blur(3px);
+    object-fit: contain;
 }
 
 .qr-code-container.active img {
@@ -861,13 +862,13 @@ select.form-control {
 
 @media (max-width: 768px) {
     .qr-code-container {
-        padding: 1.5rem;
-        margin: 0 1rem;
+        padding: 1rem;
+        max-width: 250px;
     }
 
     .qr-code-container img {
-        width: 200px;
-        height: 200px;
+        width: 180px;
+        height: 180px;
     }
 
     .qr-actions {
@@ -892,6 +893,18 @@ select.form-control {
     .download-qr-btn {
         padding: 0.7rem 1.75rem;
         font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .qr-code-container {
+        padding: 0.8rem;
+        max-width: 220px;
+    }
+
+    .qr-code-container img {
+        width: 160px;
+        height: 160px;
     }
 }
 
