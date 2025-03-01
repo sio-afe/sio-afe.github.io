@@ -32,9 +32,6 @@
                         <i class="fas fa-envelope me-1"></i>Contact Us
                     </a>
                 </li>
-                <li class="nav-item ms-2">
-                    {% include components/register-button.html %}
-                </li>
             </ul>
         </div>
 
@@ -70,9 +67,6 @@
                     <a class="{% if page.url contains '/contact' %}active{% endif %}" href="{{ '/itqan/contact' | relative_url }}">
                         <i class="fas fa-envelope me-1"></i>Contact Us
                     </a>
-                </li>
-                <li class="mobile-register-item">
-                    {% include components/register-button.html %}
                 </li>
             </ul>
         </div>
@@ -696,6 +690,40 @@
     }
 }
 
+/* Desktop Register Button Styles */
+.register-button {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    background: #9e9e9e !important; /* Light grey color */
+    border: none;
+    border-radius: 50px;
+    color: #ffffff !important;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: 'Almarena Mono', monospace;
+    box-shadow: none;
+    white-space: nowrap;
+    min-width: fit-content;
+    cursor: not-allowed;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.register-button:hover,
+.register-button:active {
+    background: #9e9e9e !important;
+    transform: none;
+    box-shadow: none;
+}
+
+.register-button i {
+    color: #ffffff !important;
+    opacity: 0.7;
+}
+
 /* Mobile Register Button Styles */
 .mobile-register-item {
     margin: 1rem 1.5rem;
@@ -705,11 +733,6 @@
     padding: 0.5rem;
     border-radius: 16px;
     backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-}
-
-.mobile-register-item:active {
-    transform: translateY(1px);
 }
 
 .mobile-register-item .register-button {
@@ -717,143 +740,26 @@
     justify-content: center;
     padding: 0.8rem 1.2rem;
     font-size: 1.1rem;
-    background: linear-gradient(45deg, #957718, #e2c27d) !important;
-    border: none;
-    border-radius: 50px;
-    transform: none;
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(149, 119, 24, 0.2);
-    color: #ffffff;
-    font-family: 'Almarena Mono', monospace;
-    transition: all 0.3s ease;
-}
-
-.mobile-register-item .register-button:hover {
-    background: linear-gradient(45deg, #8b6e17, #d4b76f) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(149, 119, 24, 0.3);
-}
-
-.mobile-register-item .register-button:active {
-    transform: translateY(1px);
-    box-shadow: 0 2px 8px rgba(149, 119, 24, 0.2);
-}
-
-[dir="rtl"] .mobile-register-item .register-button {
-    font-size: 1.4rem;
-    padding: 1.2rem 1.5rem;
-}
-
-.mobile-register-item .register-icon {
-    font-size: 1.3em;
-    margin-right: 0.8rem;
-    transition: transform 0.3s ease;
-    color: #ffffff;
-}
-
-.mobile-register-item:active .register-icon {
-    transform: scale(0.95);
-}
-
-[dir="rtl"] .mobile-register-item .register-icon {
-    margin-right: 0;
-    margin-left: 0.8rem;
-}
-
-@media (max-width: 480px) {
-    .mobile-register-item {
-        margin: 0.8rem;
-        padding: 0.4rem;
-    }
-    
-    .mobile-register-item .register-button {
-        padding: 0.7rem 1rem;
-        font-size: 1rem;
-        border-radius: 50px;
-    }
-    
-    [dir="rtl"] .mobile-register-item .register-button {
-        font-size: 1.3rem;
-        padding: 1rem 1.2rem;
-    }
-    
-    .mobile-register-item .register-icon {
-        font-size: 1.2em;
-    }
-}
-
-/* Adjust mobile menu to accommodate sticky register button */
-.mobile-menu {
-    padding-bottom: 6rem;
-}
-
-.mobile-nav {
-    padding-bottom: 2rem;
-}
-
-/* Add padding to body to prevent content from hiding under navbar */
-body {
-    padding-top: 80px; /* Adjust this value based on your navbar height */
-}
-
-/* Desktop Register Button Styles */
-.register-button {
-    padding: 0.6rem 1.2rem;
-    font-size: 1rem;
-    background: linear-gradient(45deg, #957718, #e2c27d) !important;
-    border: none;
-    border-radius: 50px;
-    color: #ffffff !important;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    font-family: 'Almarena Mono', monospace;
-    box-shadow: 0 4px 15px rgba(149, 119, 24, 0.2);
-    white-space: nowrap;
-    min-width: fit-content;
-}
-
-.register-button:hover {
-    background: linear-gradient(45deg, #8b6e17, #d4b76f) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(149, 119, 24, 0.3);
-    color: #ffffff !important;
-    text-decoration: none;
-}
-
-.register-button:active {
-    transform: translateY(1px);
-    box-shadow: 0 2px 8px rgba(149, 119, 24, 0.2);
-}
-
-.register-button i {
-    color: #ffffff !important;
+    background: #9e9e9e !important;
+    opacity: 0.7;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 @media (max-width: 480px) {
     .register-button {
         padding: 0.5rem 1rem;
         font-size: 0.9rem;
-        border-radius: 50px;
     }
     
-    .register-button i {
-        font-size: 1.1em;
+    .mobile-register-item .register-button {
+        padding: 0.7rem 1rem;
+        font-size: 1rem;
     }
-}
-
-.navbar-nav {
-    margin-right: 0;
-    align-items: center;
 }
 
 .nav-item.ms-2 {
-    margin-left: 0.75rem !important;
+    display: none;
 }
 </style>
 

@@ -253,14 +253,16 @@ title: Qur'an Recitation Competition
 }
 
 .register-hero-button .register-button {
-    background: linear-gradient(45deg, #957718, #e2c27d) !important;
+    background: #9e9e9e !important;
     color: #ffffff !important;
     border: none;
     padding: 1rem 2rem;
     border-radius: 50px;
     font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    cursor: not-allowed;
+    opacity: 0.7;
+    pointer-events: none;
+    transition: none;
     width: 100%;
     max-width: 300px;
     margin: 0 auto;
@@ -270,16 +272,17 @@ title: Qur'an Recitation Competition
     display: block;
     text-align: center;
     text-decoration: none;
+    box-shadow: none;
 }
 
 .register-hero-button .register-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(149, 119, 24, 0.3);
-    background: linear-gradient(45deg, #8b6e17, #d4b76f) !important;
+    transform: none;
+    box-shadow: none;
+    background: #9e9e9e !important;
 }
 
 .register-hero-button .register-button:active {
-    transform: translateY(0);
+    transform: none;
 }
 
 @media (max-width: 768px) {
