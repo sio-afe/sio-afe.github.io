@@ -436,13 +436,14 @@
                     const surah = quranData[surahIdx];
                     const surahNum = parseInt(surah.number);
                     
-                    // Check if this Surah is completely before or after this Juz
-                    if (surahNum < startSurahNum || (surahNum === endSurahNum && surahNum !== startSurahNum)) {
-                        continue; // Skip Surahs that are before the start of this Juz
+                    // Skip Surahs that are completely before this Juz
+                    if (surahNum < startSurahNum) {
+                        continue;
                     }
                     
-                    if (surahNum > endSurahNum) {
-                        break; // We've gone past the end Surah for this Juz
+                    // Skip Surahs that are completely after this Juz
+                    if (surahNum > endSurahNum || (surahNum === endSurahNum && surahNum !== startSurahNum)) {
+                        continue;
                     }
                     
                     // Keep track if any verses from this Surah are in this Juz
@@ -459,7 +460,7 @@
                         
                         // Skip verses after or at the end verse in the ending Surah
                         if (surahNum === endSurahNum && verseNum >= endVerseNum) {
-                            break;
+                            continue;
                         }
                         
                         // This verse is in this Juz - add it to the data

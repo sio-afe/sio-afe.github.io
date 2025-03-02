@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Itqan Quran Quiz - SIO-AFE</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicons/site.webmanifest">
+    <meta name="msapplication-TileColor" content="#c2272b">
+    <meta name="theme-color" content="#ffffff">
+
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #c2272b;
+            --secondary: #3475af;
+            --dark: #333;
+            --light: #f8f8f8;
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-rounds {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .round-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 300px;
+            transition: all 0.3s ease;
+        }
+
+        .round-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .round-header {
+            background: var(--gradient);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .round-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .round-content {
+            padding: 1.5rem;
+        }
+
+        .round-content p {
+            color: #555;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .round-card {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Itqan Quran Quiz</h1>
+            <p class="description">Test your knowledge of the Holy Quran through our interactive quiz rounds.</p>
+        </header>
+
+        <div class="quiz-rounds">
+            <div class="round-card">
+                <div class="round-header">
+                    <h2>Round 1</h2>
+                </div>
+                <div class="round-content">
+                    <p>Basic Quran identification quiz. Select a Juz and generate a question to identify Surahs and verses.</p>
+                    <a href="round1.html" class="btn">Start Round 1</a>
+                </div>
+            </div>
+
+            <div class="round-card">
+                <div class="round-header">
+                    <h2>Round 2</h2>
+                </div>
+                <div class="round-content">
+                    <p>More challenging questions with deeper knowledge requirements. Coming soon!</p>
+                    <a href="#" class="btn" style="background: #888; cursor: not-allowed;">Coming Soon</a>
+                </div>
+            </div>
+
+            <div class="round-card">
+                <div class="round-header">
+                    <h2>Round 3</h2>
+                </div>
+                <div class="round-content">
+                    <p>Advanced Quranic knowledge assessment with complex questions. Coming soon!</p>
+                    <a href="#" class="btn" style="background: #888; cursor: not-allowed;">Coming Soon</a>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>This quiz is designed for educational purposes. Please approach with respect for the Quranic text.</p>
+        </footer>
+    </div>
+</body>
+</html> 
