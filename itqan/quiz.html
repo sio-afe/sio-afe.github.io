@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Round 1 - Itqan Quran Quiz</title>
+    <title>Itqan Quran Quiz: Recitation & Surah Knowledge</title>
     
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png">
@@ -424,6 +424,49 @@
             border-left: 3px solid var(--gold);
         }
 
+        .next-ayahs .arabic-text {
+            margin-bottom: 0;
+            line-height: 2;
+            text-align: justify;
+            text-align-last: right;
+        }
+
+        .surah-info {
+            background: rgba(13, 59, 102, 0.05);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        .surah-info p {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .surah-info p:last-child {
+            margin-bottom: 0;
+        }
+
+        .surah-info strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .surah-info #first-ayah, .surah-info #last-ayah {
+            display: block;
+            font-family: 'Amiri', serif;
+            font-size: 1.8rem;
+            margin: 0.5rem 0;
+            line-height: 1.7;
+            text-align: right;
+            direction: rtl;
+            padding: 1rem;
+            background: rgba(13, 59, 102, 0.02);
+            border-radius: 8px;
+            border-right: 3px solid var(--gold);
+        }
+
         .reference {
             font-size: 1rem;
             text-align: right;
@@ -454,6 +497,10 @@
 
         .back-button:hover {
             background: rgba(13, 59, 102, 0.2);
+        }
+
+        .text-center {
+            text-align: center;
         }
 
         footer {
@@ -495,13 +542,13 @@
 <body>
     <div class="container">
         <header>
-            <h1>Round 1: Quran Recitation</h1>
-            <p class="description">Select Juz section(s) and test your ability to continue reciting verses from memory.</p>
+            <h1>Quran Recitation & Surah Knowledge</h1>
+            <p class="description">Select Juz section(s) and test your ability to continue reciting verses from memory and identify surah details.</p>
         </header>
 
         <div class="card">
             <h2>1. Select Juz Section(s)</h2>
-            <p>Choose one or more Juz sections to generate questions from. If no Juz is selected, questions will be generated from the entire Quran.</p>
+            <p>Choose one or more Juz sections to get questions from. If no Juz is selected, questions will be generated from the entire Quran.</p>
             
             <div class="filters">
                 <div class="filter-group">
@@ -520,7 +567,7 @@
             
             <div class="btn-container" style="margin-bottom: 0;">
                 <button id="generate-question-btn" class="btn">
-                    <span class="btn-text-animated">Generate</span>
+                    <span class="btn-text-animated">Get Questions</span>
                 </button>
             </div>
         </div>
@@ -540,6 +587,26 @@
                         <i class="fas fa-eye"></i> 
                         <span style="font-size: 0.9rem; vertical-align: middle; margin: 0 0.2rem; opacity: 0.9;">Show Answer</span>
                     </button>
+                    <button id="show-surah-info-btn" class="btn" style="margin-left: 10px; background: var(--primary); color: var(--white);">
+                        <i class="fas fa-info-circle"></i> 
+                        <span style="font-size: 0.9rem; vertical-align: middle; margin: 0 0.2rem; opacity: 0.9;">Show Surah Info</span>
+                    </button>
+                </div>
+                
+                <div id="surah-info-container" class="answer-container">
+                    <h3 class="answer-heading">Surah Information:</h3>
+                    <div class="surah-info">
+                        <p><strong>Surah Name:</strong> <span id="surah-name"></span></p>
+                        <p><strong>First Ayah:</strong> <span id="first-ayah"></span></p>
+                        <p><strong>Last Ayah:</strong> <span id="last-ayah"></span></p>
+                        <p><strong>Total Ayahs:</strong> <span id="total-ayahs"></span></p>
+                    </div>
+                    <div class="text-center" style="margin-top: 1rem;">
+                        <button id="hide-surah-info-btn" class="btn" style="background: rgba(13, 59, 102, 0.1); color: var(--dark); box-shadow: none; padding: 0.5rem 1rem; font-size: 0.9rem;">
+                            <i class="fas fa-eye-slash"></i> 
+                            <span style="font-size: 0.9rem; vertical-align: middle; margin: 0 0.2rem; opacity: 0.9;">Hide Surah Info</span>
+                        </button>
+                    </div>
                 </div>
                 
                 <div id="answer-container" class="answer-container">
@@ -548,13 +615,17 @@
                         <!-- Next ayahs will be added by JavaScript -->
                     </div>
                     <p id="answer-reference" class="reference"></p>
+                    <div class="text-center" style="margin-top: 1rem;">
+                        <button id="hide-answer-btn" class="btn" style="background: rgba(13, 59, 102, 0.1); color: var(--dark); box-shadow: none; padding: 0.5rem 1rem; font-size: 0.9rem;">
+                            <i class="fas fa-eye-slash"></i> 
+                            <span style="font-size: 0.9rem; vertical-align: middle; margin: 0 0.2rem; opacity: 0.9;">Hide Answer</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="nav-buttons">
-            <a href="index.html" class="back-button">← Back to Quiz Rounds</a>
-        </div>
+       
 
         <div id="loading" class="loading">Loading Quran data...</div>
 
@@ -585,15 +656,26 @@
         const translation = document.getElementById('translation');
         const questionReference = document.getElementById('question-reference');
         const showAnswerBtn = document.getElementById('show-answer-btn');
+        const showSurahInfoBtn = document.getElementById('show-surah-info-btn');
         const answerContainer = document.getElementById('answer-container');
+        const surahInfoContainer = document.getElementById('surah-info-container');
+        const surahNameElement = document.getElementById('surah-name');
+        const firstAyahElement = document.getElementById('first-ayah');
+        const lastAyahElement = document.getElementById('last-ayah');
+        const totalAyahsElement = document.getElementById('total-ayahs');
         const nextAyahs = document.getElementById('next-ayahs');
         const answerReference = document.getElementById('answer-reference');
+        const hideAnswerBtn = document.getElementById('hide-answer-btn');
+        const hideSurahInfoBtn = document.getElementById('hide-surah-info-btn');
         
         // Event listeners
         window.addEventListener('DOMContentLoaded', initializeApp);
         clearJuzBtn.addEventListener('click', clearJuzSelection);
         generateQuestionBtn.addEventListener('click', generateQuestion);
         showAnswerBtn.addEventListener('click', showAnswer);
+        showSurahInfoBtn.addEventListener('click', showSurahInfo);
+        hideAnswerBtn.addEventListener('click', hideAnswer);
+        hideSurahInfoBtn.addEventListener('click', hideSurahInfo);
         
         // Initialize the app
         async function initializeApp() {
@@ -1072,27 +1154,27 @@
             // Determine how many verses to show (usually 5, but might be fewer if near end of Surah)
             const verseCount = Math.min(5, surah.verses.length - (verseIndex + 1));
             
-            // Create DOM elements for next ayahs
+            // Create a single container for all verses
+            const continuousTextContainer = document.createElement('p');
+            continuousTextContainer.className = 'arabic-text';
+            
+            // Combine all verses into a single continuous text
+            let continuousText = '';
+            
             for (let i = 1; i <= verseCount; i++) {
                 const nextVerseIndex = verseIndex + i;
                 const nextVerse = surah.verses[nextVerseIndex];
                 
-                // Create container for this verse
-                const verseContainer = document.createElement('div');
-                verseContainer.style.marginBottom = '1.5rem';
-                
-                // Create Arabic text
-                const arabicText = document.createElement('p');
-                arabicText.className = 'arabic-text';
-                arabicText.style.marginBottom = '0.5rem';
-                arabicText.innerHTML = nextVerse.text + ' <span class="ayah-end">۝<span class="ayah-number">' + convertToArabicNumerals(nextVerseIndex + 1) + '</span></span>';
-                
-                // Add elements to verse container
-                verseContainer.appendChild(arabicText);
-                
-                // Add verse container to nextAyahs
-                nextAyahs.appendChild(verseContainer);
+                // Add verse text with ayah end marker
+                continuousText += nextVerse.text + ' <span class="ayah-end">۝<span class="ayah-number">' + 
+                    convertToArabicNumerals(nextVerseIndex + 1) + '</span></span> ';
             }
+            
+            // Set the continuous text
+            continuousTextContainer.innerHTML = continuousText;
+            
+            // Add the continuous text container to nextAyahs
+            nextAyahs.appendChild(continuousTextContainer);
             
             // Fix for undefined Surah name in answer reference
             const surahNum = getSurahNumber(surah);
@@ -1107,6 +1189,15 @@
             showAnswerBtn.style.display = 'none';
         }
         
+        // Hide the answer
+        function hideAnswer() {
+            // Hide the answer container
+            answerContainer.classList.remove('visible');
+            
+            // Show the show answer button again
+            showAnswerBtn.style.display = 'inline-block';
+        }
+        
         // Reset the question state for a new question
         function resetQuestion() {
             // Clear the content
@@ -1117,12 +1208,70 @@
             
             // Reset the container visibility
             answerContainer.classList.remove('visible');
+            surahInfoContainer.classList.remove('visible');
             
-            // Show the show answer button
+            // Show the buttons
             showAnswerBtn.style.display = 'inline-block';
+            showSurahInfoBtn.style.display = 'inline-block';
             
             // Reset current question
             currentQuestion = null;
+        }
+
+        // Show surah information including first and last ayah
+        function showSurahInfo() {
+            // Make sure we have a current question
+            if (!currentQuestion) return;
+            
+            // Get the Surah
+            const surahIndex = currentQuestion.surahIndex;
+            const surah = quranData[surahIndex];
+            
+            if (!surah || !surah.verses || !Array.isArray(surah.verses)) {
+                console.error(`Invalid surah at index ${surahIndex}`);
+                return;
+            }
+            
+            // Helper function to get Surah number safely
+            function getSurahNumber(surah) {
+                if (!surah) return null;
+                // Try to get number from either id or number property
+                if (surah.id !== undefined) return parseInt(surah.id);
+                if (surah.number !== undefined) return parseInt(surah.number);
+                return null;
+            }
+            
+            const surahNum = getSurahNumber(surah);
+            const surahName = surah.name || `سورة ${surahNum}`;
+            const englishName = surah.englishName || surah.translation || `Surah ${surahNum}`;
+            const totalAyahs = surah.verses.length;
+            
+            // Get first ayah
+            const firstAyah = surah.verses[0].text;
+            
+            // Get last ayah
+            const lastAyah = surah.verses[totalAyahs - 1].text;
+            
+            // Update the UI
+            surahNameElement.textContent = `${surahName} (${englishName})`;
+            firstAyahElement.innerHTML = firstAyah + ' <span class="ayah-end">۝<span class="ayah-number">' + convertToArabicNumerals(1) + '</span></span>';
+            lastAyahElement.innerHTML = lastAyah + ' <span class="ayah-end">۝<span class="ayah-number">' + convertToArabicNumerals(totalAyahs) + '</span></span>';
+            totalAyahsElement.textContent = totalAyahs;
+            
+            // Show the surah info container
+            surahInfoContainer.classList.add('visible');
+            
+            // Hide the show surah info button
+            showSurahInfoBtn.style.display = 'none';
+        }
+
+        // Hide the surah info
+        function hideSurahInfo() {
+            // Hide the surah info container
+            surahInfoContainer.classList.remove('visible');
+            
+            // Show the show surah info button again
+            showSurahInfoBtn.style.display = 'inline-block';
         }
 
         // Helper function to convert numbers to Arabic numerals
