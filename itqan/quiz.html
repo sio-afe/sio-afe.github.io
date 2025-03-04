@@ -536,6 +536,16 @@
                 max-height: 200px;
                 overflow-y: auto;
             }
+            
+            #show-answer-btn, #show-surah-info-btn {
+                display: block;
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            #show-surah-info-btn {
+                margin-left: 0;
+            }
         }
     </style>
 </head>
@@ -547,7 +557,7 @@
         </header>
 
         <div class="card">
-            <h2>1. Select Juz Section(s)</h2>
+            <h2>Select Juz Section(s)</h2>
             <p>Choose one or more Juz sections to get questions from. If no Juz is selected, questions will be generated from the entire Quran.</p>
             
             <div class="filters">
@@ -583,7 +593,7 @@
                 </div>
                 
                 <div class="btn-container" style="margin-top: 1.5rem;">
-                    <button id="show-answer-btn" class="btn">
+                    <button id="show-answer-btn" class="btn" style="margin-bottom: 10px;">
                         <i class="fas fa-eye"></i> 
                         <span style="font-size: 0.9rem; vertical-align: middle; margin: 0 0.2rem; opacity: 0.9;">Show Answer</span>
                     </button>
