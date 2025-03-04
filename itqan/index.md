@@ -71,7 +71,6 @@ title: Qur'an Recitation Competition
                         </div>
                     </div>
                     <div class="register-hero-button">
-                        {% include components/register-button.html %}
                     </div>
                 </div>
             </div>
