@@ -78,6 +78,95 @@ title: Qur'an Recitation Competition
     </div>
 </div>
 
+<div class="sponsors-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <div class="section-header">
+                    <h2 class="mb-4">Our Partners</h2>
+                    <p class="lead mb-5">We are grateful to our esteemed partners and sponsors who have made this event possible.</p>
+                </div>
+                
+                <div class="sponsors-grid">
+                    <a href="https://idealrelief.org/" class="sponsor-item-link">
+                        <div class="sponsor-item">
+                            <div class="sponsor-logo">
+                                <img src="/assets/img/islamic/sponsors/IRT.jpg" alt="Ideal Relief Trust Logo">
+                            </div>
+                            <h4>Ideal Relief Trust</h4>
+                        </div>
+                    </a>
+                    
+                    <a href="https://umeed.org.in" class="sponsor-item-link">
+                        <div class="sponsor-item">
+                            <div class="sponsor-logo">
+                                <img src="/assets/img/islamic/sponsors/Umeed.jpg" alt="Umeed Global School Logo">
+                            </div>
+                            <h4>Umeed Global School</h4>
+                        </div>
+                    </a>
+                    
+                    <a href="https://thehindguru.com/" class="sponsor-item-link">
+                        <div class="sponsor-item">
+                            <div class="sponsor-logo">
+                                <img src="/assets/img/islamic/sponsors/hindguru.jpg" alt="The Hind Guru Logo">
+                            </div>
+                            <h4>The Hind Guru Academy</h4>
+                        </div>
+                    </a>
+                    
+                    <a href="https://noonplayschool.com" class="sponsor-item-link">
+                        <div class="sponsor-item">
+                            <div class="sponsor-logo">
+                                <img src="/assets/img/islamic/sponsors/noon.png" alt="Noon School Logo">
+                            </div>
+                            <h4>Noon School</h4>
+                        </div>
+                    </a>
+                    
+                    <a href="https://www.facebook.com/hidayatdesk/photos/?_rdr" class="sponsor-item-link">
+                        <div class="sponsor-item">
+                            <div class="sponsor-logo">
+                                <img src="/assets/data/sponsors/hidayat.png" alt="Hidayat Publishers Logo">
+                            </div>
+                            <h4>Hidayat Publishers</h4>
+                        </div>
+                    </a>
+                    
+                    <a href="https://whitedotpublishers.com/" class="sponsor-item-link">
+                        <div class="sponsor-item">
+                            <div class="sponsor-logo">
+                                <img src="/assets/data/sponsors/whitedot.jpeg" alt="White Dot Logo">
+                            </div>
+                            <h4>White Dot Publishers</h4>
+                        </div>
+                    </a>
+                    
+                    <a href="https://radianceweekly.net/" class="sponsor-item-link">
+                        <div class="sponsor-item">
+                            <div class="sponsor-logo">
+                                <img src="/assets/img/islamic/sponsors/radiance.png" alt="Radiance Logo">
+                            </div>
+                            <h4>Radiance</h4>
+                        </div>
+                    </a>
+                    
+                    <a href="https://www.facebook.com/p/ALAM-MART-61556409391948/" class="sponsor-item-link">
+                        <div class="sponsor-item">
+                            <div class="sponsor-logo">
+                                <img src="/assets/img/islamic/sponsors/alam_mart.jpg" alt="Alam Mart Logo">
+                            </div>
+                            <h4>Alam Mart</h4>
+                        </div>
+                    </a>
+                </div>
+                
+               
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
 /* Add Thuluth font */
 @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
@@ -492,6 +581,253 @@ title: Qur'an Recitation Competition
 [dir="rtl"] .detail-content {
     font-family: 'Mehr Nastaleeq', 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', sans-serif;
 }
+
+/* Sponsors Section Styles */
+.sponsors-section {
+    padding: 5rem 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.02), rgba(223, 180, 86, 0.05));
+    position: relative;
+    overflow: hidden;
+}
+
+.sponsors-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(223, 180, 86, 0.2), transparent);
+}
+
+.section-header h2 {
+    color: #07002c;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    display: inline-block;
+    font-family: 'Almarena', sans-serif;
+}
+
+.section-header h2 .thuluth-text {
+    font-size: 1.2em;
+}
+
+.section-header h2::after {
+    content: '❁';
+    position: absolute;
+    bottom: -1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.5rem;
+    background: linear-gradient(45deg, #957718, #e2c27d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(2px 2px 4px rgba(149, 119, 24, 0.3));
+}
+
+.sponsors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+.sponsor-item-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.sponsor-item-link:hover {
+    text-decoration: none;
+    color: inherit;
+    transform: translateY(-5px);
+}
+
+.sponsor-item {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(7, 0, 44, 0.05);
+    box-shadow: 0 5px 20px rgba(7, 0, 44, 0.02);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.sponsor-item-link:hover .sponsor-item {
+    border-color: rgba(223, 180, 86, 0.2);
+    box-shadow: 0 10px 30px rgba(7, 0, 44, 0.05);
+}
+
+.sponsor-logo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+    padding: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(223, 180, 86, 0.1);
+}
+
+.sponsor-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: all 0.3s ease;
+}
+
+.sponsor-item:hover .sponsor-logo {
+    background: #ffffff;
+    transform: scale(1.05);
+    border-color: rgba(223, 180, 86, 0.3);
+    box-shadow: 0 5px 15px rgba(149, 119, 24, 0.1);
+}
+
+.sponsor-item:hover .sponsor-logo img {
+    transform: scale(1.05);
+}
+
+.sponsor-logo i {
+    display: none;
+}
+
+.sponsor-item h4 {
+    color: #07002c;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.sponsor-item p {
+    color: rgba(7, 0, 44, 0.6);
+    font-size: 0.9rem;
+    font-family: 'Almarena Mono', monospace;
+    letter-spacing: 0.5px;
+}
+
+.become-sponsor {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid rgba(223, 180, 86, 0.1);
+    display: inline-block;
+}
+
+.become-sponsor p {
+    color: #07002c;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.sponsor-contact-btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(45deg, #957718, #e2c27d);
+    color: #ffffff;
+    border-radius: 50px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    font-family: 'Almarena Mono', monospace;
+    letter-spacing: 0.5px;
+    box-shadow: 0 5px 15px rgba(149, 119, 24, 0.2);
+}
+
+.sponsor-contact-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(149, 119, 24, 0.3);
+    color: #ffffff;
+    text-decoration: none;
+}
+
+@media (max-width: 992px) {
+    .sponsors-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .sponsors-section {
+        padding: 3rem 0;
+    }
+    
+    .section-header h2 {
+        font-size: 2rem;
+    }
+    
+    .section-header h2 .thuluth-text {
+        font-size: 1.1em;
+    }
+    
+    .sponsors-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1.25rem;
+        margin: 2rem 0;
+    }
+    
+    .sponsor-logo {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .sponsor-item {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .sponsors-section {
+        padding: 2.5rem 0;
+    }
+    
+    .section-header h2 {
+        font-size: 1.8rem;
+    }
+    
+    .section-header h2 .thuluth-text {
+        font-size: 1em;
+    }
+    
+    .sponsors-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .sponsor-logo {
+        width: 80px;
+        height: 80px;
+        padding: 8px;
+    }
+    
+    .sponsor-item {
+        padding: 1.25rem;
+    }
+    
+    .sponsor-item h4 {
+        font-size: 1.1rem;
+    }
+    
+    .become-sponsor {
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+}
+
+/* End of Sponsors Section Styles */
 </style>
 
 <!-- Add more sections as needed --> 

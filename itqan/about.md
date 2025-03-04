@@ -698,6 +698,10 @@ title: About إتقان
                                     <i class="fas fa-medal prize-icon"></i>
                                     <span>Second Prize</span>
                                 </div>
+                                <div class="prize-item">
+                                    <i class="fas fa-award prize-icon"></i>
+                                    <span>Third Prize</span>
+                                </div>
             </div>
             </div>
             </div>
@@ -720,6 +724,10 @@ title: About إتقان
                                 <div class="prize-item">
                                     <i class="fas fa-medal prize-icon"></i>
                                     <span>Second Prize</span>
+                                </div>
+                                <div class="prize-item">
+                                    <i class="fas fa-award prize-icon"></i>
+                                    <span>Third Prize</span>
                                 </div>
                             </div>
                         </div>
