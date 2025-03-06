@@ -306,11 +306,6 @@ title: Contact إتقان
             <p>SIO Abul Fazal Office<br>Abul Fazal Enclave, Jamia Nagar<br>New Delhi, India</p>
         </div>
 
-        <div class="contact-card">
-            <i class="fas fa-phone"></i>
-            <h3>Phone</h3>
-            <p>+91 882 634 0784</p>
-        </div>
 
         <div class="contact-card">
             <i class="fas fa-envelope"></i>
