@@ -56,7 +56,7 @@ title: Qur'an Recitation Competition
                                 </div>
                                 <div class="detail-content">
                                     <span class="detail-label">DATE</span>
-                                    <span class="detail-value">9 March 2024</span>
+                                    <span class="detail-value">9 March 2025</span>
                                 </div>
                             </div>
                             <div class="detail-item">
@@ -115,12 +115,12 @@ title: Qur'an Recitation Competition
                         </div>
                     </a>
                     
-                    <a href="https://noonplayschool.com" class="sponsor-item-link">
+                    <a href="https://www.instagram.com/noonplayschool/" class="sponsor-item-link">
                         <div class="sponsor-item">
                             <div class="sponsor-logo">
                                 <img src="/assets/img/islamic/sponsors/noon.png" alt="Noon School Logo">
                             </div>
-                            <h4>Noon School</h4>
+                            <h4>Noon Play School</h4>
                         </div>
                     </a>
                     
