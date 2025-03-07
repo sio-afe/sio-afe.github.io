@@ -132,6 +132,15 @@ title: Qur'an Recitation Competition
                             <h4>Hidayat Publishers</h4>
                         </div>
                     </a>
+
+                    <a href="https://mmipublishers.net/" class="sponsor-item-link">
+                        <div class="sponsor-item">
+                            <div class="sponsor-logo">
+                                <img src="/assets/img/islamic/sponsors/mmi.jpg" alt="Markazi Maktaba Publishers">
+                            </div>
+                            <h4>Markazi Maktaba Publishers</h4>
+                        </div>
+                    </a>
                     
                     <a href="https://whitedotpublishers.com/" class="sponsor-item-link">
                         <div class="sponsor-item">
@@ -148,6 +157,15 @@ title: Qur'an Recitation Competition
                                 <img src="/assets/img/islamic/sponsors/radiance.png" alt="Radiance Logo">
                             </div>
                             <h4>Radiance</h4>
+                        </div>
+                    </a>
+
+                    <a href="https://www.ctag.in/" class="sponsor-item-link">
+                        <div class="sponsor-item">
+                            <div class="sponsor-logo">
+                                <img src="/assets/img/islamic/sponsors/ctag.png" alt="Radiance Logo">
+                            </div>
+                            <h4>CTAG</h4>
                         </div>
                     </a>
                     
