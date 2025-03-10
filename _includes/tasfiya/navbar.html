@@ -23,6 +23,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {% if page.url contains '/gallery' %}active{% endif %}" href="{{ '/itqan/gallery' | relative_url }}">
+                        <i class="fas fa-camera me-1"></i>Event Gallery
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {% if page.url contains '/faq' %}active{% endif %}" href="{{ '/itqan/faq' | relative_url }}">
                         <i class="fas fa-question-circle me-1"></i>FAQ
                     </a>
@@ -58,6 +63,11 @@
                 <li>
                     <a class="{% if page.url contains '/about' %}active{% endif %}" href="{{ '/itqan/about' | relative_url }}">
                         <i class="fas fa-info-circle me-1"></i>About Competition
+                    </a>
+                </li>
+                <li>
+                    <a class="{% if page.url contains '/gallery' %}active{% endif %}" href="{{ '/itqan/gallery' | relative_url }}">
+                        <i class="fas fa-camera me-1"></i>Event Gallery
                     </a>
                 </li>
                 <li>

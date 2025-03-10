@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Itqan Score Sheet</title>
+  <style>
+  .registration-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .controls {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .search-box {
+    padding: 8px 15px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 300px;
+    max-width: 100%;
+  }
+  
+  .category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .filter-btn {
+    padding: 8px 15px;
+    background-color: #f1f1f1;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .filter-btn:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .filter-btn.active {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .print-controls {
+    margin: 10px 0;
+    text-align: center;
+  }
+  
+  .print-btn {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    margin: 0 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .print-btn:hover {
+    background-color: #0b7dda;
+  }
+  
+  .registration-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .registration-table th, 
+  .registration-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+  }
+  
+  .registration-table th {
+    background-color: #f2f2f2;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .registration-table th:hover {
+    background-color: #e8e8e8;
+  }
+  
+  .registration-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .registration-table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .summary {
+    margin-top: 20px;
+    font-weight: bold;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .registration-table {
+      font-size: 14px;
+    }
+    
+    .registration-table th, 
+    .registration-table td {
+      padding: 8px;
+    }
+    
+    .search-box {
+      width: 100%;
+    }
+  }
+  
+  @media print {
+    body {
+      font-size: 12pt;
+      margin: 0;
+      padding: 0;
+    }
+    
+    @page {
+      size: landscape;
+      margin: 0.5cm;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .hide-for-print {
+      display: none;
+    }
+    
+    .controls, .filters, .print-controls, .search-box, .summary {
+      display: none;
+    }
+    
+    .registration-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .registration-table th, .registration-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    
+    .registration-table tr {
+      page-break-inside: avoid;
+    }
+  }
+  </style>
+</head>
+<body>
+
+<div class="registration-container">
+  <h1>Itqan ScoreSheet</h1>
+  
+  <div class="controls">
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="H1">Hifz 30</button>
+      <button class="filter-btn" data-filter="H2">Hifz 29 & 30</button>
+      <button class="filter-btn" data-filter="H3">Hifz Full</button>
+      <button class="filter-btn" data-filter="T">Tarteel</button>
+      <button class="filter-btn" data-filter="A">Azan</button>
+    </div>
+  </div>
+  
+  <div class="print-controls">
+    <button class="print-btn" data-print="all">Print All</button>
+    <button class="print-btn" data-print="H1">Print Hifz 30</button>
+    <button class="print-btn" data-print="H2">Print Hifz 29 & 30</button>
+    <button class="print-btn" data-print="H3">Print Hifz Full</button>
+    <button class="print-btn" data-print="T">Print Tarteel</button>
+    <button class="print-btn" data-print="A">Print Azan</button>
+  </div>
+
+  <input type="text" id="searchInput" placeholder="Search for names or IDs..." class="search-box">
+
+  <table id="registrationTable" class="registration-table">
+    <thead>
+      <tr>
+        <th onclick="sortTable(0)">ID ↕</th>
+        <th onclick="sortTable(1)">Name ↕</th>
+        <th onclick="sortTable(2)">Category ↕</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Hifz 30 -->
+      <tr data-category="H1">
+        <td>H101</td>
+        <td>Adnan Zafar</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H102</td>
+        <td>Mohd Zubair (Sabeel Us Salam)</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H103</td>
+        <td>AbdulRahman Sadiq</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H104</td>
+        <td>Mohd Umar Ibn Mohd Zufair</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H105</td>
+        <td>Mohd Faizan Ibn Aquil</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H106</td>
+        <td>Muhammad (Tariq Al Saqib)</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H107</td>
+        <td>Abdullah Naseem</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H108</td>
+        <td>Aziz Abdullah</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H109</td>
+        <td>Md Akbar</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H110</td>
+        <td>Mustafa Abbas Ibrahim</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H111</td>
+        <td>Abdurrehman Khuzaima</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H112</td>
+        <td>Muhammad Maroof</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H113</td>
+        <td>Arib Raza</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H114</td>
+        <td>Muhammad Anisur Rahman</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H115</td>
+        <td>Ashar Zaheer Khan</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H116</td>
+        <td>Ahmed Labeeb</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H117</td>
+        <td>Mohammed Maaz Inam</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H118</td>
+        <td>Ashraque Tabrez</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H119</td>
+        <td>Bashshar Umar</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H120</td>
+        <td>Saiyed Mohammad Amanullah</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H121</td>
+        <td>Saiyed Mohammad Asadullah</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H122</td>
+        <td>Rayyan Ahmad Siddiqui</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H1">
+        <td>H123</td>
+        <td>Mohammad Sadan</td>
+        <td>Hifz 30</td>
+        <td></td>
+      </tr>
+
+      <!-- Hifz 29 & 30 -->
+      <tr data-category="H2">
+        <td>H201</td>
+        <td>Mohammad Noman</td>
+        <td>Hifz 29 & 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H2">
+        <td>H202</td>
+        <td>Mohd Irfan</td>
+        <td>Hifz 29 & 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H2">
+        <td>H203</td>
+        <td>Abu Salim</td>
+        <td>Hifz 29 & 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H2">
+        <td>H204</td>
+        <td>Muhammad (Masjid Bilal)</td>
+        <td>Hifz 29 & 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H2">
+        <td>H205</td>
+        <td>Mohammed Aarsih</td>
+        <td>Hifz 29 & 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H2">
+        <td>H206</td>
+        <td>Mohd Zubair (Masjid Bilal)</td>
+        <td>Hifz 29 & 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H2">
+        <td>H207</td>
+        <td>Mohd Shayan</td>
+        <td>Hifz 29 & 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H2">
+        <td>H208</td>
+        <td>Abdullah</td>
+        <td>Hifz 29 & 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H2">
+        <td>H209</td>
+        <td>Rakey Kirmani</td>
+        <td>Hifz 29 & 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H2">
+        <td>H210</td>
+        <td>Mohammed Saqib Masood</td>
+        <td>Hifz 29 & 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H2">
+        <td>H211</td>
+        <td>Usman Siddiqui</td>
+        <td>Hifz 29 & 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H2">
+        <td>H212</td>
+        <td>Shafiqur Rahman</td>
+        <td>Hifz 29 & 30</td>
+        <td></td>
+      </tr>
+      <tr data-category="H2">
+        <td>H213</td>
+        <td>Rayyan Jasim</td>
+        <td>Hifz 29 & 30</td>
+        <td></td>
+      </tr>
+
+      <!-- Hifz Full -->
+      <tr data-category="H3">
+        <td>H301</td>
+        <td>Maouz</td>
+        <td>Hifz Full</td>
+        <td></td>
+      </tr>
+      <tr data-category="H3">
+        <td>H302</td>
+        <td>Owais Malik</td>
+        <td>Hifz Full</td>
+        <td></td>
+      </tr>
+      <tr data-category="H3">
+        <td>H303</td>
+        <td>Waliurrahman</td>
+        <td>Hifz Full</td>
+        <td></td>
+      </tr>
+      <tr data-category="H3">
+        <td>H304</td>
+        <td>Mohd Ismail</td>
+        <td>Hifz Full</td>
+        <td></td>
+      </tr>
+      <tr data-category="H3">
+        <td>H305</td>
+        <td>Qari Abdul Ahad</td>
+        <td>Hifz Full</td>
+        <td></td>
+      </tr>
+      <tr data-category="H3">
+        <td>H306</td>
+        <td>Fahad Azmat</td>
+        <td>Hifz Full</td>
+        <td></td>
+      </tr>
+      <tr data-category="H3">
+        <td>H307</td>
+        <td>Ahmad Affan</td>
+        <td>Hifz Full</td>
+        <td></td>
+      </tr>
+      <tr data-category="H3">
+        <td>H308</td>
+        <td>Fawwaz Jawed Khan</td>
+        <td>Hifz Full</td>
+        <td></td>
+      </tr>
+      <tr data-category="H3">
+        <td>H309</td>
+        <td>Bilal</td>
+        <td>Hifz Full</td>
+        <td></td>
+      </tr>
+      <tr data-category="H3">
+        <td>H310</td>
+        <td>Mohammad Ayaz</td>
+        <td>Hifz Full</td>
+        <td></td>
+      </tr>
+      <tr data-category="H3">
+        <td>H311</td>
+        <td>Ausaf Ayaz</td>
+        <td>Hifz Full</td>
+        <td></td>
+      </tr>
+
+      <!-- Tarteel -->
+      <tr data-category="T">
+        <td>T101</td>
+        <td>Mohd Shaban</td>
+        <td>Tarteel</td>
+        <td></td>
+      </tr>
+      <tr data-category="T">
+        <td>T102</td>
+        <td>Md Mukhtasar</td>
+        <td>Tarteel</td>
+        <td></td>
+      </tr>
+      <tr data-category="T">
+        <td>T103</td>
+        <td>Qari Fazlurahman</td>
+        <td>Tarteel</td>
+        <td></td>
+      </tr>
+      <tr data-category="T">
+        <td>T104</td>
+        <td>Qari Nadeem</td>
+        <td>Tarteel</td>
+        <td></td>
+      </tr>
+      <tr data-category="T">
+        <td>T105</td>
+        <td>Saifullah</td>
+        <td>Tarteel</td>
+        <td></td>
+      </tr>
+      <tr data-category="T">
+        <td>T106</td>
+        <td>Arman Aghwani</td>
+        <td>Tarteel</td>
+        <td></td>
+      </tr>
+      <tr data-category="T">
+        <td>T107</td>
+        <td>Saad Inam</td>
+        <td>Tarteel</td>
+        <td></td>
+      </tr>
+      <tr data-category="T">
+        <td>T108</td>
+        <td>Md Khalil</td>
+        <td>Tarteel</td>
+        <td></td>
+      </tr>
+      <tr data-category="T">
+        <td>T109</td>
+        <td>Pervez Musharraf</td>
+        <td>Tarteel</td>
+        <td></td>
+      </tr>
+      <tr data-category="T">
+        <td>T110</td>
+        <td>Syed Affan Ahmad</td>
+        <td>Tarteel</td>
+        <td></td>
+      </tr>
+      <tr data-category="T">
+        <td>T111</td>
+        <td>Sumama Haseeb</td>
+        <td>Tarteel</td>
+        <td></td>
+      </tr>
+      <tr data-category="T">
+        <td>T112</td>
+        <td>Obaidullah</td>
+        <td>Tarteel</td>
+        <td></td>
+      </tr>
+      <tr data-category="T">
+        <td>T113</td>
+        <td>Mohd Akhtar</td>
+        <td>Tarteel</td>
+        <td></td>
+      </tr>
+
+      <!-- Azan -->
+      <tr data-category="A">
+        <td>A101</td>
+        <td>Mohd Umar S/o Rehnul</td>
+        <td>Azan</td>
+        <td></td>
+      </tr>
+      <tr data-category="A">
+        <td>A102</td>
+        <td>Muhammad Owais</td>
+        <td>Azan</td>
+        <td></td>
+      </tr>
+      <tr data-category="A">
+        <td>A103</td>
+        <td>Mohd Amir</td>
+        <td>Azan</td>
+        <td></td>
+      </tr>
+      <tr data-category="A">
+        <td>A104</td>
+        <td>Muhammad (Masjid Tariq Al Saqib)</td>
+        <td>Azan</td>
+        <td></td>
+      </tr>
+      <tr data-category="A">
+        <td>A105</td>
+        <td>Mohd Shawaiz</td>
+        <td>Azan</td>
+        <td></td>
+      </tr>
+      <tr data-category="A">
+        <td>A106</td>
+        <td>Qari Huzaifa</td>
+        <td>Azan</td>
+        <td></td>
+      </tr>
+      <tr data-category="A">
+        <td>A107</td>
+        <td>Qari Azam</td>
+        <td>Azan</td>
+        <td></td>
+      </tr>
+      <tr data-category="A">
+        <td>A108</td>
+        <td>Muhammad Anas</td>
+        <td>Azan</td>
+        <td></td>
+      </tr>
+      <tr data-category="A">
+        <td>A109</td>
+        <td>Muhammad Sufyan</td>
+        <td>Azan</td>
+        <td></td>
+      </tr>
+      <tr data-category="A">
+        <td>A110</td>
+        <td>Mohd Yaseen</td>
+        <td>Azan</td>
+        <td></td>
+      </tr>
+      <tr data-category="A">
+        <td>A111</td>
+        <td>Muhammad Usama</td>
+        <td>Azan</td>
+        <td></td>
+      </tr>
+      <tr data-category="A">
+        <td>A112</td>
+        <td>Sabir</td>
+        <td>Azan</td>
+        <td></td>
+      </tr>
+      <tr data-category="A">
+        <td>A113</td>
+        <td>Md Sadab</td>
+        <td>Azan</td>
+        <td></td>
+      </tr>
+      <tr data-category="A">
+        <td>A114</td>
+        <td>Shaukat Ali</td>
+        <td>Azan</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div class="summary">
+    <p>Total registered: <span id="totalCount">74</span></p>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('keyup', function() {
+      const searchText = this.value.toLowerCase();
+      const rows = document.querySelectorAll('#registrationTable tbody tr');
+      
+      rows.forEach(row => {
+        const id = row.cells[0].textContent.toLowerCase();
+        const name = row.cells[1].textContent.toLowerCase();
+        const category = row.cells[2].textContent.toLowerCase();
+        
+        if (id.includes(searchText) || name.includes(searchText) || category.includes(searchText)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    });
+    
+    // Filter by category
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // Remove active class from all buttons
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        // Add active class to clicked button
+        this.classList.add('active');
+        
+        const filterValue = this.getAttribute('data-filter');
+        const rows = document.querySelectorAll('#registrationTable tbody tr');
+        
+        rows.forEach(row => {
+          if (filterValue === 'all') {
+            row.style.display = '';
+          } else {
+            const category = row.getAttribute('data-category');
+            if (category === filterValue) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          }
+        });
+      });
+    });
+    
+    // Update total count
+    const totalCount = document.getElementById('totalCount');
+    totalCount.textContent = document.querySelectorAll('#registrationTable tbody tr').length;
+    
+    // Print functionality
+    const printButtons = document.querySelectorAll('.print-btn');
+    printButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const category = this.getAttribute('data-print');
+        const rows = document.querySelectorAll('#registrationTable tbody tr');
+        
+        // Show only the rows for the selected category
+        rows.forEach(row => {
+          if (category === 'all' || row.getAttribute('data-category') === category) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+        
+        // Set the title for the print
+        let title = 'All Participants';
+        if (category === 'H1') title = 'Hifz 30 Participants';
+        if (category === 'H2') title = 'Hifz 29 & 30 Participants';
+        if (category === 'H3') title = 'Hifz Full Participants';
+        if (category === 'T') title = 'Tarteel Participants';
+        if (category === 'A') title = 'Azan Participants';
+        
+        document.title = title;
+        
+        // Print the page
+        window.print();
+        
+        // Reset the display of all rows
+        rows.forEach(row => {
+          row.style.display = '';
+        });
+        
+        // Reset the active filter
+        document.querySelector('.filter-btn.active').click();
+        
+        // Reset the title
+        document.title = 'Registration Desk';
+      });
+    });
+    
+    // Sorting functionality
+    window.sortTable = function(columnIndex) {
+      const table = document.getElementById('registrationTable');
+      let switching = true;
+      let shouldSwitch, switchcount = 0;
+      let i, x, y, dir = 'asc';
+      
+      while (switching) {
+        switching = false;
+        const rows = table.rows;
+        
+        for (i = 1; i < (rows.length - 1); i++) {
+          shouldSwitch = false;
+          x = rows[i].getElementsByTagName('td')[columnIndex];
+          y = rows[i + 1].getElementsByTagName('td')[columnIndex];
+          
+          if (dir === 'asc') {
+            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+              shouldSwitch = true;
+              break;
+            }
+          } else if (dir === 'desc') {
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+              shouldSwitch = true;
+              break;
+            }
+          }
+        }
+        
+        if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          switchcount++;
+        } else {
+          if (switchcount === 0 && dir === 'asc') {
+            dir = 'desc';
+            switching = true;
+          }
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html> 
