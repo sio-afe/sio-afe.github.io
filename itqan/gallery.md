@@ -55,33 +55,21 @@ permalink: /itqan/gallery/
                 <div class="col-md-6 col-lg-3">
                     <div class="card gallery-card h-100">
                         <img src="{{ '/assets/img/islamic/event/img2.jpg' | relative_url }}" class="card-img-top" alt="Event Photo">
-                        <div class="card-body">
-                            <h5 class="card-title">Event Highlights</h5>
-                        </div>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3">
                     <div class="card gallery-card h-100">
                         <img src="{{ '/assets/img/islamic/event/img3.jpg' | relative_url }}" class="card-img-top" alt="Event Photo">
-                        <div class="card-body">
-                            <h5 class="card-title">Event Highlights</h5>
-                        </div>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3">
                     <div class="card gallery-card h-100">
                         <img src="{{ '/assets/img/islamic/event/img4.jpg' | relative_url }}" class="card-img-top" alt="Event Photo">
-                        <div class="card-body">
-                            <h5 class="card-title">Event Highlights</h5>
-                        </div>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3">
                     <div class="card gallery-card h-100">
                         <img src="{{ '/assets/img/islamic/event/img5.jpg' | relative_url }}" class="card-img-top" alt="Event Photo">
-                        <div class="card-body">
-                            <h5 class="card-title">Event Highlights</h5>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -155,6 +143,7 @@ permalink: /itqan/gallery/
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        background: transparent;
     }
     
     .gallery-card:hover {
@@ -163,30 +152,15 @@ permalink: /itqan/gallery/
     }
     
     .gallery-card img {
-        height: 220px;
+        height: 240px;
+        width: 100%;
         object-fit: cover;
         transition: all 0.5s ease;
+        border-radius: 12px;
     }
     
     .gallery-card:hover img {
         transform: scale(1.05);
-    }
-    
-    .gallery-card .card-body {
-        padding: 1.5rem;
-        background: #07002c;
-        color: #ffffff;
-    }
-    
-    .gallery-card .card-title {
-        color: #e2c27d;
-        font-weight: 600;
-        margin-bottom: 0.75rem;
-    }
-    
-    .gallery-card .card-text {
-        color: rgba(255, 255, 255, 0.8);
-        font-size: 0.9rem;
     }
     
     .video-placeholder {
@@ -234,7 +208,7 @@ permalink: /itqan/gallery/
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .gallery-card img {
-            height: 180px;
+            height: 200px;
         }
         
         .gallery-tabs .nav-link {
@@ -244,10 +218,6 @@ permalink: /itqan/gallery/
     }
     
     /* RTL Support */
-    [dir="rtl"] .gallery-card .card-body {
-        text-align: right;
-    }
-    
     [dir="rtl"] .gallery-tabs .nav-link i {
         margin-right: 0;
         margin-left: 0.5rem;
