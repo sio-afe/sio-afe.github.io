@@ -88,16 +88,21 @@ permalink: /itqan/gallery/
             </div>
             
             <div class="row justify-content-center">
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
-                        <div class="card-body text-center py-5">
-                            <div class="video-placeholder mb-4">
-                                <i class="fas fa-video fa-4x" style="color: #e2c27d; opacity: 0.6;"></i>
+                        <div class="card-body p-0">
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe class="embed-responsive-item" width="100%" height="500" 
+                                        src="https://www.youtube.com/embed/Z4dgEGCBa1o?si=cEVKVsWKKmUBj9Qc" 
+                                        title="ITQAN Event Highlights" 
+                                        frameborder="0" 
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                        allowfullscreen></iframe>
                             </div>
-                            <h3 class="h4 mb-3">Coming Soon</h3>
-                            <p class="lead">Our team is working hard to compile and edit the event videos.</p>
-                            <p>Please be patient as we prepare these memorable moments to share with you.</p>
-                            <p>Check back soon for updates!</p>
+                        </div>
+                        <div class="card-footer bg-light p-3 text-center">
+                            <h5 class="mb-1">ITQAN Event Highlights</h5>
+                            <p class="text-muted small mb-0">Watch our event highlights and share with friends and family</p>
                         </div>
                     </div>
                 </div>
