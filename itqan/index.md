@@ -151,12 +151,12 @@ title: Qur'an Recitation Competition
                         </div>
                     </a>
                     
-                    <a href="https://radianceweekly.net/" class="sponsor-item-link">
+                    <a href="tel:+917503330234" class="sponsor-item-link">
                         <div class="sponsor-item">
                             <div class="sponsor-logo">
-                                <img src="/assets/img/islamic/sponsors/radiance.png" alt="Radiance Logo">
+                                <img src="/assets/img/islamic/sponsors/SR.png" alt="SR Logo">
                             </div>
-                            <h4>Radiance</h4>
+                            <h4>SR Furnitures</h4>
                         </div>
                     </a>
 
