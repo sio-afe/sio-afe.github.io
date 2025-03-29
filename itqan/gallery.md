@@ -130,19 +130,19 @@ permalink: /itqan/gallery/
                             <div class="carousel-item">
                                 <div class="carousel-image-container">
                                     <img src="{{ '/assets/img/islamic/event/12.jpg' | relative_url }}" class="d-block w-100" alt="Event Photo 12">
-                    </div>
-                </div>
+                                </div>
+                            </div>
                             <div class="carousel-item">
                                 <div class="carousel-image-container">
                                     <img src="{{ '/assets/img/islamic/event/13.jpg' | relative_url }}" class="d-block w-100" alt="Event Photo 13">
-                    </div>
-                </div>
+                                </div>
+                            </div>
                             <div class="carousel-item">
                                 <div class="carousel-image-container">
                                     <img src="{{ '/assets/img/islamic/event/14.jpg' | relative_url }}" class="d-block w-100" alt="Event Photo 14">
                                 </div>
-                    </div>
-                </div>
+                            </div>
+                        </div>
                         
                         <!-- Carousel controls -->
                         <button class="carousel-control-prev" type="button" data-bs-target="#eventCarousel" data-bs-slide="prev">
@@ -1298,6 +1298,35 @@ permalink: /itqan/gallery/
             margin-top: 0.5rem;
         }
     }
+    
+    /* Ad Banner Styles */
+    .ad-banner-container {
+        background-color: rgba(248, 249, 250, 0.5);
+        text-align: center;
+    }
+    
+    .google-ads-wrapper {
+        margin: 0 auto;
+        min-height: 90px;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .adsbygoogle {
+        width: 100%;
+    }
+    
+    .ad-disclaimer {
+        font-size: 10px;
+        color: #888;
+        text-align: center;
+    }
+    
+    @media (max-width: 767px) {
+        .ad-banner-container {
+            padding: 10px 5px;
+        }
+    }
 </style>
 
 <script>
@@ -1357,6 +1386,22 @@ permalink: /itqan/gallery/
                                 <div class="video-container shadow-sm">
                                     <iframe id="modalDriveVideo" class="w-100" allowfullscreen></iframe>
                                 </div>
+                                
+                                <!-- Google Ads Container -->
+                                <div class="ad-banner-container mt-3 px-3 pb-2">
+                                    <div class="ad-disclaimer mb-1">
+                                        <small class="text-muted">Advertisement</small>
+                                    </div>
+                                    <div class="google-ads-wrapper">
+                                        <!-- Itqan Video Modal Ad -->
+                                        <ins class="adsbygoogle"
+                                             style="display:block"
+                                             data-ad-client="ca-pub-7992841738035545"
+                                             data-ad-slot="1091585776"
+                                             data-ad-format="auto"
+                                             data-full-width-responsive="true"></ins>
+                                    </div>
+                                </div>
                             </div>
                             <div class="modal-footer border-0 pt-2">
                                 <div class="container-fluid px-0">
@@ -1396,6 +1441,15 @@ permalink: /itqan/gallery/
         
         // Show modal
         new bootstrap.Modal(document.getElementById('videoModal')).show();
+        
+        // Load Google Ads after modal is shown
+        setTimeout(function() {
+            try {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            } catch (e) {
+                console.error('Error loading ads:', e);
+            }
+        }, 500);
     }
 
     // Function to handle social sharing
@@ -1457,5 +1511,23 @@ permalink: /itqan/gallery/
                 videoFrame.src = '';
             }
         }
+    });
+
+    // Function to initialize Google AdSense
+    function initGoogleAds() {
+        var script = document.createElement('script');
+        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7992841738035545';
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        document.head.appendChild(script);
+    }
+
+    // Initialize Google AdSense when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize other functionality
+        // ...existing DOMContentLoaded code...
+        
+        // Initialize Google AdSense
+        initGoogleAds();
     });
 </script> 
