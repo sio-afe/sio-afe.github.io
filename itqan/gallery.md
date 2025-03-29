@@ -1327,6 +1327,94 @@ permalink: /itqan/gallery/
             padding: 10px 5px;
         }
     }
+    
+    /* Share button styles */
+    #shareButton {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+        padding: 0.5rem 1.25rem;
+        transition: all 0.2s ease;
+    }
+    
+    #shareButton i {
+        font-size: 1rem;
+    }
+    
+    /* Fallback Share Modal styles */
+    .share-fallback-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1060;
+    }
+    
+    .share-fallback-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1059;
+    }
+    
+    .share-fallback-content {
+        position: relative;
+        background-color: white;
+        border-radius: 20px 20px 0 0;
+        padding: 1.5rem;
+        box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.2);
+        z-index: 1060;
+    }
+    
+    .share-options-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .share-option-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        padding: 0.75rem;
+        border-radius: 12px;
+        transition: all 0.2s ease;
+    }
+    
+    .share-option-btn:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+    
+    .share-option-btn i {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--primary-blue);
+    }
+    
+    .share-option-btn span {
+        font-size: 0.8rem;
+        color: #333;
+    }
+    
+    @media (max-width: 767px) {
+        .share-options-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .share-options-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
 </style>
 
 <script>
@@ -1363,7 +1451,52 @@ permalink: /itqan/gallery/
                 }
             }
         }
+        
+        // Create meta tags if they don't exist yet
+        createMetaTags();
     });
+    
+    // Function to create initial meta tags
+    function createMetaTags() {
+        const head = document.head;
+        
+        // Helper function to create meta tag
+        function createMeta(property, content) {
+            // Check if tag already exists
+            if (!document.querySelector(`meta[property="${property}"]`)) {
+                const meta = document.createElement('meta');
+                meta.setAttribute('property', property);
+                meta.setAttribute('content', content);
+                head.appendChild(meta);
+            }
+        }
+        
+        // Default meta values
+        const defaultImage = window.location.origin + "{{ '/assets/img/islamic/event/tarteel-01.jpg' | relative_url }}";
+        const defaultTitle = "ITQAN Event Gallery";
+        const defaultDesc = "Watch videos from the ITQAN competition";
+        
+        // Create Open Graph tags
+        createMeta('og:title', defaultTitle);
+        createMeta('og:description', defaultDesc);
+        createMeta('og:image', defaultImage);
+        createMeta('og:url', window.location.href);
+        createMeta('og:type', 'website');
+        
+        // Create Twitter Card tags
+        createMeta('twitter:card', 'summary_large_image');
+        createMeta('twitter:title', defaultTitle);
+        createMeta('twitter:description', defaultDesc);
+        createMeta('twitter:image', defaultImage);
+        
+        // Store original values
+        window.originalMeta = {
+            title: defaultTitle,
+            description: defaultDesc,
+            image: defaultImage,
+            url: window.location.href
+        };
+    }
     
     // Google Drive Video Modal Player
     function playGDriveVideoInModal(driveId, videoTitle, videoId) {
@@ -1371,6 +1504,12 @@ permalink: /itqan/gallery/
         const url = new URL(window.location.href);
         url.searchParams.set('video', videoId);
         window.history.pushState({}, '', url);
+        
+        // Update page title to include video name
+        document.title = videoTitle;
+        
+        // Update meta tags for better social sharing
+        updateMetaTags(videoTitle, videoId);
         
         // Create modal if it doesn't exist
         if (!document.getElementById('videoModal')) {
@@ -1408,15 +1547,48 @@ permalink: /itqan/gallery/
                                     <div class="row align-items-center">
                                         <div class="col-12 col-md-8 mb-3 mb-md-0">
                                             <div class="share-buttons d-flex flex-wrap gap-2 justify-content-center justify-content-md-start">
-                                                <button class="btn btn-outline-primary btn-sm rounded-pill" onclick="shareVideo('facebook')">
-                                                    <i class="fab fa-facebook"></i> Share
+                                                <button class="btn btn-outline-primary btn-sm rounded-pill" id="shareButton" onclick="shareContent()">
+                                                    <i class="fas fa-share-alt me-2"></i>Share
                                                 </button>
-                                                <button class="btn btn-outline-primary btn-sm rounded-pill" onclick="shareVideo('twitter')">
-                                                    <i class="fab fa-twitter"></i> Share
-                                                </button>
-                                                <button class="btn btn-outline-primary btn-sm rounded-pill" onclick="shareVideo('whatsapp')">
-                                                    <i class="fab fa-whatsapp"></i> Share
-                                                </button>
+                                                <div id="fallbackShareModal" class="share-fallback-container d-none">
+                                                    <div class="share-fallback-overlay" onclick="toggleFallbackShare()"></div>
+                                                    <div class="share-fallback-content">
+                                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                                            <h5 class="m-0">Share this video</h5>
+                                                            <button class="btn-close" onclick="toggleFallbackShare()"></button>
+                                                        </div>
+                                                        <div class="share-options-grid">
+                                                            <button class="share-option-btn" onclick="shareVideo('facebook')">
+                                                                <i class="fab fa-facebook"></i>
+                                                                <span>Facebook</span>
+                                                            </button>
+                                                            <button class="share-option-btn" onclick="shareVideo('twitter')">
+                                                                <i class="fab fa-twitter"></i>
+                                                                <span>Twitter</span>
+                                                            </button>
+                                                            <button class="share-option-btn" onclick="shareVideo('whatsapp')">
+                                                                <i class="fab fa-whatsapp"></i>
+                                                                <span>WhatsApp</span>
+                                                            </button>
+                                                            <button class="share-option-btn" onclick="shareVideo('telegram')">
+                                                                <i class="fab fa-telegram"></i>
+                                                                <span>Telegram</span>
+                                                            </button>
+                                                            <button class="share-option-btn" onclick="shareVideo('linkedin')">
+                                                                <i class="fab fa-linkedin"></i>
+                                                                <span>LinkedIn</span>
+                                                            </button>
+                                                            <button class="share-option-btn" onclick="shareVideo('email')">
+                                                                <i class="fas fa-envelope"></i>
+                                                                <span>Email</span>
+                                                            </button>
+                                                            <button class="share-option-btn" onclick="copyShareLink()">
+                                                                <i class="fas fa-link"></i>
+                                                                <span>Copy Link</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-4 text-center text-md-end">
@@ -1453,6 +1625,34 @@ permalink: /itqan/gallery/
     }
 
     // Function to handle social sharing
+    function shareContent() {
+        const url = window.location.href;
+        const title = document.getElementById('videoModalLabel').textContent;
+        
+        // Try to use Web Share API if available (modern browsers and mobile)
+        if (navigator.share) {
+            navigator.share({
+                title: title,
+                text: title,
+                url: url
+            })
+            .catch(error => {
+                console.error('Error sharing:', error);
+                toggleFallbackShare(); // Show fallback on error
+            });
+        } else {
+            // Fallback for browsers that don't support Web Share API
+            toggleFallbackShare();
+        }
+    }
+
+    // Toggle fallback share modal
+    function toggleFallbackShare() {
+        const fallbackModal = document.getElementById('fallbackShareModal');
+        fallbackModal.classList.toggle('d-none');
+    }
+
+    // Function to handle sharing to specific platforms
     function shareVideo(platform) {
         const url = encodeURIComponent(window.location.href);
         const title = encodeURIComponent(document.getElementById('videoModalLabel').textContent);
@@ -1468,9 +1668,103 @@ permalink: /itqan/gallery/
             case 'whatsapp':
                 shareUrl = `https://wa.me/?text=${title}%20${url}`;
                 break;
+            case 'telegram':
+                shareUrl = `https://telegram.me/share/url?url=${url}&text=${title}`;
+                break;
+            case 'linkedin':
+                shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`;
+                break;
+            case 'email':
+                shareUrl = `mailto:?subject=${title}&body=${title}%0A${url}`;
+                break;
         }
         
-        window.open(shareUrl, '_blank', 'width=600,height=400');
+        if (shareUrl) {
+            window.open(shareUrl, '_blank', 'width=600,height=400');
+        }
+        
+        // Close the fallback share modal
+        toggleFallbackShare();
+    }
+
+    // Function to copy share link to clipboard
+    function copyShareLink() {
+        const url = window.location.href;
+        
+        navigator.clipboard.writeText(url)
+            .then(() => {
+                // Show success message
+                const shareButton = document.getElementById('shareButton');
+                const originalText = shareButton.innerHTML;
+                
+                shareButton.innerHTML = '<i class="fas fa-check me-2"></i>Copied!';
+                
+                setTimeout(() => {
+                    shareButton.innerHTML = originalText;
+                }, 2000);
+            })
+            .catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        
+        // Close the fallback share modal
+        toggleFallbackShare();
+    }
+
+    // Function to update meta tags for social sharing
+    function updateMetaTags(videoTitle, videoId) {
+        // Get the thumbnail image path - using absolute URL
+        const thumbnailPath = `/assets/img/islamic/event/${videoId}.jpg`;
+        const absoluteUrl = window.location.origin + "{{ site.baseurl }}" + thumbnailPath;
+        
+        // Function to update a meta tag
+        function updateMetaTag(property, content) {
+            let meta = document.querySelector(`meta[property="${property}"]`);
+            if (!meta) {
+                meta = document.createElement('meta');
+                meta.setAttribute('property', property);
+                document.head.appendChild(meta);
+            }
+            meta.setAttribute('content', content);
+        }
+        
+        // Update Open Graph meta tags
+        updateMetaTag('og:title', videoTitle);
+        updateMetaTag('og:description', `Watch ${videoTitle} from the ITQAN competition`);
+        updateMetaTag('og:image', absoluteUrl);
+        updateMetaTag('og:url', window.location.href);
+        updateMetaTag('og:type', 'video.other');
+        
+        // Update Twitter Card meta tags
+        updateMetaTag('twitter:card', 'summary_large_image');
+        updateMetaTag('twitter:title', videoTitle);
+        updateMetaTag('twitter:description', `Watch ${videoTitle} from the ITQAN competition`);
+        updateMetaTag('twitter:image', absoluteUrl);
+    }
+
+    // Reset meta tags when modal is closed
+    function resetMetaTags() {
+        if (window.originalMeta) {
+            // Function to update a meta tag
+            function updateMetaTag(property, content) {
+                let meta = document.querySelector(`meta[property="${property}"]`);
+                if (meta) {
+                    meta.setAttribute('content', content);
+                }
+            }
+            
+            // Reset Open Graph meta tags
+            updateMetaTag('og:title', window.originalMeta.title);
+            updateMetaTag('og:description', window.originalMeta.description);
+            updateMetaTag('og:image', window.originalMeta.image);
+            updateMetaTag('og:url', window.originalMeta.url);
+            updateMetaTag('og:type', 'website');
+            
+            // Reset Twitter Card meta tags
+            updateMetaTag('twitter:title', window.originalMeta.title);
+            updateMetaTag('twitter:description', window.originalMeta.description);
+            updateMetaTag('twitter:image', window.originalMeta.image);
+        }
     }
 
     // Handle modal close to update URL and stop video
@@ -1480,6 +1774,12 @@ permalink: /itqan/gallery/
             const url = new URL(window.location.href);
             url.searchParams.delete('video');
             window.history.pushState({}, '', url);
+            
+            // Reset page title
+            document.title = "Event Gallery";
+            
+            // Reset meta tags
+            resetMetaTags();
             
             // Stop video playback by clearing the iframe source
             const videoFrame = document.getElementById('modalDriveVideo');
