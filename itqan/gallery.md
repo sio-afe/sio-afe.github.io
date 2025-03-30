@@ -137,11 +137,7 @@ permalink: /itqan/gallery/
                                     <img src="{{ '/assets/img/islamic/event/13.jpg' | relative_url }}" class="d-block w-100" alt="Event Photo 13">
                                 </div>
                             </div>
-                            <div class="carousel-item">
-                                <div class="carousel-image-container">
-                                    <img src="{{ '/assets/img/islamic/event/14.jpg' | relative_url }}" class="d-block w-100" alt="Event Photo 14">
-                                </div>
-                            </div>
+                            
                         </div>
                         
                         <!-- Carousel controls -->
@@ -188,7 +184,6 @@ permalink: /itqan/gallery/
                             <div class="card-body p-0">
                                 <div class="video-thumbnail position-relative">
                                     <img src="{{ '/assets/img/islamic/event/tarteel-01.jpg' | relative_url }}" class="w-100" alt="ITQAN | Qari Fazlurrahman قارئ فضل الرحمٰن">
-                                    <div class="video-duration">5:22</div>
                                     <div class="video-overlay">
                                         <button class="video-play-btn" onclick="playGDriveVideoInModal('1AxvQ8ojGO31sch6qOVLY4PB-YP17H5bm', 'ITQAN | Qari Fazlurrahman قارئ فضل الرحمٰن', 'tarteel-01')">
                                             <i class="fas fa-play"></i>
@@ -206,7 +201,6 @@ permalink: /itqan/gallery/
                             <div class="card-body p-0">
                                 <div class="video-thumbnail position-relative">
                                     <img src="{{ '/assets/img/islamic/event/tarteel-02.jpg' | relative_url }}" class="w-100" alt="ITQAN | Saifullah سيف الله">
-                                    <div class="video-duration">4:36</div>
                                     <div class="video-overlay">
                                         <button class="video-play-btn" onclick="playGDriveVideoInModal('1kSKZmTnDR9BhuwG0UjHuJcPddE2F1MId', 'ITQAN | Saifullah سيف الله', 'tarteel-02')">
                                             <i class="fas fa-play"></i>
@@ -224,7 +218,6 @@ permalink: /itqan/gallery/
                             <div class="card-body p-0">
                                 <div class="video-thumbnail position-relative">
                                     <img src="{{ '/assets/img/islamic/event/tarteel-03.jpg' | relative_url }}" class="w-100" alt="ITQAN | Qari Nadeem قارئ نديم">
-                                    <div class="video-duration">3:47</div>
                                     <div class="video-overlay">
                                         <button class="video-play-btn" onclick="playGDriveVideoInModal('1zhmfMiy3XVALqao3ZXFYseZDqASb-AF7', 'ITQAN | Qari Nadeem قارئ نديم', 'tarteel-03')">
                                             <i class="fas fa-play"></i>
@@ -242,7 +235,6 @@ permalink: /itqan/gallery/
                             <div class="card-body p-0">
                                 <div class="video-thumbnail position-relative">
                                     <img src="{{ '/assets/img/islamic/event/tarteel-04.jpg' | relative_url }}" class="w-100" alt="ITQAN | Mohammad Saad Inam محمد سعد إنعام">
-                                    <div class="video-duration">4:15</div>
                                     <div class="video-overlay">
                                         <button class="video-play-btn" onclick="playGDriveVideoInModal('14FOIY2H0rqbNFE4_gnE6ya13BtFQNyFB', 'ITQAN | Mohammad Saad Inam محمد سعد إنعام', 'tarteel-04')">
                                             <i class="fas fa-play"></i>
@@ -260,7 +252,6 @@ permalink: /itqan/gallery/
                             <div class="card-body p-0">
                                 <div class="video-thumbnail position-relative">
                                     <img src="{{ '/assets/img/islamic/event/tarteel-05.jpg' | relative_url }}" class="w-100" alt="ITQAN | Pervez Musharraf پرویز مشرف">
-                                    <div class="video-duration">3:58</div>
                                     <div class="video-overlay">
                                         <button class="video-play-btn" onclick="playGDriveVideoInModal('1nW-NV4D560zlgXAx2-vVCkEST1orZhzP', 'ITQAN | Pervez Musharraf پرویز مشرف', 'tarteel-05')">
                                             <i class="fas fa-play"></i>
@@ -278,7 +269,6 @@ permalink: /itqan/gallery/
                             <div class="card-body p-0">
                                 <div class="video-thumbnail position-relative">
                                     <img src="{{ '/assets/img/islamic/event/tarteel-06.jpg' | relative_url }}" class="w-100" alt="ITQAN | Mohd Khalil">
-                                    <div class="video-duration">4:42</div>
                                     <div class="video-overlay">
                                         <button class="video-play-btn" onclick="playGDriveVideoInModal('1npgmXXaP72w0PdlG-7-F623eVbZFr4Zj', 'ITQAN | Mohd Khalil', 'tarteel-06')">
                                             <i class="fas fa-play"></i>
