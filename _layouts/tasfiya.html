@@ -1159,5 +1159,14 @@
             }
         }
     </style>
+
+    <div id="mask" class="d-none position-fixed w-100 h-100 z-1"></div>
+
+    {% if site.pwa.enabled %}
+      {% include_cached notification.html lang=lang %}
+    {% endif %}
+
+    <!-- Add PWA script -->
+    <script src="{{ '/assets/js/pwa.js' | relative_url }}"></script>
 </body>
 </html> 

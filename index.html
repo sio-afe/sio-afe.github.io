@@ -950,32 +950,29 @@
 
         /* Carousel Caption Styles */
         .carousel-caption {
-            position: relative;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
             text-align: center;
             padding: 1rem;
-            background: rgba(255, 255, 255, 0.35);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(8px);
-            margin: -1px auto 2rem;
-            width: 100%;
-            max-width: 100%;
-            border-radius: 0 0 var(--radius-md) var(--radius-md);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            z-index: 4;
+            color: white;
+            z-index: 5;
+            transition: opacity 0.3s ease;
         }
         
         .carousel-caption h3 {
-            color: var(--text-dark);
-            font-size: 1.1rem;
-            margin-bottom: 0.2rem;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
             font-weight: 600;
-            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.5);
         }
         
         .carousel-caption p {
-            color: var(--text-dark);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             margin-bottom: 0;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+            opacity: 0.9;
         }
     </style>
 </head>
@@ -1018,45 +1015,101 @@
                         <div class="carousel-container">
                             <div class="carousel-slide active">
                                 <img src="/assets/img/highlight1.jpeg" alt="Highlight Image 1">
+                                <div class="carousel-caption">
+                                    <h3>Isteqbal-e-Ramazan 2025</h3>
+                                    <p>-</p>
+                                </div>
                             </div>
                             <div class="carousel-slide">
                                 <img src="/assets/img/highlight2.jpeg" alt="Highlight Image 2">
+                                <div class="carousel-caption">
+                                    <h3>Isteqbal-e-Ramazan 2025</h3>
+                                    <p>-</p>
+                                </div>
                             </div>
                             <div class="carousel-slide">
                                 <img src="/assets/img/highlight3.jpeg" alt="Highlight Image 3">
+                                <div class="carousel-caption">
+                                    <h3>Muqawamah Re-union 2025</h3>
+                                    <p>-</p>
+                                </div>
                             </div>
                             <div class="carousel-slide">
                                 <img src="/assets/img/highlight4.jpeg" alt="Highlight Image 4">
+                                <div class="carousel-caption">
+                                    <h3>Muqawamah Re-union 2025</h3>
+                                    <p>-</p>
+                                </div>
                             </div>
                             <div class="carousel-slide">
                                 <img src="/assets/img/highlight5.jpeg" alt="Highlight Image 5">
+                                <div class="carousel-caption">
+                                    <h3>Muqawamah Tournament 2025</h3>
+                                    <p>-</p>
+                                </div>
                             </div>
                             <div class="carousel-slide">
                                 <img src="/assets/img/highlight6.jpeg" alt="Highlight Image 6">
+                                <div class="carousel-caption">
+                                    <h3>Muqawamah Tournament 2025</h3>
+                                    <p>-</p>
+                                </div>
                             </div>
                             <div class="carousel-slide">
                                 <img src="/assets/img/highlight7.jpeg" alt="Highlight Image 7">
+                                <div class="carousel-caption">
+                                    <h3>Muqawamah Tournament 2025</h3>
+                                    <p>-</p>
+                                </div>
                             </div>
                             <div class="carousel-slide">
                                 <img src="/assets/img/highlight8.jpeg" alt="Highlight Image 8">
+                                <div class="carousel-caption">
+                                    <h3>Muqawamah Tournament 2025</h3>
+                                    <p>-</p>
+                                </div>
                             </div>
                             <div class="carousel-slide">
                                 <img src="/assets/img/highlight9.jpeg" alt="Highlight Image 9">
+                                <div class="carousel-caption">
+                                    <h3>Muqawamah Tournament 2025</h3>
+                                    <p>-</p>
+                                </div>
                             </div>
                             <div class="carousel-slide">
                                 <img src="/assets/img/highlight10.jpeg" alt="Highlight Image 10">
+                                <div class="carousel-caption">
+                                    <h3>Itqan Competition 2025</h3>
+                                    <p>-</p>
+                                </div>
                             </div>
                             <div class="carousel-slide">
                                 <img src="/assets/img/highlight11.jpeg" alt="Highlight Image 11">
+                                <div class="carousel-caption">
+                                    <h3>Itqan Competition 2025</h3>
+                                    <p>-</p>
+                                </div>
                             </div>
                             <div class="carousel-slide">
                                 <img src="/assets/img/highlight12.jpeg" alt="Highlight Image 12">
+                                <div class="carousel-caption">
+                                    <h3>Itqan Competition 2025</h3>
+                                    <p>-</p>
+                                </div>
                             </div>
                             <div class="carousel-slide">
                                 <img src="/assets/img/highlight13.jpeg" alt="Highlight Image 13">
+                                <div class="carousel-caption">
+                                    <h3>Itqan Competition 2025</h3>
+                                    <p>-</p>
+                                </div>
                             </div>
                             <div class="carousel-slide">
                                 <img src="/assets/img/highlight14.jpeg" alt="Highlight Image 14">
+                                <div class="carousel-caption">
+                                    <h3>Itqan Competition 2025</h3>
+                                    <p>-</p>
+                                </div>
                             </div>
                         </div>
                         <button class="carousel-btn prev-btn">&lt;</button>
@@ -1079,7 +1132,6 @@
                         </div>
                     </div>
                     <div class="carousel-caption">
-                        <h3>Highlights from Our Recent Activities</h3>
                     </div>
                 </div>
             </div>
@@ -1163,6 +1215,15 @@
             </div>
         </footer>
     </div>
+
+    <div id="mask" class="d-none position-fixed w-100 h-100 z-1"></div>
+
+    {% if site.pwa.enabled %}
+      {% include_cached notification.html lang=lang %}
+    {% endif %}
+
+    <!-- Add PWA script -->
+    <script src="/assets/js/pwa.js"></script>
 
     <script>
         // Mobile menu toggle
@@ -1262,11 +1323,15 @@
             // Function to show slide
             function showSlide(n) {
                 // Remove active class from all slides and dots
-                slides.forEach(slide => slide.classList.remove('active'));
+                slides.forEach(slide => {
+                    slide.classList.remove('active');
+                    slide.querySelector('.carousel-caption').style.opacity = '0';
+                });
                 dots.forEach(dot => dot.classList.remove('active'));
                 
                 // Set active slide and dot
                 slides[n].classList.add('active');
+                slides[n].querySelector('.carousel-caption').style.opacity = '1';
                 dots[n].classList.add('active');
                 
                 currentSlide = n;
