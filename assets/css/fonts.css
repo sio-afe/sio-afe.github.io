@@ -1,0 +1,13 @@
+/* Google Fonts Import for Bebas Neue - similar to Etna Condensed Semibold */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+/* Import Oswald as a backup condensed font */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap');
+
+/* Define a class for the Etna-like font */
+.etna-font {
+    font-family: 'Bebas Neue', 'Oswald', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+} 

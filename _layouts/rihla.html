@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="{% if page.url contains '/ur/' %}ur{% else %}en{% endif %}" dir="{% if page.url contains '/ur/' %}rtl{% else %}ltr{% endif %}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }}</title>
+    
+    <!-- Favicons -->
+    {% include favicons.html %}
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Fonts -->
+    <link href="{{ '/assets/css/fonts.css' | relative_url }}" rel="stylesheet">
+    
+    <!-- Custom Font -->
+    <style>
+        @font-face {
+            font-family: 'Codec Pro';
+            src: url('/assets/fonts/codec-pro-regular.woff2') format('woff2'),
+                 url('/assets/fonts/codec-pro-regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Codec Pro';
+            src: url('/assets/fonts/codec-pro-bold.woff2') format('woff2'),
+                 url('/assets/fonts/codec-pro-bold.woff') format('woff');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+    </style>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="{{ '/assets/js/supabase-client.js' | relative_url }}"></script>
+    
+    <!-- Web Analytics -->
+    {% if jekyll.environment == 'production' %}
+        {% for analytics in site.analytics %}
+            {% capture str %}{{ analytics }}{% endcapture %}
+            {% assign platform = str | split: '{' | first %}
+            {% if site.analytics[platform].id and site.analytics[platform].id != empty %}
+                {% include analytics/{{ platform }}.html %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    
+    <style>
+           :root {
+        --rihla-primary: #e5395e;
+        --rihla-secondary: #d12d52;
+        --rihla-accent: #f47a94;
+        --rihla-light: #fde2e8;
+        --rihla-white: #ffffff;
+        --rihla-dark: #2c0414;
+        --rihla-gray: #f8f9fa;
+        --gradient-cool: linear-gradient(135deg, #e5395e 0%, #d12d52 100%);
+        --gradient-light: linear-gradient(135deg, rgba(253, 226, 232, 0.8) 0%, rgba(244, 122, 148, 0.4) 100%);
+        --shadow-soft: 0 4px 20px rgba(229, 57, 94, 0.1);
+        --shadow-medium: 0 8px 30px rgba(229, 57, 94, 0.15);
+        --shadow-deep: 0 15px 60px rgba(229, 57, 94, 0.2);
+        --border-radius: 16px;
+    }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background-color: var(--rihla-gray);
+            color: var(--rihla-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--rihla-secondary);
+            line-height: 1.3;
+        }
+
+        /* RTL Typography */
+        [dir="rtl"] body {
+            font-family: 'Noto Sans Arabic', 'Noto Nastaliq Urdu', 'Raleway', sans-serif;
+        }
+
+        /* Preloader */
+        .preloader {
+            position: fixed;
+            inset: 0;
+            background: var(--rihla-white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: all 0.7s ease;
+        }
+
+        .preloader-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .preloader-logo {
+            width: 120px;
+            height: auto;
+            filter: drop-shadow(0 4px 8px rgba(1, 42, 74, 0.2));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .loading-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(42, 111, 151, 0.2);
+            border-radius: 4px;
+            margin-top: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0;
+            background: var(--rihla-accent);
+            animation: progress 2s ease-in-out infinite;
+        }
+
+        @keyframes progress {
+            0% { width: 0; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--rihla-white);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--rihla-accent);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--rihla-primary);
+        }
+
+        /* Layout Container */
+        .rihla-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .rihla-header {
+            background: var(--rihla-white);
+            box-shadow: var(--shadow-soft);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(42, 111, 151, 0.1);
+        }
+
+        .header-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+            transition: transform 0.4s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.08) rotate(2deg);
+        }
+
+        .header-title {
+            text-align: center;
+            flex: 1;
+        }
+
+        .header-title h1 {
+            font-family: 'Codec Pro', 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 2.2rem;
+            color: var(--rihla-primary);
+            margin: 0;
+            letter-spacing: -0.02em;
+            position: relative;
+        }
+
+        .header-title h1::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--gradient-cool);
+            border-radius: 2px;
+            transition: width 0.4s ease;
+        }
+
+        .header-title h1:hover::after {
+            width: 120px;
+        }
+
+        /* Left side decorative branch */
+        .side-branch {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 30vw; /* Use viewport width instead of percentage */
+            z-index: 5; 
+            pointer-events: none;
+            overflow: visible;
+            display: none; /* Hidden by default */
+        }
+
+        .branch-image {
+            position: absolute;
+            left: -5vw; /* Use viewport width for positioning */
+            top: 0; /* Changed from 16.5% to 0 to move it to the very top */
+            height: 40%; 
+            width: auto;
+            max-width: none;
+            transform: rotate(270deg) scaleX(-1);
+            opacity: 1.0;
+            object-fit: cover;
+            object-position: left center;
+        }
+        
+        /* Ensure content appears above the branch */
+        .rihla-container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Right side decorative branch */
+        .right-side-branch {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            width: 30vw; /* Use viewport width instead of percentage */
+            z-index: 5;
+            pointer-events: none;
+            overflow: visible;
+            display: none; /* Hidden by default */
+        }
+
+        .right-branch-image {
+            position: absolute;
+            top: 0;
+            right: -5vw; /* Use viewport width for positioning */
+            height: 45%;
+            width: auto;
+            max-width: none;
+            transform: rotate(180deg);
+            opacity: 1.0;
+            object-fit: contain;
+            object-position: right top;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: var(--rihla-light);
+            position: relative;
+            padding: 5rem 0;
+            overflow: hidden;
+            border-radius: 0 0 50px 50px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            opacity: 0.1;
+        }
+
+        .hero-container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero-content {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-medium);
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Decoration Elements */
+        .decoration {
+            position: absolute;
+            z-index: 1;
+        }
+
+        .decoration-circle {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(42, 111, 151, 0.2), rgba(97, 165, 194, 0.1));
+            filter: blur(60px);
+        }
+
+        .decoration-top-right {
+            top: -100px;
+            right: -100px;
+        }
+
+        .decoration-bottom-left {
+            bottom: -150px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+        }
+
+        /* Shapes */
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+        }
+
+        .shape-1 {
+            top: 20%;
+            right: 5%;
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: var(--rihla-primary);
+            transform: rotate(45deg);
+            animation: float-rotate 12s ease-in-out infinite;
+        }
+
+        .shape-2 {
+            bottom: 15%;
+            left: 7%;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--rihla-accent);
+            animation: pulse 9s ease-in-out infinite;
+        }
+
+        .shape-3 {
+            top: 40%;
+            left: 10%;
+            width: 40px;
+            height: 40px;
+            background: var(--rihla-accent);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float-rotate {
+            0%, 100% { transform: translateY(0) rotate(45deg); }
+            50% { transform: translateY(-20px) rotate(90deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.1; }
+            50% { transform: scale(1.2); opacity: 0.2; }
+        }
+
+        /* Content Styles */
+        .rihla-card {
+            background: var(--rihla-white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(42, 111, 151, 0.1);
+        }
+
+        .rihla-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-medium);
+            border-color: rgba(42, 111, 151, 0.2);
+        }
+
+        /* Section Headers */
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-header h2 {
+            font-family: 'Codec Pro', 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 2.3rem;
+            color: var(--rihla-primary);
+            padding-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--gradient-cool);
+        }
+
+        .section-header p {
+            color: var(--rihla-secondary);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 1rem auto 0;
+        }
+
+        /* Feature Cards */
+        .feature-card {
+            background: var(--rihla-white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft);
+            padding: 2rem;
+            height: 100%;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(42, 111, 151, 0.1);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-cool);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-medium);
+            border-color: rgba(42, 111, 151, 0.2);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            color: var(--rihla-accent);
+            display: block;
+            margin-bottom: 1.5rem;
+            transition: transform 0.4s ease;
+        }
+
+        .feature-card:hover i {
+            transform: scale(1.2) translateY(-5px);
+            color: var(--rihla-primary);
+        }
+
+        .feature-card h4 {
+            color: var(--rihla-secondary);
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .feature-card p {
+            color: var(--rihla-dark);
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--gradient-cool);
+            color: var(--rihla-white);
+            border-radius: var(--border-radius);
+            padding: 3.5rem 2rem;
+            margin: 4rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+
+        .cta-section h2 {
+            color: var(--rihla-white);
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cta-text {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+
+        /* Button Styles */
+        .btn-rihla {
+            background: var(--rihla-white);
+            color: var(--rihla-primary);
+            font-weight: 600;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-rihla::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: rgba(42, 111, 151, 0.1);
+            transition: width 0.4s ease;
+            z-index: 0;
+        }
+
+        .btn-rihla:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            color: var(--rihla-secondary);
+        }
+
+        .btn-rihla:hover::before {
+            width: 100%;
+        }
+
+        .btn-rihla span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Footer */
+        .rihla-footer {
+            background: var(--rihla-secondary);
+            color: var(--rihla-white);
+            padding: 3rem 0 2rem;
+            margin-top: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .footer-wave {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z' fill='%23f8f9fa'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-size: cover;
+            transform: rotate(180deg);
+        }
+
+        .footer-logo {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-logo img {
+            height: 60px;
+            width: auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .footer-link {
+            color: var(--rihla-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--rihla-white);
+            transform: translateY(-2px);
+        }
+
+        .footer-copyright {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* Only show branches on large screens */
+        @media (min-width: 1200px) {
+            .side-branch, .right-side-branch {
+                display: block;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .header-wrapper {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 0 1rem;
+            }
+
+            .logo {
+                justify-content: center;
+            }
+
+            .logo img {
+                height: 50px;
+            }
+
+            .header-title {
+                margin: 0.5rem 0;
+            }
+
+            .header-title h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero-section {
+                padding: 3rem 0;
+                margin-bottom: 1.5rem;
+            }
+            
+            .hero-container {
+                padding: 0 1rem;
+            }
+
+            .rihla-card, 
+            .feature-card {
+                padding: 1.5rem;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+            
+            .cta-section {
+                padding: 2.5rem 1.5rem;
+                margin: 3rem 0;
+            }
+
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 1.5rem;
+            }
+
+            .section-header {
+                margin-bottom: 2rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .section-header p {
+                font-size: 1rem;
+            }
+
+            .feature-card i {
+                font-size: 2.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .feature-card h4 {
+                font-size: 1.2rem;
+            }
+
+            .cta-section {
+                padding: 2rem 1rem;
+            }
+
+            .cta-section h2 {
+                font-size: 1.7rem;
+            }
+
+            .cta-text {
+                font-size: 1rem;
+            }
+
+            .btn-rihla {
+                padding: 10px 24px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo img {
+                height: 45px;
+            }
+
+            .header-title h1 {
+                font-size: 1.5rem;
+            }
+
+            .hero-section {
+                padding: 2rem 0;
+                border-radius: 0 0 30px 30px;
+            }
+
+            .hero-content {
+                padding: 1.25rem;
+                margin: 0 10px;
+            }
+
+            .section-header h2 {
+                font-size: 1.6rem;
+            }
+
+            .rihla-card, 
+            .feature-card {
+                padding: 1.25rem;
+            }
+
+            .feature-card i {
+                font-size: 2.2rem;
+            }
+
+            .cta-section h2 {
+                font-size: 1.5rem;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Centered Logos with X divider */
+        .centered-logos {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            gap: 1.5rem;
+        }
+
+        .logo-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .x-divider {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--rihla-primary);
+            margin: 0 0.5rem;
+        }
+
+        /* Adjust existing logo class */
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+            transition: transform 0.4s ease;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            .centered-logos {
+                gap: 1rem;
+            }
+            
+            .logo img {
+                height: 40px;
+            }
+            
+            .x-divider {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Decorative side branch -->
+<div class="side-branch">
+    <img src="{{ '/assets/img/rihla/branches.png' | relative_url }}" alt="Decorative branch" class="branch-image">
+</div>
+<!-- Right side decorative branch -->
+<div class="right-side-branch">
+    <img src="/assets/img/rihla/branches-motion.png" alt="Decorative branch" class="right-branch-image">
+</div>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="preloader-content">
+            <img src="{{ '/assets/img/rihla/rehlaa_logo.png' | relative_url }}" alt="Rihla Logo" class="preloader-logo">
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="rihla-container">
+        <!-- Header -->
+        <header class="rihla-header">
+            <div class="header-wrapper">
+                <div class="centered-logos">
+                    <div class="logo">
+                        <img src="{{ '/assets/img/sio-logo.png' | relative_url }}" alt="SIO Logo">
+                    </div>
+                    
+                    <div class="logo-divider">
+                        <span class="x-divider">✕</span>
+                    </div>
+                    
+                    <div class="logo">
+                        <img src="{{ '/assets/img/rihla/rehlaa_logo.png' | relative_url }}" alt="Rehlaa Logo">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-bg"></div>
+            
+            <!-- Decorations -->
+            <div class="decoration decoration-circle decoration-top-right"></div>
+            <div class="decoration decoration-circle decoration-bottom-left"></div>
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            
+            <div class="hero-container">
+                <div class="hero-content">
+                    {{ content }}
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="rihla-footer">
+            <div class="footer-wave"></div>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <img src="{{ '/assets/img/sio-logo-white.png' | relative_url }}" alt="SIO Logo">
+                    </div>
+                    <div class="footer-links">
+                        <a href="#" class="footer-link">Home</a>
+                        <a href="#" class="footer-link">About</a>
+                        <a href="#" class="footer-link">Programs</a>
+                        <a href="#" class="footer-link">Contact</a>
+                    </div>
+                    <div class="footer-copyright">
+                        <p>© 2025 Summer Islamic Camp - SIO-AFE</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom Scripts -->
+    <script>
+        // Preloader
+        window.addEventListener('load', function() {
+            const preloader = document.querySelector('.preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden';
+            }, 1200);
+        });
+
+        // Initialize animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Scroll animations with Intersection Observer
+            const observerOptions = {
+                threshold: 0.15,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const fadeInUp = function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            };
+
+            const observer = new IntersectionObserver(fadeInUp, observerOptions);
+
+            const animatedElements = document.querySelectorAll('.rihla-card, .feature-card, .section-header, .cta-section');
+            
+            animatedElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+
+            // Add the visible class animation
+            document.head.insertAdjacentHTML('beforeend', `
+                <style>
+                    .visible {
+                        opacity: 1 !important;
+                        transform: translateY(0) !important;
+                    }
+                </style>
+            `);
+            
+            // Enhanced smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        window.scrollTo({
+                            top: target.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+
+        // Supabase initialization
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                await window.waitForSupabase();
+                if (window.dynamicClient) {
+                    window.dynamicClient.subscribeToChannel('page_updates');
+                }
+            } catch (error) {
+                console.error('Failed to initialize application:', error);
+            }
+        });
+    </script>
+
+    {% if site.pwa.enabled %}
+      {% include_cached notification.html lang=lang %}
+    {% endif %}
+
+    <script src="{{ '/assets/js/pwa.js' | relative_url }}"></script>
+</body>
+</html>

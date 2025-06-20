@@ -1,0 +1,522 @@
+---
+layout: rihla
+---
+
+<div class="day-page">
+    <div class="day-header">
+        <a href="{{ '/rihla/' | relative_url }}" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Camp Overview</a>
+        <h1>Day {{ page.day_number }}: {{ page.title }}</h1>
+        <p class="day-subtitle">{{ page.subtitle }}</p>
+    </div>
+
+    <div class="day-content rihla-card">
+        {{ content }}
+    </div>
+
+    <!-- Photo Carousel Section -->
+    {% if page.gallery %}
+    <div class="day-gallery rihla-card">
+        <h2 class="gallery-title"><i class="fas fa-camera"></i> Day {{ page.day_number }} Highlights</h2>
+        <div id="image-carousel" class="image-carousel">
+            <div class="carousel-container">
+                <button class="carousel-nav prev-btn" onclick="prevCarouselImage()">&lt;</button>
+                <div class="carousel-image-container">
+                    <img id="carousel-image" class="carousel-image" alt="">
+                </div>
+                <button class="carousel-nav next-btn" onclick="nextCarouselImage()">&gt;</button>
+            </div>
+            <div id="carousel-caption" class="carousel-caption"></div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="day-navigation">
+        {% if page.prev_day %}
+        <a href="{{ page.prev_day | relative_url }}" class="nav-btn prev-btn">
+            <i class="fas fa-chevron-left"></i> Previous Day
+        </a>
+        {% endif %}
+        
+        {% if page.next_day %}
+        <a href="{{ page.next_day | relative_url }}" class="nav-btn next-btn">
+            Next Day <i class="fas fa-chevron-right"></i>
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .day-page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+    
+    .day-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .day-header h1 {
+        font-size: 2.5rem;
+        color: var(--rihla-primary);
+        margin: 1rem 0;
+        font-family: 'Bebas Neue', 'Oswald', sans-serif;
+        letter-spacing: 0.02em;
+    }
+    
+    .day-subtitle {
+        font-size: 1.2rem;
+        color: var(--rihla-secondary);
+        margin-bottom: 2rem;
+    }
+    
+    .back-btn {
+        display: inline-block;
+        margin-bottom: 1.5rem;
+        color: var(--rihla-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+    
+    .back-btn:hover {
+        color: var(--rihla-primary);
+    }
+    
+    .back-btn i {
+        margin-right: 0.5rem;
+    }
+    
+    .day-content {
+        margin-bottom: 2rem;
+    }
+    
+    .day-content h2 {
+        color: var(--rihla-secondary);
+        font-size: 1.8rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .day-content h3 {
+        color: var(--rihla-accent);
+        font-size: 1.4rem;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .day-content p {
+        margin-bottom: 1rem;
+        line-height: 1.7;
+    }
+    
+    .day-content ul, .day-content ol {
+        margin-bottom: 1.5rem;
+        padding-left: 1.5rem;
+    }
+    
+    .day-content li {
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Gallery Styling */
+    .day-gallery {
+        margin: 2rem 0;
+    }
+    
+    .gallery-title {
+        text-align: center;
+        color: var(--rihla-secondary);
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        font-family: 'Bebas Neue', 'Oswald', sans-serif;
+        letter-spacing: 0.02em;
+    }
+    
+    .gallery-title i {
+        margin-right: 0.5rem;
+        color: var(--rihla-accent);
+    }
+    
+    /* Image Carousel */
+    .image-carousel {
+        display: block;
+        position: relative;
+        padding: 20px 10px;
+        z-index: 100;
+        text-align: center;
+    }
+    
+    .carousel-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        max-width: 900px;
+    }
+    
+    .carousel-image-container {
+        width: 400px;
+        height: 400px;
+        margin: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+    
+    .carousel-image {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+    
+    .carousel-nav {
+        background: var(--rihla-light);
+        color: var(--rihla-secondary);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s;
+        z-index: 2;
+    }
+    
+    .carousel-nav:hover {
+        background: var(--rihla-primary);
+        color: white;
+    }
+    
+    .carousel-caption {
+        color: var(--rihla-secondary);
+        margin-top: 15px;
+        font-size: 1rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 10px;
+    }
+    
+    .day-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin: 3rem 0;
+    }
+    
+    .nav-btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background-color: var(--rihla-white);
+        color: var(--rihla-secondary);
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: 600;
+        box-shadow: var(--shadow-soft);
+        transition: all 0.3s ease;
+    }
+    
+    .nav-btn:hover {
+        background-color: var(--rihla-primary);
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-medium);
+    }
+    
+    .nav-btn i {
+        margin: 0 0.4rem;
+    }
+    
+    .prev-btn {
+        margin-right: auto;
+    }
+    
+    .next-btn {
+        margin-left: auto;
+    }
+    
+    /* Schedule Table Styling */
+    .schedule-table {
+        margin: 1.5rem 0;
+        overflow-x: auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .schedule-table table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+    }
+    
+    /* If no table is present, apply styling directly to the div */
+    .schedule-table:not(:has(table)) {
+        display: table;
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .schedule-table th, 
+    .schedule-table td,
+    .schedule-table:not(:has(table)) th,
+    .schedule-table:not(:has(table)) td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .schedule-table th,
+    .schedule-table:not(:has(table)) th {
+        background-color: var(--rihla-primary);
+        color: white;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        font-size: 0.9em;
+    }
+    
+    .schedule-table tr:nth-child(even),
+    .schedule-table:not(:has(table)) tr:nth-child(even) {
+        background-color: rgba(229, 57, 94, 0.05);
+    }
+    
+    .schedule-table tr:hover,
+    .schedule-table:not(:has(table)) tr:hover {
+        background-color: rgba(229, 57, 94, 0.1);
+    }
+    
+    .schedule-table tr:last-child td,
+    .schedule-table:not(:has(table)) tr:last-child td {
+        border-bottom: none;
+    }
+    
+    /* Column widths */
+    .schedule-table th:nth-child(1),
+    .schedule-table td:nth-child(1),
+    .schedule-table:not(:has(table)) th:nth-child(1),
+    .schedule-table:not(:has(table)) td:nth-child(1) {
+        width: 5%;
+        text-align: center;
+        font-weight: 600;
+        color: var(--rihla-primary);
+    }
+    
+    .schedule-table th:nth-child(2),
+    .schedule-table td:nth-child(2),
+    .schedule-table:not(:has(table)) th:nth-child(2),
+    .schedule-table:not(:has(table)) td:nth-child(2) {
+        width: 30%;
+        font-weight: 500;
+    }
+    
+    .schedule-table th:nth-child(3),
+    .schedule-table td:nth-child(3),
+    .schedule-table:not(:has(table)) th:nth-child(3),
+    .schedule-table:not(:has(table)) td:nth-child(3) {
+        width: 45%;
+    }
+    
+    .schedule-table th:nth-child(4),
+    .schedule-table td:nth-child(4),
+    .schedule-table:not(:has(table)) th:nth-child(4),
+    .schedule-table:not(:has(table)) td:nth-child(4) {
+        width: 20%;
+        text-align: center;
+        font-weight: 500;
+    }
+    
+    /* Session headers styling */
+    .day-content h3 {
+        background-color: var(--rihla-light);
+        padding: 10px 15px;
+        border-radius: 8px;
+        display: inline-block;
+        margin-top: 2rem;
+    }
+    
+    @media (max-width: 768px) {
+        .day-header h1 {
+            font-size: 2rem;
+        }
+        
+        .day-subtitle {
+            font-size: 1.1rem;
+        }
+        
+        .day-content h2, .gallery-title {
+            font-size: 1.6rem;
+        }
+        
+        .day-content h3 {
+            font-size: 1.3rem;
+        }
+        
+        .schedule-table table {
+            font-size: 0.9rem;
+        }
+        
+        .schedule-table th, 
+        .schedule-table td {
+            padding: 8px 10px;
+        }
+        
+        .carousel-image-container {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .carousel-container {
+            padding: 0 5px;
+        }
+        
+        .carousel-nav {
+            width: 35px;
+            height: 35px;
+            font-size: 18px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .day-header h1 {
+            font-size: 1.7rem;
+        }
+        
+        .day-subtitle {
+            font-size: 1rem;
+        }
+        
+        .day-content h2, .gallery-title {
+            font-size: 1.4rem;
+        }
+        
+        .day-content h3 {
+            font-size: 1.2rem;
+        }
+        
+        .nav-btn {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+        }
+        
+        .schedule-table table {
+            font-size: 0.8rem;
+        }
+        
+        .schedule-table th, 
+        .schedule-table td {
+            padding: 6px 8px;
+        }
+        
+        /* Stack the table on very small screens */
+        .schedule-table {
+            overflow-x: auto;
+        }
+        
+        .carousel-image-container {
+            width: 250px;
+            height: 250px;
+            margin: 0 10px;
+        }
+        
+        .carousel-container {
+            padding: 0;
+        }
+        
+        .carousel-nav {
+            width: 30px;
+            height: 30px;
+            font-size: 16px;
+            min-width: 30px;
+        }
+        
+        .carousel-caption {
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+    }
+    
+    /* Extra small screens */
+    @media (max-width: 360px) {
+        .carousel-image-container {
+            width: 200px;
+            height: 200px;
+            margin: 0 5px;
+        }
+        
+        .carousel-nav {
+            width: 28px;
+            height: 28px;
+            font-size: 14px;
+        }
+    }
+</style>
+
+<script>
+    // Gallery images array for navigation
+    let galleryImages = [];
+    let currentImageIndex = 0;
+    
+    // Initialize gallery on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Collect all gallery images from page data
+        {% for image in page.gallery %}
+        galleryImages.push({
+            src: "{{ image.url | relative_url }}",
+            caption: "{{ image.caption }}",
+            index: {{ forloop.index0 }}
+        });
+        {% endfor %}
+        
+        // If there are images, show the first one
+        if (galleryImages.length > 0) {
+            updateCarouselImage();
+        }
+        
+        // Add keyboard navigation
+        document.addEventListener('keydown', handleKeyPress);
+    });
+    
+    // Handle keyboard navigation
+    function handleKeyPress(e) {
+        switch(e.key) {
+            case 'ArrowLeft':
+                prevCarouselImage();
+                break;
+            case 'ArrowRight':
+                nextCarouselImage();
+                break;
+        }
+    }
+    
+    // Show next image
+    function nextCarouselImage() {
+        currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+        updateCarouselImage();
+    }
+    
+    // Show previous image
+    function prevCarouselImage() {
+        currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+        updateCarouselImage();
+    }
+    
+    // Update carousel with current image
+    function updateCarouselImage() {
+        const carouselImg = document.getElementById('carousel-image');
+        const caption = document.getElementById('carousel-caption');
+        
+        // Update image and caption
+        carouselImg.src = galleryImages[currentImageIndex].src;
+        carouselImg.alt = 'Gallery image';
+        caption.innerHTML = galleryImages[currentImageIndex].caption;
+    }
+</script> 
