@@ -14,9 +14,9 @@ description: Join our exciting Summer Islamic Camp for boys aged 5th to 12th cla
 
 <div class="row">
     <div class="col-lg-10 mx-auto">
-        <p class="lead mb-5">
+<p class="lead mb-5">
             SIO Abul Fazal Enclave presents the Summer Islamic Camp <span class="arabic-text">رحلة</span> (Rihla), a transformative journey of Islamic knowledge, character development, and engaging activities for boys. This week-long program aims to nurture young Muslims in an environment of learning and brotherhood.
-        </p>
+</p>
     </div>
 </div>
 
@@ -51,26 +51,26 @@ description: Join our exciting Summer Islamic Camp for boys aged 5th to 12th cla
     </div>
     
     <div class="row mb-4">
-        <div class="col-md-6 mb-4">
+                        <div class="col-md-6 mb-4">
             <div class="info-box">
                 <div class="info-icon">
-                    <i class="fas fa-users"></i>
-                </div>
+                                    <i class="fas fa-users"></i>
+                                </div>
                 <div class="info-content">
                     <h4>Age Groups</h4>
                     <ul class="info-list">
                         <li><i class="fas fa-child"></i> <strong>Group 1:</strong> 5th to 8th Class</li>
                         <li><i class="fas fa-user-graduate"></i> <strong>Group 2:</strong> 9th to 12th Class</li>
                     </ul>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-6 mb-4">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
             <div class="info-box">
                 <div class="info-icon">
                     <i class="fas fa-calendar-alt"></i>
-                </div>
+                                </div>
                 <div class="info-content">
                     <h4>Event Details</h4>
                     <ul class="info-list">
@@ -78,17 +78,17 @@ description: Join our exciting Summer Islamic Camp for boys aged 5th to 12th cla
                         <li><i class="fas fa-clock"></i> <strong>Time:</strong> 9AM - 1PM</li>
                         <li><i class="fas fa-map-marker-alt"></i> <strong>Venue:</strong> THE SCHOLAR SCHOOL</li>
                     </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
 <div class="section-header mt-5">
     <h2>Camp Highlights</h2>
     <p>Explore our day-by-day program schedule</p>
-</div>
-
+                    </div>
+                    
 <div class="days-container">
     <div class="day-card" onclick="window.location.href='{{ '/rihla/day1' | relative_url }}'">
         <div class="day-number">1</div>
@@ -96,8 +96,8 @@ description: Join our exciting Summer Islamic Camp for boys aged 5th to 12th cla
         <p>Basics of Islam</p>
         <div class="day-overlay">
             <span class="view-details">View Details</span>
-        </div>
-    </div>
+                        </div>
+                    </div>
     
     <div class="day-card" onclick="window.location.href='{{ '/rihla/day2' | relative_url }}'">
         <div class="day-number">2</div>
@@ -105,8 +105,8 @@ description: Join our exciting Summer Islamic Camp for boys aged 5th to 12th cla
         <p>Character Development</p>
         <div class="day-overlay">
             <span class="view-details">View Details</span>
-        </div>
-    </div>
+                </div>
+            </div>
     
     <div class="day-card" onclick="window.location.href='{{ '/rihla/day3' | relative_url }}'">
         <div class="day-number">3</div>
@@ -123,26 +123,26 @@ description: Join our exciting Summer Islamic Camp for boys aged 5th to 12th cla
         <p>Sports Day</p>
         <div class="day-overlay">
             <span class="view-details">View Details</span>
-        </div>
-    </div>
-    
+</div>
+                        </div>
+                        
     <div class="day-card" onclick="window.location.href='{{ '/rihla/day5' | relative_url }}'">
         <div class="day-number">5</div>
         <h4>Day Five</h4>
         <p>Prophethood</p>
         <div class="day-overlay">
             <span class="view-details">View Details</span>
-        </div>
-    </div>
-    
+                            </div>
+                        </div>
+                        
     <div class="day-card" onclick="window.location.href='{{ '/rihla/day6' | relative_url }}'">
         <div class="day-number">6</div>
         <h4>Day Six</h4>
         <p>Educational Trip</p>
         <div class="day-overlay">
             <span class="view-details">View Details</span>
-        </div>
-    </div>
+                        </div>
+                    </div>
     
     <div class="day-card" onclick="window.location.href='{{ '/rihla/day7' | relative_url }}'">
         <div class="day-number">7</div>
@@ -155,16 +155,16 @@ description: Join our exciting Summer Islamic Camp for boys aged 5th to 12th cla
 </div>
 
 <div class="rihla-card mt-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-10 text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
             <div class="organizer-badge">
                 <img src="{{ '/assets/img/sio-logo.png' | relative_url }}" alt="SIO Logo" class="organizer-logo">
-            </div>
+                </div>
             <h3 class="organizer-title">Students Islamic Organisation of India</h3>
             <p class="organizer-subtitle">Abul Fazal Enclave Unit</p>
             <p class="organizer-description">
-                Empowering Muslim youth through Islamic education, character development, and community service since decades.
-            </p>
+                    Empowering Muslim youth through Islamic education, character development, and community service since decades.
+                </p>
         </div>
     </div>
 </div>
