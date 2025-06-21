@@ -170,7 +170,7 @@ description: Join our exciting Summer Islamic Camp for boys aged 5th to 12th cla
             
             <p class="photo-instruction">Find your photos by taking a selfie 📸</p>
             
-            <a href="https://memzo.ai/integrate/ZGIybG4xTjRSWFlITHkzTWI0V1pIZz09" target="_blank" class="photo-button">
+            <a href="https://event.memzo.ai/m/Rihla/17899" target="_blank" class="photo-button">
                 Take Selfie and View Photos
             </a>
         </div>
