@@ -86,7 +86,6 @@ description: Join our exciting Summer Islamic Camp for boys aged 5th to 12th cla
                     
 <div class="section-header mt-5">
     <h2>Camp Highlights</h2>
-    <p>Explore our day-by-day program schedule</p>
                     </div>
                     
 <section id="schedule" class="schedule-section">
@@ -155,6 +154,28 @@ description: Join our exciting Summer Islamic Camp for boys aged 5th to 12th cla
         </div>
     </div>
 </section>
+
+<div class="section-header mt-5">
+    <h2>Find My Photo</h2>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+        <div class="photo-card">
+            <h3>Get your photos from</h3>
+            
+            <div class="photo-banner photo-banner-white">
+                <img src="{{ '/assets/img/rihla/rehlaa_logo.png' | relative_url }}" alt="Rihla Logo" class="photo-banner-img">
+            </div>
+            
+            <p class="photo-instruction">Find your photos by taking a selfie 📸</p>
+            
+            <a href="https://memzo.ai/integrate/ZGIybG4xTjRSWFlITHkzTWI0V1pIZz09" target="_blank" class="photo-button">
+                Take Selfie and View Photos
+            </a>
+        </div>
+    </div>
+</div>
 
 <div class="rihla-card mt-5">
         <div class="row justify-content-center">
@@ -630,5 +651,113 @@ description: Join our exciting Summer Islamic Camp for boys aged 5th to 12th cla
     padding: 0.5rem 1rem;
     border: 2px solid white;
     border-radius: 30px;
+}
+
+/* Photo Finder Section - ITQAN Style */
+.photo-card {
+    background: var(--rihla-white);
+    border-radius: 12px;
+    box-shadow: var(--shadow-soft);
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    border: 1px solid #eaeaea;
+}
+
+.photo-card h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.photo-banner {
+    border-radius: 10px;
+    padding: 2rem;
+    margin: 1rem 0 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.photo-banner-white {
+    background: #fff;
+    border: 2px dashed #e5395e;
+}
+
+.photo-banner-img {
+    max-height: 120px;
+    max-width: 80%;
+}
+
+.photo-instruction {
+    font-size: 1.1rem;
+    color: #555;
+    margin: 1.5rem 0;
+}
+
+.photo-button {
+    display: inline-block;
+    background: #e5395e;
+    color: white;
+    font-weight: 600;
+    padding: 0.8rem 2rem;
+    border-radius: 30px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.photo-button:hover {
+    background: #d42c50;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(229, 57, 94, 0.3);
+    color: white;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .photo-card {
+        padding: 1.5rem;
+    }
+    
+    .photo-banner {
+        padding: 1.5rem;
+    }
+    
+    .photo-banner-img {
+        max-height: 100px;
+    }
+    
+    .photo-instruction {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .photo-card {
+        padding: 1.2rem;
+    }
+    
+    .photo-banner {
+        padding: 1.2rem;
+    }
+    
+    .photo-banner-img {
+        max-height: 80px;
+    }
+    
+    .photo-card h3 {
+        font-size: 1.3rem;
+    }
+    
+    .photo-instruction {
+        font-size: 0.95rem;
+    }
+    
+    .photo-button {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.95rem;
+    }
 }
 </style>

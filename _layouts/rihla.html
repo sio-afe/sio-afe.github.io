@@ -310,6 +310,12 @@
             object-position: right top;
         }
 
+        /* Show branches in desktop view regardless of device */
+        .desktop-mode .side-branch,
+        .desktop-mode .right-side-branch {
+            display: block;
+        }
+
         /* Hero Section */
         .hero-section {
             background: var(--rihla-light);
@@ -680,7 +686,8 @@
 
         /* Only show branches on large screens */
         @media (min-width: 1200px) {
-            .side-branch, .right-side-branch {
+            body:not(.desktop-mode) .side-branch, 
+            body:not(.desktop-mode) .right-side-branch {
                 display: block;
             }
         }
@@ -976,6 +983,36 @@
 
         // Initialize animations
         document.addEventListener('DOMContentLoaded', function() {
+            // Detect if user is requesting desktop site on mobile
+            function checkDesktopMode() {
+                // Check if viewport is being scaled (common in desktop mode on mobile)
+                const viewportScale = window.visualViewport ? window.visualViewport.scale : 1;
+                const isDesktopSite = window.innerWidth > window.screen.width || viewportScale < 1;
+                
+                // Check for typical desktop mode indicators
+                const userAgent = navigator.userAgent.toLowerCase();
+                const isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(userAgent);
+                
+                // Check for common desktop mode viewport meta
+                const viewportMeta = document.querySelector('meta[name="viewport"]');
+                const viewportContent = viewportMeta ? viewportMeta.getAttribute('content') : '';
+                const hasDesktopViewport = !viewportContent.includes('width=device-width');
+                
+                // If on mobile but using desktop site
+                if ((isMobile && (isDesktopSite || hasDesktopViewport)) || window.innerWidth >= 1200) {
+                    document.body.classList.add('desktop-mode');
+                } else {
+                    document.body.classList.remove('desktop-mode');
+                }
+            }
+            
+            // Run on load and on resize
+            checkDesktopMode();
+            window.addEventListener('resize', checkDesktopMode);
+            
+            // Also check when orientation changes
+            window.addEventListener('orientationchange', checkDesktopMode);
+            
             // Scroll animations with Intersection Observer
             const observerOptions = {
                 threshold: 0.15,
