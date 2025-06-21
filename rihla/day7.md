@@ -88,9 +88,9 @@ The seventh and final day of our Summer Islamic Camp was dedicated to celebratin
 </table>
 </div>
 
-## Day Highlights
+<!-- ## Day Highlights -->
 
-Day 7 of Rihla Summer Camp-2025 marked the emotional conclusion of our week-long journey. The day began with a beautiful recitation from the Holy Quran by Br. Sheikh Ahmed Yaseen, setting a spiritual tone for our final gathering. This was followed by an insightful Hadith session conducted by Br. Abdullah Ammar, former Secretary of SIO AFE.
+<!-- Day 7 of Rihla Summer Camp-2025 marked the emotional conclusion of our week-long journey. The day began with a beautiful recitation from the Holy Quran by Br. Sheikh Ahmed Yaseen, setting a spiritual tone for our final gathering. This was followed by an insightful Hadith session conducted by Br. Abdullah Ammar, former Secretary of SIO AFE.
 
 One of the most heartwarming segments of the day was the participants' presentations, where campers from both age groups showcased what they had learned throughout the week. Their presentations reflected not only the Islamic knowledge they had gained but also the confidence and public speaking skills they had developed. The presentations covered various topics from the camp curriculum, including Tawheed, character development, responsible social media usage, and lessons from the life of Prophet Muhammad (PBUH).
 
@@ -102,4 +102,4 @@ The camp concluded with an inspiring ending talk that emphasized the importance 
 
 As the ceremony came to a close, there were mixed emotions of accomplishment and farewell, with many participants exchanging contact information to stay connected beyond the camp. The organizing team from SIO Abul Fazal Enclave was acknowledged for their dedication in making the camp a success.
 
-The Rihla Summer Islamic Camp-2025 successfully achieved its objective of providing a holistic Islamic educational experience that combined knowledge, character development, and brotherhood in an engaging and memorable way. 
+The Rihla Summer Islamic Camp-2025 successfully achieved its objective of providing a holistic Islamic educational experience that combined knowledge, character development, and brotherhood in an engaging and memorable way.  -->

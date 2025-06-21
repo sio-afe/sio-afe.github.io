@@ -31,7 +31,7 @@ description: Get in touch with the organizers of Rihla Summer Islamic Camp. We'r
                 <div class="location-details mt-3">
                     <h4>SIO Abul Fazal Enclave Unit</h4>
                     <p><i class="fas fa-map-pin me-2"></i> Abul Fazal Enclave, Jamia Nagar, New Delhi - 110025</p>
-                    <p><i class="fas fa-directions me-2"></i> <a href="https://goo.gl/maps/XYZ123" target="_blank" class="direction-link">Get Directions</a></p>
+                    <p><i class="fas fa-directions me-2"></i> <a href="https://www.google.com/maps/place/abul+fazal+enclave/data=!4m2!3m1!1s0x390ce40cf061dd3d:0x9891c8694b2b7ba2?sa=X&ved=1t:242&ictx=111" target="_blank" class="direction-link">Get Directions</a></p>
                 </div>
             </div>
         </div>
@@ -58,7 +58,7 @@ description: Get in touch with the organizers of Rihla Summer Islamic Camp. We'r
                     </div>
                     <div class="contact-details">
                         <h5>Email</h5>
-                        <p><a href="mailto:sioaf@proton.me">sioaf@proton.me</a></p>
+                        <p><a href="mailto:contact@sio-abulfazal.org">contact@sio-abulfazal.org</a></p>
                     </div>
                 </div>
                 

@@ -25,16 +25,16 @@ description: Learn about our mission, vision, and the story behind SIO AFE's ann
         <div class="col-md-4 col-6 mb-4">
             <div class="team-member">
                 <div class="member-photo">
-                    <img src="{{ '/assets/img/rihla/avatar.png' | relative_url }}" alt="Saquib">
+                    <img src="{{ '/assets/img/rihla/team/saqib.png' | relative_url }}" alt="Saquib">
                 </div>
-                <h5>Saquib</h5>
+                <h5>Saqib Khan</h5>
                 <p class="member-role">Program Convener</p>
             </div>
         </div>
         <div class="col-md-4 col-6 mb-4">
             <div class="team-member">
                 <div class="member-photo">
-                    <img src="{{ '/assets/img/rihla/avatar.png' | relative_url }}" alt="Abdullah Ammar">
+                    <img src="{{ '/assets/img/rihla/team/ammar.png' | relative_url }}" alt="Abdullah Ammar">
                 </div>
                 <h5>Abdullah Ammar</h5>
                 <p class="member-role">Program Co-Convener</p>
@@ -43,7 +43,7 @@ description: Learn about our mission, vision, and the story behind SIO AFE's ann
     </div>
     
     <!-- Invited Speakers Section -->
-    <h4 class="section-subtitle text-center mb-4">Invited Speakers</h4>
+    <!-- <h4 class="section-subtitle text-center mb-4">Invited Speakers</h4>
     <div class="row justify-content-center mb-5">
         <div class="col-md-3 col-6 mb-4">
             <div class="team-member">
@@ -99,45 +99,54 @@ description: Learn about our mission, vision, and the story behind SIO AFE's ann
                 <p class="member-role">National Secretary-JIH</p>
             </div>
         </div>
-    </div>
+    </div> -->
     
     <!-- Team Members Section -->
-    <h4 class="section-subtitle text-center mb-4">Core Team Members</h4>
+    <h4 class="section-subtitle text-center mb-4">Team Members</h4>
     <div class="row justify-content-center">
         <div class="col-md-3 col-6 mb-4">
             <div class="team-member">
                 <div class="member-photo">
-                    <img src="{{ '/assets/img/rihla/avatar.png' | relative_url }}" alt="Ahmed Naeem">
+                    <img src="{{ '/assets/img/rihla/team/ahmed_naeem.png' | relative_url }}" alt="Ahmed Naeem">
                 </div>
                 <h5>Ahmed Naeem</h5>
-                <p class="member-role">Logistics Coordinator</p>
+                <p class="member-role">SIO AbulFazal Member</p>
             </div>
         </div>
         <div class="col-md-3 col-6 mb-4">
             <div class="team-member">
                 <div class="member-photo">
-                    <img src="{{ '/assets/img/rihla/avatar.png' | relative_url }}" alt="Adnan Shakeel">
+                    <img src="{{ '/assets/img/rihla/team/adnan.png' | relative_url }}" alt="Adnan Shakeel">
                 </div>
-                <h5>Adnan Shakeel</h5>
-                <p class="member-role">Activities Lead</p>
+                <h5>Adnan Shakeel Ahmed</h5>
+                <p class="member-role">SIO AbulFazal Member</p>
             </div>
         </div>
         <div class="col-md-3 col-6 mb-4">
             <div class="team-member">
                 <div class="member-photo">
-                    <img src="{{ '/assets/img/rihla/avatar.png' | relative_url }}" alt="Furqan Ahmed">
+                    <img src="{{ '/assets/img/rihla/team/ahmed_yassin.png' | relative_url }}" alt="Sheikh Ahmed Yaseen">
                 </div>
-                <h5>Furqan Ahmed</h5>
-                <p class="member-role">Communications</p>
+                <h5>Sheikh Ahmed Yaseen</h5>
+                <p class="member-role">SIO AbulFazal Associate</p>
             </div>
         </div>
         <div class="col-md-3 col-6 mb-4">
             <div class="team-member">
                 <div class="member-photo">
-                    <img src="{{ '/assets/img/rihla/avatar.png' | relative_url }}" alt="Sabir Khan">
+                    <img src="{{ '/assets/img/rihla/team/sabir.png' | relative_url }}" alt="Sabir Khan">
                 </div>
                 <h5>Sabir Khan</h5>
-                <p class="member-role">Registration Manager</p>
+                <p class="member-role">SIO AbulFazal Member</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <div class="team-member">
+                <div class="member-photo">
+                    <img src="{{ '/assets/img/rihla/team/maaz.png' | relative_url }}" alt="Maaz Inam">
+                </div>
+                <h5>Maaz Inam</h5>
+                <p class="member-role">SIO AbulFazal Member</p>
             </div>
         </div>
     </div>
