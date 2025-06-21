@@ -1,6 +1,6 @@
 ---
 layout: rihla
-title: Contact Us - Summer Islamic Camp
+title: Contact Us 
 description: Get in touch with the organizers of Rihla Summer Islamic Camp. We're here to answer your questions and provide more information.
 ---
 

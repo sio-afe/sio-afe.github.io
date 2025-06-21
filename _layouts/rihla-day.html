@@ -21,7 +21,7 @@ layout: rihla
             <div class="carousel-container">
                 <button class="carousel-nav prev-btn" onclick="prevCarouselImage()">&lt;</button>
                 <div class="carousel-image-container">
-                    <img id="carousel-image" class="carousel-image" alt="">
+                    <img id="carousel-image" class="carousel-image" src="{{ '/assets/img/rihla/avatar.png' | relative_url }}" alt="Gallery image">
                 </div>
                 <button class="carousel-nav next-btn" onclick="nextCarouselImage()">&gt;</button>
             </div>
@@ -525,5 +525,7 @@ layout: rihla
             this.alt = 'Placeholder image';
         };
         
+          // Hide caption element
+        caption.style.display = 'none';
     }
 </script> 
