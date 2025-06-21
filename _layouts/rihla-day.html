@@ -471,7 +471,7 @@ layout: rihla
         {% for image in page.gallery %}
         galleryImages.push({
             src: "{{ image.url | relative_url }}",
-            caption: "{{ image.caption }}",
+            caption: "{{ image.caption | default: '' }}",
             index: {{ forloop.index0 }}
         });
         {% endfor %}
@@ -516,7 +516,14 @@ layout: rihla
         
         // Update image and caption
         carouselImg.src = galleryImages[currentImageIndex].src;
-        carouselImg.alt = 'Gallery image';
-        caption.innerHTML = galleryImages[currentImageIndex].caption;
+        carouselImg.alt = 'Gallery image ' + (currentImageIndex + 1);
+        
+        // Handle image loading errors
+        carouselImg.onerror = function() {
+            this.onerror = null; // Prevent infinite loop
+            this.src = 'https://via.placeholder.com/800x600.png?text=Image+Coming+Soon';
+            this.alt = 'Placeholder image';
+        };
+        
     }
 </script> 

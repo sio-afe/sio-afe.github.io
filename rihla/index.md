@@ -8,7 +8,7 @@ description: Join our exciting Summer Islamic Camp for boys aged 5th to 12th cla
     <div class="logo-container-large">
         <img src="{{ '/assets/img/rihla/rehlaa_logo.png' | relative_url }}" alt="Rihla Logo" class="center-logo">
     </div>
-    <h2>Summer Islamic Camp <span class="arabic-text">رحلة</span></h2>
+    <h2>Summer Islamic Camp</h2>
     <p>A journey of knowledge, character, and brotherhood</p>
 </div>
 
@@ -89,70 +89,72 @@ description: Join our exciting Summer Islamic Camp for boys aged 5th to 12th cla
     <p>Explore our day-by-day program schedule</p>
                     </div>
                     
-<div class="days-container">
-    <div class="day-card" onclick="window.location.href='{{ '/rihla/day1' | relative_url }}'">
-        <div class="day-number">1</div>
-        <h4>Day One</h4>
-        <p>Basics of Islam</p>
-        <div class="day-overlay">
-            <span class="view-details">View Details</span>
+<section id="schedule" class="schedule-section">
+    <div class="days-container">
+        <div class="day-card" onclick="window.location.href='{{ '/rihla/day1' | relative_url }}'">
+            <div class="day-number">1</div>
+            <h4>Day One</h4>
+            <p>Basics of Islam</p>
+            <div class="day-overlay">
+                <span class="view-details">View Details</span>
                         </div>
                     </div>
-    
-    <div class="day-card" onclick="window.location.href='{{ '/rihla/day2' | relative_url }}'">
-        <div class="day-number">2</div>
-        <h4>Day Two</h4>
-        <p>Character Development</p>
-        <div class="day-overlay">
-            <span class="view-details">View Details</span>
-                </div>
+        
+        <div class="day-card" onclick="window.location.href='{{ '/rihla/day2' | relative_url }}'">
+            <div class="day-number">2</div>
+            <h4>Day Two</h4>
+            <p>Character Development</p>
+            <div class="day-overlay">
+                <span class="view-details">View Details</span>
             </div>
-    
-    <div class="day-card" onclick="window.location.href='{{ '/rihla/day3' | relative_url }}'">
-        <div class="day-number">3</div>
-        <h4>Day Three</h4>
-        <p>Social Media</p>
-        <div class="day-overlay">
-            <span class="view-details">View Details</span>
         </div>
+        
+        <div class="day-card" onclick="window.location.href='{{ '/rihla/day3' | relative_url }}'">
+            <div class="day-number">3</div>
+            <h4>Day Three</h4>
+            <p>Social Media</p>
+            <div class="day-overlay">
+                <span class="view-details">View Details</span>
     </div>
-    
-    <div class="day-card" onclick="window.location.href='{{ '/rihla/day4' | relative_url }}'">
-        <div class="day-number">4</div>
-        <h4>Day Four</h4>
-        <p>Sports Day</p>
-        <div class="day-overlay">
-            <span class="view-details">View Details</span>
 </div>
+
+        <div class="day-card" onclick="window.location.href='{{ '/rihla/day4' | relative_url }}'">
+            <div class="day-number">4</div>
+            <h4>Day Four</h4>
+            <p>Sports Day</p>
+            <div class="day-overlay">
+                <span class="view-details">View Details</span>
+            </div>
                         </div>
                         
-    <div class="day-card" onclick="window.location.href='{{ '/rihla/day5' | relative_url }}'">
-        <div class="day-number">5</div>
-        <h4>Day Five</h4>
-        <p>Prophethood</p>
-        <div class="day-overlay">
-            <span class="view-details">View Details</span>
+        <div class="day-card" onclick="window.location.href='{{ '/rihla/day5' | relative_url }}'">
+            <div class="day-number">5</div>
+            <h4>Day Five</h4>
+            <p>Prophethood</p>
+            <div class="day-overlay">
+                <span class="view-details">View Details</span>
                             </div>
                         </div>
                         
-    <div class="day-card" onclick="window.location.href='{{ '/rihla/day6' | relative_url }}'">
-        <div class="day-number">6</div>
-        <h4>Day Six</h4>
-        <p>Educational Trip</p>
-        <div class="day-overlay">
-            <span class="view-details">View Details</span>
+        <div class="day-card" onclick="window.location.href='{{ '/rihla/day6' | relative_url }}'">
+            <div class="day-number">6</div>
+            <h4>Day Six</h4>
+            <p>Educational Trip</p>
+            <div class="day-overlay">
+                <span class="view-details">View Details</span>
                         </div>
                     </div>
-    
-    <div class="day-card" onclick="window.location.href='{{ '/rihla/day7' | relative_url }}'">
-        <div class="day-number">7</div>
-        <h4>Day Seven</h4>
-        <p>Prize Distribution & Closing Ceremony</p>
-        <div class="day-overlay">
-            <span class="view-details">View Details</span>
+        
+        <div class="day-card" onclick="window.location.href='{{ '/rihla/day7' | relative_url }}'">
+            <div class="day-number">7</div>
+            <h4>Day Seven</h4>
+            <p>Prize Distribution & Closing Ceremony</p>
+            <div class="day-overlay">
+                <span class="view-details">View Details</span>
+            </div>
         </div>
     </div>
-</div>
+</section>
 
 <div class="rihla-card mt-5">
         <div class="row justify-content-center">
