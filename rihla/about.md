@@ -28,7 +28,7 @@ description: Learn about our mission, vision, and the story behind SIO AFE's ann
                     <img src="{{ '/assets/img/rihla/team/saqib.png' | relative_url }}" alt="Saquib">
                 </div>
                 <h5>Saqib Khan</h5>
-                <p class="member-role">Program Convener</p>
+                <p class="member-role">SIO AbulFazal Member</p>
             </div>
         </div>
         <div class="col-md-4 col-6 mb-4">
@@ -37,70 +37,12 @@ description: Learn about our mission, vision, and the story behind SIO AFE's ann
                     <img src="{{ '/assets/img/rihla/team/ammar.png' | relative_url }}" alt="Abdullah Ammar">
                 </div>
                 <h5>Abdullah Ammar</h5>
-                <p class="member-role">Program Co-Convener</p>
+                <p class="member-role">SIO AbulFazal Member</p>
             </div>
         </div>
     </div>
     
-    <!-- Invited Speakers Section -->
-    <!-- <h4 class="section-subtitle text-center mb-4">Invited Speakers</h4>
-    <div class="row justify-content-center mb-5">
-        <div class="col-md-3 col-6 mb-4">
-            <div class="team-member">
-                <div class="member-photo">
-                    <img src="{{ '/assets/img/rihla/avatar.png' | relative_url }}" alt="Dr. Rizwan Rafeequi">
-                </div>
-                <h5>Dr. Rizwan Rafeequi</h5>
-                <p class="member-role">Assistant Secretary-JIH</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-6 mb-4">
-            <div class="team-member">
-                <div class="member-photo">
-                    <img src="{{ '/assets/img/rihla/avatar.png' | relative_url }}" alt="Imrul Quesh">
-                </div>
-                <h5>Imrul Quesh</h5>
-                <p class="member-role">Former Zonal President-SIO Delhi</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-6 mb-4">
-            <div class="team-member">
-                <div class="member-photo">
-                    <img src="{{ '/assets/img/rihla/avatar.png' | relative_url }}" alt="Dr. Muhiuddin Ghazi">
-                </div>
-                <h5>Dr. Muhiuddin Ghazi</h5>
-                <p class="member-role">Secretary-JIH</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-6 mb-4">
-            <div class="team-member">
-                <div class="member-photo">
-                    <img src="{{ '/assets/img/rihla/avatar.png' | relative_url }}" alt="Ali Ahmad">
-                </div>
-                <h5>Ali Ahmad</h5>
-                <p class="member-role">Former National Secretary-SIO India</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-6 mb-4">
-            <div class="team-member">
-                <div class="member-photo">
-                    <img src="{{ '/assets/img/rihla/avatar.png' | relative_url }}" alt="Md. Anisur Rahman">
-                </div>
-                <h5>Md. Anisur Rahman</h5>
-                <p class="member-role">Former Zonal President-SIO Delhi</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-6 mb-4">
-            <div class="team-member">
-                <div class="member-photo">
-                    <img src="{{ '/assets/img/rihla/avatar.png' | relative_url }}" alt="Mohd. Atiqur Rahman">
-                </div>
-                <h5>Mohd. Atiqur Rahman</h5>
-                <p class="member-role">National Secretary-JIH</p>
-            </div>
-        </div>
-    </div> -->
-    
+        
     <!-- Team Members Section -->
     <h4 class="section-subtitle text-center mb-4">Team Members</h4>
     <div class="row justify-content-center">
