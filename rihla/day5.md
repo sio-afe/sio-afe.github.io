@@ -101,7 +101,3 @@ Day 5 began with a beautiful recitation of the Holy Quran by Br. Saqib Khan, fol
 The participants then engaged in an interactive activity called "Guess The Prophet," where they had to identify different prophets based on clues about their lives and teachings. This activity helped reinforce their knowledge about various prophets mentioned in the Quran and their unique contributions.
 
 After a short refreshment break, Mohd. Atiqur Rehman Sb. delivered an inspiring talk on the life of Prophet Muhammad (PBUH), highlighting his exemplary character, teachings, and the relevance of his message in today's world. The session emphasized how the Prophet's life serves as a perfect model for Muslims to follow in all aspects of their lives.
-
-The day concluded with a Drawing Competition, where participants were encouraged to express their understanding of the day's theme through art. The young artists created beautiful illustrations depicting various aspects of the Prophet's life and Islamic teachings. This creative activity not only showcased their artistic talents but also demonstrated their comprehension of the concepts discussed throughout the day.
-
-Throughout Day 5, participants showed great enthusiasm and engagement, asking thoughtful questions and actively participating in discussions. The combination of educational sessions and creative activities made the day both informative and enjoyable, helping to deepen the participants' understanding of Prophethood in Islam. 

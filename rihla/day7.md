@@ -4,7 +4,16 @@ title: "Prize Distribution & Closing Ceremony"
 subtitle: "Celebrating achievements and concluding our journey of knowledge"
 day_number: 7
 prev_day: "/rihla/day6"
-gallery: []
+gallery:
+  - url: "/assets/img/rihla/Day7/1.jpg"
+  - url: "/assets/img/rihla/Day7/2.jpg"
+  - url: "/assets/img/rihla/Day7/3.jpg"
+  - url: "/assets/img/rihla/Day7/4.jpg"
+  - url: "/assets/img/rihla/Day7/5.jpg"
+  - url: "/assets/img/rihla/Day7/6.jpg"
+  - url: "/assets/img/rihla/Day7/7.jpg"
+  - url: "/assets/img/rihla/Day7/8.jpg"
+  - url: "/assets/img/rihla/Day7/9.jpg"
 ---
 
 # Day 7: Prize Distribution & Closing Ceremony

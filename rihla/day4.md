@@ -92,8 +92,6 @@ Throughout the day, campers participated in a series of fun-filled activities de
 
 The Squat Ball activity combined strength training with ball skills, making fitness fun and engaging. The Green Light / Red Light game taught participants the importance of following instructions and quick reactions.
 
-The highlight of the day was the Football Match, where teams competed in a friendly tournament that showcased their teamwork and strategy. The match created a spirit of healthy competition and camaraderie among all participants.
-
 The Sports Day was not just about physical activities but also emphasized the Islamic perspective on health and fitness. Participants learned about the importance of maintaining physical health as emphasized in Islamic teachings, with reminders that "A strong believer is better and more beloved to Allah than a weak believer."
 
 By the end of the day, participants were tired but fulfilled, having experienced the joy of physical activity and the importance of maintaining a healthy lifestyle in accordance with Islamic principles. 
