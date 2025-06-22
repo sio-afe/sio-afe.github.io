@@ -165,7 +165,7 @@ description: Join our exciting Summer Islamic Camp for boys aged 5th to 12th cla
             <h3>Get your photos from</h3>
             
             <div class="photo-banner photo-banner-white">
-                <img src="{{ '/assets/img/rihla/rehlaa_logo.png' | relative_url }}" alt="Rihla Logo" class="photo-banner-img">
+                <img src="{{ '/assets/img/rihla/sio_rehlaa.png' | relative_url }}" alt="Rihla Logo" class="photo-banner-img">
             </div>
             
             <p class="photo-instruction">Find your photos by taking a selfie 📸</p>
