@@ -1,0 +1,56 @@
+- id: quran-eng-translation
+  title: "The Noble Quran: English Translation"
+  author: "Various Translators"
+  category: "quran"
+  pdf: "/assets/books/quran-eng.pdf"
+  epub: "/assets/books/quran-eng.epub"
+  
+- id: sahih-bukhari
+  title: "Sahih Al-Bukhari"
+  author: "Imam Bukhari"
+  category: "hadith"
+  pdf: "/assets/books/sahih-bukhari.pdf"
+  
+- id: riyad-saliheen
+  title: "Riyad as-Saliheen (Gardens of the Righteous)"
+  author: "Imam An-Nawawi"
+  category: "hadith"
+  pdf: "/assets/books/riyad-saliheen.pdf"
+  epub: "/assets/books/riyad-saliheen.epub"
+  
+- id: sealed-nectar
+  title: "The Sealed Nectar (Ar-Raheeq Al-Makhtum)"
+  author: "Safiur Rahman Mubarakpuri"
+  category: "seerah"
+  pdf: "/assets/books/sealed-nectar.pdf"
+  audio: "/assets/audio/sealed-nectar.mp3"
+  
+- id: ihya-ulum-al-din
+  title: "Ihya Ulum Al-Din (Revival of Religious Sciences)"
+  author: "Imam Al-Ghazali"
+  category: "spirituality"
+  pdf: "/assets/books/ihya.pdf"
+  
+- id: aqeedah-tahawiyyah
+  title: "Aqeedah Tahawiyyah"
+  author: "Imam Abu Ja'far at-Tahawi"
+  category: "aqeedah"
+  pdf: "/assets/books/aqeedah-tahawiyyah.pdf"
+  
+- id: fiqh-sunnah
+  title: "Fiqh Us-Sunnah"
+  author: "Sayyid Sabiq"
+  category: "fiqh"
+  pdf: "/assets/books/fiqh-sunnah.pdf"
+  
+- id: muslim-family
+  title: "The Muslim Family: A Guide"
+  author: "Muhammad Abdul-Rauf"
+  category: "family"
+  pdf: "/assets/books/muslim-family.pdf"
+  
+- id: islam-modern-world
+  title: "Islam and the Modern World"
+  author: "Seyyed Hossein Nasr"
+  category: "contemporary"
+  pdf: "/assets/books/islam-modern-world.pdf" 
