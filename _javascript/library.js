@@ -4,7 +4,8 @@
  */
 
 document.addEventListener('DOMContentLoaded', function() {
-    initCategoryCarousel();
+    console.log('Library JS loaded');
+    setTimeout(initCategoryCarousel, 500); // Delay initialization to ensure DOM is fully rendered
     initCategoryFilter();
 });
 
@@ -17,55 +18,102 @@ function initCategoryCarousel() {
     const prevBtn = document.querySelector('.prev-btn');
     const nextBtn = document.querySelector('.next-btn');
     
-    if (!track || !slides.length || !prevBtn || !nextBtn) return;
-    
-    let slideWidth = slides[0].offsetWidth + parseInt(window.getComputedStyle(slides[0]).marginLeft) + 
-                    parseInt(window.getComputedStyle(slides[0]).marginRight);
-    let currentIndex = 0;
-    let slidesToShow = getVisibleSlides();
-    
-    function getVisibleSlides() {
-        const viewportWidth = window.innerWidth;
-        if (viewportWidth < 576) return 1;
-        if (viewportWidth < 992) return 2;
-        if (viewportWidth < 1200) return 3;
-        return 4;
-    }
-    
-    function updateSlideWidth() {
-        slideWidth = slides[0].offsetWidth + parseInt(window.getComputedStyle(slides[0]).marginLeft) + 
-                    parseInt(window.getComputedStyle(slides[0]).marginRight);
-        slidesToShow = getVisibleSlides();
-        moveToSlide(currentIndex);
-    }
-    
-    function moveToSlide(index) {
-        if (index < 0) index = 0;
-        if (index > slides.length - slidesToShow) index = slides.length - slidesToShow;
-        
-        currentIndex = index;
-        track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
-        
-        // Update button states
-        prevBtn.disabled = currentIndex === 0;
-        nextBtn.disabled = currentIndex >= slides.length - slidesToShow;
-        
-        prevBtn.style.opacity = currentIndex === 0 ? '0.5' : '1';
-        nextBtn.style.opacity = currentIndex >= slides.length - slidesToShow ? '0.5' : '1';
-    }
-    
-    prevBtn.addEventListener('click', () => {
-        moveToSlide(currentIndex - 1);
+    console.log('Initializing carousel with:', {
+        track: track,
+        slides: slides.length,
+        prevBtn: prevBtn,
+        nextBtn: nextBtn
     });
     
-    nextBtn.addEventListener('click', () => {
-        moveToSlide(currentIndex + 1);
-    });
+    if (!track || !slides.length || !prevBtn || !nextBtn) {
+        console.error('Carousel elements not found');
+        return;
+    }
     
-    window.addEventListener('resize', updateSlideWidth);
+    // Force browser to calculate dimensions
+    window.dispatchEvent(new Event('resize'));
     
-    // Initialize
-    updateSlideWidth();
+    // Set initial slide width with a small delay to ensure proper calculation
+    setTimeout(() => {
+        let slideWidth = getSlideWidth();
+        let currentIndex = 0;
+        let slidesToShow = getVisibleSlides();
+        
+        function getSlideWidth() {
+            const slide = slides[0];
+            const style = window.getComputedStyle(slide);
+            const width = slide.offsetWidth;
+            const marginLeft = parseInt(style.marginLeft) || 0;
+            const marginRight = parseInt(style.marginRight) || 0;
+            const totalWidth = width + marginLeft + marginRight;
+            console.log('Slide width calculated:', totalWidth);
+            return totalWidth;
+        }
+        
+        function getVisibleSlides() {
+            const viewportWidth = window.innerWidth;
+            let visible;
+            if (viewportWidth < 576) visible = 1;
+            else if (viewportWidth < 992) visible = 2;
+            else if (viewportWidth < 1200) visible = 3;
+            else visible = 4;
+            console.log('Visible slides:', visible);
+            return visible;
+        }
+        
+        function updateSlideWidth() {
+            slideWidth = getSlideWidth();
+            slidesToShow = getVisibleSlides();
+            moveToSlide(currentIndex);
+        }
+        
+        function moveToSlide(index) {
+            if (index < 0) index = 0;
+            const maxIndex = Math.max(0, slides.length - slidesToShow);
+            if (index > maxIndex) index = maxIndex;
+            
+            currentIndex = index;
+            const translateX = -currentIndex * slideWidth;
+            console.log(`Moving to slide ${index}, translateX: ${translateX}px`);
+            
+            // Apply the transform
+            track.style.transform = `translateX(${translateX}px)`;
+            
+            // Update button states
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex >= maxIndex;
+            
+            prevBtn.style.opacity = currentIndex === 0 ? '0.5' : '1';
+            nextBtn.style.opacity = currentIndex >= maxIndex ? '0.5' : '1';
+        }
+        
+        // Event listeners
+        prevBtn.addEventListener('click', function() {
+            console.log('Previous button clicked');
+            moveToSlide(currentIndex - 1);
+        });
+        
+        nextBtn.addEventListener('click', function() {
+            console.log('Next button clicked');
+            moveToSlide(currentIndex + 1);
+        });
+        
+        // Handle window resize
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(updateSlideWidth, 250);
+        });
+        
+        // Initialize
+        updateSlideWidth();
+        
+        // Make buttons more visible for debugging
+        prevBtn.style.backgroundColor = '#1a5928';
+        prevBtn.style.color = 'white';
+        nextBtn.style.backgroundColor = '#1a5928';
+        nextBtn.style.color = 'white';
+    }, 100);
 }
 
 /**
@@ -93,6 +141,27 @@ function initCategoryFilter() {
                     behavior: 'smooth'
                 });
             }
+        });
+    });
+    
+    // Make explore buttons work the same way as clicking the card
+    const exploreButtons = document.querySelectorAll('.explore-more');
+    exploreButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const card = this.closest('.category-card');
+            if (card) {
+                const filter = card.dataset.filter;
+                if (categoryFilter) {
+                    categoryFilter.value = filter;
+                    filterBooks(filter);
+                }
+            }
+            
+            // Scroll to book collection section
+            document.querySelector('.book-collection').scrollIntoView({
+                behavior: 'smooth'
+            });
         });
     });
     

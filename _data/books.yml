@@ -1,56 +1,50 @@
-- id: quran-eng-translation
-  title: "The Noble Quran: English Translation"
-  author: "Various Translators"
+# Sciences of the Quran Books
+- id: intro-sciences-quran
+  title: "An Introduction to the Sciences of the Quran"
+  author: "Abu Ammaar Yasir Qadhi"
   category: "quran"
-  pdf: "/assets/books/quran-eng.pdf"
-  epub: "/assets/books/quran-eng.epub"
-  
-- id: sahih-bukhari
-  title: "Sahih Al-Bukhari"
-  author: "Imam Bukhari"
-  category: "hadith"
-  pdf: "/assets/books/sahih-bukhari.pdf"
-  
-- id: riyad-saliheen
-  title: "Riyad as-Saliheen (Gardens of the Righteous)"
-  author: "Imam An-Nawawi"
-  category: "hadith"
-  pdf: "/assets/books/riyad-saliheen.pdf"
-  epub: "/assets/books/riyad-saliheen.epub"
-  
-- id: sealed-nectar
-  title: "The Sealed Nectar (Ar-Raheeq Al-Makhtum)"
-  author: "Safiur Rahman Mubarakpuri"
-  category: "seerah"
-  pdf: "/assets/books/sealed-nectar.pdf"
-  audio: "/assets/audio/sealed-nectar.mp3"
-  
-- id: ihya-ulum-al-din
-  title: "Ihya Ulum Al-Din (Revival of Religious Sciences)"
-  author: "Imam Al-Ghazali"
-  category: "spirituality"
-  pdf: "/assets/books/ihya.pdf"
-  
-- id: aqeedah-tahawiyyah
-  title: "Aqeedah Tahawiyyah"
-  author: "Imam Abu Ja'far at-Tahawi"
-  category: "aqeedah"
-  pdf: "/assets/books/aqeedah-tahawiyyah.pdf"
-  
-- id: fiqh-sunnah
-  title: "Fiqh Us-Sunnah"
-  author: "Sayyid Sabiq"
-  category: "fiqh"
-  pdf: "/assets/books/fiqh-sunnah.pdf"
-  
-- id: muslim-family
-  title: "The Muslim Family: A Guide"
-  author: "Muhammad Abdul-Rauf"
-  category: "family"
-  pdf: "/assets/books/muslim-family.pdf"
-  
-- id: islam-modern-world
-  title: "Islam and the Modern World"
-  author: "Seyyed Hossein Nasr"
-  category: "contemporary"
-  pdf: "/assets/books/islam-modern-world.pdf" 
+  type: "book"
+  cover: "/assets/img/library/default.png"
+  drive_link: "https://drive.google.com/file/d/1ItpAkdgzEf_7PnnN7AFCpDhl_2Hle6OG/view?usp=drive_link"
+
+- id: ulum-al-quran
+  title: "Ulum al Qur'an: An Introduction to the Sciences of the Qur'an"
+  author: "Ahmad Von Denffer"
+  category: "quran"
+  type: "book"
+  cover: "/assets/img/library/default.png"
+  drive_link: "https://drive.google.com/file/d/1YurhPpNfaqk3YVQRHgEgRKkhyHGRlyUC/view?usp=drive_link"
+
+- id: perfect-guide-quran
+  title: "The Perfect Guide to the Sciences of the Qur'an: Al-itqan Fi'ulum Al-Qur'an"
+  author: "Imam Jalal Al-Din Al-Suyuti"
+  category: "quran"
+  type: "book"
+  cover: "/assets/img/library/default.png"
+  drive_link: "https://drive.google.com/file/d/1qK70RRvu9AY6g2Dxe7clziGqzL4knpmK/view?usp=drive_link"
+
+- id: approach-quranic-sciences
+  title: "An Approach to the Quranic Sciences: Uloom-ul-Quran"
+  author: "Muhammad Taqi Usmani"
+  category: "quran"
+  type: "book"
+  cover: "/assets/img/library/default.png"
+  drive_link: "https://drive.google.com/file/d/1LQGAaUrKZA-UYwpTfasnydbJaA54I80g/view?usp=drive_link"
+
+- id: introduction-quran
+  title: "Introduction to the Qur'an"
+  author: "Muhammad Abdullah Draz"
+  category: "quran"
+  type: "book"
+  cover: "/assets/img/library/default.png"
+  drive_link: "https://drive.google.com/file/d/1wMsA98NIbX-Fqym2im_wU0uh-8vvb3-x/view?usp=drive_link"
+
+# Sciences of the Quran Articles
+- id: intro-ulum-quran-field
+  title: "An Introduction to 'Ulum-al-Qur'an: The Field of Qur'anic Studies"
+  author: "Sh. Yousef Wahb"
+  category: "quran"
+  type: "article"
+  cover: "/assets/img/library/default.png"
+  drive_link: "https://yaqeeninstitute.org/read/paper/an-introduction-to-ulum-al-quran-the-field-of-quranic-studies"
+

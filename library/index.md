@@ -20,7 +20,7 @@ permalink: /library/
                 <div class="category-slide">
                     <div class="category-card" data-filter="quran">
                         <div class="card-image">
-                            <img src="{{ '/assets/img/library/categories/quran.jpg' | relative_url }}" alt="Sciences of the Quran">
+                            <img src="{{ '/assets/img/library/default.png' | relative_url }}" alt="Sciences of the Quran">
                             <div class="category-overlay">
                                 <div class="category-icon">
                                     <i class="fas fa-book-quran"></i>
@@ -33,7 +33,7 @@ permalink: /library/
                             <li><a href="#">Resource Types</a></li>
                             <li><a href="#">Languages</a></li>
                         </ul>
-                        <a href="#" class="explore-more">Explore More Contents</a>
+                        <a href="#book-collection" class="explore-more">Explore Books</a>
                     </div>
                 </div>
                 
@@ -41,7 +41,7 @@ permalink: /library/
                 <div class="category-slide">
                     <div class="category-card" data-filter="hadith">
                         <div class="card-image">
-                            <img src="{{ '/assets/img/library/categories/hadith.jpg' | relative_url }}" alt="Sciences of the Hadith">
+                            <img src="{{ '/assets/img/library/default.png' | relative_url }}" alt="Sciences of the Hadith">
                             <div class="category-overlay">
                                 <div class="category-icon">
                                     <i class="fas fa-scroll"></i>
@@ -54,7 +54,7 @@ permalink: /library/
                             <li><a href="#">Resource Types</a></li>
                             <li><a href="#">Languages</a></li>
                         </ul>
-                        <a href="#" class="explore-more">Explore More Contents</a>
+                        <a href="#book-collection" class="explore-more">Explore Books</a>
                     </div>
                 </div>
                 
@@ -62,7 +62,7 @@ permalink: /library/
                 <div class="category-slide">
                     <div class="category-card" data-filter="fiqh">
                         <div class="card-image">
-                            <img src="{{ '/assets/img/library/categories/fiqh.jpg' | relative_url }}" alt="Sciences of the Fiqh And Shariah">
+                            <img src="{{ '/assets/img/library/default.png' | relative_url }}" alt="Sciences of the Fiqh And Shariah">
                             <div class="category-overlay">
                                 <div class="category-icon">
                                     <i class="fas fa-balance-scale"></i>
@@ -75,7 +75,7 @@ permalink: /library/
                             <li><a href="#">Resource Types</a></li>
                             <li><a href="#">Languages</a></li>
                         </ul>
-                        <a href="#" class="explore-more">Explore More Contents</a>
+                        <a href="#book-collection" class="explore-more">Explore Books</a>
                     </div>
                 </div>
                 
@@ -83,7 +83,7 @@ permalink: /library/
                 <div class="category-slide">
                     <div class="category-card" data-filter="islamic-law">
                         <div class="card-image">
-                            <img src="{{ '/assets/img/library/categories/law.jpg' | relative_url }}" alt="Islamic Law">
+                            <img src="{{ '/assets/img/library/default.png' | relative_url }}" alt="Islamic Law">
                             <div class="category-overlay">
                                 <div class="category-icon">
                                     <i class="fas fa-gavel"></i>
@@ -96,7 +96,7 @@ permalink: /library/
                             <li><a href="#">Resource Types</a></li>
                             <li><a href="#">Languages</a></li>
                         </ul>
-                        <a href="#" class="explore-more">Explore More Contents</a>
+                        <a href="#book-collection" class="explore-more">Explore Books</a>
                     </div>
                 </div>
                 
@@ -104,7 +104,7 @@ permalink: /library/
                 <div class="category-slide">
                     <div class="category-card" data-filter="maqasid">
                         <div class="card-image">
-                            <img src="{{ '/assets/img/library/categories/maqasid.jpg' | relative_url }}" alt="Maqasid Al Sharia">
+                            <img src="{{ '/assets/img/library/default.png' | relative_url }}" alt="Maqasid Al Sharia">
                             <div class="category-overlay">
                                 <div class="category-icon">
                                     <i class="fas fa-bullseye"></i>
@@ -117,7 +117,7 @@ permalink: /library/
                             <li><a href="#">Resource Types</a></li>
                             <li><a href="#">Languages</a></li>
                         </ul>
-                        <a href="#" class="explore-more">Explore More Contents</a>
+                        <a href="#book-collection" class="explore-more">Explore Books</a>
                     </div>
                 </div>
                 
@@ -125,7 +125,7 @@ permalink: /library/
                 <div class="category-slide">
                     <div class="category-card" data-filter="intellectual">
                         <div class="card-image">
-                            <img src="{{ '/assets/img/library/categories/intellectual.jpg' | relative_url }}" alt="Islamic Intellectual Tradition">
+                            <img src="{{ '/assets/img/library/default.png' | relative_url }}" alt="Islamic Intellectual Tradition">
                             <div class="category-overlay">
                                 <div class="category-icon">
                                     <i class="fas fa-lightbulb"></i>
@@ -138,7 +138,7 @@ permalink: /library/
                             <li><a href="#">Resource Types</a></li>
                             <li><a href="#">Languages</a></li>
                         </ul>
-                        <a href="#" class="explore-more">Explore More Contents</a>
+                        <a href="#book-collection" class="explore-more">Explore Books</a>
                     </div>
                 </div>
                 
@@ -146,7 +146,7 @@ permalink: /library/
                 <div class="category-slide">
                     <div class="category-card" data-filter="ummah">
                         <div class="card-image">
-                            <img src="{{ '/assets/img/library/categories/ummah.jpg' | relative_url }}" alt="Ummah">
+                            <img src="{{ '/assets/img/library/default.png' | relative_url }}" alt="Ummah">
                             <div class="category-overlay">
                                 <div class="category-icon">
                                     <i class="fas fa-users"></i>
@@ -159,7 +159,7 @@ permalink: /library/
                             <li><a href="#">Resource Types</a></li>
                             <li><a href="#">Languages</a></li>
                         </ul>
-                        <a href="#" class="explore-more">Explore More Contents</a>
+                        <a href="#book-collection" class="explore-more">Explore Books</a>
                     </div>
                 </div>
                 
@@ -167,7 +167,7 @@ permalink: /library/
                 <div class="category-slide">
                     <div class="category-card" data-filter="philosophy">
                         <div class="card-image">
-                            <img src="{{ '/assets/img/library/categories/philosophy.jpg' | relative_url }}" alt="Islamic Philosophy">
+                            <img src="{{ '/assets/img/library/default.png' | relative_url }}" alt="Islamic Philosophy">
                             <div class="category-overlay">
                                 <div class="category-icon">
                                     <i class="fas fa-brain"></i>
@@ -180,7 +180,7 @@ permalink: /library/
                             <li><a href="#">Resource Types</a></li>
                             <li><a href="#">Languages</a></li>
                         </ul>
-                        <a href="#" class="explore-more">Explore More Contents</a>
+                        <a href="#book-collection" class="explore-more">Explore Books</a>
                     </div>
                 </div>
                 
@@ -188,7 +188,7 @@ permalink: /library/
                 <div class="category-slide">
                     <div class="category-card" data-filter="sufism">
                         <div class="card-image">
-                            <img src="{{ '/assets/img/library/categories/sufism.jpg' | relative_url }}" alt="Sufism, Mysticism and Islamic Spirituality">
+                            <img src="{{ '/assets/img/library/default.png' | relative_url }}" alt="Sufism, Mysticism and Islamic Spirituality">
                             <div class="category-overlay">
                                 <div class="category-icon">
                                     <i class="fas fa-heart"></i>
@@ -201,7 +201,7 @@ permalink: /library/
                             <li><a href="#">Resource Types</a></li>
                             <li><a href="#">Languages</a></li>
                         </ul>
-                        <a href="#" class="explore-more">Explore More Contents</a>
+                        <a href="#book-collection" class="explore-more">Explore Books</a>
                     </div>
                 </div>
                 
@@ -209,7 +209,7 @@ permalink: /library/
                 <div class="category-slide">
                     <div class="category-card" data-filter="islamism">
                         <div class="card-image">
-                            <img src="{{ '/assets/img/library/categories/islamism.jpg' | relative_url }}" alt="Islamism and Post-Islamism">
+                            <img src="{{ '/assets/img/library/default.png' | relative_url }}" alt="Islamism and Post-Islamism">
                             <div class="category-overlay">
                                 <div class="category-icon">
                                     <i class="fas fa-mosque"></i>
@@ -222,7 +222,7 @@ permalink: /library/
                             <li><a href="#">Resource Types</a></li>
                             <li><a href="#">Languages</a></li>
                         </ul>
-                        <a href="#" class="explore-more">Explore More Contents</a>
+                        <a href="#book-collection" class="explore-more">Explore Books</a>
                     </div>
                 </div>
                 
@@ -230,7 +230,7 @@ permalink: /library/
                 <div class="category-slide">
                     <div class="category-card" data-filter="modernity">
                         <div class="card-image">
-                            <img src="{{ '/assets/img/library/categories/modernity.jpg' | relative_url }}" alt="Modernity">
+                            <img src="{{ '/assets/img/library/default.png' | relative_url }}" alt="Modernity">
                             <div class="category-overlay">
                                 <div class="category-icon">
                                     <i class="fas fa-city"></i>
@@ -243,7 +243,7 @@ permalink: /library/
                             <li><a href="#">Resource Types</a></li>
                             <li><a href="#">Languages</a></li>
                         </ul>
-                        <a href="#" class="explore-more">Explore More Contents</a>
+                        <a href="#book-collection" class="explore-more">Explore Books</a>
                     </div>
                 </div>
                 
@@ -256,7 +256,7 @@ permalink: /library/
 </section>
 
 <!-- Book Collection -->
-<section class="book-collection">
+<section class="book-collection" id="book-collection">
     <div class="row">
         <div class="col-12">
             <div class="collection-header">

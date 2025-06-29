@@ -108,6 +108,17 @@
 
     <!-- Library JavaScript -->
     <script src="{{ '/assets/js/library.js' | relative_url }}"></script>
+    
+    <!-- Debug script -->
+    <script>
+        console.log('Library layout loaded');
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM fully loaded');
+            console.log('Carousel track:', document.querySelector('.carousel-track'));
+            console.log('Carousel slides:', document.querySelectorAll('.category-slide').length);
+            console.log('Carousel buttons:', document.querySelector('.prev-btn'), document.querySelector('.next-btn'));
+        });
+    </script>
 
     <!-- JavaScript for search and filter functionality -->
     <script>
