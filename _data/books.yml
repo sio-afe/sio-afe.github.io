@@ -48,3 +48,95 @@
   cover: "/assets/img/library/default.png"
   drive_link: "https://yaqeeninstitute.org/read/paper/an-introduction-to-ulum-al-quran-the-field-of-quranic-studies"
 
+# Sciences of the Hadith Books
+- id: textbook-hadith-studies
+  title: "A Textbook of Hadith Studies: Authenticity, Compilation, Classification and Criticism of Hadith"
+  author: "Mohammad Hashim Kamali"
+  category: "hadith"
+  type: "book"
+  cover: "/assets/img/library/default.png"
+  drive_link: "#"
+  is_new: true
+
+- id: hadith-literature
+  title: "Hadith Literature: Its Origin, Development and Special Features"
+  author: "Muhammad Zubayr Siddiqi"
+  category: "hadith"
+  type: "book"
+  cover: "/assets/img/library/default.png"
+  drive_link: "#"
+  is_new: true
+
+- id: misquoting-muhammad
+  title: "Misquoting Muhammad: The Challenge and Choices of Interpreting the Prophet's Legacy"
+  author: "Jonathan Brown"
+  category: "hadith"
+  type: "book"
+  cover: "/assets/img/library/default.png"
+  drive_link: "#"
+  is_new: true
+
+- id: studies-hadith-methodology
+  title: "Studies In Hadith Methodology and Literature"
+  author: "Muhammad Mustafa Azmi"
+  category: "hadith"
+  type: "book"
+  cover: "/assets/img/library/default.png"
+  drive_link: "#"
+  is_new: true
+
+- id: hadith-muhammad-legacy
+  title: "Hadith: Muhammad's Legacy in the Medieval and Modern World"
+  author: "Jonathan A.C. Brown"
+  category: "hadith"
+  type: "book"
+  cover: "/assets/img/library/default.png"
+  drive_link: "#"
+  is_new: true
+
+- id: approaching-sunnah
+  title: "Approaching the Sunnah: Comprehension and Controversy"
+  author: "Yusuf Al-Qaradawi"
+  category: "hadith"
+  type: "book"
+  cover: "/assets/img/library/default.png"
+  drive_link: "#"
+  is_new: true
+
+- id: sunnah-role-islamic-legislation
+  title: "The Sunnah and Its Role in Islamic Legislation"
+  author: "Mustafa al-Siba'i"
+  category: "hadith"
+  type: "book"
+  cover: "/assets/img/library/default.png"
+  drive_link: "#"
+  is_new: true
+
+- id: authentication-hadith
+  title: "Authentication of Hadith: Redefining the Criteria"
+  author: "Israr Ahmad Khan"
+  category: "hadith"
+  type: "book"
+  cover: "/assets/img/library/default.png"
+  drive_link: "#"
+  is_new: true
+
+# Sciences of the Hadith Articles
+- id: are-hadith-necessary
+  title: "Are Hadith Necessary? An Examination of the Authority of Hadith in Islam"
+  author: "Dr. Emad Hamdeh"
+  category: "hadith"
+  type: "article"
+  cover: "/assets/img/library/default.png"
+  drive_link: "#"
+  is_new: true
+
+- id: authenticating-hadith
+  title: "Authenticating Hadith and the History of Hadith Criticism"
+  author: "Dr. Jonathan Brown"
+  category: "hadith"
+  type: "article"
+  cover: "/assets/img/library/default.png"
+  drive_link: "#"
+  is_new: true
+
