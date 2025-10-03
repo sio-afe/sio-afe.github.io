@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Why should I not cheat?</title>
+    <title>Why should I not cheat? / میں دھوکہ کیوں نہیں دوں؟</title>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Lato', sans-serif;
@@ -21,6 +22,36 @@
             padding: 20px 40px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo-container img {
+            max-width: 150px;
+            height: auto;
+            cursor: pointer;
+        }
+        .language-toggle {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+        }
+        .toggle-link {
+            color: #2c3e50;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 8px 15px;
+            border: 2px solid #2c3e50;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        .toggle-link:hover {
+            background-color: #2c3e50;
+            color: white;
         }
         h1, h2 {
             font-family: 'Lato', sans-serif;
@@ -43,44 +74,209 @@
             background: #ddd;
             margin: 20px 0;
         }
+        .urdu-content {
+            display: none;
+            font-family: 'Noto Nastaliq Urdu', serif;
+            direction: rtl;
+            text-align: right;
+        }
+        .urdu-content h1,
+        .urdu-content h2 {
+            font-family: 'Noto Nastaliq Urdu', serif;
+        }
+        .urdu-content p {
+            font-size: 1.3em;
+            line-height: 2;
+        }
+        .english-content {
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 15px 20px;
+            }
+            .logo-container img {
+                max-width: 100px;
+            }
+            .language-toggle {
+                top: 20px;
+                right: 20px;
+            }
+            .toggle-link {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+            h1 {
+                font-size: 1.5em;
+            }
+            h2 {
+                font-size: 1.3em;
+            }
+            p {
+                font-size: 1em;
+            }
+            .urdu-content p {
+                font-size: 1.1em;
+                line-height: 1.8;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            .container {
+                padding: 10px 15px;
+            }
+            .logo-container {
+                margin-bottom: 15px;
+            }
+            .logo-container img {
+                max-width: 80px;
+            }
+            .language-toggle {
+                top: 15px;
+                right: 15px;
+            }
+            .toggle-link {
+                font-size: 12px;
+                padding: 5px 10px;
+                border-width: 1px;
+            }
+            h1 {
+                font-size: 1.3em;
+                padding-bottom: 8px;
+                margin-bottom: 15px;
+            }
+            h2 {
+                font-size: 1.2em;
+            }
+            p {
+                font-size: 0.95em;
+                margin-bottom: 1em;
+            }
+            .urdu-content p {
+                font-size: 1em;
+                line-height: 1.7;
+            }
+        }
+
+        @media screen and (min-width: 1200px) {
+            .container {
+                max-width: 900px;
+                padding: 30px 50px;
+            }
+            .logo-container img {
+                max-width: 180px;
+            }
+            .language-toggle {
+                top: 40px;
+                right: 50px;
+            }
+            .toggle-link {
+                font-size: 18px;
+                padding: 10px 20px;
+            }
+            h1 {
+                font-size: 2.2em;
+            }
+            p {
+                font-size: 1.15em;
+            }
+            .urdu-content p {
+                font-size: 1.4em;
+            }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Why should I not cheat?</h1>
 
-        <p>From a purely utilitarian perspective, it is a fantastic idea to cheat. If I cheat smartly in a way that I do not get caught, I can increase my points. By increasing my points, I will be eligible to win.</p>
+        <div class="logo-container">
+            <a href="https://sio-abulfazal.org">
+                <img src="/assets/img/ihdina/Logo.png" alt="IHDINA Logo">
+            </a>
+        </div>
 
-        <p>This thinking can be extended to almost all areas of life. If I cheat at my job such as by taking credit for other’s work, I can get quicker promotions; if I cheat in my relationships, I can get more pleasure(?); and so on.</p>
+        <div class="language-toggle">
+            <a href="#" class="toggle-link" onclick="toggleLanguage(); return false;">Urdu</a>
+        </div>
 
-        <p>If cheating can increase my chances of overall pleasure and success, why then should I not cheat?</p>
+        <!-- English Content -->
+        <div class="english-content" id="englishContent">
+            <h1>Why should I not cheat?</h1>
 
-        <p>Unfortunately, every cheating instance breaks my self-concept. Ego and self-concept are fluid things instead of something written in stone. There is a constant feedback loop between my actions and my self-concept. If I cheat a few times because I didn’t have enough time, my self-concept will slowly start shifting into I am “a person who is lazy” or I am “a person who does not know how to manage my time”. If I cheat a few times because I didn’t really understand the concepts, my self-concept will slowly start shifting into I am “a person who can not understand tough concepts” or I am “dumb”.</p>
+            <p>From a purely utilitarian perspective, it is a fantastic idea to cheat. If I cheat smartly in a way that I do not get caught, I can increase my points. By increasing my points, I will be eligible to win.</p>
 
-        <p>There is another reason people cheat: anti-authoritarianism. I may believe that I am really smart and I will assert my smartness by showing that I can fool the organizers and get away with cheating. To begin with as organizers, We believe that you are in all likelihood smarter than we are. We are already convinced. You are brilliant.</p>
+            <p>This thinking can be extended to almost all areas of life. If I cheat at my job such as by taking credit for other's work, I can get quicker promotions; if I cheat in my relationships, I can get more pleasure(?); and so on.</p>
 
-        <p>But the problem is such external validations, including encouraging words, grades, and degrees, do not last one for their whole life. Therefore, even landing a great job and just getting into a great college can never provide sustained confidence. It’s important to reflect on this. You are already competing with some of the brightest minds in India. You won the competition but have you built the lasting confidence?</p>
+            <p>Unfortunately, every cheating instance breaks my self-concept. Ego and self-concept are fluid things instead of something written in stone. There is a constant feedback loop between my actions and my self-concept. If I cheat a few times because I didn't have enough time, my self-concept will slowly start shifting into I am "a person who is lazy" or I am "a person who does not know how to manage my time" or into I am "a person who can not understand tough concepts" or I am "dumb".</p>
 
-        <p>What actually lasts and serves in the whole life is (1) <strong>knowledge</strong>: I really deeply know what I am talking about; (2) <strong>learning ability</strong>: if I do not understand something, I have the ability to spend enough time and effort to learn really tough concepts; and (3) <strong>integrity</strong>: no matter what are the circumstances, I do not bend on my strong will and principles.</p>
+            <p>There is another reason people cheat: anti-authoritarianism. I may believe that I am really smart and I will assert my smartness by showing that I can fool the organizers and get away with cheating. To begin with as organizers, We believe that you are in all likelihood smarter than we are. We are already convinced. You are brilliant.</p>
 
-        <p>Cheating does not build either of these. You will always look out for ways to lie and fool other people, desperately trying to look smart or faithful, and can never keep lasting confidence.</p>
+            <p>But the problem is such external validations, including encouraging words, grades, and degrees, do not last one for their whole life. You won the competition but have you built the lasting confidence?</p>
 
-        <p>However, if you build integrity: I will give my honest best and then just get what I truly deserve; you will develop all three: knowledge, learning ability, and integrity. Your actions and self-concept will come in a positive loop and you will start building lasting self-confidence. If you continue this approach, you will succeed in all areas of life – personal and professional – and become a strong leader.</p>
+            <p>What actually lasts and serves in the whole life is (1) <strong>knowledge</strong>: I really deeply know what I am talking about; (2) <strong>learning ability</strong>: if I do not understand something, I have the ability to spend enough time and effort to learn really tough concepts; and (3) <strong>integrity</strong>: no matter what are the circumstances, I do not bend on my strong will and principles.</p>
 
-        <hr>
+            <p>Cheating does not build either of these. You will always look out for ways to lie and fool other people, desperately trying to look smart or faithful, and can never keep lasting confidence.</p>
 
-        <h2>Should I tell the organizers that someone else is cheating?</h2>
-        <p>For this quiz, we appreciate “whistleblowers” who privately share evidences of cheating. Anonymity of whistleblowers will always be maintained by the organizers.</p>
+            <p>However, if you build integrity, Your actions and self-concept will come in a positive loop and you will start building lasting self-confidence. If you continue this approach, you will succeed in all areas of life – personal and professional – and become a strong leader.</p>
 
-        <p>Becoming a whistleblower serves integrity; cheaters are harmful for everyone because they will shift the bell curve to the right and hurt points of honest participants.</p>
+            <hr>
+        </div>
 
-        <p>However, becoming a whistleblower is tough because it goes against an individual’s ingrained tendency to conform with the society. Yet, becoming one is the prime of integrity and ethics.</p>
+        <!-- Urdu Content -->
+        <div class="urdu-content" id="urduContent">
+            <h1>میں نقل کیوں نہیں کروں؟</h1>
 
-        <p>Again, there will be many instances in life where you come to know about your superiors and your peers doing unethical tasks such as workplace harrassment, hurting the nature, and bending government regulations. Tasks that you know in your heart of hearts are unethical. How you behave in those circumstances define what kind of a person you are and whether you possess goodwill towards the society as a whole. It will take a lot of guts to go towards righteousness and truth even when it may be against your immediate society.</p>
+            <p>خالصتاً افادی (utilitarian) نقطہ نظر سے، نقل کرنا ایک شاندار خیال ہے۔ اگر میں ہوشیاری سے نقل کروں کہ پکڑا نہ جاؤں، تو میں اپنے پوائنٹس بڑھا سکتا ہوں۔ اپنے پوائنٹس بڑھا کر، میں جیتنے کے قابل ہو جاؤں گا۔</p>
 
-        <p>Whistleblowers expose the cheaters so that the honest people do not get hurt. If you do become a whistleblower, I have nothing short of my deepest respect for you. If you cannot bring yourself to become one, it is ok. Please don’t be harsh on yourself. It is super tough. I wish you more courage.</p>
+            <p>یہ سوچ زندگی کے تقریباً تمام شعبوں میں لاگو کی جا سکتی ہے۔ اگر میں اپنی نوکری میں نقل کروں، جیسے دوسروں کے کام کا کریڈٹ لے لوں، تو مجھے جلد ترقی مل سکتی ہے؛ اگر میں اپنے تعلقات میں نقل کروں، تو مجھے زیادہ خوشی(؟) مل سکتی ہے؛ اور اسی طرح آگے۔</p>
+
+            <p>بدقسمتی سے، نقل کرنے کی ہر مثال میری خود شناسی کو توڑ دیتی ہے۔ انا اور خود شناسی پتھر پر لکھی ہوئی چیزوں کی بجائے روانی کی چیزیں ہیں۔ میرے اعمال اور میری خود شناسی کے درمیان ایک مسلسل فیڈ بیک لوپ ہوتا ہے۔ اگر میں چند بار نقل کرتا ہوں کیونکہ میرے پاس کافی وقت نہیں تھا، تو میری خود شناسی آہستہ آہستہ یہ بننا شروع ہو جائے گی کہ میں "ایک سست شخص ہوں" یا میں "ایک ایسا شخص ہوں جو اپنا وقت منظم نہیں کر سکتا" یا میں "ایک ایسا شخص ہوں جو مشکل تصورات کو نہیں سمجھ سکتا" یا میں "بیوقوف ہوں"۔</p>
+
+            <p>لوگوں کے نقل کرنے کی ایک اور وجہ ہے: اختیار مخالف(anti-authoritarianism) رویہ۔ میں یہ یقین کر سکتا ہوں کہ میں واقعی بہت ہوشیار ہوں اور میں اپنی ہوشیاری کا اظہار یہ دکھا کر کروں گا کہ میں منتظمین کو بیوقوف بنا سکتا ہوں اور نقل کر کے بچ سکتا ہوں۔ بطور منتظمین، ہم یقین رکھتے ہیں کہ تمام امکانات میں آپ ہم سے زیادہ ہوشیار ہیں۔ ہم پہلے ہی قائل ہیں۔ آپ شاندار ہیں۔</p>
+
+            <p>لیکن مسئلہ یہ ہے کہ ایسی بیرونی توثیق، بشمول حوصلہ افزا الفاظ، گریڈز، اور ڈگریاں، کسی کی پوری زندگی کے لیے نہیں چلتیں۔ آپ نے مقابلہ جیت لیا لیکن کیا آپ نے پائیدار اعتماد بنایا ہے؟</p>
+
+            <p>جو چیز واقعی پوری زندگی میں رہتی ہے اور کام آتی ہے وہ ہے (۱) <strong>علم</strong>: میں واقعی گہرائی سے جانتا ہوں کہ میں کس بارے میں بات کر رہا ہوں؛ (۲) <strong>سیکھنے کی صلاحیت</strong>: اگر میں کچھ نہیں سمجھتا، تو میرے پاس واقعی مشکل تصورات سیکھنے کے لیے کافی وقت اور محنت خرچ کرنے کی صلاحیت ہے؛ اور (۳) <strong>دیانت داری</strong>: حالات کچھ بھی ہوں، میں اپنی مضبوط مرضی اور اصولوں پر نہیں جھکتا۔</p>
+
+            <p>نقل کرنا ان میں سے کوئی بھی چیز نہیں بناتا۔ آپ ہمیشہ جھوٹ بولنے اور دوسرے لوگوں کو بیوقوف بنانے کے طریقے تلاش کریں گے، شدت سے ہوشیار یا وفادار نظر آنے کی کوشش کریں گے، اور کبھی پائیدار اعتماد نہیں رکھ سکتے۔</p>
+
+            <p>تاہم، اگر آپ دیانت داری بناتے ہیں، تو آپ کے اعمال اور خود شناسی ایک مثبت لوپ میں آ جائیں گے اور آپ پائیدار خود اعتمادی بنانا شروع کر دیں گے۔ اگر آپ اس طریقہ کار کو جاری رکھتے ہیں، تو آپ زندگی کے تمام شعبوں میں کامیاب ہوں گے – ذاتی اور پیشہ ورانہ – اور ایک مضبوط لیڈر بنیں گے۔</p>
+
+            <hr>
+        </div>
+       
     </div>
+
+    <script>
+        let currentLang = 'english';
+
+        function toggleLanguage() {
+            const englishContent = document.getElementById('englishContent');
+            const urduContent = document.getElementById('urduContent');
+            const toggleLink = document.querySelector('.toggle-link');
+
+            if (currentLang === 'english') {
+                englishContent.style.display = 'none';
+                urduContent.style.display = 'block';
+                toggleLink.textContent = 'English';
+                currentLang = 'urdu';
+            } else {
+                englishContent.style.display = 'block';
+                urduContent.style.display = 'none';
+                toggleLink.textContent = 'Urdu';
+                currentLang = 'english';
+            }
+        }
+    </script>
 
 </body>
 </html>
