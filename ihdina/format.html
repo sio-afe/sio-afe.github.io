@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ihdina Quiz Format | SIO-AFE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #c2272b; --secondary: #3475af; --text-dark: #1a2a36; --text-light: #546a7b;
+            --bg-light: #f8f9fa; --card-bg: rgba(255, 255, 255, 0.95); --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+            --shadow-sm: 0 4px 6px rgba(0,0,0,0.05); --shadow-md: 0 10px 25px rgba(0,0,0,0.1); --radius-sm: 6px; --radius-md: 12px;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+        body { background: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        .container { width:100%; max-width: 1000px; margin:0 auto; padding:0 1.5rem; }
+        .header { padding:1rem 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); box-shadow: var(--shadow-sm); position: sticky; top:0; z-index:1000; }
+        .header-container { display:flex; justify-content: space-between; align-items:center; }
+        .site-logo { height:50px; width:auto; }
+        .back-link { color: var(--secondary); text-decoration:none; font-weight:500; display:flex; align-items:center; gap:0.5rem; }
+        .back-link:hover { color: var(--primary); }
+        .main-content { padding:2.5rem 0; }
+        .card { background: var(--card-bg); border-radius: var(--radius-md); box-shadow: var(--shadow-md); padding: 2rem; margin-bottom:1.5rem; }
+        .title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3.5vw, 2.4rem); margin-bottom:0.75rem; }
+        .subtitle { color: var(--text-light); margin-bottom: 1.25rem; }
+        .list { padding-left: 1rem; }
+        .list li { margin-bottom: 0.6rem; }
+        .warn { background: rgba(194,39,43,0.05); border-left: 4px solid var(--primary); border-radius: var(--radius-sm); padding: 0.9rem 1rem; margin-top: 1rem; }
+        .lang-label { font-weight:600; color: var(--secondary); margin: 1.25rem 0 0.5rem; }
+        .cta { text-align:center; margin-top: 2rem; }
+        .cta a { display:inline-block; padding:0.8rem 1.6rem; background: var(--gradient); color:#fff; text-decoration:none; border-radius:50px; box-shadow: var(--shadow-sm); }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container header-container">
+            <div class="logo-container">
+                <img src="/assets/img/sio-logo.png" alt="SIO-AFE Logo" class="site-logo">
+            </div>
+            <a class="back-link" href="/ihdina/"><i class="fas fa-arrow-left"></i> Back to Ihdina</a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="card">
+                <h1 class="title">Demo Quiz & Format</h1>
+                <p class="subtitle">Dear Participants, please read carefully before the online demo quiz.</p>
+
+                <h3 class="title" style="font-size:1.25rem; margin-top: 0.5rem;">Demo Quiz Schedule</h3>
+                <ul class="list">
+                    <li><strong>Date:</strong> Oct 11</li>
+                    <li><strong>Time:</strong> 10:00 PM (sharp)</li>
+                    <li><strong>Link:</strong> The quiz link will be shared 10 minutes before (9:50 PM).</li>
+                </ul>
+
+                <h3 class="title" style="font-size:1.25rem; margin-top: 1rem;">Menti Registration Format</h3>
+                <p class="subtitle" style="margin-bottom:0.5rem;">Use the first four letters of your name + last four digits of your registered mobile number.</p>
+                <div class="warn"><strong>Example:</strong> If your name is Rashid Khan and number is 1234567890, register as <strong>RASH7890</strong>.</div>
+
+                <h3 class="title" style="font-size:1.25rem; margin-top: 1rem;">Quiz Format</h3>
+                <ul class="list">
+                    <li>The quiz will be conducted only on Menti 🧠</li>
+                    <li>The Google Meet link is for following the quiz live (questions and timing will be visible there)</li>
+                    <li>20 multiple-choice questions (MCQs)</li>
+                    <li>English and Urdu participants will use the same link</li>
+                    <li>⚠️ Do not share or forward the quiz link anywhere</li>
+                    <li>Each question will have only one correct answer</li>
+                    <li>⏱️ 5 seconds to read each question</li>
+                    <li>⏳ 15 seconds to answer</li>
+                </ul>
+
+                <h3 class="title" style="font-size:1.25rem; margin-top: 1rem;">Important Instructions</h3>
+                <ol class="list" style="padding-left: 1.25rem;">
+                    <li>Use a stable internet connection to avoid interruptions</li>
+                    <li>Join the Google Meet on a laptop/desktop and attempt the Menti quiz on your phone</li>
+                    <li>Do not reload, refresh, or close the Menti window during the quiz</li>
+                    <li>Avoid opening other apps or tabs while attempting</li>
+                    <li>Any suspicious activity may lead to disqualification</li>
+                    <li>Be ready at least 10 minutes before the quiz begins</li>
+                </ol>
+
+                <div class="warn" style="margin-top: 1rem;">
+                    ✅ All the best — be on time and give it your best shot! 💪
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="lang-label">اردو</div>
+                <h2 class="title" style="font-size: 1.4rem;">ڈیمو کوئز اور فارمیٹ</h2>
+                <p class="subtitle">براہِ کرم آن لائن ڈیمو کوئز سے پہلے درج ذیل ہدایات غور سے پڑھیں:</p>
+
+                <h3 class="title" style="font-size:1.2rem; margin-top: 0.5rem;">ڈیمو کوئز شیڈول</h3>
+                <ul class="list">
+                    <li><strong>تاریخ:</strong> 11 اکتوبر</li>
+                    <li><strong>وقت:</strong> رات 10:00 بجے (بالکل وقت پر)</li>
+                    <li><strong>لنک:</strong> کوئز کا لنک وقتِ آغاز سے 10 منٹ پہلے (9:50 بجے) شیئر کیا جائے گا۔</li>
+                </ul>
+
+                <h3 class="title" style="font-size:1.2rem; margin-top: 1rem;">مینٹی رجسٹریشن طریقہ کار</h3>
+                <p class="subtitle" style="margin-bottom:0.5rem;">اپنے نام کے پہلے چار حروف + رجسٹرڈ موبائل نمبر کے آخری چار ہندسے استعمال کریں۔</p>
+                <div class="warn"><strong>مثال:</strong> اگر نام راشد خان اور نمبر 1234567890 ہو تو رجسٹر کریں: <strong>RASH7890</strong></div>
+
+                <h3 class="title" style="font-size:1.2rem; margin-top: 1rem;">کوئز فارمیٹ</h3>
+                <ul class="list">
+                    <li>کوئز صرف مینٹی پر ہوگا 🧠</li>
+                    <li>گوگل میٹ لنک صرف لائیو فالو کرنے کے لیے ہے (سوالات اور ٹائمنگ وہیں نظر آئیں گے)</li>
+                    <li>20 کثیر الانتخاب (MCQs) سوالات</li>
+                    <li>انگریزی اور اردو شرکاء ایک ہی لنک استعمال کریں گے</li>
+                    <li>⚠️ کوئز لنک کہیں شیئر یا فارورڈ نہ کریں</li>
+                    <li>ہر سوال کا صرف ایک درست جواب ہوگا</li>
+                    <li>⏱️ ہر سوال پڑھنے کے لیے 5 سیکنڈ</li>
+                    <li>⏳ جواب دینے کے لیے 15 سیکنڈ</li>
+                </ul>
+
+                <h3 class="title" style="font-size:1.2rem; margin-top: 1rem;">اہم ہدایات</h3>
+                <ol class="list" style="padding-left: 1.25rem;">
+                    <li>مستحکم انٹرنیٹ کنیکشن استعمال کریں تاکہ رکاوٹ نہ آئے</li>
+                    <li>گوگل میٹ لیپ ٹاپ/ڈیسک ٹاپ پر جوائن کریں اور مینٹی کوئز فون پر حل کریں</li>
+                    <li>کوئز کے دوران مینٹی ونڈو کو ری لوڈ/ریفریش یا بند نہ کریں</li>
+                    <li>حل کرتے وقت دیگر ایپس یا ٹیبز نہ کھولیں</li>
+                    <li>کسی بھی مشتبہ سرگرمی پر نااہلی ہو سکتی ہے</li>
+                    <li>کوئز شروع ہونے سے کم از کم 10 منٹ پہلے تیار رہیں</li>
+                </ol>
+
+                <div class="warn" style="margin-top: 1rem;">
+                    ✅ نیک تمنائیں — وقت پر آئیں اور پوری لگن سے حصہ لیں! 💪
+                </div>
+            </div>
+
+            <div class="cta">
+                <a href="/ihdina/"><i class="fa-solid fa-house"></i> Back to Ihdina Home</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+
+

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ihdina Prizes | SIO-AFE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #c2272b;
+            --primary-dark: #a61f23;
+            --secondary: #3475af;
+            --secondary-dark: #2a5f8f;
+            --text-dark: #1a2a36;
+            --text-light: #546a7b;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg-light); color: var(--text-dark); line-height: 1.6; overflow-x: hidden; }
+        .container { width: 100%; max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+        .header { padding: 1rem 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); box-shadow: var(--shadow-sm); position: sticky; top: 0; z-index: 1000; }
+        .header-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo-container { display: flex; align-items: center; }
+        .site-logo { height: 50px; width: auto; }
+        .back-link { color: var(--secondary); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; transition: var(--transition); }
+        .back-link:hover { color: var(--primary); }
+
+        .main-content { padding: 2.5rem 0; min-height: 70vh; }
+        .card { background: var(--card-bg); border-radius: var(--radius-md); box-shadow: var(--shadow-md); padding: 2rem; margin-bottom: 1.5rem; }
+        .title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3.5vw, 2.4rem); margin-bottom: 0.75rem; }
+        .subtitle { color: var(--text-light); margin-bottom: 1.25rem; }
+        .list { list-style: none; }
+        .list li { background: rgba(194,39,43,0.05); border-left: 4px solid var(--primary); border-radius: var(--radius-sm); padding: 0.9rem 1rem; margin-bottom: 0.6rem; display: flex; gap: 0.75rem; align-items: center; }
+        .list li i { color: var(--primary); }
+        .note { margin-top: 1rem; color: var(--text-light); }
+
+        .lang-label { font-weight: 600; color: var(--secondary); margin: 1.25rem 0 0.5rem; }
+
+        .cta { text-align: center; margin-top: 2rem; }
+        .cta a { display: inline-block; padding: 0.8rem 1.6rem; background: var(--gradient); color: #fff; text-decoration: none; border-radius: 50px; box-shadow: var(--shadow-sm); transition: var(--transition); }
+        .cta a:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container header-container">
+            <div class="logo-container">
+                <img src="/assets/img/sio-logo.png" alt="SIO-AFE Logo" class="site-logo">
+            </div>
+            <a href="/ihdina/" class="back-link"><i class="fas fa-arrow-left"></i> Back to Ihdina</a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="card">
+                <h1 class="title">Ihdina Prize Distribution</h1>
+                <p class="subtitle">Total prize pool: ₹20,000 among top 5 participants</p>
+                <ul class="list">
+                    <li><i class="fa-solid fa-medal"></i> <strong>1st Place:</strong> ₹10,000</li>
+                    <li><i class="fa-solid fa-medal"></i> <strong>2nd Place:</strong> ₹5,000</li>
+                    <li><i class="fa-solid fa-medal"></i> <strong>3rd Place:</strong> ₹3,000</li>
+                    <li><i class="fa-solid fa-award"></i> <strong>4th & 5th:</strong> ₹1,500 each (consolation)</li>
+                </ul>
+                <p class="note">Keep preparing and aim for the top!</p>
+            </div>
+
+            <div class="card">
+                <div class="lang-label">اردو</div>
+                <h2 class="title" style="font-size: 1.4rem;">انعامات کی تفصیل</h2>
+                <p class="subtitle">مجموعی رقم: ₹20,000 (سرفہرست 5 شرکاء کے درمیان)</p>
+                <ul class="list">
+                    <li><i class="fa-solid fa-medal"></i> <strong>پہلی پوزیشن:</strong> ₹10,000</li>
+                    <li><i class="fa-solid fa-medal"></i> <strong>دوسری پوزیشن:</strong> ₹5,000</li>
+                    <li><i class="fa-solid fa-medal"></i> <strong>تیسری پوزیشن:</strong> ₹3,000</li>
+                    <li><i class="fa-solid fa-award"></i> <strong>چوتھی اور پانچویں:</strong> ₹1,500 فی کس (Consolation)</li>
+                </ul>
+                <p class="note">تیاری جاری رکھیں اور بہترین کارکردگی کا ہدف بنائیں!</p>
+            </div>
+
+            <div class="cta">
+                <a href="/ihdina/"><i class="fa-solid fa-house"></i> Back to Ihdina Home</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+
+
