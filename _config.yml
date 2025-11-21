@@ -243,6 +243,7 @@ exclude:
   - purgecss.js
   - rollup.config.js
   - "package*.json"
+  - muqawamah-react
 
 jekyll-archives:
   enabled: [categories, tags]
