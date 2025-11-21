@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import AboutSection from './components/AboutSection';
-import RulesSection from './components/RulesSection';
-import CTASection from './components/CTASection';
-import SponsorsSection from './components/SponsorsSection';
-import FindImagesSection from './components/FindImagesSection';
-import SocialSection from './components/SocialSection';
+import { AnimatePresence } from 'framer-motion';
+import Navbar from './components/shared/Navbar';
+import Edition2025 from './components/editions/2025/Edition2025';
+import Edition2026 from './components/editions/2026/Edition2026';
 
 function App() {
   const [selectedEdition, setSelectedEdition] = useState('2025');
@@ -43,21 +38,11 @@ function App() {
       <Navbar selectedEdition={selectedEdition} setSelectedEdition={setSelectedEdition} />
       
       <AnimatePresence mode="wait">
-        <motion.div
-          key={selectedEdition}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
-        >
-          <Hero selectedEdition={selectedEdition} setSelectedEdition={setSelectedEdition} />
-          <AboutSection edition={selectedEdition} />
-          <RulesSection edition={selectedEdition} />
-          <CTASection edition={selectedEdition} />
-          <SponsorsSection edition={selectedEdition} />
-          <FindImagesSection edition={selectedEdition} />
-          <SocialSection edition={selectedEdition} />
-        </motion.div>
+        {selectedEdition === '2025' ? (
+          <Edition2025 key="2025" setSelectedEdition={setSelectedEdition} />
+        ) : (
+          <Edition2026 key="2026" setSelectedEdition={setSelectedEdition} />
+        )}
       </AnimatePresence>
     </div>
   );

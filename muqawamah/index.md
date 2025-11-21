@@ -8,4 +8,4 @@ permalink: /muqawamah/
 
 <div id="root"></div>
 
-<script type="module" src="/assets/muqawamah-react/main-BpYagt8H.js"></script>
+<script type="module" src="/assets/muqawamah-react/main-s9pI3mFW.js"></script>
