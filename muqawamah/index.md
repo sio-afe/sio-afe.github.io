@@ -8,4 +8,4 @@ permalink: /muqawamah/2025/
 
 <div id="root"></div>
 
-<script type="module" src="/assets/muqawamah-react/main-3KNZt74M.js"></script>
+<script type="module" src="/assets/muqawamah-react/main-D7XGmc1M.js"></script>

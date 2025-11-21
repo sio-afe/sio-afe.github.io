@@ -63,19 +63,6 @@ function RulesSection({ edition }) {
           ))}
         </div>
 
-        <motion.div
-          className="full-rules-cta"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          viewport={{ once: true }}
-        >
-          <p>View complete rules & regulations</p>
-          <button className="rules-link-btn">
-            <span>Full Guidelines</span>
-            <i className="fas fa-arrow-right"></i>
-          </button>
-        </motion.div>
       </div>
     </section>
   );
