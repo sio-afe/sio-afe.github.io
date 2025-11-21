@@ -1,22 +1,11 @@
 ---
-layout: default
-permalink: /muqawamah/open-age/
-category: open-age
-show_back_button: true
-scripts:
-  - /assets/js/tournament/fireworks.js
-  - /assets/js/tournament/final-fixture.js
-styles:
-  - /assets/css/tournament.css
+layout: fullwidth
+permalink: /muqawamah/2025/open-age/
 ---
 
-{% include tournament/final-fixture.html %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="/assets/muqawamah-react/tournament-style.css">
 
-<!-- Add this for fireworks -->
-<canvas id="fireworksCanvas"></canvas>
+<div id="tournament-root"></div>
 
-<!-- Add these event trigger buttons for testing -->
-<!-- <div class="test-buttons">
-  <button class="test-btn" onclick="document.dispatchEvent(new Event('goalScored'))">Test Goal</button>
-  <button class="test-btn" onclick="document.dispatchEvent(new Event('matchEnd'))">Test Match End</button>
-</div> -->
+<script type="module" src="/assets/muqawamah-react/tournament-main.js"></script>

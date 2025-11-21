@@ -8,7 +8,8 @@ export default defineConfig({
     outDir: 'dist',
     rollupOptions: {
       input: {
-        main: resolve(process.cwd(), 'index.html')
+        main: resolve(process.cwd(), 'index.html'),
+        tournament: resolve(process.cwd(), 'tournament.html')
       }
     },
     cssCodeSplit: false,

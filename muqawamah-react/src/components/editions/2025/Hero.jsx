@@ -99,24 +99,6 @@ function Hero({ selectedEdition, setSelectedEdition }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
         >
-          {/* Edition Toggle Switch */}
-          <div className="hero-edition-toggle">
-            <span className={`hero-edition-label ${selectedEdition === '2025' ? 'active' : ''}`}>2025</span>
-            <div 
-              className="hero-toggle-switch"
-              onClick={() => {
-                setSelectedEdition(selectedEdition === '2025' ? '2026' : '2025');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            >
-              <div className={`hero-toggle-slider ${selectedEdition === '2026' ? 'active' : ''}`}></div>
-            </div>
-            <span className={`hero-edition-label ${selectedEdition === '2026' ? 'active' : ''}`}>
-              2026
-              {selectedEdition !== '2026' && <span className="hero-soon-badge">Soon</span>}
-            </span>
-          </div>
-
           {/* Edition Content */}
           <AnimatePresence mode="wait">
             <motion.div

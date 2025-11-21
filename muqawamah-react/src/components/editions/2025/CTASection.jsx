@@ -6,13 +6,15 @@ const tournaments = [
     category: "Open Age",
     icon: "fas fa-users",
     status: "Completed",
-    teams: 12
+    teams: 12,
+    link: "/muqawamah/2025/open-age/"
   },
   {
     category: "Under 17",
     icon: "fas fa-user-graduate",
     status: "Completed",
-    teams: 10
+    teams: 10,
+    link: "/muqawamah/2025/u17/"
   }
 ];
 
@@ -64,7 +66,10 @@ function CTASection({ edition }) {
                     </span>
                     <span className="status-badge">{tournament.status}</span>
                   </div>
-                  <button className="view-details-btn">View Results</button>
+                  <a href={tournament.link} className="view-details-btn">
+                    View Results
+                    <i className="fas fa-arrow-right"></i>
+                  </a>
                 </motion.div>
               ))}
             </div>

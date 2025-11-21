@@ -62,8 +62,8 @@ function Navbar({ selectedEdition, setSelectedEdition }) {
           <div 
             className="toggle-switch"
             onClick={() => {
-              setSelectedEdition(selectedEdition === '2025' ? '2026' : '2025');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              const newEdition = selectedEdition === '2025' ? '2026' : '2025';
+              window.location.href = `/muqawamah/${newEdition}/`;
             }}
           >
             <div className={`toggle-slider ${selectedEdition === '2026' ? 'active' : ''}`}></div>
@@ -113,9 +113,8 @@ function Navbar({ selectedEdition, setSelectedEdition }) {
               <div 
                 className="toggle-switch"
                 onClick={() => {
-                  setSelectedEdition(selectedEdition === '2025' ? '2026' : '2025');
-                  setMobileMenuOpen(false);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  const newEdition = selectedEdition === '2025' ? '2026' : '2025';
+                  window.location.href = `/muqawamah/${newEdition}/`;
                 }}
               >
                 <div className={`toggle-slider ${selectedEdition === '2026' ? 'active' : ''}`}></div>

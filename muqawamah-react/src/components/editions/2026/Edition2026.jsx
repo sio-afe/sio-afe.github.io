@@ -1,9 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import Hero2026 from './Hero2026';
-import About2026 from './About2026';
-import Tournaments2026 from './Tournaments2026';
-import Social2026 from './Social2026';
+import Hero from '../2025/Hero';
+import AboutSection from '../2025/AboutSection';
+import CTASection from '../2025/CTASection';
+import RulesSection from '../2025/RulesSection';
+import SponsorsSection from '../2025/SponsorsSection';
+import FindImagesSection from '../2025/FindImagesSection';
+import SocialSection from '../2025/SocialSection';
 
 function Edition2026({ setSelectedEdition }) {
   return (
@@ -14,10 +17,13 @@ function Edition2026({ setSelectedEdition }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Hero2026 setSelectedEdition={setSelectedEdition} />
-      <About2026 />
-      <Tournaments2026 />
-      <Social2026 />
+      <Hero selectedEdition="2026" setSelectedEdition={setSelectedEdition} />
+      <AboutSection edition="2026" />
+      <CTASection edition="2026" />
+      <RulesSection edition="2026" />
+      <SponsorsSection edition="2026" />
+      <FindImagesSection edition="2026" />
+      <SocialSection edition="2026" />
     </motion.div>
   );
 }

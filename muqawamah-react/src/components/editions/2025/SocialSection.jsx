@@ -8,51 +8,6 @@ const stats = [
 ];
 
 function SocialSection({ edition }) {
-  const is2026 = edition === '2026';
-
-  if (is2026) {
-    // Show minimal contact info for 2026
-    return (
-      <section id="contact" className="social-section-modern">
-        <div className="container-modern">
-          <motion.div
-            className="section-header-modern"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="section-title-modern">Stay Connected</h2>
-            <p className="section-subtitle-modern">
-              Follow us for updates on Muqawamah 2026
-            </p>
-          </motion.div>
-          
-          <motion.div
-            className="social-links-grid"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <a href="https://instagram.com/muqawamah" target="_blank" rel="noopener noreferrer" className="social-link-card">
-              <i className="fab fa-instagram"></i>
-              <span>Instagram</span>
-            </a>
-            <a href="https://twitter.com/muqawamah" target="_blank" rel="noopener noreferrer" className="social-link-card">
-              <i className="fab fa-twitter"></i>
-              <span>Twitter</span>
-            </a>
-            <a href="mailto:info@muqawamah.com" className="social-link-card">
-              <i className="fas fa-envelope"></i>
-              <span>Email</span>
-            </a>
-          </motion.div>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section id="contact" className="social-section-modern">
       <div className="container-modern">

@@ -5,7 +5,9 @@ import Edition2025 from './components/editions/2025/Edition2025';
 import Edition2026 from './components/editions/2026/Edition2026';
 
 function App() {
-  const [selectedEdition, setSelectedEdition] = useState('2025');
+  // Detect edition from URL
+  const urlEdition = window.location.pathname.includes('/2026/') ? '2026' : '2025';
+  const [selectedEdition, setSelectedEdition] = useState(urlEdition);
 
   React.useEffect(() => {
     const observerOptions = {
