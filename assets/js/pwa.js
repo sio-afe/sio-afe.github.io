@@ -20,21 +20,21 @@ if ('serviceWorker' in navigator) {
         });
 
         // Listen for new service worker installation
-        registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing;
+        // registration.addEventListener('updatefound', () => {
+        //     const newWorker = registration.installing;
 
-            newWorker.addEventListener('statechange', () => {
-                // When the service worker is installed
-                if (newWorker.state === 'installed') {
-                    if (navigator.serviceWorker.controller) {
-                        // New content is available, create a notification
-                        createUpdateNotification(() => {
-                            newWorker.postMessage('skipWaiting');
-                        });
-                    }
-                }
-            });
-        });
+        //     newWorker.addEventListener('statechange', () => {
+        //         // When the service worker is installed
+        //         if (newWorker.state === 'installed') {
+        //             if (navigator.serviceWorker.controller) {
+        //                 // New content is available, create a notification
+        //                 createUpdateNotification(() => {
+        //                     newWorker.postMessage('skipWaiting');
+        //                 });
+        //             }
+        //         }
+        //     });
+        // });
     }).catch(error => {
         console.log('ServiceWorker registration failed:', error);
     });
