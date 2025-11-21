@@ -1,0 +1,563 @@
+body.registration-body {
+  background: linear-gradient(180deg, #f9fbff 0%, #eff3f8 100%);
+  color: #1a1a1a;
+  min-height: 100vh;
+}
+
+#registration-root {
+  min-height: 100vh;
+}
+
+.registration-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 60px 20px 80px;
+  min-height: 100vh;
+  color: #212433;
+}
+
+.registration-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.registration-header h1 {
+  font-size: 2.4rem;
+  margin-bottom: 0.5rem;
+  color: #1c1f2e;
+  line-height: 1.2;
+}
+
+.registration-header p {
+  color: rgba(28, 31, 46, 0.7);
+  max-width: 460px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-email {
+  font-size: 0.9rem;
+  color: rgba(28, 31, 46, 0.7);
+}
+
+.logout-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-weight: 600;
+  cursor: pointer;
+  background: rgba(235, 87, 87, 0.1);
+  color: #c62828;
+  border: 1px solid rgba(198, 40, 40, 0.2);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logout-btn i {
+  font-size: 0.9rem;
+}
+
+.registration-stepper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.registration-stepper::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(28, 31, 46, 0.15);
+  z-index: 0;
+}
+
+.registration-stepper .step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+
+.registration-stepper .step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 2px solid rgba(79, 140, 255, 0.3);
+  margin-bottom: 8px;
+  font-weight: 700;
+  color: #3d4258;
+}
+
+.registration-stepper .step.active .step-number {
+  background: linear-gradient(135deg, #4f8cff, #6ecdee);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(79, 140, 255, 0.35);
+}
+
+.registration-stepper .step.complete .step-number {
+  background: #4f8cff;
+  border-color: transparent;
+  color: #fff;
+}
+
+.registration-stepper .step-label {
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: rgba(33, 36, 51, 0.7);
+}
+
+.registration-form {
+  background: #fff;
+  border: 1px solid rgba(20, 30, 60, 0.08);
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 20px 60px rgba(15, 18, 31, 0.08);
+}
+
+.registration-form h3 {
+  margin-top: 0;
+  font-size: 1.8rem;
+  color: #1e2030;
+}
+
+.registration-form label {
+  display: block;
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: #2a2d3b;
+}
+
+.registration-form input,
+.registration-form select,
+.registration-form textarea {
+  width: 100%;
+  margin-top: 6px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(35, 40, 62, 0.12);
+  background: rgba(249, 250, 255, 0.85);
+  color: #1c1e29;
+  appearance: none;
+}
+
+.registration-form select {
+  background: #fff;
+  border: 1px solid rgba(35, 40, 62, 0.12);
+}
+
+.registration-form select option {
+  background: #fff;
+  color: #222;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.step-description {
+  margin-top: -10px;
+  margin-bottom: 25px;
+  color: rgba(37, 40, 55, 0.7);
+}
+
+.position-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.position-pill {
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(79, 140, 255, 0.1);
+  border: 1px solid rgba(79, 140, 255, 0.2);
+}
+
+.position-pill strong {
+  display: block;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  color: #2a2d3b;
+}
+
+.position-pill span {
+  display: block;
+  font-size: 0.78rem;
+  color: rgba(42, 45, 59, 0.7);
+}
+
+.players-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 15px;
+}
+
+.player-card {
+  border: 1px solid rgba(28, 31, 46, 0.08);
+  border-radius: 12px;
+  padding: 15px;
+  background: rgba(244, 246, 252, 0.7);
+}
+
+.formation-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.formation-presets button {
+  border: 1px solid rgba(79, 140, 255, 0.3);
+  background: rgba(79, 140, 255, 0.08);
+  color: #2d3150;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.formation-presets button:hover {
+  background: rgba(79, 140, 255, 0.2);
+}
+
+.football-field {
+  position: relative;
+  width: 100%;
+  padding-top: 170%;
+  background-color: #0b611c;
+  border-radius: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  margin-bottom: 24px;
+  overflow: hidden;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.2);
+}
+
+.football-field::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/assets/img/Muqawama/football-field-svgrepo-com.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transform-origin: center;
+  transform: rotate(0deg);
+}
+
+.player-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.player-circle {
+  position: absolute;
+  top: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff5f6d, #ffc371);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  box-shadow: 0 8px 18px rgba(79, 140, 255, 0.35);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  overflow: hidden;
+}
+
+.player-circle.substitute {
+  background: rgba(255, 255, 255, 0.35);
+  color: #34405d;
+}
+
+.player-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.player-label {
+  margin-top: 54px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.player-label strong {
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(34, 40, 62, 0.85);
+}
+
+.player-label span {
+  font-size: 0.8rem;
+  color: rgba(34, 40, 62, 0.9);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.primary-btn,
+.secondary-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #4f8cff, #6ecdee);
+  color: #fff;
+  box-shadow: 0 10px 18px rgba(79, 140, 255, 0.35);
+}
+
+.secondary-btn {
+  background: rgba(58, 64, 90, 0.08);
+  color: #2a2d3b;
+  border: 1px solid rgba(58, 64, 90, 0.2);
+}
+
+.auth-modal {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 32px 28px;
+  border-radius: 24px;
+  border: 1px solid rgba(20, 30, 50, 0.08);
+  background: #fff;
+  box-shadow: 0 30px 60px rgba(10, 12, 25, 0.12);
+}
+
+.auth-form input {
+  width: 100%;
+  margin-top: 6px;
+  height: 52px;
+  border-radius: 14px;
+  padding: 0 16px;
+  font-size: 1rem;
+  border: 1px solid rgba(35, 40, 62, 0.15);
+  background: rgba(244, 246, 252, 0.95);
+  color: #1d2031;
+  box-shadow: inset 0 2px 8px rgba(15, 18, 31, 0.05);
+}
+
+.auth-error {
+  color: #d64545;
+}
+
+.auth-message {
+  color: #2e7d32;
+}
+
+.auth-alternative {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.auth-oauth-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(79, 140, 255, 0.25);
+  background: rgba(79, 140, 255, 0.08);
+  color: #2c3150;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-oauth-btn.apple {
+  border-color: rgba(33, 33, 33, 0.2);
+  background: rgba(33, 33, 33, 0.05);
+  color: #111;
+}
+
+.auth-oauth-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 18px rgba(79, 140, 255, 0.2);
+}
+.auth-oauth-btn.apple:hover {
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.15);
+}
+.auth-form label {
+  color: #26293a;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.auth-form input {
+  background: rgba(244, 246, 252, 0.9);
+  border: 1px solid rgba(35, 40, 62, 0.12);
+  color: #1d2031;
+}
+
+
+.auth-divider {
+  text-align: center;
+  margin: 16px 0;
+  color: rgba(28, 31, 46, 0.4);
+  font-size: 0.85rem;
+  position: relative;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: rgba(28, 31, 46, 0.15);
+}
+
+.auth-divider::before {
+  left: 0;
+}
+
+.auth-divider::after {
+  right: 0;
+}
+
+.auth-submit {
+  width: 100%;
+  padding: 12px;
+  border-radius: 999px;
+  border: none;
+  margin-top: 10px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #4f8cff, #6ecdee);
+  cursor: pointer;
+}
+
+.auth-switcher {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.auth-switcher button {
+  background: none;
+  border: none;
+  color: rgba(33, 36, 51, 0.6);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.summary-section {
+  margin-bottom: 20px;
+}
+
+.players-summary {
+  list-style: none;
+  padding-left: 0;
+}
+
+.players-summary li {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(28, 31, 46, 0.1);
+  padding: 6px 0;
+  color: #2a2d3b;
+}
+
+@media (max-width: 900px) {
+  .registration-container {
+    padding: 40px 16px 60px;
+  }
+
+  .registration-stepper {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .registration-stepper::before {
+    display: none;
+  }
+
+  .registration-stepper .step {
+    align-items: flex-start;
+  }
+
+  .position-info {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .registration-form {
+    padding: 20px;
+  }
+
+  .players-grid,
+  .position-info {
+    grid-template-columns: 1fr;
+  }
+
+  .player-circle {
+    width: 40px;
+    height: 40px;
+  }
+
+  .player-label {
+    margin-top: 40px;
+  }
+}
+
+@media (min-width: 768px) {
+  .football-field {
+    padding-top: 70%;
+  }
+
+  .football-field::before {
+    transform: rotate(180deg) scale(1);
+  }
+}
+

@@ -55,14 +55,17 @@ function AboutSection({ edition }) {
             viewport={{ once: true }}
           >
             <i className="fas fa-calendar-alt"></i>
-            <h3>Tournament Details Coming Soon</h3>
+            <h3>Muqawama 2026 Registration</h3>
             <p>
-              We're planning an even bigger and better Muqawamah experience for 2026. 
-              Stay tuned for dates, registration details, and exciting new features!
+              Captains can now reserve their slots for Open Age or U17. Submit your roster, logo and preferred formation.
             </p>
-            <button className="register-btn disabled" disabled>
-              <i className="fas fa-lock"></i>
-              Registration Opening Soon
+            <button
+              className="register-btn"
+              type="button"
+              onClick={() => (window.location.href = '/muqawamah/2026/register/')}
+            >
+              <i className="fas fa-user-plus"></i>
+              Register Your Team
             </button>
           </motion.div>
         ) : (

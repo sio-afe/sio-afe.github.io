@@ -9,7 +9,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(process.cwd(), 'index.html'),
-        tournament: resolve(process.cwd(), 'tournament.html')
+        tournament: resolve(process.cwd(), 'tournament.html'),
+        registration: resolve(process.cwd(), 'registration.html')
       }
     },
     cssCodeSplit: false,

@@ -134,6 +134,44 @@ ${mainJsLinks}
   writeFileSync(join(jekyllMuqawamahDir, '2026.md'), edition2026Content);
   console.log('✅ Updated muqawamah/2026.md (permalink: /muqawamah/2026/)');
 
+  // Process registration.html
+  console.log('\n📄 Processing registration app (registration.html)...');
+  const registrationHtml = readFileSync(join(distDir, 'registration.html'), 'utf-8');
+  const registrationCssMatches = registrationHtml.match(/<link[^>]*href="([^"]*\.css)"[^>]*>/g) || [];
+  const registrationJsMatches = registrationHtml.match(/<script[^>]*src="([^"]*\.js)"[^>]*>/g) || [];
+
+  const registrationCssFiles = registrationCssMatches.map(match => {
+    const href = match.match(/href="([^"]*)"/);
+    return href ? href[1] : null;
+  }).filter(Boolean);
+
+  const registrationJsFiles = registrationJsMatches.map(match => {
+    const src = match.match(/src="([^"]*)"/);
+    return src ? src[1] : null;
+  }).filter(Boolean);
+
+  registrationCssFiles.forEach(file => {
+    if (!file.startsWith('http')) {
+      const sourceFile = join(distDir, file.replace('/muqawamah/', ''));
+      const targetFile = join(jekyllAssetsDir, 'registration-style.css');
+      if (existsSync(sourceFile)) {
+        cpSync(sourceFile, targetFile);
+        console.log('✅ Copied registration CSS: registration-style.css');
+      }
+    }
+  });
+
+  registrationJsFiles.forEach(file => {
+    if (!file.startsWith('http')) {
+      const sourceFile = join(distDir, file.replace('/muqawamah/', ''));
+      const targetFile = join(jekyllAssetsDir, 'registration-main.js');
+      if (existsSync(sourceFile)) {
+        cpSync(sourceFile, targetFile);
+        console.log('✅ Copied registration JS: registration-main.js');
+      }
+    }
+  });
+
   console.log('\n🎉 Build complete!');
   console.log('\n📂 Files updated:');
   console.log(`   - ${join(jekyllMuqawamahDir, 'index.md')} → /muqawamah/2025/`);
