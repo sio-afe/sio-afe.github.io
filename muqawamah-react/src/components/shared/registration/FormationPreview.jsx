@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function FormationPreview({ players, editable = false, onDragStart, onDrag, onDragEnd }) {
+export default function FormationPreview({ players }) {
   return (
     <div className="football-field">
       {players.map((player) => (
@@ -12,13 +12,7 @@ export default function FormationPreview({ players, editable = false, onDragStar
           <div
             className={`player-circle ${player.isSubstitute ? 'substitute' : ''}`}
             draggable={false}
-            onMouseDown={(e) => editable && onDragStart?.(e, player.id)}
-            onTouchStart={(e) => editable && onDragStart?.(e, player.id)}
-            onMouseMove={(e) => editable && onDrag?.(e)}
-            onTouchMove={(e) => editable && onDrag?.(e)}
-            onMouseUp={() => editable && onDragEnd?.()}
-            onTouchEnd={() => editable && onDragEnd?.()}
-            style={{ cursor: editable ? 'grab' : 'default' }}
+            style={{ cursor: 'default' }}
           >
             {player.image ? (
               <img src={player.image} alt={player.name || player.position} />

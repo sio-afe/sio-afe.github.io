@@ -134,14 +134,17 @@ export default function RegistrationSummary({ readOnly = false }) {
 
       <section className="summary-section">
         <h4>Players</h4>
-        <ul className="players-summary">
-          {players.map((player) => (
-            <li key={player.id}>
-              <span>{player.name || 'Unnamed Player'}</span>
-              <span>{player.isSubstitute ? 'SUB' : player.position}</span>
-            </li>
+        <div className="players-grid">
+          {players.map((player, index) => (
+            <div className="player-card" key={player.id || index}>
+              <strong>{player.name || 'Unnamed Player'}</strong>
+              <div className="player-card-meta">
+                <span className="player-role">{player.isSubstitute ? 'Substitute' : player.position}</span>
+              </div>
+              {player.image && <img src={player.image} alt={player.name || player.position} />}
+            </div>
           ))}
-        </ul>
+        </div>
       </section>
 
       <section className="summary-section">
