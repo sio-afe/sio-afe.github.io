@@ -140,10 +140,10 @@ export default function RegistrationSummary({ readOnly = false }) {
   if (successTeamId && !readOnly) {
     return (
       <div className="registration-form">
-        <h3>Registration Submitted ✅</h3>
+        <h3>{existingTeamId ? 'Registration Updated ✅' : 'Registration Submitted ✅'}</h3>
         <p>
-          Your team has been registered. Team ID: <strong>{successTeamId}</strong>. A confirmation
-          email has been sent to {teamData.captainEmail}.
+          Your team has been {existingTeamId ? 'updated' : 'registered'}. Team ID: <strong>{successTeamId}</strong>. 
+          {!existingTeamId && ` A confirmation email has been sent to ${teamData.captainEmail}.`}
         </p>
       </div>
     );
@@ -151,8 +151,8 @@ export default function RegistrationSummary({ readOnly = false }) {
 
   return (
     <div className="registration-form">
-      <h3>Step 4 · Review & Submit</h3>
-      <p className="step-description">Verify everything looks good before locking your team.</p>
+      <h3>Step 4 · Review & {existingTeamId ? 'Update' : 'Submit'}</h3>
+      <p className="step-description">Verify everything looks good before {existingTeamId ? 'updating' : 'submitting'} your team.</p>
 
       <section className="summary-section">
         <h4>Team Information</h4>
@@ -229,7 +229,7 @@ export default function RegistrationSummary({ readOnly = false }) {
             Back
           </button>
           <button type="button" className="primary-btn" onClick={handleSubmit} disabled={loading}>
-            {loading ? 'Submitting...' : 'Submit Registration'}
+            {loading ? (existingTeamId ? 'Updating...' : 'Submitting...') : (existingTeamId ? 'Update Registration' : 'Submit Registration')}
           </button>
         </div>
       )}

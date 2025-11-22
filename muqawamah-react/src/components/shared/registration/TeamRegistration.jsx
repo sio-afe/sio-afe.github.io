@@ -45,6 +45,8 @@ function RegistrationFlow() {
 
   useEffect(() => {
     let mounted = true;
+    let hasHydrated = false;
+
     supabaseClient.auth.getSession().then(({ data }) => {
       if (!mounted) return;
       const sessionUser = data.session?.user ?? null;
@@ -52,19 +54,24 @@ function RegistrationFlow() {
       setLoading(false);
       if (sessionUser) {
         hydrateExistingRegistration(sessionUser);
+        hasHydrated = true;
       } else {
         resetForm();
       }
     });
 
-    const { data: listener } = supabaseClient.auth.onAuthStateChange(async (_event, session) => {
+    const { data: listener } = supabaseClient.auth.onAuthStateChange(async (event, session) => {
       const sessionUser = session?.user ?? null;
       setUser(sessionUser);
+      
+      // Only hydrate on SIGNED_IN event, not on every token refresh
       if (!sessionUser) {
         resetForm();
         setStep(1);
-      } else {
+        hasHydrated = false;
+      } else if (event === 'SIGNED_IN' && !hasHydrated) {
         await hydrateExistingRegistration(sessionUser);
+        hasHydrated = true;
       }
     });
 
@@ -72,7 +79,7 @@ function RegistrationFlow() {
       mounted = false;
       listener.subscription.unsubscribe();
     };
-  }, [resetForm, setStep, setPlayers, setTeamData, setExistingTeamId]);
+  }, []);
 
   const hydrateExistingRegistration = async (sessionUser) => {
     try {
@@ -86,7 +93,7 @@ function RegistrationFlow() {
 
       if (data) {
         setExistingTeamId(data.id);
-        setReadOnlyMode(true);
+        setReadOnlyMode(false); // Allow editing
         setTeamData({
           teamName: data.team_name || '',
           category: data.category || 'open-age',
@@ -109,6 +116,7 @@ function RegistrationFlow() {
           })) || defaultPlayers();
 
         setPlayers(mappedPlayers);
+        setStep(4); // Go directly to review step for existing registrations
       } else {
         setExistingTeamId(null);
         setReadOnlyMode(false);
@@ -158,7 +166,7 @@ function RegistrationFlow() {
       <div className="registration-header">
         <div>
           <h1>Muqawama 2026 · Team Registration</h1>
-          <p>Complete all steps to confirm your team. Registration is locked after submission.</p>
+          <p>{existingTeamId ? 'Edit your team registration and update any details.' : 'Complete all steps to confirm your team registration.'}</p>
         </div>
         <div className="header-actions">
           <span className="user-email">{user.email}</span>
@@ -168,18 +176,8 @@ function RegistrationFlow() {
         </div>
       </div>
       {globalError && <p className="auth-error">{globalError}</p>}
-      {!readOnlyMode && <Stepper />}
-      {readOnlyMode ? (
-        <div className="registration-form">
-          <h3>Your submitted team</h3>
-          <p>
-            You have already registered this team. Contact the organizers if you need additional changes.
-          </p>
-          <RegistrationSummary readOnly />
-        </div>
-      ) : (
-        renderStep()
-      )}
+      <Stepper />
+      {renderStep()}
     </>
   );
 }
