@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { supabaseClient } from '../../../lib/supabaseClient';
-import { useRegistration, defaultPlayers, initialTeamData } from './RegistrationContext';
+import { useRegistration } from './RegistrationContext';
 import FormationPreview from './FormationPreview';
 
 export default function RegistrationSummary({ readOnly = false }) {
@@ -8,6 +8,7 @@ export default function RegistrationSummary({ readOnly = false }) {
     teamData,
     players,
     setStep,
+    setPlayers,
     loading,
     setLoading,
     error,
@@ -17,6 +18,54 @@ export default function RegistrationSummary({ readOnly = false }) {
     existingTeamId,
     setExistingTeamId
   } = useRegistration();
+
+  const statLabels = useMemo(() => ['PAC', 'SHO', 'PAS', 'DRI', 'DEF', 'PHY'], []);
+
+  const buildCardStats = (player, index) => {
+    const seed = ((player.name?.length || 4) * 11 + index * 17 + (player.position?.length || 3) * 5) % 100;
+    const base = 60 + (seed % 30);
+    const stats = statLabels.map((label, idx) => ({
+      label,
+      value: Math.min(99, base + ((seed + idx * 7) % 25))
+    }));
+    const rating = Math.min(
+      99,
+      Math.round(stats.reduce((sum, stat) => sum + stat.value, 0) / stats.length)
+    );
+    return { stats, rating };
+  };
+
+  const fieldRef = useRef(null);
+  const [draggingId, setDraggingId] = useState(null);
+
+  const updatePlayerPosition = (playerId, x, y) => {
+    setPlayers((prev) =>
+      prev.map((player) => (player.id === playerId ? { ...player, x, y } : player))
+    );
+  };
+
+  const handleDragStart = (_, playerId) => {
+    setDraggingId(playerId);
+  };
+
+  const handleDrag = (event) => {
+    if (!draggingId || !fieldRef.current) return;
+    event.preventDefault();
+    const rect = fieldRef.current.getBoundingClientRect();
+    const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+    const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+    const relativeX = ((clientX - rect.left) / rect.width) * 100;
+    const relativeY = ((clientY - rect.top) / rect.height) * 100;
+    updatePlayerPosition(
+      draggingId,
+      Math.min(Math.max(relativeX, 0), 100),
+      Math.min(Math.max(relativeY, 0), 100)
+    );
+  };
+
+  const handleDragEnd = () => {
+    setDraggingId(null);
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -134,22 +183,59 @@ export default function RegistrationSummary({ readOnly = false }) {
 
       <section className="summary-section">
         <h4>Players</h4>
-        <div className="players-grid">
-          {players.map((player, index) => (
-            <div className="player-card" key={player.id || index}>
-              <strong>{player.name || 'Unnamed Player'}</strong>
-              <div className="player-card-meta">
-                <span className="player-role">{player.isSubstitute ? 'Substitute' : player.position}</span>
+        <div className="player-card-grid">
+          {players.map((player, index) => {
+            const { stats, rating } = buildCardStats(player, index);
+            return (
+              <div
+                className={`player-card-badge ${player.isSubstitute ? 'substitute' : ''}`}
+                key={player.id || index}
+              >
+                <div className="badge-header">
+                  <div className="badge-rating">
+                    <span className="rating-value">{String(rating).padStart(2, '0')}</span>
+                    <span className="rating-pos">{player.isSubstitute ? 'SUB' : player.position || 'POS'}</span>
+                  </div>
+                  <div className="badge-flair">
+                    <i className="fas fa-shield-alt" aria-hidden="true"></i>
+                  </div>
+                </div>
+                <div className="badge-photo">
+                  {player.image ? (
+                    <img src={player.image} alt={player.name || player.position} />
+                  ) : (
+                    <div className="badge-photo-placeholder">
+                      <i className="fas fa-user"></i>
+                    </div>
+                  )}
+                </div>
+                <div className="badge-name">{player.name || 'Unnamed Player'}</div>
+                <div className="badge-stats">
+                  {stats.map((stat) => (
+                    <div className="badge-stat" key={stat.label}>
+                      <span className="stat-value">{stat.value}</span>
+                      <span className="stat-label">{stat.label}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              {player.image && <img src={player.image} alt={player.name || player.position} />}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
       <section className="summary-section">
         <h4>Formation Preview</h4>
-        <FormationPreview players={players.filter((p) => !p.isSubstitute)} />
+        <div ref={fieldRef}>
+          <FormationPreview
+            players={players.filter((p) => !p.isSubstitute)}
+            editable={!readOnly}
+            onDragStart={handleDragStart}
+            onDrag={handleDrag}
+            onDragEnd={handleDragEnd}
+            showDownload
+          />
+        </div>
       </section>
 
       {error && <p className="auth-error">{error}</p>}
