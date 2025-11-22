@@ -60,9 +60,9 @@ try {
     return `<script type="module" src="/assets/muqawamah-react${file.replace('/muqawamah/assets', '')}"></script>`;
   }).join('\n');
   
-  const mainJekyllContent = `---
+  const buildReactPage = (permalink) => `---
 layout: fullwidth
-permalink: /muqawamah/2025/
+permalink: ${permalink}
 ---
 
 ${mainCssLinks}
@@ -71,9 +71,12 @@ ${mainBodyContent}
 
 ${mainJsLinks}
 `;
-  
-  writeFileSync(join(jekyllMuqawamahDir, 'index.md'), mainJekyllContent);
-  console.log('✅ Updated muqawamah/index.md (permalink: /muqawamah/2025/)');
+
+  writeFileSync(join(jekyllMuqawamahDir, 'index.md'), buildReactPage('/muqawamah/'));
+  console.log('✅ Updated muqawamah/index.md (permalink: /muqawamah/)');
+
+  writeFileSync(join(jekyllMuqawamahDir, '2025.md'), buildReactPage('/muqawamah/2025/'));
+  console.log('✅ Updated muqawamah/2025.md (permalink: /muqawamah/2025/)');
 
   // Process tournament.html
   console.log('\n📄 Processing tournament app (tournament.html)...');
@@ -119,19 +122,7 @@ ${mainJsLinks}
   });
 
   // Also update 2026.md to use the React app
-  const edition2026Content = `---
-layout: fullwidth
-permalink: /muqawamah/2026/
----
-
-${mainCssLinks}
-
-${mainBodyContent}
-
-${mainJsLinks}
-`;
-  
-  writeFileSync(join(jekyllMuqawamahDir, '2026.md'), edition2026Content);
+  writeFileSync(join(jekyllMuqawamahDir, '2026.md'), buildReactPage('/muqawamah/2026/'));
   console.log('✅ Updated muqawamah/2026.md (permalink: /muqawamah/2026/)');
 
   // Process registration.html
@@ -174,11 +165,11 @@ ${mainJsLinks}
 
   console.log('\n🎉 Build complete!');
   console.log('\n📂 Files updated:');
-  console.log(`   - ${join(jekyllMuqawamahDir, 'index.md')} → /muqawamah/2025/`);
+  console.log(`   - ${join(jekyllMuqawamahDir, 'index.md')} → /muqawamah/`);
+  console.log(`   - ${join(jekyllMuqawamahDir, '2025.md')} → /muqawamah/2025/`);
   console.log(`   - ${join(jekyllMuqawamahDir, '2026.md')} → /muqawamah/2026/`);
   console.log(`   - ${join(jekyllMuqawamahDir, 'open-age.md')} → /muqawamah/2025/open-age/`);
   console.log(`   - ${join(jekyllMuqawamahDir, 'u17.md')} → /muqawamah/2025/u17/`);
-  console.log(`   - ${join(jekyllMuqawamahDir, 'redirect.md')} → /muqawamah/ (redirects to 2025)`);
   console.log(`   - Assets in: ${jekyllAssetsDir}`);
   console.log('\n📝 Next step: Test your Jekyll site with: make serve');
 
