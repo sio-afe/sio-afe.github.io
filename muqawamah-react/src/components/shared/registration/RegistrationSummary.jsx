@@ -173,21 +173,26 @@ export default function RegistrationSummary({ readOnly = false }) {
               className={`player-card-badge simple ${player.isSubstitute ? 'substitute' : ''}`}
               key={player.id || index}
             >
-              <div className="badge-team">
-                <div className="team-logo">
-                  {teamData.teamLogo ? (
-                    <img src={teamData.teamLogo} alt={`${teamData.teamName} logo`} />
-                  ) : (
-                    <div className="team-logo-placeholder">
-                      {teamData.teamName?.charAt(0)?.toUpperCase() || 'T'}
-                    </div>
-                  )}
+              <div className="badge-header">
+                <div className="badge-team">
+                  <div className="team-logo">
+                    {teamData.teamLogo ? (
+                      <img src={teamData.teamLogo} alt={`${teamData.teamName} logo`} />
+                    ) : (
+                      <div className="team-logo-placeholder">
+                        {teamData.teamName?.charAt(0)?.toUpperCase() || 'T'}
+                      </div>
+                    )}
+                  </div>
+                  <div className="team-meta">
+                    <span className="team-name">{teamData.teamName || 'Team name'}</span>
+                    <span className="player-role">
+                      {player.isSubstitute ? 'Substitute' : player.position || 'Player'}
+                    </span>
+                  </div>
                 </div>
-                <div className="team-meta">
-                  <span className="team-name">{teamData.teamName || 'Team name'}</span>
-                  <span className="player-role">
-                    {player.isSubstitute ? 'Substitute' : player.position || 'Player'}
-                  </span>
+                <div className="muqawama-logo">
+                  <img src="/assets/img/MuqawamaLogo.png" alt="Muqawama 2026" />
                 </div>
               </div>
               <div className="badge-photo">

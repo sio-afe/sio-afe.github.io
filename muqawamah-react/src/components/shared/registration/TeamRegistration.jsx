@@ -37,41 +37,59 @@ function RegistrationFlow() {
     setExistingTeamId,
     readOnlyMode,
     setReadOnlyMode,
-    resetForm
+    resetForm,
+    existingTeamId
   } = useRegistration();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [globalError, setGlobalError] = useState('');
+  const [hydrating, setHydrating] = useState(false);
+  const hasHydratedRef = React.useRef(false);
 
   useEffect(() => {
     let mounted = true;
-    let hasHydrated = false;
+    setGlobalError('');
 
-    supabaseClient.auth.getSession().then(({ data }) => {
-      if (!mounted) return;
-      const sessionUser = data.session?.user ?? null;
-      setUser(sessionUser);
-      setLoading(false);
-      if (sessionUser) {
-        hydrateExistingRegistration(sessionUser);
-        hasHydrated = true;
-      } else {
-        resetForm();
+    const bootstrapUser = async () => {
+      try {
+        const { data, error } = await supabaseClient.auth.getUser();
+        if (!mounted) return;
+        if (error && error.message !== 'Auth session missing!') {
+          throw error;
+        }
+        const sessionUser = data.user ?? null;
+        console.log('[Registration] User retrieved:', sessionUser ? sessionUser.email : 'No user');
+        setUser(sessionUser);
+
+        if (sessionUser) {
+          await hydrateExistingRegistration(sessionUser, { force: true });
+        } else {
+          resetForm();
+        }
+      } catch (err) {
+        console.error('[Registration] User fetch error:', err);
+        if (mounted) {
+          setGlobalError('Unable to verify your login. Please refresh and try again.');
+        }
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
       }
-    });
+    };
+
+    bootstrapUser();
 
     const { data: listener } = supabaseClient.auth.onAuthStateChange(async (event, session) => {
       const sessionUser = session?.user ?? null;
       setUser(sessionUser);
       
-      // Only hydrate on SIGNED_IN event, not on every token refresh
       if (!sessionUser) {
         resetForm();
         setStep(1);
-        hasHydrated = false;
-      } else if (event === 'SIGNED_IN' && !hasHydrated) {
-        await hydrateExistingRegistration(sessionUser);
-        hasHydrated = true;
+        hasHydratedRef.current = false;
+      } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        await hydrateExistingRegistration(sessionUser, { force: true });
       }
     });
 
@@ -81,7 +99,12 @@ function RegistrationFlow() {
     };
   }, []);
 
-  const hydrateExistingRegistration = async (sessionUser) => {
+  const hydrateExistingRegistration = async (sessionUser, { force = false } = {}) => {
+    if (hasHydratedRef.current && !force) return;
+    hasHydratedRef.current = true;
+    console.log('[Registration] Starting hydration from database...');
+    setHydrating(true);
+    setGlobalError('');
     try {
       const { data, error } = await supabaseClient
         .from('team_registrations')
@@ -89,9 +112,13 @@ function RegistrationFlow() {
         .eq('user_id', sessionUser.id)
         .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (error) {
+        console.error('[Registration] Database error:', error);
+        if (error.code !== 'PGRST116') throw error;
+      }
 
       if (data) {
+        console.log('[Registration] Found existing registration, loading data...');
         setExistingTeamId(data.id);
         setReadOnlyMode(false); // Allow editing
         setTeamData({
@@ -118,6 +145,7 @@ function RegistrationFlow() {
         setPlayers(mappedPlayers);
         setStep(4); // Go directly to review step for existing registrations
       } else {
+        console.log('[Registration] No existing registration found, starting fresh');
         setExistingTeamId(null);
         setReadOnlyMode(false);
         setTeamData({
@@ -128,7 +156,21 @@ function RegistrationFlow() {
         setStep(1);
       }
     } catch (err) {
-      setGlobalError(err.message);
+      console.error('[Registration] Hydration error:', err);
+      console.warn('[Registration] Database might be unreachable or RLS policies might be blocking access');
+      setGlobalError('Could not load your saved registration. You can continue and submitting will overwrite the previous data.');
+      // Still initialize form even if hydration fails
+      console.log('[Registration] Initializing fresh form despite error');
+      setExistingTeamId(null);
+      setReadOnlyMode(false);
+      setTeamData({
+        ...initialTeamData,
+        captainEmail: sessionUser.email || ''
+      });
+      setPlayers(defaultPlayers());
+      setStep(1);
+    } finally {
+      setHydrating(false);
     }
   };
 
@@ -175,6 +217,7 @@ function RegistrationFlow() {
           </button>
         </div>
       </div>
+      {hydrating && <p className="auth-message subtle">Loading your saved registration…</p>}
       {globalError && <p className="auth-error">{globalError}</p>}
       <Stepper />
       {renderStep()}
