@@ -64,7 +64,6 @@ function AboutSection({ edition }) {
               type="button"
               onClick={() => (window.location.href = '/muqawamah/2026/register/')}
             >
-              <i className="fas fa-user-plus"></i>
               Register Your Team
             </button>
           </motion.div>
