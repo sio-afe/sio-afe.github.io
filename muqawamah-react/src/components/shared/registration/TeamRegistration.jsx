@@ -230,7 +230,17 @@ function RegistrationFlow() {
   };
 
   if (loading) {
-    return <p className="auth-message">Checking session...</p>;
+    return (
+      <div className="loading-screen">
+        <div className="loading-content">
+          <div className="logo-loader">
+            <div className="logo-ring"></div>
+            <img src="/assets/img/MuqawamaLogo.png" alt="Muqawama" className="logo-pulse" />
+          </div>
+          <p>Loading your registration...</p>
+        </div>
+      </div>
+    );
   }
 
   const handleLogout = async () => {
