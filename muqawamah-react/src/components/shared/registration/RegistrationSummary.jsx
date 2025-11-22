@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { supabaseClient } from '../../../lib/supabaseClient';
 import { useRegistration } from './RegistrationContext';
 import FormationPreview from './FormationPreview';
@@ -18,22 +18,6 @@ export default function RegistrationSummary({ readOnly = false }) {
     existingTeamId,
     setExistingTeamId
   } = useRegistration();
-
-  const statLabels = useMemo(() => ['PAC', 'SHO', 'PAS', 'DRI', 'DEF', 'PHY'], []);
-
-  const buildCardStats = (player, index) => {
-    const seed = ((player.name?.length || 4) * 11 + index * 17 + (player.position?.length || 3) * 5) % 100;
-    const base = 60 + (seed % 30);
-    const stats = statLabels.map((label, idx) => ({
-      label,
-      value: Math.min(99, base + ((seed + idx * 7) % 25))
-    }));
-    const rating = Math.min(
-      99,
-      Math.round(stats.reduce((sum, stat) => sum + stat.value, 0) / stats.length)
-    );
-    return { stats, rating };
-  };
 
   const fieldRef = useRef(null);
   const [draggingId, setDraggingId] = useState(null);
@@ -184,43 +168,42 @@ export default function RegistrationSummary({ readOnly = false }) {
       <section className="summary-section">
         <h4>Players</h4>
         <div className="player-card-grid">
-          {players.map((player, index) => {
-            const { stats, rating } = buildCardStats(player, index);
-            return (
-              <div
-                className={`player-card-badge ${player.isSubstitute ? 'substitute' : ''}`}
-                key={player.id || index}
-              >
-                <div className="badge-header">
-                  <div className="badge-rating">
-                    <span className="rating-value">{String(rating).padStart(2, '0')}</span>
-                    <span className="rating-pos">{player.isSubstitute ? 'SUB' : player.position || 'POS'}</span>
-                  </div>
-                  <div className="badge-flair">
-                    <i className="fas fa-shield-alt" aria-hidden="true"></i>
-                  </div>
-                </div>
-                <div className="badge-photo">
-                  {player.image ? (
-                    <img src={player.image} alt={player.name || player.position} />
+          {players.map((player, index) => (
+            <div
+              className={`player-card-badge simple ${player.isSubstitute ? 'substitute' : ''}`}
+              key={player.id || index}
+            >
+              <div className="badge-team">
+                <div className="team-logo">
+                  {teamData.teamLogo ? (
+                    <img src={teamData.teamLogo} alt={`${teamData.teamName} logo`} />
                   ) : (
-                    <div className="badge-photo-placeholder">
-                      <i className="fas fa-user"></i>
+                    <div className="team-logo-placeholder">
+                      {teamData.teamName?.charAt(0)?.toUpperCase() || 'T'}
                     </div>
                   )}
                 </div>
-                <div className="badge-name">{player.name || 'Unnamed Player'}</div>
-                <div className="badge-stats">
-                  {stats.map((stat) => (
-                    <div className="badge-stat" key={stat.label}>
-                      <span className="stat-value">{stat.value}</span>
-                      <span className="stat-label">{stat.label}</span>
-                    </div>
-                  ))}
+                <div className="team-meta">
+                  <span className="team-name">{teamData.teamName || 'Team name'}</span>
+                  <span className="player-role">
+                    {player.isSubstitute ? 'Substitute' : player.position || 'Player'}
+                  </span>
                 </div>
               </div>
-            );
-          })}
+              <div className="badge-photo">
+                {player.image ? (
+                  <img src={player.image} alt={player.name || player.position} />
+                ) : (
+                  <div className="badge-photo-placeholder">
+                    <i className="fas fa-user"></i>
+                  </div>
+                )}
+              </div>
+              <div className="badge-player-info">
+                <span className="player-name">{player.name || 'Unnamed Player'}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 

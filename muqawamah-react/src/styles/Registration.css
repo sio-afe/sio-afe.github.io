@@ -261,38 +261,59 @@ body.registration-body {
   box-shadow: 0 20px 35px rgba(15, 15, 22, 0.35);
 }
 
-.badge-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+.player-card-badge.simple {
+  min-height: 260px;
+  gap: 18px;
 }
 
-.badge-rating {
+.badge-team {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.team-logo {
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.team-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.team-logo-placeholder {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.team-meta {
   display: flex;
   flex-direction: column;
-  line-height: 1;
+  gap: 2px;
 }
 
-.badge-rating .rating-value {
-  font-size: 2.7rem;
-  font-weight: 800;
-}
-
-.badge-rating .rating-pos {
+.team-name {
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.badge-flair {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
-  display: grid;
-  place-items: center;
-  font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.8);
+.player-role {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .badge-photo {
@@ -318,38 +339,14 @@ body.registration-body {
   color: rgba(255, 255, 255, 0.5);
 }
 
-.badge-name {
-  font-size: 1.4rem;
-  font-weight: 700;
-  text-align: center;
-  letter-spacing: 0.08em;
-}
-
-.badge-stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+.badge-player-info {
   text-align: center;
 }
 
-.badge-stat {
-  display: flex;
-  flex-direction: column;
-  background: rgba(0, 0, 0, 0.25);
-  border-radius: 12px;
-  padding: 8px 6px;
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.35);
-}
-
-.badge-stat .stat-value {
-  font-size: 1.2rem;
+.badge-player-info .player-name {
+  font-size: 1.35rem;
   font-weight: 700;
-}
-
-.badge-stat .stat-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.06em;
 }
 
 .formation-presets {
