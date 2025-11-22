@@ -386,7 +386,7 @@ body.registration-body {
 .football-field-surface {
   position: absolute;
   inset: 0;
-  background-image: url('/assets/img/Muqawama/football-field-svgrepo-com.svg');
+  background-image: url('../assets/football-field.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
