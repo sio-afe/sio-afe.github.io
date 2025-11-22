@@ -15,7 +15,6 @@ export default function AuthModal({ onSuccess }) {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [popup, setPopup] = useState(null);
   const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleAuth = async (event) => {
@@ -58,12 +57,6 @@ export default function AuthModal({ onSuccess }) {
     }
   };
 
-  useEffect(() => {
-    return () => {
-      popup?.close();
-    };
-  }, [popup]);
-
   const handleGoogleSignIn = async () => {
     setError('');
     setGoogleLoading(true);
@@ -75,19 +68,12 @@ export default function AuthModal({ onSuccess }) {
         }
       });
       if (oauthError) throw oauthError;
-      if (data?.url) {
-        const authWindow = window.open(
-          data.url,
-          '_blank',
-          'toolbar=no, location=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=480, height=720'
-        );
-        setPopup(authWindow);
-      }
+      // Let Supabase handle the redirect in the same window
+      // The session will be established when the user is redirected back
     } catch (oauthError) {
       setError(
-        `Google sign-in is not available yet. Please enable the Google provider in Supabase or use email/phone login. (${oauthError.message})`
+        `Google sign-in failed: ${oauthError.message}. Please try email/password login or contact support.`
       );
-    } finally {
       setGoogleLoading(false);
     }
   };
