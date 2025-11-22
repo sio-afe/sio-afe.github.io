@@ -81,6 +81,9 @@ export default function AuthModal({ onSuccess }) {
   return (
     <div className="auth-modal">
       <div className="auth-card">
+        <div className="auth-logo">
+          <img src="/assets/img/title.png" alt="Muqawama 2026" />
+        </div>
         <h2>{mode === modes.LOGIN ? 'Login' : mode === modes.SIGNUP ? 'Create Account' : 'Reset Password'}</h2>
         <p className="auth-subtitle">Use your email to authenticate and manage your team registration.</p>
 

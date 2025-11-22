@@ -38,18 +38,8 @@ export default function FormationPreview({
     }
   };
 
-  const attachHandlers = (playerId) =>
-    editable
-      ? {
-          draggable: true,
-          onDragStart: (event) => onDragStart && onDragStart(event, playerId),
-          onDrag: (event) => onDrag && onDrag(event),
-          onDragEnd: (event) => onDragEnd && onDragEnd(event),
-          onTouchStart: (event) => onDragStart && onDragStart(event, playerId),
-          onTouchMove: (event) => onDrag && onDrag(event),
-          onTouchEnd: (event) => onDragEnd && onDragEnd(event)
-        }
-      : {};
+  // Dragging is now disabled for all previews
+  const attachHandlers = (playerId) => ({});
 
   return (
     <div className="formation-preview-wrapper">
@@ -57,14 +47,13 @@ export default function FormationPreview({
         <div className="football-field-surface" />
         <div
           className="formation-overlay"
-          style={{ pointerEvents: editable ? 'auto' : 'none' }}
+          style={{ pointerEvents: 'none' }}
         >
           {players.map((player) => (
             <div
               key={player.id}
-              className={`player-marker ${editable ? 'draggable' : ''}`}
+              className="player-marker"
               style={{ left: `${player.x}%`, top: `${player.y}%` }}
-              {...attachHandlers(player.id)}
             >
               <div className={`player-circle ${player.isSubstitute ? 'substitute' : ''}`}>
                 {player.image ? (

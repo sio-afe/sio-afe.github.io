@@ -18,11 +18,32 @@ body.registration-body {
 
 .registration-header {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
+  gap: 20px;
+  text-align: center;
+}
+
+.registration-header-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 16px;
-  flex-wrap: wrap;
+  width: 100%;
+}
+
+.registration-header-logo img {
+  max-width: 240px;
+  height: auto;
+}
+
+.registration-header-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1c1f2e;
+  margin: 0;
+  letter-spacing: 0.02em;
 }
 
 .registration-header h1 {
@@ -41,6 +62,15 @@ body.registration-body {
   display: flex;
   align-items: center;
   gap: 12px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 8px 16px;
+  border-radius: 999px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 .user-email {
@@ -67,10 +97,12 @@ body.registration-body {
 }
 
 .registration-stepper {
-  display: flex;
+  display: flex !important;
+  flex-direction: row !important;
   justify-content: space-between;
   margin-bottom: 30px;
   position: relative;
+  width: 100%;
 }
 
 .registration-stepper::before {
@@ -85,10 +117,11 @@ body.registration-body {
 }
 
 .registration-stepper .step {
-  display: flex;
-  flex-direction: column;
+  display: flex !important;
+  flex-direction: column !important;
   align-items: center;
   z-index: 1;
+  flex: 1;
 }
 
 .registration-stepper .step-number {
@@ -411,19 +444,21 @@ body.registration-body {
 .football-field {
   position: relative;
   width: 100%;
-  padding-top: 170%;
-  border-radius: 24px;
+  max-width: 400px;
+  margin: 0 auto;
+  padding-top: 150%;
+  border-radius: 16px;
   border: 2px solid rgba(255, 255, 255, 0.4);
   margin-bottom: 24px;
   overflow: hidden;
-  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .football-field-surface {
   position: absolute;
   inset: 0;
   background-image: url('/assets/img/Muqawama/football-field-svgrepo-com.svg');
-  background-size: contain;
+  background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
   transform: rotate(0deg);
@@ -437,7 +472,9 @@ body.registration-body {
 .formation-preview-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
 }
 
 .download-formation-btn {
@@ -479,15 +516,18 @@ body.registration-body {
   align-items: center;
   gap: 6px;
   text-align: center;
-  pointer-events: auto;
+  pointer-events: none;
+  /* Constrain players within field bounds */
+  max-width: 90%;
 }
 
 .player-marker.draggable {
-  cursor: grab;
+  cursor: default;
+  pointer-events: none;
 }
 
 .player-marker.draggable:active {
-  cursor: grabbing;
+  cursor: default;
 }
 
 .player-circle {
@@ -583,6 +623,28 @@ body.registration-body {
   border: 1px solid rgba(20, 30, 50, 0.08);
   background: #fff;
   box-shadow: 0 30px 60px rgba(10, 12, 25, 0.12);
+  text-align: center;
+}
+
+.auth-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.auth-logo img {
+  max-width: 200px;
+  height: auto;
+}
+
+.auth-card h2 {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.auth-subtitle {
+  text-align: center;
+  margin-bottom: 24px;
 }
 
 .auth-form input {
@@ -729,25 +791,26 @@ body.registration-body {
     padding: 40px 16px 60px;
   }
 
-  .registration-stepper {
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .registration-stepper::before {
-    display: none;
-  }
-
-  .registration-stepper .step {
-    align-items: flex-start;
-  }
-
   .position-info {
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   }
 }
 
 @media (max-width: 640px) {
+  .registration-stepper .step-number {
+    width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
+  }
+
+  .registration-stepper .step-label {
+    font-size: 0.7rem;
+  }
+
+  .registration-stepper::before {
+    top: 16px;
+  }
+
   .registration-form {
     padding: 20px;
   }
@@ -769,11 +832,15 @@ body.registration-body {
 
 @media (min-width: 768px) {
   .football-field {
-    padding-top: 70%;
+    padding-top: 0;
+    height: 600px;
+    max-width: 400px;
+    aspect-ratio: 2/3;
   }
 
   .football-field-surface {
-    transform: rotate(180deg) scale(1);
+    transform: rotate(180deg);
+    background-size: 100% 100%;
   }
 }
 

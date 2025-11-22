@@ -50,29 +50,67 @@ function RegistrationFlow() {
     let mounted = true;
     setGlobalError('');
 
+    // Immediately clear loading after a short delay to show UI
+    const initialLoadTimeout = setTimeout(() => {
+      if (mounted) {
+        console.log('[Registration] Initial load timeout - showing UI');
+        setLoading(false);
+      }
+    }, 500);
+
     const bootstrapUser = async () => {
       try {
-        const { data, error } = await supabaseClient.auth.getUser();
+        console.log('[Registration] Checking for existing session...');
+        
+        // First try to get session from storage synchronously
+        const storedSession = window.localStorage.getItem('sb-uzieoxfqkglcoistswxq-auth-token');
+        console.log('[Registration] Stored session exists:', !!storedSession);
+        
+        // Then verify with Supabase
+        const { data, error } = await Promise.race([
+          supabaseClient.auth.getUser(),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('getUser timeout')), 2000)
+          )
+        ]);
+        
         if (!mounted) return;
-        if (error && error.message !== 'Auth session missing!') {
-          throw error;
+        clearTimeout(initialLoadTimeout);
+        
+        if (error) {
+          if (error.message === 'getUser timeout') {
+            console.warn('[Registration] getUser timed out, assuming no session');
+            setUser(null);
+            resetForm();
+            setLoading(false);
+            return;
+          }
+          if (error.message !== 'Auth session missing!') {
+            throw error;
+          }
         }
-        const sessionUser = data.user ?? null;
+        
+        const sessionUser = data?.user ?? null;
         console.log('[Registration] User retrieved:', sessionUser ? sessionUser.email : 'No user');
         setUser(sessionUser);
 
         if (sessionUser) {
-          await hydrateExistingRegistration(sessionUser, { force: true });
+          // Hydrate in background, don't block UI
+          hydrateExistingRegistration(sessionUser, { force: true }).catch(err => {
+            console.error('[Registration] Background hydration failed:', err);
+          });
         } else {
           resetForm();
         }
       } catch (err) {
-        console.error('[Registration] User fetch error:', err);
+        console.error('[Registration] Bootstrap error:', err);
         if (mounted) {
-          setGlobalError('Unable to verify your login. Please refresh and try again.');
+          setUser(null);
+          resetForm();
         }
       } finally {
         if (mounted) {
+          console.log('[Registration] Bootstrap complete');
           setLoading(false);
         }
       }
@@ -81,6 +119,7 @@ function RegistrationFlow() {
     bootstrapUser();
 
     const { data: listener } = supabaseClient.auth.onAuthStateChange(async (event, session) => {
+      console.log('[Registration] Auth state changed:', event);
       const sessionUser = session?.user ?? null;
       setUser(sessionUser);
       
@@ -88,13 +127,14 @@ function RegistrationFlow() {
         resetForm();
         setStep(1);
         hasHydratedRef.current = false;
-      } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+      } else if (event === 'SIGNED_IN') {
         await hydrateExistingRegistration(sessionUser, { force: true });
       }
     });
 
     return () => {
       mounted = false;
+      clearTimeout(initialLoadTimeout);
       listener.subscription.unsubscribe();
     };
   }, []);
@@ -205,16 +245,17 @@ function RegistrationFlow() {
 
   return (
     <>
+      <div className="header-actions">
+        <span className="user-email">{user.email}</span>
+        <button type="button" className="logout-btn" onClick={handleLogout}>
+          <i className="fas fa-sign-out-alt" /> Logout
+        </button>
+      </div>
       <div className="registration-header">
-        <div>
-          <h1>Muqawama 2026 · Team Registration</h1>
+        <div className="registration-header-logo">
+          <img src="/assets/img/title.png" alt="Muqawama 2026" />
+          <h2 className="registration-header-title">Team Registration</h2>
           <p>{existingTeamId ? 'Edit your team registration and update any details.' : 'Complete all steps to confirm your team registration.'}</p>
-        </div>
-        <div className="header-actions">
-          <span className="user-email">{user.email}</span>
-          <button type="button" className="logout-btn" onClick={handleLogout}>
-            <i className="fas fa-sign-out-alt" /> Logout
-          </button>
         </div>
       </div>
       {hydrating && <p className="auth-message subtle">Loading your saved registration…</p>}
