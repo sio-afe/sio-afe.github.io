@@ -156,13 +156,73 @@ export default function RegistrationSummary({ readOnly = false }) {
 
       <section className="summary-section">
         <h4>Team Information</h4>
-        <p>
-          <strong>{teamData.teamName}</strong> · {teamData.category === 'open-age' ? 'Open Age' : 'U17'}
-        </p>
-        <p>
-          Captain: {teamData.captainName} ({teamData.captainEmail})
-        </p>
-        {teamData.captainPhone && <p>Phone: {teamData.captainPhone}</p>}
+        <div className="team-info-card">
+          <div className="team-info-header">
+            <div className="team-logo-large">
+              {teamData.teamLogo ? (
+                <img src={teamData.teamLogo} alt={`${teamData.teamName} logo`} />
+              ) : (
+                <div className="team-logo-placeholder-large">
+                  <i className="fas fa-shield-alt"></i>
+                </div>
+              )}
+            </div>
+            <div className="team-info-main">
+              <h3 className="team-name-display">{teamData.teamName}</h3>
+              <span className="team-category-badge">
+                <i className="fas fa-trophy"></i> {teamData.category === 'open-age' ? 'Open Age' : 'Under 17'}
+              </span>
+            </div>
+          </div>
+          
+          <div className="team-info-details">
+            <div className="info-row">
+              <div className="info-item">
+                <i className="fas fa-user-tie"></i>
+                <div className="info-content">
+                  <span className="info-label">Captain</span>
+                  <span className="info-value">{teamData.captainName}</span>
+                </div>
+              </div>
+              <div className="info-item">
+                <i className="fas fa-envelope"></i>
+                <div className="info-content">
+                  <span className="info-label">Email</span>
+                  <span className="info-value">{teamData.captainEmail}</span>
+                </div>
+              </div>
+            </div>
+            {teamData.captainPhone && (
+              <div className="info-row">
+                <div className="info-item">
+                  <i className="fas fa-phone"></i>
+                  <div className="info-content">
+                    <span className="info-label">Phone</span>
+                    <span className="info-value">{teamData.captainPhone}</span>
+                  </div>
+                </div>
+                <div className="info-item">
+                  <i className="fas fa-futbol"></i>
+                  <div className="info-content">
+                    <span className="info-label">Formation</span>
+                    <span className="info-value">{teamData.formation}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+            {!teamData.captainPhone && (
+              <div className="info-row">
+                <div className="info-item">
+                  <i className="fas fa-futbol"></i>
+                  <div className="info-content">
+                    <span className="info-label">Formation</span>
+                    <span className="info-value">{teamData.formation}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </section>
 
       <section className="summary-section">
