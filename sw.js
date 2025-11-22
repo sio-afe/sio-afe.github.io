@@ -1,76 +1,46 @@
-const CACHE_NAME = 'site-cache-v1';
-const OFFLINE_URL = '/offline.html';
+// Network-first service worker - always fetch fresh content
+// No caching strategy enabled
 
-// Files to cache
-const urlsToCache = [
-  '/',
-  '/assets/css/style.css',
-  '/assets/js/dist/theme.min.js',
-  OFFLINE_URL
-];
-
-// Install event
+// Install event - skip waiting immediately
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
-      })
-  );
+  console.log('Service Worker: Installed (no cache)');
+  self.skipWaiting();
 });
 
-// Fetch event
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Cache hit - return response
-        if (response) {
-          return response;
-        }
-
-        return fetch(event.request).then(
-          response => {
-            // Check if we received a valid response
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-
-            // Clone the response
-            const responseToCache = response.clone();
-
-            caches.open(CACHE_NAME)
-              .then(cache => {
-                cache.put(event.request, responseToCache);
-              });
-
-            return response;
-          }
-        );
-      })
-      .catch(() => {
-        // If both cache and network fail, show offline page
-        if (event.request.mode === 'navigate') {
-          return caches.match(OFFLINE_URL);
-        }
-      })
-  );
-});
-
-// Activate event - cleanup old caches
+// Activate event - clear all existing caches and take control immediately
 self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME];
-
+  console.log('Service Worker: Activated (clearing all caches)');
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
-          }
+          console.log('Service Worker: Deleting cache:', cacheName);
+          return caches.delete(cacheName);
         })
       );
+    }).then(() => {
+      return self.clients.claim();
+    })
+  );
+});
+
+// Fetch event - always use network, never cache
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    fetch(event.request, {
+      cache: 'no-store',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    }).catch(error => {
+      console.log('Service Worker: Fetch failed:', error);
+      // Return a basic error response instead of cached content
+      return new Response('Network error', {
+        status: 503,
+        statusText: 'Service Unavailable'
+      });
     })
   );
 });
@@ -79,5 +49,12 @@ self.addEventListener('activate', event => {
 self.addEventListener('message', event => {
   if (event.data === 'skipWaiting') {
     self.skipWaiting();
+  }
+  if (event.data === 'clearCache') {
+    event.waitUntil(
+      caches.keys().then(cacheNames => {
+        return Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)));
+      })
+    );
   }
 }); 

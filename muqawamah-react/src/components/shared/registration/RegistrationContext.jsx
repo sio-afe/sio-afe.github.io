@@ -31,7 +31,7 @@ export const defaultPlayers = () => {
     x: 5 + index * 10,
     y: 90
   }));
-  return [...defaults.slice(0, 11), ...subs];
+  return [...defaults, ...subs];
 };
 
 export const initialTeamData = {
