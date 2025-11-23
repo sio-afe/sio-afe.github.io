@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import CountdownTimer from '../../shared/CountdownTimer';
 
 const highlightImages = [
   '/assets/img/highlight5.jpeg',
@@ -42,10 +43,9 @@ const editions = [
     year: '2026',
     title: 'MUQAWAMA 2026',
     subtitle: 'The Journey Continues...',
+    countdownTarget: '2026-01-03T09:00:00+05:30',
     stats: [
-      { number: 'TBA', label: 'Teams' },
-      { number: 'TBA', label: 'Players' },
-      { number: 'TBA', label: 'Days' }
+      { number: 'Jan 3-4, 2026', label: 'Tournament Dates' }
     ],
     status: 'coming-soon',
     statusLabel: 'Coming Soon'
@@ -122,10 +122,18 @@ function Hero({ selectedEdition, setSelectedEdition }) {
 
               <h1 className="hero-title-modern">{currentEdition.title}</h1>
               <p className="hero-subtitle-modern">{currentEdition.subtitle}</p>
+
+              {currentEdition.countdownTarget && (
+                <CountdownTimer
+                  targetDate={currentEdition.countdownTarget}
+                  label="Kick-off begins in"
+                  variant="hero"
+                />
+              )}
               
               <div className="hero-stats-modern">
                 {currentEdition.stats.map((stat, index) => (
-                  <div key={index} className="stat-box">
+                  <div key={index} className="stat-box condensed">
                     <span className="stat-number">{stat.number}</span>
                     <span className="stat-label">{stat.label}</span>
                   </div>

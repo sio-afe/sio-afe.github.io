@@ -67,7 +67,10 @@ function StandingsTable({ teams, category }) {
                         e.target.src = '/assets/data/open-age/team-logos/default.png';
                       }}
                     />
-                    <span className="team-name">{team.name}</span>
+                  </div>
+                  {/* Mobile: Show last 3 matches below team name */}
+                  <div className="mobile-form">
+                    {renderFormMobile(team.form)}
                   </div>
                 </td>
                 <td className="mobile-hide">{team.played || 0}</td>
@@ -185,7 +188,7 @@ function StandingsTable({ teams, category }) {
   );
 }
 
-// Helper function to render form (last 5 matches)
+// Helper function to render form (last 5 matches) - Desktop
 function renderForm(formString) {
   if (!formString) return <span className="no-form">-</span>;
   
@@ -194,6 +197,23 @@ function renderForm(formString) {
       {formString.split('').slice(0, 5).map((result, index) => (
         <span key={index} className={`form-result ${result.toLowerCase()}`}>
           {result}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+// Helper function to render form (last 3 matches) - Mobile
+function renderFormMobile(formString) {
+  if (!formString) return null;
+  
+  return (
+    <div className="form-indicators-mobile">
+      {formString.split('').slice(0, 3).map((result, index) => (
+        <span key={index} className={`form-result-mobile ${result.toLowerCase()}`}>
+          {result === 'W' && <i className="fas fa-check-circle"></i>}
+          {result === 'D' && <i className="fas fa-minus-circle"></i>}
+          {result === 'L' && <i className="fas fa-times-circle"></i>}
         </span>
       ))}
     </div>

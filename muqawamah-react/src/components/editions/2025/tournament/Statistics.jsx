@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { supabaseClient as sharedSupabaseClient } from '../../../../lib/supabaseClient';
 
 function Statistics({ category }) {
   const [activeStatTab, setActiveStatTab] = useState('scorers');
@@ -14,61 +15,69 @@ function Statistics({ category }) {
   const fetchStatistics = async () => {
     setLoading(true);
     try {
-      if (!window.supabaseClient) {
-        console.error('Supabase client not available');
-        setLoading(false);
+      const supabase = window.supabaseClient || sharedSupabaseClient;
+      if (!supabase) {
+        console.error('[Statistics] Supabase client not available');
+        setTopScorers([]);
+        setTopAssists([]);
         return;
       }
 
-      // Fetch top scorers - group by player_name and count goals
-      const { data: scorersData, error: scorersError } = await window.supabaseClient
-        .from('match_events')
-        .select('player_name, team_id, teams(name, crest_url)')
-        .eq('category', category)
-        .eq('event_type', 'goal');
+      // Get match IDs for the current category
+      const { data: matchRows, error: matchesError } = await supabase
+        .from('matches')
+        .select('id')
+        .eq('category', category);
 
-      if (scorersError) throw scorersError;
+      if (matchesError) throw matchesError;
 
-      // Process scorers data
+      if (!matchRows || matchRows.length === 0) {
+        setTopScorers([]);
+        setTopAssists([]);
+        return;
+      }
+
+      const matchIds = matchRows.map((match) => match.id);
+
+      const { data: goalsData, error: goalsError } = await supabase
+        .from('goals')
+        .select('scorer_name, assist_name, team_id, teams(name, crest_url)')
+        .in('match_id', matchIds);
+
+      if (goalsError) throw goalsError;
+
       const scorersMap = {};
-      scorersData?.forEach((event) => {
-        const key = `${event.player_name}-${event.team_id}`;
-        if (!scorersMap[key]) {
-          scorersMap[key] = {
-            player_name: event.player_name,
-            team: event.teams,
-            goals: 0,
-          };
+      const assistsMap = {};
+
+      (goalsData || []).forEach((goalEvent) => {
+        if (goalEvent.scorer_name) {
+          const scorerKey = `${goalEvent.scorer_name}-${goalEvent.team_id}`;
+          if (!scorersMap[scorerKey]) {
+            scorersMap[scorerKey] = {
+              player_name: goalEvent.scorer_name,
+              team: goalEvent.teams,
+              goals: 0,
+            };
+          }
+          scorersMap[scorerKey].goals += 1;
         }
-        scorersMap[key].goals++;
+
+        if (goalEvent.assist_name) {
+          const assistKey = `${goalEvent.assist_name}-${goalEvent.team_id}`;
+          if (!assistsMap[assistKey]) {
+            assistsMap[assistKey] = {
+              player_name: goalEvent.assist_name,
+              team: goalEvent.teams,
+              assists: 0,
+            };
+          }
+          assistsMap[assistKey].assists += 1;
+        }
       });
 
       const processedScorers = Object.values(scorersMap)
         .sort((a, b) => b.goals - a.goals)
         .slice(0, 15);
-
-      // Fetch top assists
-      const { data: assistsData, error: assistsError } = await window.supabaseClient
-        .from('match_events')
-        .select('assist_name, team_id, teams(name, crest_url)')
-        .eq('category', category)
-        .not('assist_name', 'is', null);
-
-      if (assistsError) throw assistsError;
-
-      // Process assists data
-      const assistsMap = {};
-      assistsData?.forEach((event) => {
-        const key = `${event.assist_name}-${event.team_id}`;
-        if (!assistsMap[key]) {
-          assistsMap[key] = {
-            player_name: event.assist_name,
-            team: event.teams,
-            assists: 0,
-          };
-        }
-        assistsMap[key].assists++;
-      });
 
       const processedAssists = Object.values(assistsMap)
         .sort((a, b) => b.assists - a.assists)
@@ -78,6 +87,8 @@ function Statistics({ category }) {
       setTopAssists(processedAssists);
     } catch (error) {
       console.error('Error fetching statistics:', error);
+      setTopScorers([]);
+      setTopAssists([]);
     } finally {
       setLoading(false);
     }
