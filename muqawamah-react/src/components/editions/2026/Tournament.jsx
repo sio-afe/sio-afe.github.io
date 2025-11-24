@@ -56,12 +56,6 @@ function Tournament2026() {
         throw teamsError;
       }
 
-      // Calculate goal difference for each team
-      const teamsWithGD = (teamsData || []).map(team => ({
-        ...team,
-        gd: team.goals_for - team.goals_against
-      }));
-
       // Fetch matches
       const { data: matchesData, error: matchesError } = await supabaseClient
         .from('matches')
@@ -78,7 +72,37 @@ function Tournament2026() {
         console.error('[2026 Tournament] Error fetching matches:', matchesError);
       }
 
-      setTeams(teamsWithGD);
+      // Calculate form for each team from completed matches
+      const calculateTeamForm = (teamId) => {
+        const completedMatches = (matchesData || [])
+          .filter(match => 
+            match.status === 'completed' && 
+            (match.home_team_id === teamId || match.away_team_id === teamId)
+          )
+          .sort((a, b) => new Date(b.match_date) - new Date(a.match_date))
+          .slice(0, 5);
+
+        return completedMatches
+          .map(match => {
+            const isHome = match.home_team_id === teamId;
+            const teamScore = isHome ? match.home_score : match.away_score;
+            const opponentScore = isHome ? match.away_score : match.home_score;
+            
+            if (teamScore > opponentScore) return 'W';
+            if (teamScore < opponentScore) return 'L';
+            return 'D';
+          })
+          .join('');
+      };
+
+      // Calculate goal difference and form for each team
+      const teamsWithGDAndForm = (teamsData || []).map(team => ({
+        ...team,
+        gd: team.goals_for - team.goals_against,
+        form: calculateTeamForm(team.id)
+      }));
+
+      setTeams(teamsWithGDAndForm);
       setFixtures(matchesData || []);
       
       console.log('[2026 Tournament] Loaded:', {

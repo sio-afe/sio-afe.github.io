@@ -29,7 +29,7 @@ function StandingsTable({ teams, category }) {
           <thead>
             <tr>
               <th>POS</th>
-              <th className="team-column">CLUB</th>
+              <th className="team-column">TEAMS</th>
               <th className="mobile-hide">P</th>
               <th className="mobile-hide">W</th>
               <th className="mobile-hide">D</th>
@@ -67,6 +67,7 @@ function StandingsTable({ teams, category }) {
                         e.target.src = '/assets/data/open-age/team-logos/default.png';
                       }}
                     />
+                    <span className="team-name">{team.name}</span>
                   </div>
                   {/* Mobile: Show last 3 matches below team name */}
                   <div className="mobile-form">

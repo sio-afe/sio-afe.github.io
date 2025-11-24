@@ -7,6 +7,9 @@ function Fixtures({ fixtures }) {
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [matchDetails, setMatchDetails] = useState(null);
   const [loadingDetails, setLoadingDetails] = useState(false);
+  const [activeDetailTab, setActiveDetailTab] = useState('overview');
+  const [playerStats, setPlayerStats] = useState({ home: [], away: [] });
+  const [playerStatsLoading, setPlayerStatsLoading] = useState(false);
 
   const groupFixturesByDate = (fixtures) => {
     const grouped = {};
@@ -60,7 +63,10 @@ function Fixtures({ fixtures }) {
     }
 
     setSelectedMatch(fixture);
+    setActiveDetailTab('overview');
     setLoadingDetails(true);
+    setPlayerStats({ home: [], away: [] });
+    setPlayerStatsLoading(true);
 
     try {
       const supabase = window.supabaseClient || sharedSupabaseClient;
@@ -73,18 +79,23 @@ function Fixtures({ fixtures }) {
           console.error('Error fetching match details:', error);
           // Use basic fixture data if function doesn't exist
           setMatchDetails(fixture);
+          await loadPlayerStats(fixture, supabase);
         } else {
           const payload = Array.isArray(data) ? data[0] : data;
           const parsed =
             typeof payload === 'string' ? safeJSONParse(payload) : payload;
-          setMatchDetails(parsed || fixture);
+          const resolvedDetails = parsed || fixture;
+          setMatchDetails(resolvedDetails);
+          await loadPlayerStats(resolvedDetails, supabase);
         }
       } else {
         setMatchDetails(fixture);
+        setPlayerStatsLoading(false);
       }
     } catch (error) {
       console.error('Error:', error);
       setMatchDetails(fixture);
+      setPlayerStatsLoading(false);
     } finally {
       setLoadingDetails(false);
     }
@@ -108,10 +119,276 @@ function Fixtures({ fixtures }) {
     return Array.isArray(players) ? players : [];
   };
 
+  const normalizeGoals = (goals) => {
+    if (!goals) return [];
+    if (typeof goals === 'string') {
+      const parsed = safeJSONParse(goals);
+      return Array.isArray(parsed) ? parsed : [];
+    }
+    return Array.isArray(goals) ? goals : [];
+  };
+
+  const loadPlayerStats = async (details, supabase) => {
+    if (!supabase || !details) {
+      setPlayerStats({ home: [], away: [] });
+      setPlayerStatsLoading(false);
+      return;
+    }
+
+    const homeTeam = details.home_team || details.homeTeam;
+    const awayTeam = details.away_team || details.awayTeam;
+
+    if (!homeTeam?.id || !awayTeam?.id) {
+      setPlayerStats({ home: [], away: [] });
+      setPlayerStatsLoading(false);
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('goals')
+        .select('team_id, scorer_name, assist_name')
+        .in('team_id', [homeTeam.id, awayTeam.id]);
+
+      if (error) throw error;
+
+      const aggregateForTeam = (team) => {
+        if (!team?.id) return [];
+        const playerMap = {};
+        const basePlayers = normalizePlayers(team.players || []);
+
+        basePlayers.forEach((player) => {
+          if (!player?.name) return;
+          const key = player.name.toLowerCase();
+          playerMap[key] = {
+            id: player.id || key,
+            name: player.name,
+            position: player.position || '',
+            player_image: player.player_image,
+            goals: 0,
+            assists: 0,
+          };
+        });
+
+        (data || []).forEach((event) => {
+          if (event.team_id !== team.id) return;
+          if (event.scorer_name) {
+            const key = event.scorer_name.toLowerCase();
+            if (!playerMap[key]) {
+              playerMap[key] = {
+                id: key,
+                name: event.scorer_name,
+                position: '',
+                goals: 0,
+                assists: 0,
+              };
+            }
+            playerMap[key].goals += 1;
+          }
+
+          if (event.assist_name) {
+            const key = event.assist_name.toLowerCase();
+            if (!playerMap[key]) {
+              playerMap[key] = {
+                id: key,
+                name: event.assist_name,
+                position: '',
+                goals: 0,
+                assists: 0,
+              };
+            }
+            playerMap[key].assists += 1;
+          }
+        });
+
+        return Object.values(playerMap).sort((a, b) => (b.goals + b.assists) - (a.goals + a.assists));
+      };
+
+      setPlayerStats({
+        home: aggregateForTeam(homeTeam),
+        away: aggregateForTeam(awayTeam),
+      });
+    } catch (error) {
+      console.error('Error loading player stats:', error);
+      setPlayerStats({ home: [], away: [] });
+    } finally {
+      setPlayerStatsLoading(false);
+    }
+  };
+
   const closeModal = () => {
     setSelectedMatch(null);
     setMatchDetails(null);
+    setActiveDetailTab('overview');
+    setPlayerStats({ home: [], away: [] });
   };
+
+  const renderHighlights = (goalsList, homeName, awayName) => {
+    if (!goalsList.length) {
+      return (
+        <div className="empty-highlights">
+          <i className="fas fa-info-circle"></i>
+          <p>No goals recorded for this match.</p>
+        </div>
+      );
+    }
+
+    return goalsList.map((goal) => (
+      <div
+        key={goal.id || `${goal.scorer_name}-${goal.minute}`}
+        className={`highlight-card ${goal.team_name === homeName ? 'home' : 'away'}`}
+      >
+        <div className="highlight-minute">{goal.minute}&rsquo;</div>
+        <div className="highlight-details">
+          <span className="highlight-player">{goal.scorer_name}</span>
+          {goal.assist_name && (
+            <span className="highlight-assist">Assist: {goal.assist_name}</span>
+          )}
+        </div>
+      </div>
+    ));
+  };
+
+  const renderFieldPlayers = (players, isAway = false) => {
+    if (!players.length) return null;
+
+    return players.map((player) => {
+      const posX = typeof player.position_x === 'number' ? player.position_x : 50;
+      const posY = typeof player.position_y === 'number' ? player.position_y : 50;
+      
+      let adjustedX;
+      let adjustedY;
+      
+      if (isAway) {
+        // Away team: face downward by mirroring the horizontal axis and occupying top half
+        adjustedX = 100 - posX;
+        adjustedY = 52.5 + (posY * 0.45); // Scale 0-100 to 52.5-97.5
+      } else {
+        // Home team: occupy bottom half attacking upward
+        adjustedX = posX;
+        adjustedY = 47.5 - (posY * 0.45); // Scale 0-100 to 47.5-2.5
+      }
+      
+      const safeX = Math.min(95, Math.max(5, adjustedX));
+      const safeY = Math.min(97.5, Math.max(2.5, adjustedY));
+
+      return (
+        <div
+          key={player.id || `${player.name}-${player.position}`}
+          className="field-player"
+          style={{ left: `${safeX}%`, top: `${safeY}%` }}
+        >
+          <div className="field-player-avatar">
+            <img
+              src={player.player_image || '/assets/data/open-age/team-logos/default.png'}
+              alt={player.name}
+              loading="lazy"
+              onError={(e) => {
+                e.target.src = '/assets/data/open-age/team-logos/default.png';
+              }}
+            />
+          </div>
+          <span className="field-player-name">{player.name}</span>
+        </div>
+      );
+    });
+  };
+
+  const renderSubstitutes = (label, substitutes, teamCrest) => (
+    <div className="team-subs-card">
+      <div className="team-subs-header">
+        <img src={teamCrest} alt="" className="subs-team-crest" />
+        <h5>{label}</h5>
+      </div>
+      {substitutes.length ? (
+        <div className="substitutes-grid">
+          {substitutes.map((player) => (
+            <div key={player.id || `${player.name}-sub`} className="substitute-item">
+              <div className="substitute-avatar">
+                <img
+                  src={player.player_image || '/assets/data/open-age/team-logos/default.png'}
+                  alt={player.name}
+                  onError={(e) => {
+                    e.target.src = '/assets/data/open-age/team-logos/default.png';
+                  }}
+                />
+                {player.number && <span className="sub-number">#{player.number}</span>}
+              </div>
+              <div className="substitute-info">
+                <span className="sub-name">{player.name}</span>
+                <span className="sub-position">{player.position}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="muted-text">No substitutes listed.</p>
+      )}
+    </div>
+  );
+
+  const renderPlayerStats = (label, crest, stats) => (
+    <div className="player-stats-card">
+      <div className="player-stats-heading">
+        {crest && (
+          <img
+            src={crest}
+            alt={label}
+            onError={(e) => {
+              e.target.src = '/assets/data/open-age/team-logos/default.png';
+            }}
+          />
+        )}
+        <div>
+          <p className="label">{label}</p>
+          <p className="caption">Tournament totals</p>
+        </div>
+      </div>
+
+      {playerStatsLoading ? (
+        <div className="player-stats-loading">
+          <div className="loading-spinner small"></div>
+          <p>Loading player contributions...</p>
+        </div>
+      ) : stats.length ? (
+        <div className="player-stat-list">
+          {stats.map((player) => (
+            <div key={player.id} className="player-stat-row">
+              <div className="player-stat-info">
+                <div className="player-avatar-mini">
+                  <img
+                    src={player.player_image || '/assets/data/open-age/team-logos/default.png'}
+                    alt={player.name}
+                    onError={(e) => {
+                      e.target.src = '/assets/data/open-age/team-logos/default.png';
+                    }}
+                  />
+                </div>
+                <div>
+                  <p className="player-name">{player.name}</p>
+                  <span className="player-role">{player.position || 'Player'}</span>
+                </div>
+              </div>
+              <div className="player-stat-metrics">
+                <span>
+                  <i className="fas fa-futbol"></i>
+                  {player.goals || 0}
+                </span>
+                <span>
+                  <i className="fas fa-hands-helping"></i>
+                  {player.assists || 0}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="player-stats-empty">
+          <p>No recorded goals or assists yet.</p>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className="fixtures-container">
@@ -266,123 +543,191 @@ function Fixtures({ fixtures }) {
               ) : matchDetails ? (
                 <div className="match-details-content">
                   {/* Match Header */}
-                    <div className="match-details-header">
-                    <div className="match-date-time">
-                      <i className="fas fa-calendar-alt"></i>
-                      {new Date(selectedMatch.match_time || selectedMatch.match_date).toLocaleDateString('en-US', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })}
-                    </div>
-                    {selectedMatch.venue && (
-                      <div className="match-venue">
-                        <i className="fas fa-map-marker-alt"></i>
-                        {selectedMatch.venue}
-                      </div>
-                    )}
-                  </div>
+                  {(() => {
+                    const meta = matchDetails?.match || {};
+                    const homeTeamInfo = matchDetails?.home_team || selectedMatch.home_team || {};
+                    const awayTeamInfo = matchDetails?.away_team || selectedMatch.away_team || {};
+                    const homePlayers = normalizePlayers(homeTeamInfo.players);
+                    const awayPlayers = normalizePlayers(awayTeamInfo.players);
+                    const goalsList = normalizeGoals(matchDetails?.goals);
+                    const matchDate = new Date(selectedMatch.match_time || selectedMatch.match_date);
+                    const homeScore = meta.home_score ?? selectedMatch.home_score ?? 0;
+                    const awayScore = meta.away_score ?? selectedMatch.away_score ?? 0;
 
-                  {/* Match Score */}
-                  <div className="match-score-display">
-                    {(() => {
-                      const meta = matchDetails?.match || {};
-                      const homeScore = meta.home_score ?? selectedMatch.home_score ?? 0;
-                      const awayScore = meta.away_score ?? selectedMatch.away_score ?? 0;
-                      const homeTeamInfo = matchDetails?.home_team || {};
-                      const awayTeamInfo = matchDetails?.away_team || {};
-                      const homePlayers = normalizePlayers(homeTeamInfo.players);
-                      const awayPlayers = normalizePlayers(awayTeamInfo.players);
-
-                      return (
-                        <>
-                          <div className="team-display home">
-                            <img
-                              src={
-                                selectedMatch.home_team?.crest_url ||
-                                homeTeamInfo.crest_url ||
-                                '/assets/data/open-age/team-logos/default.png'
-                              }
-                              alt={selectedMatch.home_team?.name || homeTeamInfo.name}
-                              className="team-crest-large"
-                            />
-                            <h3>{selectedMatch.home_team?.name || homeTeamInfo.name}</h3>
-                            {homeTeamInfo.formation && (
-                              <span className="formation-badge">{homeTeamInfo.formation}</span>
-                            )}
+                    return (
+                      <>
+                        <div className="match-details-header">
+                          <div>
+                            <p className="match-status-pill">{selectedMatch.status === 'completed' ? 'Full-time' : selectedMatch.status}</p>
+                            <h2>{(homeTeamInfo.name || selectedMatch.home_team?.name || 'Home')} vs {(awayTeamInfo.name || selectedMatch.away_team?.name || 'Away')}</h2>
+                            <p className="match-date">
+                              <i className="fas fa-calendar-alt"></i>
+                              {matchDate.toLocaleDateString('en-US', {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                              })}
+                            </p>
                           </div>
+                          {selectedMatch.venue && (
+                            <div className="match-meta-chip">
+                              <i className="fas fa-map-marker-alt"></i>
+                              {selectedMatch.venue}
+                            </div>
+                          )}
+                        </div>
 
-                          <div className="score-display-large">
-                            <span
-                              className={`score-number ${homeScore > awayScore ? 'winner' : ''}`}
-                            >
-                              {homeScore}
-                            </span>
-                            <span className="score-separator">-</span>
-                            <span
-                              className={`score-number ${awayScore > homeScore ? 'winner' : ''}`}
-                            >
-                              {awayScore}
-                            </span>
-                          </div>
+                        <div className="match-details-tabs">
+                          <button
+                            className={activeDetailTab === 'overview' ? 'active' : ''}
+                            onClick={() => setActiveDetailTab('overview')}
+                          >
+                            Overview
+                          </button>
+                          <button
+                            className={activeDetailTab === 'lineups' ? 'active' : ''}
+                            onClick={() => setActiveDetailTab('lineups')}
+                          >
+                            Lineups
+                          </button>
+                          <button
+                            className={activeDetailTab === 'players' ? 'active' : ''}
+                            onClick={() => setActiveDetailTab('players')}
+                          >
+                            Players
+                          </button>
+                        </div>
 
-                          <div className="team-display away">
-                            <img
-                              src={
-                                selectedMatch.away_team?.crest_url ||
-                                awayTeamInfo.crest_url ||
-                                '/assets/data/open-age/team-logos/default.png'
-                              }
-                              alt={selectedMatch.away_team?.name || awayTeamInfo.name}
-                              className="team-crest-large"
-                            />
-                            <h3>{selectedMatch.away_team?.name || awayTeamInfo.name}</h3>
-                            {awayTeamInfo.formation && (
-                              <span className="formation-badge">{awayTeamInfo.formation}</span>
-                            )}
-                          </div>
-
-                          {homePlayers.length > 0 && awayPlayers.length > 0 ? (
-                            <div className="match-lineups-section">
-                              <h4>
-                                <i className="fas fa-users"></i> Match Lineups
-                              </h4>
-                              <div className="lineups-grid">
-                                <div className="lineup-column">
-                                  <h5>{selectedMatch.home_team?.name || homeTeamInfo.name}</h5>
-                                  <ul className="player-list">
-                                    {homePlayers.slice(0, 7).map((player) => (
-                                      <li key={player.id || player.name}>
-                                        <span className="player-position">{player.position}</span>
-                                        <span className="player-name">{player.name}</span>
-                                      </li>
-                                    ))}
-                                  </ul>
+                        <div className="match-tab-content">
+                          {activeDetailTab === 'overview' && (
+                            <div className="match-overview">
+                              <div className="scoreboard-card scoreboard-google">
+                                <div className="score-meta-row">
+                                  <span className="score-competition">
+                                    {selectedMatch.category === 'u17' ? 'U17 Division' : 'Open Age Division'}
+                                  </span>
                                 </div>
-                                <div className="lineup-column">
-                                  <h5>{selectedMatch.away_team?.name || awayTeamInfo.name}</h5>
-                                  <ul className="player-list">
-                                    {awayPlayers.slice(0, 7).map((player) => (
-                                      <li key={player.id || player.name}>
-                                        <span className="player-position">{player.position}</span>
-                                        <span className="player-name">{player.name}</span>
-                                      </li>
-                                    ))}
-                                  </ul>
+                                <div className="score-line">
+                                  <img
+                                    className="score-crest"
+                                    src={
+                                      homeTeamInfo.crest_url ||
+                                      selectedMatch.home_team?.crest_url ||
+                                      '/assets/data/open-age/team-logos/default.png'
+                                    }
+                                    alt={homeTeamInfo.name || selectedMatch.home_team?.name}
+                                  />
+                                  <span className={`score-digit ${homeScore > awayScore ? 'winner' : ''}`}>
+                                    {homeScore}
+                                  </span>
+                                  <span className="score-hyphen">-</span>
+                                  <span className={`score-digit ${awayScore > homeScore ? 'winner' : ''}`}>
+                                    {awayScore}
+                                  </span>
+                                  <img
+                                    className="score-crest"
+                                    src={
+                                      awayTeamInfo.crest_url ||
+                                      selectedMatch.away_team?.crest_url ||
+                                      '/assets/data/open-age/team-logos/default.png'
+                                    }
+                                    alt={awayTeamInfo.name || selectedMatch.away_team?.name}
+                                  />
+                                </div>
+                                {(selectedMatch.match_type || selectedMatch.match_number) && (
+                                  <div className="score-stage-row">
+                                    {selectedMatch.match_type
+                                      ? selectedMatch.match_type.replace(/-/g, ' ')
+                                      : `Match ${selectedMatch.match_number}`}
+                                  </div>
+                                )}
+                              </div>
+
+                              <div className="goal-highlights-card">
+                                <div className="card-header">
+                                  <p>Highlights</p>
+                                  <span>Goals & key moments</span>
+                                </div>
+                                <div className="highlight-list">
+                                  {renderHighlights(goalsList, homeTeamInfo.name, awayTeamInfo.name)}
                                 </div>
                               </div>
                             </div>
-                          ) : (
-                            <div className="no-lineups">
-                              <i className="fas fa-info-circle"></i>
-                              <p>Detailed lineups not available for this match yet.</p>
+                          )}
+
+                          {activeDetailTab === 'lineups' && (
+                            homePlayers.length || awayPlayers.length ? (
+                              <div className="lineups-section-modern">
+                                <div className="match-lineup-field-svg">
+                                  <svg
+                                    viewBox="0 0 74 111"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="football-field-svg"
+                                    preserveAspectRatio="xMidYMid meet"
+                                  >
+                                    <rect width="74" height="111" fill="#00a000" />
+                                    <g fill="none" stroke="#fff" strokeWidth="0.5" transform="translate(3 3)">
+                                      <path d="M 0 0 h 68 v 105 h -68 Z" />
+                                      <path d="M 0 52.5 h 68" />
+                                      <circle r="9.15" cx="34" cy="52.5" />
+                                      <circle r="0.75" cx="34" cy="52.5" fill="#fff" stroke="none" />
+                                      <g>
+                                        <path d="M 13.84 0 v 16.5 h 40.32 v -16.5" />
+                                        <path d="M 24.84 0 v 5.5 h 18.32 v -5.5" />
+                                        <circle r="0.75" cx="34" cy="10.94" fill="#fff" stroke="none" />
+                                        <path d="M 26.733027 16.5 a 9.15 9.15 0 0 0 14.533946 0" />
+                                      </g>
+                                      <g transform="rotate(180,34,52.5)">
+                                        <path d="M 13.84 0 v 16.5 h 40.32 v -16.5" />
+                                        <path d="M 24.84 0 v 5.5 h 18.32 v -5.5" />
+                                        <circle r="0.75" cx="34" cy="10.94" fill="#fff" stroke="none" />
+                                        <path d="M 26.733027 16.5 a 9.15 9.15 0 0 0 14.533946 0" />
+                                      </g>
+                                      <path d="M 0 2 a 2 2 0 0 0 2 -2M 66 0 a 2 2 0 0 0 2 2M 68 103 a 2 2 0 0 0 -2 2M 2 105 a 2 2 0 0 0 -2 -2" />
+                                    </g>
+                                  </svg>
+                                  <div className="field-label home-label">
+                                    {homeTeamInfo.name || selectedMatch.home_team?.name}
+                                  </div>
+                                  <div className="field-label away-label">
+                                    {awayTeamInfo.name || selectedMatch.away_team?.name}
+                                  </div>
+                                  {renderFieldPlayers(homePlayers.filter((player) => !player.is_substitute), false)}
+                                  {renderFieldPlayers(awayPlayers.filter((player) => !player.is_substitute), true)}
+                                </div>
+
+                                <div className="substitutes-wrapper">
+                                  {renderSubstitutes(
+                                    `${homeTeamInfo.name || selectedMatch.home_team?.name} substitutes`, 
+                                    homePlayers.filter((player) => player.is_substitute),
+                                    homeTeamInfo.crest_url || selectedMatch.home_team?.crest_url
+                                  )}
+                                  {renderSubstitutes(
+                                    `${awayTeamInfo.name || selectedMatch.away_team?.name} substitutes`, 
+                                    awayPlayers.filter((player) => player.is_substitute),
+                                    awayTeamInfo.crest_url || selectedMatch.away_team?.crest_url
+                                  )}
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="no-lineups">
+                                <i className="fas fa-info-circle"></i>
+                                <p>Detailed lineups not available for this match yet.</p>
+                              </div>
+                            )
+                          )}
+
+                          {activeDetailTab === 'players' && (
+                            <div className="player-stats-section">
+                              {renderPlayerStats(homeTeamInfo.name || selectedMatch.home_team?.name || 'Home Team', homeTeamInfo.crest_url || selectedMatch.home_team?.crest_url, playerStats.home)}
+                              {renderPlayerStats(awayTeamInfo.name || selectedMatch.away_team?.name || 'Away Team', awayTeamInfo.crest_url || selectedMatch.away_team?.crest_url, playerStats.away)}
                             </div>
                           )}
-                        </>
-                      );
-                    })()}
-                  </div>
+                        </div>
+                      </>
+                    );
+                  })()}
                 </div>
               ) : null}
             </motion.div>
