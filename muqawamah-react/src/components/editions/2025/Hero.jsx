@@ -42,7 +42,6 @@ const editions = [
   {
     year: '2026',
     title: 'MUQAWAMA 2026',
-    subtitle: 'The Journey Continues...',
     countdownTarget: '2026-01-03T09:00:00+05:30',
     stats: [
       { number: 'Jan 3-4, 2026', label: 'Tournament Dates' }

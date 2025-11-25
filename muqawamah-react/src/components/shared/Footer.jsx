@@ -10,7 +10,7 @@ const policyLinks = [
 
 export default function Footer({ sponsors = [], edition = '2026' }) {
   const rows = sponsors.length > 0 ? [sponsors.slice(0, 5), sponsors.slice(5)] : [];
-  const editionLabel = edition === '2026' ? '2026 Kick-off' : '2025 Football Tournament';
+  const editionLabel = edition === '2026' ? 'Muqawama 2026' : 'Muqawama 2025';
 
   return (
     <section id="footer" className="footer-showcase">

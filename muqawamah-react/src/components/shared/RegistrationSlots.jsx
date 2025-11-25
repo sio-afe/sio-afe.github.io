@@ -20,9 +20,10 @@ export default function RegistrationSlots() {
         {
           event: '*',
           schema: 'public',
-          table: 'team_registrations'
+          table: 'registration_slots'
         },
         () => {
+          console.log('Registration slots table changed, refetching...');
           fetchSlots();
         }
       )
@@ -33,30 +34,77 @@ export default function RegistrationSlots() {
     };
   }, []);
 
+  // Debug: Log when slots state changes
+  useEffect(() => {
+    console.log('Slots state updated:', slots);
+  }, [slots]);
+
   const fetchSlots = async () => {
     try {
+      console.log('Fetching slots from registration_slots table...');
+      // Query directly from registration_slots table
       const { data, error } = await supabaseClient
         .from('registration_slots')
-        .select('*');
+        .select('category, total_slots, filled_slots, available_slots, registration_open, status');
 
-      if (error) throw error;
+      console.log('Registration slots query result:', { data, error });
 
-      if (data) {
+      if (error) {
+        console.error('Error fetching registration_slots:', error);
+        throw error;
+      }
+
+      if (data && data.length > 0) {
+        // Map the table data to our component state
         const slotsData = {};
         data.forEach(slot => {
+          const total = slot.total_slots || 12;
+          const registered = slot.filled_slots || 0;
+          const available = slot.available_slots || 0;
+          const percentage = total > 0 ? Math.round((registered / total) * 100) : 0;
+
           slotsData[slot.category] = {
-            total: slot.total_slots,
-            registered: slot.registered_teams,
-            available: slot.available_slots,
-            percentage: slot.fill_percentage,
-            isOpen: slot.registration_open,
-            deadline: slot.registration_deadline
+            total,
+            registered,
+            available,
+            percentage,
+            isOpen: slot.registration_open !== false,
+            deadline: null // Add deadline if available in table
           };
         });
+        console.log('Final slots data from table:', slotsData);
         setSlots(slotsData);
+      } else {
+        console.log('No data returned from registration_slots table, using defaults');
+        // Use defaults if table is empty
+        const defaultSlots = {
+          'open-age': { total: 12, registered: 0, available: 12, percentage: 0, isOpen: true, deadline: null },
+          'u17': { total: 12, registered: 0, available: 12, percentage: 0, isOpen: true, deadline: null }
+        };
+        setSlots(defaultSlots);
       }
     } catch (err) {
       console.error('Error fetching slots:', err);
+      // On error, use defaults
+      const fallbackSlots = {
+        'open-age': {
+          total: 12,
+          registered: 0,
+          available: 12,
+          percentage: 0,
+          isOpen: true,
+          deadline: null
+        },
+        'u17': {
+          total: 12,
+          registered: 0,
+          available: 12,
+          percentage: 0,
+          isOpen: true,
+          deadline: null
+        }
+      };
+      setSlots(fallbackSlots);
     } finally {
       setLoading(false);
     }

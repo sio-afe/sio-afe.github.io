@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Hero from '../2025/Hero';
 import AboutSection from '../2025/AboutSection';
-import CTASection from '../2025/CTASection';
 import RulesSection from '../2025/RulesSection';
 import SponsorsSection from '../2025/SponsorsSection';
 import FindImagesSection from '../2025/FindImagesSection';
@@ -19,7 +18,6 @@ function Edition2026({ setSelectedEdition }) {
     >
       <Hero selectedEdition="2026" setSelectedEdition={setSelectedEdition} />
       <AboutSection edition="2026" />
-      <CTASection edition="2026" />
       <RulesSection edition="2026" />
       <FindImagesSection edition="2026" />
       <SocialSection edition="2026" />

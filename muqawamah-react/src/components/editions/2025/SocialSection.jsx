@@ -35,22 +35,24 @@ function SocialSection({ edition }) {
             <span>@muqawama2026</span>
           </motion.a>
 
-          <div className="stats-grid-modern">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                className="stat-card-modern"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <i className={stat.icon}></i>
-                <span className="stat-number-modern">{stat.number}</span>
-                <span className="stat-label-modern">{stat.label}</span>
-              </motion.div>
-            ))}
-          </div>
+          {edition !== '2026' && (
+            <div className="stats-grid-modern">
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={index}
+                  className="stat-card-modern"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <i className={stat.icon}></i>
+                  <span className="stat-number-modern">{stat.number}</span>
+                  <span className="stat-label-modern">{stat.label}</span>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </motion.div>
       </div>
     </section>
