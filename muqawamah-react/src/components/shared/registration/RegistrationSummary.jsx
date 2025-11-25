@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import { supabaseClient } from '../../../lib/supabaseClient';
 import { useRegistration } from './RegistrationContext';
 import FormationPreview from './FormationPreview';
 
@@ -9,14 +8,7 @@ export default function RegistrationSummary({ readOnly = false }) {
     players,
     setStep,
     setPlayers,
-    loading,
-    setLoading,
-    error,
-    setError,
-    successTeamId,
-    setSuccessTeamId,
-    existingTeamId,
-    setExistingTeamId
+    existingTeamId
   } = useRegistration();
 
   const fieldRef = useRef(null);
@@ -51,103 +43,9 @@ export default function RegistrationSummary({ readOnly = false }) {
     setDraggingId(null);
   };
 
-  const handleSubmit = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      if (readOnly) return;
-
-      const {
-        data: { user }
-      } = await supabaseClient.auth.getUser();
-
-      if (!user) {
-        throw new Error('You must be logged in to submit the registration.');
-      }
-
-      let teamId = existingTeamId;
-      if (existingTeamId) {
-        const { error: updateError } = await supabaseClient
-          .from('team_registrations')
-          .update({
-            team_name: teamData.teamName,
-            category: teamData.category,
-            team_logo: teamData.teamLogo,
-            captain_name: teamData.captainName,
-            captain_email: teamData.captainEmail,
-            captain_phone: teamData.captainPhone,
-            formation: teamData.formation,
-            submitted_at: new Date().toISOString()
-          })
-          .eq('id', existingTeamId);
-        if (updateError) throw updateError;
-        await supabaseClient.from('team_players').delete().eq('team_id', existingTeamId);
-      } else {
-        const { data: insertTeam, error: teamError } = await supabaseClient
-          .from('team_registrations')
-          .insert({
-            user_id: user.id,
-            team_name: teamData.teamName,
-            category: teamData.category,
-            team_logo: teamData.teamLogo,
-            captain_name: teamData.captainName,
-            captain_email: teamData.captainEmail,
-            captain_phone: teamData.captainPhone,
-            formation: teamData.formation,
-            status: 'submitted',
-            submitted_at: new Date().toISOString()
-          })
-          .select()
-          .single();
-
-        if (teamError) throw teamError;
-        teamId = insertTeam.id;
-        setExistingTeamId(teamId);
-      }
-
-      if (!teamId) throw new Error('Unable to determine team id.');
-
-      const payload = players.map((player) => ({
-        team_id: teamId,
-        player_name: player.name,
-        position: player.position,
-        is_substitute: player.isSubstitute,
-        player_image: player.image,
-        position_x: player.x,
-        position_y: player.y
-      }));
-
-      const { error: playersError } = await supabaseClient.from('team_players').insert(payload);
-      if (playersError) throw playersError;
-
-      await supabaseClient.functions.invoke('send-registration-email', {
-        body: {
-          teamId,
-          email: teamData.captainEmail,
-          teamName: teamData.teamName,
-          category: teamData.category
-        }
-      });
-
-      setSuccessTeamId(teamId);
-    } catch (submitError) {
-      setError(submitError.message);
-    } finally {
-      setLoading(false);
-    }
+  const handleProceedToPayment = () => {
+    setStep(5);
   };
-
-  if (successTeamId && !readOnly) {
-    return (
-      <div className="registration-form">
-        <h3>{existingTeamId ? 'Registration Updated ✅' : 'Registration Submitted ✅'}</h3>
-        <p>
-          Your team has been {existingTeamId ? 'updated' : 'registered'}. Team ID: <strong>{successTeamId}</strong>. 
-          {!existingTeamId && ` A confirmation email has been sent to ${teamData.captainEmail}.`}
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="registration-form">
@@ -286,15 +184,13 @@ export default function RegistrationSummary({ readOnly = false }) {
         </div>
       </section>
 
-      {error && <p className="auth-error">{error}</p>}
-
       {!readOnly && (
         <div className="form-actions">
-          <button type="button" className="secondary-btn" onClick={() => setStep(3)} disabled={loading}>
+          <button type="button" className="secondary-btn" onClick={() => setStep(3)}>
             Back
           </button>
-          <button type="button" className="primary-btn" onClick={handleSubmit} disabled={loading}>
-            {loading ? (existingTeamId ? 'Updating...' : 'Submitting...') : (existingTeamId ? 'Update Registration' : 'Submit Registration')}
+          <button type="button" className="primary-btn" onClick={handleProceedToPayment}>
+            Proceed to Payment
           </button>
         </div>
       )}

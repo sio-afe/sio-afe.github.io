@@ -4,7 +4,6 @@ import Hero from './Hero';
 import AboutSection from './AboutSection';
 import RulesSection from './RulesSection';
 import CTASection from './CTASection';
-import SponsorsSection from './SponsorsSection';
 import FindImagesSection from './FindImagesSection';
 import SocialSection from './SocialSection';
 
@@ -21,7 +20,6 @@ function Edition2025({ setSelectedEdition }) {
       <AboutSection edition="2025" />
       <RulesSection edition="2025" />
       <CTASection edition="2025" />
-      <SponsorsSection edition="2025" />
       <FindImagesSection edition="2025" />
       <SocialSection edition="2025" />
     </motion.div>

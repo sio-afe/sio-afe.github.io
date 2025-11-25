@@ -1,0 +1,9 @@
+{
+  "functions": {
+    "api/enhance-image.mjs": {
+      "memory": 1024,
+      "maxDuration": 30
+    }
+  }
+}
+

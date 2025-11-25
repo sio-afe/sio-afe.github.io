@@ -21,9 +21,9 @@ function Edition2026({ setSelectedEdition }) {
       <AboutSection edition="2026" />
       <CTASection edition="2026" />
       <RulesSection edition="2026" />
-      <SponsorsSection edition="2026" />
       <FindImagesSection edition="2026" />
       <SocialSection edition="2026" />
+      <SponsorsSection edition="2026" />
     </motion.div>
   );
 }

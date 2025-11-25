@@ -21,7 +21,7 @@ const values = [
   {
     icon: "fas fa-hands-praying",
     title: "Identity",
-    description: "Rooted in Islamic principles"
+    description: "Rooted in values & principles"
   }
 ];
 

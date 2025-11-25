@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { useRegistration } from './RegistrationContext';
 import { presetFormations } from './utils/formationUtils';
 
-const MAX_LOGO_SIZE = 500 * 1024; // 500KB
+const MAX_LOGO_SIZE = 2 * 1024 * 1024; // 2MB
 
 const categories = [
   { value: 'open-age', label: 'Open Age' },
@@ -18,28 +18,37 @@ export default function TeamDetailsForm() {
     setTeamData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleLogoUpload = async (e) => {
+  const handleLogoUpload = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > MAX_LOGO_SIZE) {
-      alert('Logo size must be under 500KB');
+      alert('Logo size must be under 2MB');
       fileInputRef.current.value = '';
       return;
     }
-    const base64 = await fileToBase64(file);
-    setTeamData((prev) => ({ ...prev, teamLogo: base64 }));
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setTeamData((prev) => ({ 
+        ...prev, 
+        teamLogo: event.target.result,
+        teamLogoFileName: file.name
+      }));
+    };
+    reader.readAsDataURL(file);
   };
-
-  const fileToBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
 
   const handleNext = (e) => {
     e.preventDefault();
+    if (!teamData.teamLogo) {
+      alert('Please upload a team logo');
+      return;
+    }
+    // Validate phone number (should have 10 digits after +91)
+    const phoneDigits = teamData.captainPhone?.replace(/^\+91\s?/g, '').replace(/\s/g, '') || '';
+    if (phoneDigits.length !== 10) {
+      alert('Please enter a valid 10-digit mobile number');
+      return;
+    }
     setStep(2);
   };
 
@@ -71,10 +80,36 @@ export default function TeamDetailsForm() {
         </select>
       </label>
 
-      <label>
-        Team Logo (optional)
-        <input type="file" accept="image/*" ref={fileInputRef} onChange={handleLogoUpload} />
-        <span className="input-hint">JPG/PNG up to 500KB. Displayed across the tournament site.</span>
+      <label className="file-label">
+        Team Logo
+        {teamData.teamLogo && (
+          <div className="uploaded-photo-preview">
+            <div className="photo-preview-container">
+              <img src={teamData.teamLogo} alt="Team logo" className="photo-preview" />
+              <div className="photo-overlay">
+                <i className="fas fa-check-circle"></i>
+              </div>
+            </div>
+            <div className="uploaded-file-info">
+              <i className="fas fa-check-circle"></i>
+              <span>
+                {teamData.teamLogoFileName 
+                  ? `Uploaded: ${teamData.teamLogoFileName}` 
+                  : 'Logo uploaded'}
+              </span>
+              <span className="file-change-hint">(Click to change)</span>
+            </div>
+          </div>
+        )}
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleLogoUpload}
+        />
+        {!teamData.teamLogo && (
+          <span className="input-hint">JPG/PNG up to 2MB. Displayed across the tournament site.</span>
+        )}
       </label>
 
       <label>
@@ -114,14 +149,50 @@ export default function TeamDetailsForm() {
       </div>
 
       <label>
-        Captain Phone (optional)
-        <input
-          type="tel"
-          name="captainPhone"
-          value={teamData.captainPhone}
-          onChange={handleChange}
-          placeholder="+966 5x xxx xxxx"
-        />
+        Captain Phone
+        <div className="phone-input-wrapper">
+          <span className="phone-prefix">
+            <i className="fas fa-flag"></i> +91
+          </span>
+          <input
+            type="tel"
+            name="captainPhone"
+            value={teamData.captainPhone?.replace(/^\+91\s?/, '').trim() || ''}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, ''); // Only numbers
+              let formatted = '';
+              if (value) {
+                // Format as +91 XXXXX XXXXX (10 digits)
+                formatted = '+91 ';
+                if (value.length <= 5) {
+                  formatted += value;
+                } else {
+                  formatted += `${value.slice(0, 5)} ${value.slice(5, 10)}`;
+                }
+              }
+              setTeamData((prev) => ({ ...prev, captainPhone: formatted }));
+            }}
+            placeholder="98765 43210"
+            pattern="[0-9\s]{10,12}"
+            maxLength={12}
+            onInvalid={(e) => {
+              const input = e.target;
+              const phoneNumber = teamData.captainPhone?.replace(/^\+91\s?/g, '').replace(/\s/g, '') || '';
+              if (phoneNumber.length < 10) {
+                input.setCustomValidity('Please enter a valid 10-digit mobile number');
+              } else {
+                input.setCustomValidity('');
+              }
+            }}
+            onInput={(e) => {
+              e.target.setCustomValidity('');
+            }}
+            required
+          />
+        </div>
+        <span className="input-hint">
+          <i className="fas fa-info-circle"></i> 10-digit mobile number (e.g., 98765 43210)
+        </span>
       </label>
 
       <div className="form-actions">

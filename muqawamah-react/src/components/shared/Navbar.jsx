@@ -34,7 +34,7 @@ function Navbar({ selectedEdition, setSelectedEdition }) {
       <div className="navbar-container">
         {/* Logo */}
         <div className="navbar-logo">
-          <img src="/assets/img/title.png" alt="Muqawama" className="logo-img" />
+          <img src="/assets/img/title_invert.png" alt="Muqawama" className="logo-img" />
         </div>
 
         {/* Desktop Navigation */}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { supabaseClient } from '../../../lib/supabaseClient';
 import AuthModal from './AuthModal';
 import FormationBuilder from './FormationBuilder';
+import PaymentCheckout from './PaymentCheckout';
 import PlayersForm from './PlayersForm';
 import RegistrationSummary from './RegistrationSummary';
 import TeamDetailsForm from './TeamDetailsForm';
@@ -11,7 +12,8 @@ const steps = [
   { id: 1, label: 'Team' },
   { id: 2, label: 'Players' },
   { id: 3, label: 'Formation' },
-  { id: 4, label: 'Review' }
+  { id: 4, label: 'Review' },
+  { id: 5, label: 'Payment' }
 ];
 
 function Stepper() {
@@ -38,13 +40,31 @@ function RegistrationFlow() {
     readOnlyMode,
     setReadOnlyMode,
     resetForm,
-    existingTeamId
+    existingTeamId,
+    setPaymentStatus
   } = useRegistration();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [globalError, setGlobalError] = useState('');
   const [hydrating, setHydrating] = useState(false);
   const hasHydratedRef = React.useRef(false);
+
+  // Check for payment return status in URL
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentResult = urlParams.get('payment');
+    
+    if (paymentResult === 'success') {
+      setPaymentStatus('success');
+      setStep(5);
+      // Clean up URL
+      window.history.replaceState({}, '', window.location.pathname);
+    } else if (paymentResult === 'failed') {
+      setPaymentStatus('failed');
+      setStep(5);
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -167,7 +187,9 @@ function RegistrationFlow() {
           teamLogo: data.team_logo,
           captainName: data.captain_name || '',
           captainEmail: data.captain_email || sessionUser.email || '',
-          captainPhone: data.captain_phone || '',
+          captainPhone: data.captain_phone 
+            ? (data.captain_phone.startsWith('+91') ? data.captain_phone : `+91 ${data.captain_phone.replace(/^\+91\s?/, '')}`)
+            : '',
           formation: data.formation || '1-3-2-1'
         });
 
@@ -224,6 +246,8 @@ function RegistrationFlow() {
         return <FormationBuilder />;
       case 4:
         return <RegistrationSummary />;
+      case 5:
+        return <PaymentCheckout />;
       default:
         return <TeamDetailsForm />;
     }

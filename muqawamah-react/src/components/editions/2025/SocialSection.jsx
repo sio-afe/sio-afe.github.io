@@ -24,7 +24,7 @@ function SocialSection({ edition }) {
           </p>
 
           <motion.a 
-            href="https://instagram.com/muqawama2025" 
+            href="https://instagram.com/muqawama2026" 
             target="_blank" 
             rel="noopener" 
             className="instagram-button-modern"
@@ -32,7 +32,7 @@ function SocialSection({ edition }) {
             whileTap={{ scale: 0.95 }}
           >
             <i className="fab fa-instagram"></i>
-            <span>@muqawama2025</span>
+            <span>@muqawama2026</span>
           </motion.a>
 
           <div className="stats-grid-modern">

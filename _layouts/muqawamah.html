@@ -10,6 +10,7 @@ layout: none
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Muqawama Tournament</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/muqawamah-info-pages.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
@@ -82,32 +83,42 @@ layout: none
 
         .back-nav {
             position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 100;
+            bottom: 24px;
+            left: 24px;
+            z-index: 1000;
         }
 
         .back-link {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            color: #333;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: #2d3748;
+            border: none;
+            border-radius: 50%;
+            color: #ffffff;
             text-decoration: none;
-            font-size: 14px;
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
         }
 
         .back-link:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+            background: #374151;
+        }
+
+        .back-link:active {
+            transform: scale(0.95);
         }
 
         .back-link i {
-            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .back-link span {
+            display: none;
         }
 
         @media (max-width: 849px) {
@@ -117,19 +128,30 @@ layout: none
             }
 
             .back-nav {
-                position: absolute;
-                top: 10px;
-                left: 10px;
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
             }
 
             .back-link {
-                padding: 6px 12px;
-                font-size: 12px;
+                width: 44px;
+                height: 44px;
+            }
+
+            .back-link i {
+                font-size: 16px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="back-nav">
+        <a href="/muqawamah/2026/" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Tournament</span>
+        </a>
+    </div>
+
     <div class="muqawamah-header">
         <img src="/assets/img/title.png" alt="SIO X Muqawama">
     </div>
@@ -138,17 +160,67 @@ layout: none
         {{ content }}
     </div>
 
+    <!-- Footer -->
+    <footer class="info-page-footer">
+        <div class="footer-showcase">
+            <div class="sponsors-brand-lockup">
+                <span class="brand-label">Presented by</span>
+                <img src="/assets/img/title.png" alt="Muqawama" class="footer-title-logo" />
+                <p>2026 Kick-off</p>
+            </div>
+
+            <div class="footer-policy-links">
+                <a href="/muqawamah/terms-and-conditions/">Terms of Participation</a>
+                <a href="/muqawamah/privacy-policy/">Privacy Policy</a>
+                <a href="/muqawamah/refund-policy/">Refund Policy</a>
+                <a href="/muqawamah/about/">About Us</a>
+                <a href="/muqawamah/contact/">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Add smooth scroll behavior
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
                 });
             });
+
+            // Highlight active TOC link on scroll
+            const tocLinks = document.querySelectorAll('.toc-nav a');
+            const sections = document.querySelectorAll('.privacy-section');
+
+            function updateActiveLink() {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (window.pageYOffset >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            if (tocLinks.length > 0) {
+                window.addEventListener('scroll', updateActiveLink);
+                updateActiveLink(); // Initial call
+            }
         });
     </script>
 </body>

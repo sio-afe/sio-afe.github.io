@@ -12,7 +12,7 @@ export const useRegistration = () => {
 
 export const defaultPlayers = () => {
   const basePositions = ['GK', 'CB', 'LB', 'RB', 'CM', 'LM', 'ST'];
-  const substitutes = ['SUB1', 'SUB2', 'SUB3'];
+  const substitutes = ['SUB1', 'SUB2', 'SUB3', 'SUB4'];
   const defaults = basePositions.map((pos, index) => ({
     id: `${pos}-${index}`,
     name: '',
@@ -28,7 +28,7 @@ export const defaultPlayers = () => {
     position: 'SUB',
     isSubstitute: true,
     image: null,
-    x: 5 + index * 10,
+    x: 10 + index * 20,
     y: 90
   }));
   return [...defaults, ...subs];
@@ -38,6 +38,7 @@ export const initialTeamData = {
   teamName: '',
   category: 'open-age',
   teamLogo: null,
+  teamLogoFileName: null,
   captainName: '',
   captainEmail: '',
   captainPhone: '',
@@ -53,12 +54,16 @@ export const RegistrationProvider = ({ children }) => {
   const [successTeamId, setSuccessTeamId] = useState(null);
   const [existingTeamId, setExistingTeamId] = useState(null);
   const [readOnlyMode, setReadOnlyMode] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState(null); // 'pending', 'success', 'failed'
+  const [transactionId, setTransactionId] = useState(null);
 
   const resetForm = () => {
     setTeamData(initialTeamData);
     setPlayers(defaultPlayers());
     setSuccessTeamId(null);
     setExistingTeamId(null);
+    setPaymentStatus(null);
+    setTransactionId(null);
     setStep(1);
   };
 
@@ -80,9 +85,13 @@ export const RegistrationProvider = ({ children }) => {
       setExistingTeamId,
       readOnlyMode,
       setReadOnlyMode,
+      paymentStatus,
+      setPaymentStatus,
+      transactionId,
+      setTransactionId,
       resetForm
     }),
-    [step, teamData, players, loading, error, successTeamId, existingTeamId, readOnlyMode]
+    [step, teamData, players, loading, error, successTeamId, existingTeamId, readOnlyMode, paymentStatus, transactionId]
   );
 
   return (

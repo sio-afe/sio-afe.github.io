@@ -1,4 +1,4 @@
-// Valid 7v7 formations (7 starters + 3 subs = 10 total)
+// Valid 7v7 formations (7 starters + 4 subs = 11 total)
 export const presetFormations = [
   '1-3-2-1', // Balanced (GK + 3 Defenders + 2 Midfielders + 1 Forward)
   '1-2-3-1', // Attacking (GK + 2 Defenders + 3 Midfielders + 1 Forward)

@@ -3,8 +3,6 @@ import { useRegistration } from './RegistrationContext';
 
 const positionOptions = ['GK', 'CB', 'LB', 'RB', 'CDM', 'CM', 'CAM', 'LM', 'RM', 'CF', 'ST'];
 
-
-
 export default function PlayersForm() {
   const { players, setPlayers, setStep } = useRegistration();
 
@@ -17,27 +15,25 @@ export default function PlayersForm() {
   const mainPlayers = players.filter((p) => !p.isSubstitute);
   const subs = players.filter((p) => p.isSubstitute);
 
-  const handleFile = async (index, file) => {
+  const handleFile = (index, file) => {
     if (!file) return;
-    if (file.size > 500 * 1024) {
-      alert('Player photo must be under 500KB');
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Player photo must be under 2MB');
       return;
     }
-    const base64 = await fileToBase64(file);
-    handlePlayerChange(index, 'image', base64);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      handlePlayerChange(index, 'image', event.target.result);
+      handlePlayerChange(index, 'imageFileName', file.name);
+    };
+    reader.readAsDataURL(file);
   };
 
-  const fileToBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-
   const validatePlayers = () => {
-    const filledMain = mainPlayers.every((player) => player.name && player.position);
-    const filledSubs = subs.every((player) => player.name);
+    const filledMain = mainPlayers.every(
+      (player) => player.name && player.position && player.image
+    );
+    const filledSubs = subs.every((player) => player.name && player.image);
     return filledMain && filledSubs;
   };
 
@@ -80,8 +76,34 @@ export default function PlayersForm() {
       )}
 
       <label className="file-label">
-        Player Photo (optional)
-        <input type="file" accept="image/*" onChange={(e) => handleFile(index, e.target.files?.[0])} />
+        Player Photo
+        {player.image && (
+          <div className="uploaded-photo-preview">
+            <div className="photo-preview-container">
+              <img src={player.image} alt="Player photo" className="photo-preview" />
+              <div className="photo-overlay">
+                <i className="fas fa-check-circle"></i>
+              </div>
+            </div>
+            <div className="uploaded-file-info">
+              <i className="fas fa-check-circle"></i>
+              <span>
+                {player.imageFileName 
+                  ? `Uploaded: ${player.imageFileName}` 
+                  : 'Photo uploaded'}
+              </span>
+              <span className="file-change-hint">(Click to change)</span>
+            </div>
+          </div>
+        )}
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => handleFile(index, e.target.files?.[0])}
+        />
+        {!player.image && (
+          <span className="input-hint">JPG/PNG up to 2MB. Required.</span>
+        )}
       </label>
     </div>
   );
@@ -89,7 +111,7 @@ export default function PlayersForm() {
   return (
     <form className="registration-form" onSubmit={handleNext}>
       <h3>Step 2 · Players</h3>
-      <p className="step-description">Provide 7 main players and 3 substitutes.</p>
+      <p className="step-description">Provide 7 main players and 4 substitutes.</p>
 
       <h4>Main Players</h4>
       <div className="players-grid">
