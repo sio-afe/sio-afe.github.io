@@ -1,0 +1,132 @@
+/* Tournament Navbar */
+.tournament-navbar {
+  background: #1a1d2e;
+  border-bottom: 2px solid rgba(79, 140, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+}
+
+.tournament-navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding: 16px 24px;
+}
+
+.tournament-navbar-logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.tournament-navbar-logo img {
+  height: 45px;
+  width: auto;
+  object-fit: contain;
+  transition: opacity 0.2s ease;
+}
+
+.tournament-navbar-logo:hover img {
+  opacity: 0.8;
+}
+
+.tournament-navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex: 1;
+}
+
+.tournament-nav-link {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.tournament-nav-link:hover {
+  color: #fff;
+}
+
+.tournament-nav-link.active {
+  color: #4f8cff;
+  border-bottom-color: #4f8cff;
+}
+
+.tournament-nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #4f8cff;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.tournament-nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+.tournament-nav-link.active::after {
+  transform: scaleX(1);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .tournament-navbar-container {
+    padding: 12px 16px;
+    gap: 20px;
+  }
+
+  .tournament-navbar-logo img {
+    height: 35px;
+  }
+
+  .tournament-navbar-links {
+    gap: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .tournament-navbar-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tournament-nav-link {
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .tournament-navbar-container {
+    gap: 12px;
+  }
+
+  .tournament-navbar-logo img {
+    height: 30px;
+  }
+
+  .tournament-navbar-links {
+    gap: 12px;
+  }
+
+  .tournament-nav-link {
+    font-size: 0.8rem;
+    padding: 6px 0;
+  }
+}
+

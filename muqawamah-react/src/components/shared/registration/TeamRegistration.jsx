@@ -79,32 +79,19 @@ function RegistrationFlow() {
     let mounted = true;
     setGlobalError('');
 
-    // Immediately clear loading after a short delay to show UI
-    const initialLoadTimeout = setTimeout(() => {
-      if (mounted) {
-        console.log('[Registration] Initial load timeout - showing UI');
-        setLoading(false);
-      }
-    }, 500);
-
     const bootstrapUser = async () => {
       try {
         console.log('[Registration] Checking for existing session...');
         
-        // First try to get session from storage synchronously
-        const storedSession = window.localStorage.getItem('sb-uzieoxfqkglcoistswxq-auth-token');
-        console.log('[Registration] Stored session exists:', !!storedSession);
-        
-        // Then verify with Supabase
+        // Get user from Supabase with timeout
         const { data, error } = await Promise.race([
           supabaseClient.auth.getUser(),
           new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('getUser timeout')), 2000)
+            setTimeout(() => reject(new Error('getUser timeout')), 3000)
           )
         ]);
         
         if (!mounted) return;
-        clearTimeout(initialLoadTimeout);
         
         if (error) {
           if (error.message === 'getUser timeout') {
@@ -121,14 +108,13 @@ function RegistrationFlow() {
         
         const sessionUser = data?.user ?? null;
         console.log('[Registration] User retrieved:', sessionUser ? sessionUser.email : 'No user');
-        setUser(sessionUser);
-
+        
         if (sessionUser) {
-          // Hydrate in background, don't block UI
-          hydrateExistingRegistration(sessionUser, { force: true }).catch(err => {
-            console.error('[Registration] Background hydration failed:', err);
-          });
+          setUser(sessionUser);
+          // Wait for hydration to complete before showing UI
+          await hydrateExistingRegistration(sessionUser, { force: true });
         } else {
+          setUser(null);
           resetForm();
         }
       } catch (err) {
@@ -150,20 +136,22 @@ function RegistrationFlow() {
     const { data: listener } = supabaseClient.auth.onAuthStateChange(async (event, session) => {
       console.log('[Registration] Auth state changed:', event);
       const sessionUser = session?.user ?? null;
-      setUser(sessionUser);
       
       if (!sessionUser) {
+        setUser(null);
         resetForm();
         setStep(1);
         hasHydratedRef.current = false;
       } else if (event === 'SIGNED_IN') {
+        setUser(sessionUser);
+        setLoading(true); // Show loading while hydrating
         await hydrateExistingRegistration(sessionUser, { force: true });
+        setLoading(false);
       }
     });
 
     return () => {
       mounted = false;
-      clearTimeout(initialLoadTimeout);
       listener.subscription.unsubscribe();
     };
   }, []);
@@ -207,6 +195,7 @@ function RegistrationFlow() {
           ? data.team_players.map((p, index) => ({
               id: p.id || `player-${index}`,
               name: p.player_name || '',
+              age: p.player_age || '',
               position: p.position || 'SUB',
               isSubstitute: p.is_substitute,
               image: p.player_image,
@@ -282,6 +271,13 @@ function RegistrationFlow() {
     }
   };
 
+  const handleLogout = async () => {
+    await supabaseClient.auth.signOut();
+    setUser(null);
+    setStep(1);
+  };
+
+  // Show loading screen while initializing
   if (loading) {
     return (
       <div className="loading-screen">
@@ -296,12 +292,7 @@ function RegistrationFlow() {
     );
   }
 
-  const handleLogout = async () => {
-    await supabaseClient.auth.signOut();
-    setUser(null);
-    setStep(1);
-  };
-
+  // Show auth modal if not logged in
   if (!user) {
     return <AuthModal onSuccess={setUser} />;
   }
@@ -321,7 +312,6 @@ function RegistrationFlow() {
           <p>{existingTeamId ? 'Edit your team registration and update any details.' : 'Complete all steps to confirm your team registration.'}</p>
         </div>
       </div>
-      {hydrating && <p className="auth-message subtle">Loading your saved registration…</p>}
       {globalError && <p className="auth-error">{globalError}</p>}
       <Stepper />
       {renderStep()}

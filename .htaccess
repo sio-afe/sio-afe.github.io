@@ -1,0 +1,7 @@
+RewriteEngine On
+
+# Redirect all player detail pages to the main players page
+RewriteRule ^muqawamah/2026/open-age/players/([a-f0-9-]+)/(.*)$ /muqawamah/2026/open-age/players/ [L]
+RewriteRule ^muqawamah/2026/u17/players/([a-f0-9-]+)/(.*)$ /muqawamah/2026/u17/players/ [L]
+
+

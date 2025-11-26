@@ -17,6 +17,7 @@ export const defaultPlayers = () => {
   const defaults = basePositions.map((pos, index) => ({
     id: `${pos}-${index}`,
     name: '',
+    age: '',
     position: pos,
     isSubstitute: false,
     image: null,
@@ -26,6 +27,7 @@ export const defaultPlayers = () => {
   const subs = substitutes.map((pos, index) => ({
     id: `${pos}-${index}`,
     name: '',
+    age: '',
     position: 'SUB',
     isSubstitute: true,
     image: null,
@@ -130,6 +132,7 @@ export const RegistrationProvider = ({ children }) => {
         const payload = players.map((player) => ({
           team_id: teamId,
           player_name: player.name,
+          player_age: player.age ? parseInt(player.age) : null,
           position: player.position,
           is_substitute: player.isSubstitute,
           player_image: player.image,

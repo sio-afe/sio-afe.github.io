@@ -4,7 +4,7 @@ import { useRegistration } from './RegistrationContext';
 const positionOptions = ['GK', 'CB', 'LB', 'RB', 'CDM', 'CM', 'CAM', 'LM', 'RM', 'CF', 'ST'];
 
 export default function PlayersForm() {
-  const { players, setPlayers, setStep, saveProgress, saving, error } = useRegistration();
+  const { players, setPlayers, setStep, saveProgress, saving, error, teamData } = useRegistration();
 
   const handlePlayerChange = (index, field, value) => {
     setPlayers((prev) =>
@@ -14,6 +14,10 @@ export default function PlayersForm() {
 
   const mainPlayers = players.filter((p) => !p.isSubstitute);
   const subs = players.filter((p) => p.isSubstitute);
+  
+  // First player is the captain
+  const captain = mainPlayers[0];
+  const otherMainPlayers = mainPlayers.slice(1);
 
   const handleFile = (index, file) => {
     if (!file) return;
@@ -31,9 +35,9 @@ export default function PlayersForm() {
 
   const validatePlayers = () => {
     const filledMain = mainPlayers.every(
-      (player) => player.name && player.position && player.image
+      (player) => player.name && player.age && player.position && player.image
     );
-    const filledSubs = subs.every((player) => player.name && player.image);
+    const filledSubs = subs.every((player) => player.name && player.age && player.image);
     return filledMain && filledSubs;
   };
 
@@ -51,15 +55,33 @@ export default function PlayersForm() {
     }
   };
 
-  const renderPlayerCard = (player, index) => (
-    <div className="player-card" key={player.id}>
+  const renderPlayerCard = (player, index, isCaptain = false) => (
+    <div className={`player-card ${isCaptain ? 'captain-card' : ''}`} key={player.id}>
+      {isCaptain && (
+        <div className="captain-badge">
+          <i className="fas fa-star"></i> Team Captain
+        </div>
+      )}
       <label>
-        Player Name
+        {isCaptain ? 'Captain Name' : 'Player Name'}
         <input
           type="text"
           value={player.name}
           onChange={(e) => handlePlayerChange(index, 'name', e.target.value)}
-          placeholder={player.isSubstitute ? 'Substitute Name' : `${player.position} Player`}
+          placeholder={isCaptain ? teamData.captainName || 'Captain Name' : (player.isSubstitute ? 'Substitute Name' : `${player.position} Player`)}
+          required
+        />
+      </label>
+
+      <label>
+        Age
+        <input
+          type="number"
+          value={player.age || ''}
+          onChange={(e) => handlePlayerChange(index, 'age', e.target.value)}
+          placeholder="e.g., 22"
+          min="10"
+          max="60"
           required
         />
       </label>
@@ -116,11 +138,16 @@ export default function PlayersForm() {
   return (
     <form className="registration-form" onSubmit={handleNext}>
       <h3>Step 2 · Players</h3>
-      <p className="step-description">Provide 7 main players and 4 substitutes.</p>
+      <p className="step-description">Start with the captain, then add 6 more players and 4 substitutes.</p>
 
-      <h4>Main Players</h4>
+      <h4>Captain</h4>
+      <div className="captain-section">
+        {captain && renderPlayerCard(captain, players.indexOf(captain), true)}
+      </div>
+
+      <h4>Other Main Players</h4>
       <div className="players-grid">
-        {mainPlayers.map((player, index) => renderPlayerCard(player, players.indexOf(player)))}
+        {otherMainPlayers.map((player) => renderPlayerCard(player, players.indexOf(player)))}
       </div>
 
       <h4>Substitutes</h4>

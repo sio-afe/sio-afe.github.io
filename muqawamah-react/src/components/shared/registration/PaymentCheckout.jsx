@@ -114,6 +114,7 @@ export default function PaymentCheckout() {
       const payload = players.map((player) => ({
         team_id: teamId,
         player_name: player.name,
+        player_age: player.age ? parseInt(player.age) : null,
         position: player.position,
         is_substitute: player.isSubstitute,
         player_image: player.image,

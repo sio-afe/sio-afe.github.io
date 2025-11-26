@@ -1,0 +1,14 @@
+[
+  {
+    "from": "/muqawamah/2026/open-age/players/*",
+    "to": "/muqawamah/2026/open-age/players/",
+    "status": 200
+  },
+  {
+    "from": "/muqawamah/2026/u17/players/*",
+    "to": "/muqawamah/2026/u17/players/",
+    "status": 200
+  }
+]
+
+

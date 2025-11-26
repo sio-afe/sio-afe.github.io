@@ -163,6 +163,236 @@ ${mainJsLinks}
     }
   });
 
+  // Process players.html
+  console.log('\n📄 Processing players database app (players.html)...');
+  const playersHtmlPath = join(distDir, 'players.html');
+  if (existsSync(playersHtmlPath)) {
+    const playersHtml = readFileSync(playersHtmlPath, 'utf-8');
+    const playersCssMatches = playersHtml.match(/<link[^>]*href="([^"]*\.css)"[^>]*>/g) || [];
+    const playersJsMatches = playersHtml.match(/<script[^>]*src="([^"]*\.js)"[^>]*>/g) || [];
+
+    const playersCssFiles = playersCssMatches.map(match => {
+      const href = match.match(/href="([^"]*)"/);
+      return href ? href[1] : null;
+    }).filter(Boolean);
+
+    const playersJsFiles = playersJsMatches.map(match => {
+      const src = match.match(/src="([^"]*)"/);
+      return src ? src[1] : null;
+    }).filter(Boolean);
+
+    console.log('📦 Players CSS files:', playersCssFiles);
+    console.log('📦 Players JS files:', playersJsFiles);
+
+    playersCssFiles.forEach(file => {
+      if (!file.startsWith('http')) {
+        const sourceFile = join(distDir, file.replace('/muqawamah/', ''));
+        const targetFile = join(jekyllAssetsDir, 'players-style.css');
+        if (existsSync(sourceFile)) {
+          cpSync(sourceFile, targetFile);
+          console.log('✅ Copied players CSS: players-style.css');
+        }
+      }
+    });
+
+    playersJsFiles.forEach(file => {
+      if (!file.startsWith('http')) {
+        const sourceFile = join(distDir, file.replace('/muqawamah/', ''));
+        const targetFile = join(jekyllAssetsDir, 'players-main.js');
+        if (existsSync(sourceFile)) {
+          cpSync(sourceFile, targetFile);
+          console.log('✅ Copied players JS: players-main.js');
+        }
+      }
+    });
+  } else {
+    console.log('⚠️ players.html not found, skipping...');
+  }
+
+  // Process teams.html
+  console.log('\n📄 Processing teams database app (teams.html)...');
+  const teamsHtmlPath = join(distDir, 'teams.html');
+  if (existsSync(teamsHtmlPath)) {
+    const teamsHtml = readFileSync(teamsHtmlPath, 'utf-8');
+    const teamsCssMatches = teamsHtml.match(/<link[^>]*href="([^"]*\.css)"[^>]*>/g) || [];
+    const teamsJsMatches = teamsHtml.match(/<script[^>]*src="([^"]*\.js)"[^>]*>/g) || [];
+
+    const teamsCssFiles = teamsCssMatches.map(match => {
+      const href = match.match(/href="([^"]*)"/);
+      return href ? href[1] : null;
+    }).filter(Boolean);
+
+    const teamsJsFiles = teamsJsMatches.map(match => {
+      const src = match.match(/src="([^"]*)"/);
+      return src ? src[1] : null;
+    }).filter(Boolean);
+
+    console.log('📦 Teams CSS files:', teamsCssFiles);
+    console.log('📦 Teams JS files:', teamsJsFiles);
+
+    teamsCssFiles.forEach(file => {
+      if (!file.startsWith('http')) {
+        const sourceFile = join(distDir, file.replace('/muqawamah/', ''));
+        const targetFile = join(jekyllAssetsDir, 'teams-style.css');
+        if (existsSync(sourceFile)) {
+          cpSync(sourceFile, targetFile);
+          console.log('✅ Copied teams CSS: teams-style.css');
+        }
+      }
+    });
+
+    teamsJsFiles.forEach(file => {
+      if (!file.startsWith('http')) {
+        const sourceFile = join(distDir, file.replace('/muqawamah/', ''));
+        const targetFile = join(jekyllAssetsDir, 'teams-main.js');
+        if (existsSync(sourceFile)) {
+          cpSync(sourceFile, targetFile);
+          console.log('✅ Copied teams JS: teams-main.js');
+        }
+      }
+    });
+  } else {
+    console.log('⚠️ teams.html not found, skipping...');
+  }
+
+  // Process fixtures.html
+  console.log('\n📄 Processing fixtures app (fixtures.html)...');
+  const fixturesHtmlPath = join(distDir, 'fixtures.html');
+  if (existsSync(fixturesHtmlPath)) {
+    const fixturesHtml = readFileSync(fixturesHtmlPath, 'utf-8');
+    const fixturesCssMatches = fixturesHtml.match(/<link[^>]*href="([^"]*\.css)"[^>]*>/g) || [];
+    const fixturesJsMatches = fixturesHtml.match(/<script[^>]*src="([^"]*\.js)"[^>]*>/g) || [];
+
+    const fixturesCssFiles = fixturesCssMatches.map(match => {
+      const href = match.match(/href="([^"]*)"/);
+      return href ? href[1] : null;
+    }).filter(Boolean);
+
+    const fixturesJsFiles = fixturesJsMatches.map(match => {
+      const src = match.match(/src="([^"]*)"/);
+      return src ? src[1] : null;
+    }).filter(Boolean);
+
+    console.log('📦 Fixtures CSS files:', fixturesCssFiles);
+    console.log('📦 Fixtures JS files:', fixturesJsFiles);
+
+    fixturesCssFiles.forEach(file => {
+      if (!file.startsWith('http')) {
+        const sourceFile = join(distDir, file.replace('/muqawamah/', ''));
+        const targetFile = join(jekyllAssetsDir, 'fixtures-style.css');
+        if (existsSync(sourceFile)) {
+          cpSync(sourceFile, targetFile);
+          console.log('✅ Copied fixtures CSS: fixtures-style.css');
+        }
+      }
+    });
+
+    fixturesJsFiles.forEach(file => {
+      if (!file.startsWith('http')) {
+        const sourceFile = join(distDir, file.replace('/muqawamah/', ''));
+        const targetFile = join(jekyllAssetsDir, 'fixtures-main.js');
+        if (existsSync(sourceFile)) {
+          cpSync(sourceFile, targetFile);
+          console.log('✅ Copied fixtures JS: fixtures-main.js');
+        }
+      }
+    });
+  } else {
+    console.log('⚠️ fixtures.html not found, skipping...');
+  }
+
+  // Process standings.html
+  console.log('\n📄 Processing standings app (standings.html)...');
+  const standingsHtmlPath = join(distDir, 'standings.html');
+  if (existsSync(standingsHtmlPath)) {
+    const standingsHtml = readFileSync(standingsHtmlPath, 'utf-8');
+    const standingsCssMatches = standingsHtml.match(/<link[^>]*href="([^"]*\.css)"[^>]*>/g) || [];
+    const standingsJsMatches = standingsHtml.match(/<script[^>]*src="([^"]*\.js)"[^>]*>/g) || [];
+
+    const standingsCssFiles = standingsCssMatches.map(match => {
+      const href = match.match(/href="([^"]*)"/);
+      return href ? href[1] : null;
+    }).filter(Boolean);
+
+    const standingsJsFiles = standingsJsMatches.map(match => {
+      const src = match.match(/src="([^"]*)"/);
+      return src ? src[1] : null;
+    }).filter(Boolean);
+
+    console.log('📦 Standings CSS files:', standingsCssFiles);
+    console.log('📦 Standings JS files:', standingsJsFiles);
+
+    standingsCssFiles.forEach(file => {
+      if (!file.startsWith('http')) {
+        const sourceFile = join(distDir, file.replace('/muqawamah/', ''));
+        const targetFile = join(jekyllAssetsDir, 'standings-style.css');
+        if (existsSync(sourceFile)) {
+          cpSync(sourceFile, targetFile);
+          console.log('✅ Copied standings CSS: standings-style.css');
+        }
+      }
+    });
+
+    standingsJsFiles.forEach(file => {
+      if (!file.startsWith('http')) {
+        const sourceFile = join(distDir, file.replace('/muqawamah/', ''));
+        const targetFile = join(jekyllAssetsDir, 'standings-main.js');
+        if (existsSync(sourceFile)) {
+          cpSync(sourceFile, targetFile);
+          console.log('✅ Copied standings JS: standings-main.js');
+        }
+      }
+    });
+  } else {
+    console.log('⚠️ standings.html not found, skipping...');
+  }
+
+  // Process statistics.html
+  console.log('\n📄 Processing statistics app (statistics.html)...');
+  const statisticsHtmlPath = join(distDir, 'statistics.html');
+  if (existsSync(statisticsHtmlPath)) {
+    const statisticsHtml = readFileSync(statisticsHtmlPath, 'utf-8');
+    const statisticsCssMatches = statisticsHtml.match(/<link[^>]*href="([^"]*\.css)"[^>]*>/g) || [];
+    const statisticsJsMatches = statisticsHtml.match(/<script[^>]*src="([^"]*\.js)"[^>]*>/g) || [];
+
+    const statisticsCssFiles = statisticsCssMatches.map(match => {
+      const href = match.match(/href="([^"]*)"/);
+      return href ? href[1] : null;
+    }).filter(Boolean);
+
+    const statisticsJsFiles = statisticsJsMatches.map(match => {
+      const src = match.match(/src="([^"]*)"/);
+      return src ? src[1] : null;
+    }).filter(Boolean);
+
+    console.log('📦 Statistics CSS files:', statisticsCssFiles);
+    console.log('📦 Statistics JS files:', statisticsJsFiles);
+
+    statisticsCssFiles.forEach(file => {
+      if (!file.startsWith('http')) {
+        const sourceFile = join(distDir, file.replace('/muqawamah/', ''));
+        const targetFile = join(jekyllAssetsDir, 'statistics-style.css');
+        if (existsSync(sourceFile)) {
+          cpSync(sourceFile, targetFile);
+          console.log('✅ Copied statistics CSS: statistics-style.css');
+        }
+      }
+    });
+
+    statisticsJsFiles.forEach(file => {
+      if (!file.startsWith('http')) {
+        const sourceFile = join(distDir, file.replace('/muqawamah/', ''));
+        const targetFile = join(jekyllAssetsDir, 'statistics-main.js');
+        if (existsSync(sourceFile)) {
+          cpSync(sourceFile, targetFile);
+          console.log('✅ Copied statistics JS: statistics-main.js');
+        }
+      }
+    });
+  } else {
+    console.log('⚠️ statistics.html not found, skipping...');
+  }
+
   console.log('\n🎉 Build complete!');
   console.log('\n📂 Files updated:');
   console.log(`   - ${join(jekyllMuqawamahDir, 'index.md')} → /muqawamah/`);
@@ -170,6 +400,11 @@ ${mainJsLinks}
   console.log(`   - ${join(jekyllMuqawamahDir, '2026.md')} → /muqawamah/2026/`);
   console.log(`   - ${join(jekyllMuqawamahDir, 'open-age.md')} → /muqawamah/2025/open-age/`);
   console.log(`   - ${join(jekyllMuqawamahDir, 'u17.md')} → /muqawamah/2025/u17/`);
+  console.log(`   - ${join(jekyllMuqawamahDir, '2026-open-age-players.md')} → /muqawamah/2026/open-age/players/`);
+  console.log(`   - ${join(jekyllMuqawamahDir, '2026-open-age-teams.md')} → /muqawamah/2026/open-age/teams/`);
+  console.log(`   - ${join(jekyllMuqawamahDir, '2026-open-age-fixtures.md')} → /muqawamah/2026/open-age/fixtures/`);
+  console.log(`   - ${join(jekyllMuqawamahDir, '2026-open-age-table.md')} → /muqawamah/2026/open-age/standings/`);
+  console.log(`   - ${join(jekyllMuqawamahDir, '2026-open-age-statistics.md')} → /muqawamah/2026/open-age/statistics/`);
   console.log(`   - Assets in: ${jekyllAssetsDir}`);
   console.log('\n📝 Next step: Test your Jekyll site with: make serve');
 

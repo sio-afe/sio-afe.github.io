@@ -2,6 +2,15 @@ body.registration-body {
   background: linear-gradient(180deg, #f9fbff 0%, #eff3f8 100%);
   color: #1a1a1a;
   min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+body.registration-body h1,
+body.registration-body h2,
+body.registration-body h3,
+body.registration-body h4 {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 600;
 }
 
 #registration-root {
@@ -254,6 +263,34 @@ body.registration-body {
   border-radius: 12px;
   padding: 15px;
   background: rgba(244, 246, 252, 0.7);
+}
+
+/* Captain Card Styles */
+.captain-section {
+  margin-bottom: 24px;
+}
+
+.captain-card {
+  border: 2px solid rgba(79, 140, 255, 0.3);
+  background: linear-gradient(135deg, rgba(79, 140, 255, 0.08), rgba(110, 205, 238, 0.08));
+  position: relative;
+}
+
+.captain-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #4f8cff, #6ecdee);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.captain-badge i {
+  font-size: 0.75rem;
 }
 
 .player-card-grid {
@@ -710,11 +747,13 @@ body.registration-body {
   margin-top: 24px;
   font-size: 0.85rem;
   color: rgba(28, 31, 46, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  line-height: 1.5;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.auth-note i {
+  margin-right: 6px;
+  opacity: 0.7;
 }
 
 /* Auth form styles removed - email login removed */
@@ -770,11 +809,19 @@ body.registration-body {
 
 /* Loading Screen */
 .loading-screen {
-  min-height: 60vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
+  background: linear-gradient(180deg, #f9fbff 0%, #eff3f8 100%);
+  z-index: 100;
 }
 
 .loading-content {
