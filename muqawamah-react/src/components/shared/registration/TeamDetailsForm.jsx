@@ -10,7 +10,7 @@ const categories = [
 ];
 
 export default function TeamDetailsForm() {
-  const { teamData, setTeamData, setStep } = useRegistration();
+  const { teamData, setTeamData, setStep, saveProgress, saving, error } = useRegistration();
   const fileInputRef = useRef(null);
 
   const handleChange = (e) => {
@@ -37,19 +37,24 @@ export default function TeamDetailsForm() {
     reader.readAsDataURL(file);
   };
 
-  const handleNext = (e) => {
+  const handleNext = async (e) => {
     e.preventDefault();
     if (!teamData.teamLogo) {
       alert('Please upload a team logo');
       return;
     }
-    // Validate phone number (should have 10 digits after +91)
-    const phoneDigits = teamData.captainPhone?.replace(/^\+91\s?/g, '').replace(/\s/g, '') || '';
+    // Validate phone number (should have 10 digits)
+    const phoneDigits = teamData.captainPhone?.replace(/\s/g, '') || '';
     if (phoneDigits.length !== 10) {
       alert('Please enter a valid 10-digit mobile number');
       return;
     }
-    setStep(2);
+    
+    // Save progress to database
+    const result = await saveProgress(1);
+    if (result.success) {
+      setStep(2);
+    }
   };
 
   return (
@@ -150,54 +155,58 @@ export default function TeamDetailsForm() {
 
       <label>
         Captain Phone
-        <div className="phone-input-wrapper">
-          <span className="phone-prefix">
-            <i className="fas fa-flag"></i> +91
-          </span>
-          <input
-            type="tel"
-            name="captainPhone"
-            value={teamData.captainPhone?.replace(/^\+91\s?/, '').trim() || ''}
-            onChange={(e) => {
-              const value = e.target.value.replace(/\D/g, ''); // Only numbers
-              let formatted = '';
-              if (value) {
-                // Format as +91 XXXXX XXXXX (10 digits)
-                formatted = '+91 ';
-                if (value.length <= 5) {
-                  formatted += value;
-                } else {
-                  formatted += `${value.slice(0, 5)} ${value.slice(5, 10)}`;
-                }
-              }
-              setTeamData((prev) => ({ ...prev, captainPhone: formatted }));
-            }}
-            placeholder="98765 43210"
-            pattern="[0-9\s]{10,12}"
-            maxLength={12}
-            onInvalid={(e) => {
-              const input = e.target;
-              const phoneNumber = teamData.captainPhone?.replace(/^\+91\s?/g, '').replace(/\s/g, '') || '';
-              if (phoneNumber.length < 10) {
-                input.setCustomValidity('Please enter a valid 10-digit mobile number');
+        <input
+          type="tel"
+          name="captainPhone"
+          value={teamData.captainPhone || ''}
+          onChange={(e) => {
+            const value = e.target.value.replace(/\D/g, ''); // Only numbers
+            let formatted = '';
+            if (value) {
+              // Format as XXXXX XXXXX (10 digits)
+              if (value.length <= 5) {
+                formatted = value;
               } else {
-                input.setCustomValidity('');
+                formatted = `${value.slice(0, 5)} ${value.slice(5, 10)}`;
               }
-            }}
-            onInput={(e) => {
-              e.target.setCustomValidity('');
-            }}
-            required
-          />
-        </div>
+            }
+            setTeamData((prev) => ({ ...prev, captainPhone: formatted }));
+          }}
+          placeholder="98765 43210"
+          pattern="[0-9\s]{10,12}"
+          maxLength={11}
+          onInvalid={(e) => {
+            const input = e.target;
+            const phoneNumber = teamData.captainPhone?.replace(/\s/g, '') || '';
+            if (phoneNumber.length < 10) {
+              input.setCustomValidity('Please enter a valid 10-digit mobile number');
+            } else {
+              input.setCustomValidity('');
+            }
+          }}
+          onInput={(e) => {
+            e.target.setCustomValidity('');
+          }}
+          required
+        />
         <span className="input-hint">
           <i className="fas fa-info-circle"></i> 10-digit mobile number (e.g., 98765 43210)
         </span>
       </label>
 
+      {error && <p className="auth-error">{error}</p>}
+
       <div className="form-actions">
-        <button type="submit" className="primary-btn">
-          Continue to Players
+        <button type="submit" className="primary-btn" disabled={saving}>
+          {saving ? (
+            <>
+              <i className="fas fa-spinner fa-spin"></i> Saving...
+            </>
+          ) : (
+            <>
+              <i className="fas fa-save"></i> Save & Continue
+            </>
+          )}
         </button>
       </div>
     </form>

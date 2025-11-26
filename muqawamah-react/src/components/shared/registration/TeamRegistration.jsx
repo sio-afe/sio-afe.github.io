@@ -7,20 +7,28 @@ import PlayersForm from './PlayersForm';
 import RegistrationSummary from './RegistrationSummary';
 import TeamDetailsForm from './TeamDetailsForm';
 import { RegistrationProvider, useRegistration, defaultPlayers, initialTeamData } from './RegistrationContext';
+import RegistrationComplete from './RegistrationComplete';
 
 const steps = [
   { id: 1, label: 'Team' },
   { id: 2, label: 'Players' },
   { id: 3, label: 'Formation' },
   { id: 4, label: 'Review' },
-  { id: 5, label: 'Payment' }
+  { id: 5, label: 'Payment' },
+  { id: 6, label: 'Complete' }
 ];
 
 function Stepper() {
   const { step } = useRegistration();
+  // Only show steps 1-5 in stepper (Complete is shown as result, not a step)
+  const visibleSteps = steps.slice(0, 5);
+  
+  // Hide stepper if on complete step
+  if (step === 6) return null;
+  
   return (
     <div className="registration-stepper">
-      {steps.map((s, index) => (
+      {visibleSteps.map((s, index) => (
         <div key={s.id} className={`step ${step === s.id ? 'active' : ''} ${step > s.id ? 'complete' : ''}`}>
           <span className="step-number">{index + 1}</span>
           <span className="step-label">{s.label}</span>
@@ -41,7 +49,8 @@ function RegistrationFlow() {
     setReadOnlyMode,
     resetForm,
     existingTeamId,
-    setPaymentStatus
+    setPaymentStatus,
+    setLastSavedStep
   } = useRegistration();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -188,24 +197,42 @@ function RegistrationFlow() {
           captainName: data.captain_name || '',
           captainEmail: data.captain_email || sessionUser.email || '',
           captainPhone: data.captain_phone 
-            ? (data.captain_phone.startsWith('+91') ? data.captain_phone : `+91 ${data.captain_phone.replace(/^\+91\s?/, '')}`)
+            ? data.captain_phone.replace(/^\+91\s?/, '').trim()
             : '',
           formation: data.formation || '1-3-2-1'
         });
 
-        const mappedPlayers =
-          data.team_players?.map((p, index) => ({
-            id: p.id || `player-${index}`,
-            name: p.player_name || '',
-            position: p.position || 'SUB',
-            isSubstitute: p.is_substitute,
-            image: p.player_image,
-            x: p.position_x ?? 50,
-            y: p.position_y ?? 50
-          })) || defaultPlayers();
+        // If there are saved players, map them; otherwise use defaults
+        const savedPlayers = data.team_players && data.team_players.length > 0
+          ? data.team_players.map((p, index) => ({
+              id: p.id || `player-${index}`,
+              name: p.player_name || '',
+              position: p.position || 'SUB',
+              isSubstitute: p.is_substitute,
+              image: p.player_image,
+              x: p.position_x ?? 50,
+              y: p.position_y ?? 50
+            }))
+          : defaultPlayers();
 
-        setPlayers(mappedPlayers);
-        setStep(4); // Go directly to review step for existing registrations
+        setPlayers(savedPlayers);
+        
+        // Check registration status and set appropriate step
+        if (data.status === 'confirmed') {
+          // Already confirmed, show completion
+          setPaymentStatus('success');
+          setStep(6);
+        } else if (data.status === 'pending_payment') {
+          // Was in payment, go back to review
+          setStep(4);
+        } else {
+          // Status is 'submitted' - resume from where they left off
+          const savedStep = data.last_saved_step || 1;
+          setLastSavedStep(savedStep);
+          // Go to the next step after their last saved step, or review if complete
+          const nextStep = savedStep >= 3 ? 4 : savedStep + 1;
+          setStep(nextStep);
+        }
       } else {
         console.log('[Registration] No existing registration found, starting fresh');
         setExistingTeamId(null);
@@ -248,6 +275,8 @@ function RegistrationFlow() {
         return <RegistrationSummary />;
       case 5:
         return <PaymentCheckout />;
+      case 6:
+        return <RegistrationComplete />;
       default:
         return <TeamDetailsForm />;
     }

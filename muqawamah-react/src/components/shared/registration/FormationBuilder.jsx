@@ -4,7 +4,7 @@ import FormationPreview from './FormationPreview';
 import { applyFormationToPlayers, presetFormations } from './utils/formationUtils';
 
 export default function FormationBuilder() {
-  const { players, setPlayers, teamData, setTeamData, setStep } = useRegistration();
+  const { players, setPlayers, teamData, setTeamData, setStep, saveProgress, saving, error } = useRegistration();
   const fieldRef = useRef(null);
   const [draggingId, setDraggingId] = useState(null);
   const [presetApplied, setPresetApplied] = useState(false);
@@ -51,9 +51,14 @@ export default function FormationBuilder() {
     }
   }, [teamData.formation, players, setPlayers, presetApplied]);
 
-  const handleNext = (e) => {
+  const handleNext = async (e) => {
     e.preventDefault();
-    setStep(4);
+    
+    // Save progress to database
+    const result = await saveProgress(3);
+    if (result.success) {
+      setStep(4);
+    }
   };
 
   return (
@@ -92,12 +97,22 @@ export default function FormationBuilder() {
         />
       </div>
 
+      {error && <p className="auth-error">{error}</p>}
+
       <div className="form-actions">
-        <button type="button" className="secondary-btn" onClick={() => setStep(2)}>
+        <button type="button" className="secondary-btn" onClick={() => setStep(2)} disabled={saving}>
           Back
         </button>
-        <button type="submit" className="primary-btn">
-          Review Registration
+        <button type="submit" className="primary-btn" disabled={saving}>
+          {saving ? (
+            <>
+              <i className="fas fa-spinner fa-spin"></i> Saving...
+            </>
+          ) : (
+            <>
+              <i className="fas fa-save"></i> Save & Review
+            </>
+          )}
         </button>
       </div>
     </form>

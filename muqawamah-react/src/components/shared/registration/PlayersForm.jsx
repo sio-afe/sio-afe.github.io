@@ -4,7 +4,7 @@ import { useRegistration } from './RegistrationContext';
 const positionOptions = ['GK', 'CB', 'LB', 'RB', 'CDM', 'CM', 'CAM', 'LM', 'RM', 'CF', 'ST'];
 
 export default function PlayersForm() {
-  const { players, setPlayers, setStep } = useRegistration();
+  const { players, setPlayers, setStep, saveProgress, saving, error } = useRegistration();
 
   const handlePlayerChange = (index, field, value) => {
     setPlayers((prev) =>
@@ -37,13 +37,18 @@ export default function PlayersForm() {
     return filledMain && filledSubs;
   };
 
-  const handleNext = (e) => {
+  const handleNext = async (e) => {
     e.preventDefault();
     if (!validatePlayers()) {
-      alert('Please fill out all player names and positions (for main players).');
+      alert('Please fill out all player names and upload photos for all players.');
       return;
     }
-    setStep(3);
+    
+    // Save progress to database
+    const result = await saveProgress(2);
+    if (result.success) {
+      setStep(3);
+    }
   };
 
   const renderPlayerCard = (player, index) => (
@@ -123,12 +128,22 @@ export default function PlayersForm() {
         {subs.map((player) => renderPlayerCard(player, players.indexOf(player)))}
       </div>
 
+      {error && <p className="auth-error">{error}</p>}
+
       <div className="form-actions">
-        <button type="button" className="secondary-btn" onClick={() => setStep(1)}>
+        <button type="button" className="secondary-btn" onClick={() => setStep(1)} disabled={saving}>
           Back
         </button>
-        <button type="submit" className="primary-btn">
-          Continue to Formation
+        <button type="submit" className="primary-btn" disabled={saving}>
+          {saving ? (
+            <>
+              <i className="fas fa-spinner fa-spin"></i> Saving...
+            </>
+          ) : (
+            <>
+              <i className="fas fa-save"></i> Save & Continue
+            </>
+          )}
         </button>
       </div>
     </form>

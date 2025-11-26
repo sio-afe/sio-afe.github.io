@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRegistration } from './RegistrationContext';
 import { supabaseClient } from '../../../lib/supabaseClient';
+import RegistrationComplete from './RegistrationComplete';
 
 // Pricing configuration
 const PRICING = {
@@ -61,7 +62,7 @@ export default function PaymentCheckout() {
         throw new Error('You must be logged in to proceed with payment.');
       }
 
-      // First, save the registration as 'pending_payment'
+      // TEST MODE: Skip Easebuzz, directly confirm registration
       let teamId = existingTeamId;
       
       if (!existingTeamId) {
@@ -76,7 +77,7 @@ export default function PaymentCheckout() {
             captain_email: teamData.captainEmail,
             captain_phone: teamData.captainPhone,
             formation: teamData.formation,
-            status: 'pending_payment',
+            status: 'confirmed', // TEST: Direct confirm
             payment_amount: totalAmount,
             submitted_at: new Date().toISOString()
           })
@@ -98,7 +99,7 @@ export default function PaymentCheckout() {
             captain_email: teamData.captainEmail,
             captain_phone: teamData.captainPhone,
             formation: teamData.formation,
-            status: 'pending_payment',
+            status: 'confirmed', // TEST: Direct confirm
             payment_amount: totalAmount,
             submitted_at: new Date().toISOString()
           })
@@ -123,10 +124,14 @@ export default function PaymentCheckout() {
       const { error: playersError } = await supabaseClient.from('team_players').insert(payload);
       if (playersError) throw playersError;
 
-      // Generate transaction ID
+      // TEST MODE: Show success page directly instead of Easebuzz redirect
+      setPaymentStatus('success');
+      setStep(6);
+
+      /* 
+      // REAL PAYMENT CODE - Uncomment when Easebuzz is ready
       const txnId = `MUQ${Date.now()}${teamId}`;
 
-      // Call Easebuzz initiate payment via Supabase Edge Function
       const { data: paymentData, error: paymentError } = await supabaseClient.functions.invoke(
         'easebuzz-initiate',
         {
@@ -148,11 +153,11 @@ export default function PaymentCheckout() {
       }
 
       if (paymentData.status === 1 && paymentData.payUrl) {
-        // Redirect to Easebuzz payment page
         window.location.href = paymentData.payUrl;
       } else {
         throw new Error(paymentData.error || 'Payment initiation failed');
       }
+      */
     } catch (err) {
       console.error('Payment error:', err);
       setError(err.message);
@@ -161,30 +166,9 @@ export default function PaymentCheckout() {
     }
   };
 
-  // If payment was already completed
+  // If payment was already completed, show the thank you page
   if (paymentStatus === 'success') {
-    return (
-      <div className="registration-form">
-        <div className="payment-success">
-          <div className="success-icon">
-            <i className="fas fa-check-circle"></i>
-          </div>
-          <h3>Payment Successful! 🎉</h3>
-          <p>Your registration for <strong>{teamData.teamName}</strong> is now complete.</p>
-          <p>A confirmation email has been sent to <strong>{teamData.captainEmail}</strong>.</p>
-          <div className="payment-receipt">
-            <div className="receipt-row">
-              <span>Amount Paid</span>
-              <span>₹{totalAmount}</span>
-            </div>
-            <div className="receipt-row">
-              <span>Category</span>
-              <span>{pricing.label}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <RegistrationComplete />;
   }
 
   return (

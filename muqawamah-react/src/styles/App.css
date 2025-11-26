@@ -4787,3 +4787,241 @@ body {
   font-size: 0.85rem;
   font-style: italic;
 }
+
+/* Registration Complete Page */
+.registration-complete {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.complete-container {
+  text-align: center;
+}
+
+.complete-icon {
+  margin-bottom: 24px;
+}
+
+.icon-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+}
+
+.icon-circle.success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
+  animation: successPulse 2s ease-in-out infinite;
+}
+
+@keyframes successPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.registration-complete h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1c1f2e;
+  margin: 0 0 24px;
+}
+
+.complete-team-info {
+  margin-bottom: 32px;
+}
+
+.complete-team-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e5e7eb;
+  margin-bottom: 12px;
+}
+
+.complete-team-info h3 {
+  font-size: 1.5rem;
+  color: #1c1f2e;
+  margin: 0 0 8px;
+}
+
+.complete-category {
+  display: inline-block;
+  padding: 6px 16px;
+  background: linear-gradient(135deg, #4f8cff, #6ecdee);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.complete-message {
+  margin-bottom: 32px;
+  padding: 24px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 16px;
+}
+
+.complete-message .main-message {
+  font-size: 1.1rem;
+  color: #1c1f2e;
+  margin: 0 0 12px;
+  line-height: 1.6;
+}
+
+.complete-message .sub-message {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.complete-details {
+  margin-bottom: 32px;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.complete-details h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1c1f2e;
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.next-steps-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.next-steps-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.next-steps-list li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.next-steps-list li i {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(79, 140, 255, 0.1), rgba(110, 205, 238, 0.1));
+  color: #4f8cff;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.next-steps-list li span {
+  color: #4b5563;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.complete-contact {
+  margin-bottom: 32px;
+  padding: 20px;
+  background: #f9fafb;
+  border-radius: 12px;
+}
+
+.complete-contact p {
+  margin: 0 0 12px;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.complete-contact .contact-links {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.complete-contact .contact-links a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  color: #4b5563;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.complete-contact .contact-links a:hover {
+  border-color: #4f8cff;
+  color: #4f8cff;
+  transform: translateY(-2px);
+}
+
+.complete-contact .contact-links a i {
+  font-size: 1rem;
+}
+
+.complete-actions {
+  margin-top: 24px;
+}
+
+.complete-actions .primary-btn {
+  padding: 16px 32px;
+  font-size: 1rem;
+}
+
+@media (max-width: 600px) {
+  .registration-complete {
+    padding: 24px 16px;
+  }
+
+  .registration-complete h2 {
+    font-size: 1.5rem;
+  }
+
+  .icon-circle {
+    width: 64px;
+    height: 64px;
+    font-size: 2rem;
+  }
+
+  .complete-team-logo {
+    width: 60px;
+    height: 60px;
+  }
+
+  .complete-team-info h3 {
+    font-size: 1.25rem;
+  }
+
+  .complete-contact .contact-links {
+    flex-direction: column;
+  }
+
+  .complete-contact .contact-links a {
+    justify-content: center;
+  }
+}
