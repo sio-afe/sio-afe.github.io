@@ -6,7 +6,7 @@ permalink: /muqawamah/contact/
 
 <div class="privacy-page">
   <div class="privacy-header">
-    <h1>Contact the Muqawama Organizing Committee</h1>
+    <h1>Contact Us</h1>
     <p class="last-updated">Last Updated: November 25, 2025</p>
   </div>
 
@@ -29,6 +29,10 @@ permalink: /muqawamah/contact/
           <div class="info-card">
             <h4>Instagram</h4>
             <p><a href="https://www.instagram.com/muqawama2026/" target="_blank" rel="noopener">@muqawama2026</a></p>
+          </div>
+          <div class="info-card">
+            <h4>Location</h4>
+            <p>Abulfazal Enclave<br>New Delhi, Delhi 110025</p>
           </div>
         </div>
       </section>

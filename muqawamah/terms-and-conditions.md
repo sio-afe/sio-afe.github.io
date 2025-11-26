@@ -61,7 +61,7 @@ permalink: /muqawamah/terms-and-conditions/
       <section id="awards-media" class="privacy-section">
         <h2>5. Awards & Media</h2>
         <p>
-          Champions and runners-up receive trophies and medals. Individual awards include Top Goal Scorer, Top Goalkeeper,
+          Champions and runners-up receive awards. Individual awards include Top Goal Scorer, Top Goalkeeper,
           and Best Player. By entering, participants grant us the right to capture and share photos/videos for recap content,
           highlights, and sponsor deliverables. Contact us if you need a specific asset removed.
         </p>

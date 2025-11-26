@@ -381,7 +381,7 @@
 }
 
 .footer-showcase {
-    background: #05060f;
+    background: #0a0e27;
     padding: 80px 20px 90px;
     text-align: center;
     color: rgba(255, 255, 255, 0.7);
@@ -417,6 +417,17 @@
 .sponsors-brand-lockup p {
     color: rgba(255, 255, 255, 0.5);
     margin: 0;
+}
+
+.footer-edition-link {
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-edition-link:hover {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: underline;
 }
 
 .footer-policy-links {

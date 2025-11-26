@@ -16,12 +16,10 @@ function Navbar({ selectedEdition, setSelectedEdition }) {
 
   const navLinks = [
     { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Tournaments', href: '#tournaments', badge: selectedEdition },
-    { name: 'Rules', href: '#rules' },
-    { name: 'Sponsors', href: '#sponsors' },
+    { name: 'About', href: '/muqawamah/about/', isExternal: true },
+    { name: 'Rules', href: '/muqawamah/terms-and-conditions/', isExternal: true },
     { name: 'Gallery', href: '#gallery' },
-    { name: 'Contact', href: '#contact' }
+    { name: 'Contact', href: '/muqawamah/contact/', isExternal: true }
   ];
 
   return (
@@ -45,6 +43,10 @@ function Navbar({ selectedEdition, setSelectedEdition }) {
               href={link.href}
               className="nav-link"
               onClick={(e) => {
+                if (link.isExternal) {
+                  // Allow default navigation for external links
+                  return;
+                }
                 e.preventDefault();
                 const element = document.querySelector(link.href);
                 element?.scrollIntoView({ behavior: 'smooth' });
@@ -97,6 +99,11 @@ function Navbar({ selectedEdition, setSelectedEdition }) {
               href={link.href}
               className="mobile-nav-link"
               onClick={(e) => {
+                if (link.isExternal) {
+                  // Allow default navigation for external links
+                  setMobileMenuOpen(false);
+                  return;
+                }
                 e.preventDefault();
                 const element = document.querySelector(link.href);
                 element?.scrollIntoView({ behavior: 'smooth' });

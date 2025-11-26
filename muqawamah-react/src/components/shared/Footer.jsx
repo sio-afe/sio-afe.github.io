@@ -32,7 +32,11 @@ export default function Footer({ sponsors = [], edition = '2026' }) {
       <div className="sponsors-brand-lockup">
         <span className="brand-label">Presented by</span>
         <img src="/assets/img/title_invert.png" alt="Muqawama" className="footer-title-logo" />
-        <p>{editionLabel}</p>
+        <p>
+          <a href="/muqawamah/2026/" className="footer-edition-link">
+            {editionLabel}
+          </a>
+        </p>
       </div>
 
       <div className="footer-policy-links">
