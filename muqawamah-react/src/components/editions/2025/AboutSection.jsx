@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import RegistrationSlots from '../../shared/RegistrationSlots';
+import CategoryModal from '../../shared/CategoryModal';
 
 const values = [
   {
@@ -27,8 +28,14 @@ const values = [
 
 function AboutSection({ edition }) {
   const is2026 = edition === '2026';
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
 
   return (
+    <>
+      <CategoryModal 
+        isOpen={showCategoryModal} 
+        onClose={() => setShowCategoryModal(false)} 
+      />
     <section id="about" className="about-section-modern">
       <div className="container-modern">
         <motion.div
@@ -83,9 +90,9 @@ function AboutSection({ edition }) {
                   Register Your Team
                 </button>
                 <button
-                  className="tournament-btn disabled"
+                  className="tournament-btn"
                   type="button"
-                  disabled
+                  onClick={() => setShowCategoryModal(true)}
                 >
                   View Tournament
                 </button>
@@ -142,6 +149,7 @@ function AboutSection({ edition }) {
         )}
       </div>
     </section>
+    </>
   );
 }
 

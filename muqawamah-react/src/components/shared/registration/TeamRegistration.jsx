@@ -196,6 +196,7 @@ function RegistrationFlow() {
               id: p.id || `player-${index}`,
               name: p.player_name || '',
               age: p.player_age || '',
+              aadhar_no: p.aadhar_no || '',
               position: p.position || 'SUB',
               isSubstitute: p.is_substitute,
               image: p.player_image,

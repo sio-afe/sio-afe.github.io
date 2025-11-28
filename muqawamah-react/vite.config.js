@@ -15,7 +15,8 @@ export default defineConfig({
         teams: resolve(process.cwd(), 'teams.html'),
         fixtures: resolve(process.cwd(), 'fixtures.html'),
         standings: resolve(process.cwd(), 'standings.html'),
-        statistics: resolve(process.cwd(), 'statistics.html')
+        statistics: resolve(process.cwd(), 'statistics.html'),
+        admin: resolve(process.cwd(), 'admin.html')
       }
     },
     cssCodeSplit: false,

@@ -115,6 +115,7 @@ export default function PaymentCheckout() {
         team_id: teamId,
         player_name: player.name,
         player_age: player.age ? parseInt(player.age) : null,
+        aadhar_no: player.aadhar_no || null,
         position: player.position,
         is_substitute: player.isSubstitute,
         player_image: player.image,

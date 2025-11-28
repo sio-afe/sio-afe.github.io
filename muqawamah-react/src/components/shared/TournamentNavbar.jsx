@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 export default function TournamentNavbar() {
   const [activeLink, setActiveLink] = useState('');
   const [category, setCategory] = useState('open-age');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     // Determine category from URL
@@ -27,6 +28,19 @@ export default function TournamentNavbar() {
     }
   }, []);
 
+  useEffect(() => {
+    // Prevent body scroll when mobile menu is open
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [mobileMenuOpen]);
+
   const navLinks = [
     { name: 'MATCHES', href: `/muqawamah/2026/${category}/fixtures/`, key: 'fixtures' },
     { name: 'TABLE', href: `/muqawamah/2026/${category}/standings/`, key: 'table' },
@@ -36,25 +50,78 @@ export default function TournamentNavbar() {
   ];
 
   return (
-    <nav className="tournament-navbar">
-      <div className="tournament-navbar-container">
-        <a href="/muqawamah/2026/" className="tournament-navbar-logo">
-          <img src="/assets/img/MuqawamaLogo.png" alt="Muqawama" />
-        </a>
+    <>
+      <nav className="tournament-navbar">
+        <div className="tournament-navbar-container">
+          <a href="/muqawamah/2026/" className="tournament-navbar-logo">
+            <img src="/assets/img/MuqawamaLogo.png" alt="Muqawama" />
+          </a>
+          
+          {/* Desktop Links */}
+          <div className="tournament-navbar-links desktop-only">
+            {navLinks.map((link) => (
+              <a
+                key={link.key}
+                href={link.href}
+                className={`tournament-nav-link ${activeLink === link.key ? 'active' : ''}`}
+              >
+                {link.name}
+              </a>
+            ))}
+          </div>
+
+          {/* Mobile Hamburger Button */}
+          <button 
+            className="mobile-menu-toggle"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
+            <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
+            <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Sidebar Menu */}
+      <div className={`mobile-sidebar ${mobileMenuOpen ? 'open' : ''}`}>
+        <div className="mobile-sidebar-header">
+          <a href="/muqawamah/2026/" className="mobile-sidebar-logo">
+            <img src="/assets/img/MuqawamaLogo.png" alt="Muqawama" />
+          </a>
+          <button 
+            className="mobile-close-btn"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-label="Close menu"
+          >
+            <i className="fas fa-times"></i>
+          </button>
+        </div>
         
-        <div className="tournament-navbar-links">
-          {navLinks.map((link) => (
-            <a
-              key={link.key}
-              href={link.href}
-              className={`tournament-nav-link ${activeLink === link.key ? 'active' : ''}`}
-            >
-              {link.name}
-            </a>
-          ))}
+        <div className="mobile-sidebar-content">
+          <div className="mobile-sidebar-links">
+            {navLinks.map((link) => (
+              <a
+                key={link.key}
+                href={link.href}
+                className={`mobile-nav-link ${activeLink === link.key ? 'active' : ''}`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {link.name}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
-    </nav>
+
+      {/* Overlay */}
+      {mobileMenuOpen && (
+        <div 
+          className="mobile-menu-overlay"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+    </>
   );
 }
 

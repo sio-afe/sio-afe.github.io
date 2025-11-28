@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useRegistration } from './RegistrationContext';
+import { compressImage, getBase64SizeKB } from './utils/imageCompression';
 
 const positionOptions = ['GK', 'CB', 'LB', 'RB', 'CDM', 'CM', 'CAM', 'LM', 'RM', 'CF', 'ST'];
 
 export default function PlayersForm() {
   const { players, setPlayers, setStep, saveProgress, saving, error, teamData } = useRegistration();
+  const [compressingIndex, setCompressingIndex] = useState(null);
 
   const handlePlayerChange = (index, field, value) => {
     setPlayers((prev) =>
@@ -19,32 +21,50 @@ export default function PlayersForm() {
   const captain = mainPlayers[0];
   const otherMainPlayers = mainPlayers.slice(1);
 
-  const handleFile = (index, file) => {
+  const handleFile = async (index, file) => {
     if (!file) return;
+    
     if (file.size > 2 * 1024 * 1024) {
       alert('Player photo must be under 2MB');
       return;
     }
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      handlePlayerChange(index, 'image', event.target.result);
+
+    try {
+      setCompressingIndex(index);
+      
+      // Compress the image before storing
+      const compressedBase64 = await compressImage(file, {
+        maxWidth: 600,
+        maxHeight: 600,
+        quality: 0.85,
+        outputFormat: 'image/jpeg'
+      });
+
+      const compressedSizeKB = getBase64SizeKB(compressedBase64);
+      console.log(`Player photo compressed: ${Math.round(file.size / 1024)}KB → ${compressedSizeKB}KB`);
+
+      handlePlayerChange(index, 'image', compressedBase64);
       handlePlayerChange(index, 'imageFileName', file.name);
-    };
-    reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Error compressing player photo:', error);
+      alert('Failed to process image. Please try another file.');
+    } finally {
+      setCompressingIndex(null);
+    }
   };
 
   const validatePlayers = () => {
     const filledMain = mainPlayers.every(
-      (player) => player.name && player.age && player.position && player.image
+      (player) => player.name && player.age && player.aadhar_no && player.aadhar_no.length === 12 && player.position && player.image
     );
-    const filledSubs = subs.every((player) => player.name && player.age && player.image);
+    const filledSubs = subs.every((player) => player.name && player.age && player.aadhar_no && player.aadhar_no.length === 12 && player.image);
     return filledMain && filledSubs;
   };
 
   const handleNext = async (e) => {
     e.preventDefault();
     if (!validatePlayers()) {
-      alert('Please fill out all player names and upload photos for all players.');
+      alert('Please fill out all required fields including name, age, Aadhar number, and photo for all players.');
       return;
     }
     
@@ -86,6 +106,25 @@ export default function PlayersForm() {
         />
       </label>
 
+      <label>
+        Aadhar Number
+        <input
+          type="text"
+          value={player.aadhar_no || ''}
+          onChange={(e) => {
+            const value = e.target.value.replace(/\D/g, ''); // Only allow digits
+            if (value.length <= 12) {
+              handlePlayerChange(index, 'aadhar_no', value);
+            }
+          }}
+          placeholder="12-digit Aadhar number"
+          maxLength="12"
+          pattern="[0-9]{12}"
+          required
+        />
+        <span className="input-hint">Enter 12-digit Aadhar number</span>
+      </label>
+
       {!player.isSubstitute && (
         <label>
           Position
@@ -104,7 +143,13 @@ export default function PlayersForm() {
 
       <label className="file-label">
         Player Photo
-        {player.image && (
+        {compressingIndex === index && (
+          <div className="compressing-indicator">
+            <i className="fas fa-spinner fa-spin"></i>
+            <span>Compressing image...</span>
+          </div>
+        )}
+        {player.image && compressingIndex !== index && (
           <div className="uploaded-photo-preview">
             <div className="photo-preview-container">
               <img src={player.image} alt="Player photo" className="photo-preview" />
@@ -127,8 +172,9 @@ export default function PlayersForm() {
           type="file"
           accept="image/*"
           onChange={(e) => handleFile(index, e.target.files?.[0])}
+          disabled={compressingIndex === index}
         />
-        {!player.image && (
+        {!player.image && compressingIndex !== index && (
           <span className="input-hint">JPG/PNG up to 2MB. Required.</span>
         )}
       </label>

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { useRegistration } from './RegistrationContext';
 import FormationPreview from './FormationPreview';
 
@@ -7,41 +7,8 @@ export default function RegistrationSummary({ readOnly = false }) {
     teamData,
     players,
     setStep,
-    setPlayers,
     existingTeamId
   } = useRegistration();
-
-  const fieldRef = useRef(null);
-  const [draggingId, setDraggingId] = useState(null);
-
-  const updatePlayerPosition = (playerId, x, y) => {
-    setPlayers((prev) =>
-      prev.map((player) => (player.id === playerId ? { ...player, x, y } : player))
-    );
-  };
-
-  const handleDragStart = (_, playerId) => {
-    setDraggingId(playerId);
-  };
-
-  const handleDrag = (event) => {
-    if (!draggingId || !fieldRef.current) return;
-    event.preventDefault();
-    const rect = fieldRef.current.getBoundingClientRect();
-    const clientX = event.touches ? event.touches[0].clientX : event.clientX;
-    const clientY = event.touches ? event.touches[0].clientY : event.clientY;
-    const relativeX = ((clientX - rect.left) / rect.width) * 100;
-    const relativeY = ((clientY - rect.top) / rect.height) * 100;
-    updatePlayerPosition(
-      draggingId,
-      Math.min(Math.max(relativeX, 0), 100),
-      Math.min(Math.max(relativeY, 0), 100)
-    );
-  };
-
-  const handleDragEnd = () => {
-    setDraggingId(null);
-  };
 
   const handleProceedToPayment = () => {
     setStep(5);
@@ -175,10 +142,7 @@ export default function RegistrationSummary({ readOnly = false }) {
         <div ref={fieldRef}>
           <FormationPreview
             players={players.filter((p) => !p.isSubstitute)}
-            editable={!readOnly}
-            onDragStart={handleDragStart}
-            onDrag={handleDrag}
-            onDragEnd={handleDragEnd}
+            editable={false}
             showDownload
           />
         </div>

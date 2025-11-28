@@ -22,34 +22,49 @@ export default function FormationBuilder() {
   const handleDrag = (event) => {
     if (!draggingId || !fieldRef.current) return;
     event.preventDefault();
-    const rect = fieldRef.current.getBoundingClientRect();
+    
+    // Get the SVG element inside the container
+    const svgElement = fieldRef.current.querySelector('svg');
+    if (!svgElement) return;
+    
+    const rect = svgElement.getBoundingClientRect();
     const clientX = event.touches ? event.touches[0].clientX : event.clientX;
     const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+    
+    // Calculate position relative to SVG viewport
     const x = ((clientX - rect.left) / rect.width) * 100;
     const y = ((clientY - rect.top) / rect.height) * 100;
-    updatePlayerPosition(draggingId, Math.min(Math.max(x, 0), 100), Math.min(Math.max(y, 0), 100));
+    
+    // Clamp values between 0 and 100
+    const clampedX = Math.min(Math.max(x, 0), 100);
+    const clampedY = Math.min(Math.max(y, 0), 100);
+    
+    updatePlayerPosition(draggingId, clampedX, clampedY);
   };
 
   const handleDragEnd = () => {
     setDraggingId(null);
   };
 
-  const applyPreset = useCallback(
-    (formation) => {
-      const updated = applyFormationToPlayers(players, formation);
-      setPlayers(updated);
-      setTeamData((prev) => ({ ...prev, formation }));
-    },
-    [players, setPlayers, setTeamData]
-  );
+  const applyPreset = (formation) => {
+    console.log('Applying preset formation:', formation);
+    setPlayers((currentPlayers) => {
+      const updated = applyFormationToPlayers(currentPlayers, formation);
+      console.log('Updated players:', updated);
+      return updated;
+    });
+    setTeamData((prev) => ({ ...prev, formation }));
+  };
 
+  // Apply initial formation on mount
   useEffect(() => {
-    if (!presetApplied && teamData.formation) {
+    if (!presetApplied && teamData.formation && players.length > 0) {
+      console.log('Applying initial formation:', teamData.formation);
       const updated = applyFormationToPlayers(players, teamData.formation);
       setPlayers(updated);
       setPresetApplied(true);
     }
-  }, [teamData.formation, players, setPlayers, presetApplied]);
+  }, []);
 
   const handleNext = async (e) => {
     e.preventDefault();
@@ -64,30 +79,38 @@ export default function FormationBuilder() {
   return (
     <form className="registration-form" onSubmit={handleNext}>
       <h3>Step 3 · Formation & Positions</h3>
-      <p className="step-description">Drag players around the field or start from a preset.</p>
+      <p className="step-description">Choose a preset formation below, then drag players to customize positions.</p>
 
-      <label>
-        Formation Label
-        <input
-          type="text"
-          value={teamData.formation}
-          onChange={(e) => setTeamData((prev) => ({ ...prev, formation: e.target.value }))}
-          placeholder="e.g., 1-3-2-1"
-        />
-      </label>
-
-      <div className="formation-presets">
-        {presetFormations.map((formation) => (
-          <button type="button" key={formation} onClick={() => applyPreset(formation)}>
-            {formation}
-          </button>
-        ))}
-        <button type="button" onClick={() => applyPreset(teamData.formation)}>
-          Apply Current
-        </button>
+      <div className="formation-instruction-box">
+        <div className="instruction-icon">
+          <i className="fas fa-hand-pointer"></i>
+        </div>
+        <div className="instruction-content">
+          <strong className="instruction-title">Interactive Field</strong>
+          <p className="instruction-text">Click and drag any player on the field to reposition them</p>
+        </div>
       </div>
 
-      <div ref={fieldRef}>
+      <div className="formation-presets-section">
+        <div className="presets-header">
+          <i className="fas fa-chess-board"></i>
+          <span className="presets-title">Choose Formation</span>
+        </div>
+        <div className="formation-buttons-grid">
+          {presetFormations.map((formation) => (
+            <button 
+              type="button" 
+              key={formation} 
+              className={`formation-preset-btn ${teamData.formation === formation ? 'active' : ''}`}
+              onClick={() => applyPreset(formation)}
+            >
+              <span className="formation-name">{formation}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div ref={fieldRef} className="formation-field-container">
         <FormationPreview
           players={players.filter((p) => !p.isSubstitute)}
           editable

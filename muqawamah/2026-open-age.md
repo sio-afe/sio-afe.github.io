@@ -1,12 +1,14 @@
 ---
 layout: fullwidth
 permalink: /muqawamah/2026/open-age/
+redirect_to: /muqawamah/2026/open-age/fixtures/
 ---
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<link rel="stylesheet" href="/assets/muqawamah-react/tournament-style.css">
+<script>
+  window.location.href = '/muqawamah/2026/open-age/fixtures/';
+</script>
 
-<div id="tournament-root"></div>
+<meta http-equiv="refresh" content="0; url=/muqawamah/2026/open-age/fixtures/">
 
-<script type="module" src="/assets/muqawamah-react/tournament-main.js"></script>
+<p>Redirecting to fixtures page...</p>
 

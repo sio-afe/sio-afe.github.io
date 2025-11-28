@@ -24,10 +24,10 @@ export default function CountdownTimer({ targetDate, label, variant = 'card' }) 
   }, [targetDate]);
 
   const segments = [
-    { label: 'Days', value: time.days.toString().padStart(2, '0') },
-    { label: 'Hours', value: time.hours.toString().padStart(2, '0') },
-    { label: 'Minutes', value: time.minutes.toString().padStart(2, '0') },
-    { label: 'Seconds', value: time.seconds.toString().padStart(2, '0') }
+    { label: 'days', value: time.days.toString().padStart(2, '0') },
+    { label: 'hrs', value: time.hours.toString().padStart(2, '0') },
+    { label: 'mins', value: time.minutes.toString().padStart(2, '0') },
+    { label: 'secs', value: time.seconds.toString().padStart(2, '0') }
   ];
 
   return (

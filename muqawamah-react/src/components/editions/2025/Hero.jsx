@@ -44,7 +44,7 @@ const editions = [
     title: 'MUQAWAMA 2026',
     countdownTarget: '2026-01-03T09:00:00+05:30',
     stats: [
-      { number: 'Jan 3-4, 2026', label: 'Tournament Dates' }
+      { number: 'January 3, 4 2026', label: '' }
     ],
     status: 'coming-soon',
     statusLabel: 'Coming Soon'
@@ -134,7 +134,7 @@ function Hero({ selectedEdition, setSelectedEdition }) {
                 {currentEdition.stats.map((stat, index) => (
                   <div key={index} className="stat-box condensed">
                     <span className="stat-number">{stat.number}</span>
-                    <span className="stat-label">{stat.label}</span>
+                    {stat.label && <span className="stat-label">{stat.label}</span>}
                   </div>
                 ))}
               </div>

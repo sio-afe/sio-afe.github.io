@@ -1,0 +1,343 @@
+/**
+ * Admin Settings Page Styles
+ */
+
+/* Settings Container */
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Settings Tabs */
+.settings-tabs {
+  display: flex;
+  gap: 8px;
+  background: #fff;
+  padding: 8px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.settings-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: #6b7280;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.settings-tab:hover {
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
+.settings-tab.active {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff;
+}
+
+/* Settings Content */
+.settings-content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.settings-section h3 {
+  margin: 0 0 20px 0;
+  font-size: 1.3rem;
+  color: #1f2937;
+}
+
+/* Settings Card */
+.settings-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.settings-card h4 {
+  margin: 0 0 12px 0;
+  font-size: 1.1rem;
+  color: #1f2937;
+}
+
+.settings-card p {
+  margin: 0 0 16px 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+/* Setting Item */
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.setting-item:last-child {
+  border-bottom: none;
+}
+
+.setting-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 1rem;
+  color: #1f2937;
+}
+
+.setting-info p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.setting-input {
+  padding: 8px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-weight: 600;
+  min-width: 150px;
+  text-align: right;
+}
+
+/* Toggle Button */
+.toggle-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toggle-btn.active {
+  background: #10b981;
+  color: #fff;
+}
+
+.toggle-btn:not(.active) {
+  background: #e5e7eb;
+  color: #6b7280;
+}
+
+/* Export Buttons */
+.export-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.btn-export {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: #fff;
+  border: 2px solid #3b82f6;
+  border-radius: 8px;
+  color: #3b82f6;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-export:hover {
+  background: #3b82f6;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Danger Zone */
+.settings-card.danger {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.settings-card.danger h4 {
+  color: #991b1b;
+}
+
+.danger-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn-danger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #fff;
+  border: 2px solid #ef4444;
+  border-radius: 8px;
+  color: #ef4444;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-danger:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+/* Admin Info */
+.admin-info-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.info-item label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.9rem;
+}
+
+.info-item p {
+  margin: 0;
+  color: #1f2937;
+  font-size: 0.95rem;
+}
+
+.info-item code {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #f3f4f6;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #3b82f6;
+}
+
+.email-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.email-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #dbeafe;
+  color: #1e40af;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.info-note {
+  margin-top: 20px;
+  padding: 16px;
+  background: #eff6ff;
+  border-left: 4px solid #3b82f6;
+  border-radius: 8px;
+  display: flex;
+  gap: 12px;
+}
+
+.info-note i {
+  color: #3b82f6;
+  font-size: 1.2rem;
+}
+
+.info-note p {
+  margin: 0;
+  color: #1f2937;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Statistics Overview */
+.stats-overview {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stats-overview h3 {
+  margin: 0 0 20px 0;
+  font-size: 1.2rem;
+  color: #1f2937;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.stat-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.stat-box i {
+  font-size: 2rem;
+  color: #3b82f6;
+}
+
+.stat-label {
+  margin: 0 0 4px 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.stat-value {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+/* Stats Tables Grid */
+.stats-tables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.stats-table-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stats-table-section.full-width {
+  grid-column: 1 / -1;
+}
+
+.stats-table-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 1.1rem;
+  color: #1f2937;
+}
+

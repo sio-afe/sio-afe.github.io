@@ -1,6 +1,7 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useRegistration } from './RegistrationContext';
 import { presetFormations } from './utils/formationUtils';
+import { compressImage, getBase64SizeKB } from './utils/imageCompression';
 
 const MAX_LOGO_SIZE = 2 * 1024 * 1024; // 2MB
 
@@ -12,29 +13,49 @@ const categories = [
 export default function TeamDetailsForm() {
   const { teamData, setTeamData, setStep, saveProgress, saving, error } = useRegistration();
   const fileInputRef = useRef(null);
+  const [compressing, setCompressing] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setTeamData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleLogoUpload = (e) => {
+  const handleLogoUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    
     if (file.size > MAX_LOGO_SIZE) {
       alert('Logo size must be under 2MB');
       fileInputRef.current.value = '';
       return;
     }
-    const reader = new FileReader();
-    reader.onload = (event) => {
+
+    try {
+      setCompressing(true);
+      
+      // Compress the image before storing
+      const compressedBase64 = await compressImage(file, {
+        maxWidth: 800,
+        maxHeight: 800,
+        quality: 0.85,
+        outputFormat: 'image/jpeg'
+      });
+
+      const compressedSizeKB = getBase64SizeKB(compressedBase64);
+      console.log(`Logo compressed: ${Math.round(file.size / 1024)}KB → ${compressedSizeKB}KB`);
+
       setTeamData((prev) => ({ 
         ...prev, 
-        teamLogo: event.target.result,
+        teamLogo: compressedBase64,
         teamLogoFileName: file.name
       }));
-    };
-    reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Error compressing logo:', error);
+      alert('Failed to process image. Please try another file.');
+      fileInputRef.current.value = '';
+    } finally {
+      setCompressing(false);
+    }
   };
 
   const handleNext = async (e) => {
@@ -87,7 +108,13 @@ export default function TeamDetailsForm() {
 
       <label className="file-label">
         Team Logo
-        {teamData.teamLogo && (
+        {compressing && (
+          <div className="compressing-indicator">
+            <i className="fas fa-spinner fa-spin"></i>
+            <span>Compressing image...</span>
+          </div>
+        )}
+        {teamData.teamLogo && !compressing && (
           <div className="uploaded-photo-preview">
             <div className="photo-preview-container">
               <img src={teamData.teamLogo} alt="Team logo" className="photo-preview" />
@@ -111,8 +138,9 @@ export default function TeamDetailsForm() {
           accept="image/*"
           ref={fileInputRef}
           onChange={handleLogoUpload}
+          disabled={compressing}
         />
-        {!teamData.teamLogo && (
+        {!teamData.teamLogo && !compressing && (
           <span className="input-hint">JPG/PNG up to 2MB. Displayed across the tournament site.</span>
         )}
       </label>

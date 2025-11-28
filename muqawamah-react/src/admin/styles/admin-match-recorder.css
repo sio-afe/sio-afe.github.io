@@ -1,0 +1,146 @@
+/**
+ * Match Recorder Specific Styles
+ */
+
+/* Goals Section */
+.goals-section {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 2px solid #e5e7eb;
+}
+
+.goals-section h3 {
+  margin: 0 0 20px 0;
+  font-size: 1.2rem;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Goals List */
+.goals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 10px;
+}
+
+.goal-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #fff;
+  border-radius: 8px;
+  border-left: 4px solid #10b981;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.goal-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.goal-minute {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  padding: 4px 8px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff;
+  font-weight: 700;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.goal-scorer {
+  font-weight: 700;
+  color: #1f2937;
+  font-size: 1rem;
+}
+
+.goal-assist {
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.goal-type-tag {
+  padding: 4px 10px;
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.goal-delete-btn {
+  background: #fee2e2;
+  color: #991b1b;
+  border: none;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.goal-delete-btn:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+/* Add Goal Form */
+.add-goal-form {
+  padding: 20px;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 2px dashed #d1d5db;
+}
+
+.add-goal-form h4 {
+  margin: 0 0 16px 0;
+  font-size: 1rem;
+  color: #374151;
+}
+
+.btn-add-goal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 16px;
+}
+
+.btn-add-goal:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-add-goal:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+

@@ -1,0 +1,396 @@
+/**
+ * Admin Tables and Components Styles
+ */
+
+/* Page Header */
+.admin-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.page-header-left,
+.page-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Buttons */
+.refresh-btn,
+.create-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.refresh-btn {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.refresh-btn:hover {
+  background: #e5e7eb;
+}
+
+.create-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+}
+
+.create-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* Search Box */
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  background: #fff;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  min-width: 320px;
+  transition: all 0.2s ease;
+}
+
+.search-box:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 0.95rem;
+  color: #1f2937;
+}
+
+.search-box input::placeholder {
+  color: #9ca3af;
+}
+
+.search-box i {
+  color: #6b7280;
+  font-size: 1.1rem;
+}
+
+/* Filter Select */
+.filter-select {
+  padding: 10px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-select:hover {
+  border-color: #3b82f6;
+}
+
+/* Filter Tabs */
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filter-tab {
+  padding: 10px 20px;
+  background: #fff;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  color: #6b7280;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-tab:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.filter-tab.active {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: #fff;
+}
+
+/* Table Container */
+.admin-table-container {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.table-stats {
+  padding: 16px 20px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.table-stats strong {
+  color: #1f2937;
+}
+
+/* Admin Table */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table thead {
+  background: #f9fafb;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.admin-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.admin-table tbody tr {
+  border-bottom: 1px solid #f3f4f6;
+  transition: background 0.15s ease;
+}
+
+.admin-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.admin-table td {
+  padding: 16px;
+  font-size: 0.95rem;
+  color: #1f2937;
+}
+
+.admin-table.compact td {
+  padding: 12px 16px;
+}
+
+/* Table Cell Components */
+.team-cell,
+.player-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.team-logo-small,
+.player-image-small {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.player-image-tiny {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Badges */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+  text-transform: capitalize;
+}
+
+.status-scheduled {
+  background: #6b7280;
+}
+
+.status-live {
+  background: #ef4444;
+}
+
+.status-completed {
+  background: #10b981;
+}
+
+.status-postponed,
+.status-cancelled {
+  background: #f59e0b;
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: #dbeafe;
+  color: #1e40af;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.position-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #f3e8ff;
+  color: #6b21a8;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.type-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.type-badge.starter {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.type-badge.substitute {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.goal-type-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.btn-view {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.btn-view:hover {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.btn-edit {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.btn-edit:hover {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.btn-delete {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.btn-delete:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+.btn-tournament {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.btn-tournament:hover {
+  background: #fbbf24;
+  color: #fff;
+}
+
+.btn-tournament-added {
+  background: #d1fae5;
+  color: #065f46;
+  cursor: default;
+  opacity: 0.7;
+}
+
+.btn-tournament-added:hover {
+  background: #d1fae5;
+  color: #065f46;
+  transform: none;
+}
+
+/* Score Display */
+.score-display {
+  font-size: 1.2rem;
+  color: #3b82f6;
+}
+
+.vs-text {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Highlight Value */
+.highlight-value {
+  color: #3b82f6;
+  font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-table-container {
+    overflow-x: auto;
+  }
+
+  .admin-table {
+    min-width: 800px;
+  }
+}
+

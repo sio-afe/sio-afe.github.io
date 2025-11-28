@@ -1,0 +1,244 @@
+/**
+ * Settings Panel
+ * System configuration and management
+ */
+
+import React, { useState } from 'react';
+import { supabaseClient } from '../../../lib/supabaseClient';
+import AdminLayout from '../../components/AdminLayout';
+import { SUPER_ADMIN_EMAILS } from '../../config/adminConfig';
+
+export default function SettingsPanel() {
+  const [activeTab, setActiveTab] = useState('general');
+
+  const handleResetStandings = async () => {
+    if (!confirm('Are you sure you want to reset ALL team standings? This cannot be undone!')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabaseClient
+        .from('teams')
+        .update({
+          played: 0,
+          won: 0,
+          drawn: 0,
+          lost: 0,
+          goals_for: 0,
+          goals_against: 0,
+          points: 0
+        })
+        .neq('id', '00000000-0000-0000-0000-000000000000'); // Update all
+
+      if (error) throw error;
+
+      alert('All team standings have been reset!');
+    } catch (error) {
+      console.error('Error resetting standings:', error);
+      alert('Failed to reset standings');
+    }
+  };
+
+  const handleClearAllGoals = async () => {
+    if (!confirm('Are you sure you want to delete ALL goals? This cannot be undone!')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabaseClient
+        .from('goals')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all
+
+      if (error) throw error;
+
+      alert('All goals have been deleted!');
+    } catch (error) {
+      console.error('Error clearing goals:', error);
+      alert('Failed to clear goals');
+    }
+  };
+
+  const exportData = async (table) => {
+    try {
+      const { data, error } = await supabaseClient
+        .from(table)
+        .select('*');
+
+      if (error) throw error;
+
+      const jsonData = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${table}-export-${new Date().toISOString().split('T')[0]}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+
+      alert(`${table} data exported successfully!`);
+    } catch (error) {
+      console.error('Error exporting data:', error);
+      alert('Failed to export data');
+    }
+  };
+
+  return (
+    <AdminLayout title="Settings">
+      <div className="settings-container">
+        <div className="settings-tabs">
+          <button
+            className={`settings-tab ${activeTab === 'general' ? 'active' : ''}`}
+            onClick={() => setActiveTab('general')}
+          >
+            <i className="fas fa-cog"></i> General
+          </button>
+          <button
+            className={`settings-tab ${activeTab === 'data' ? 'active' : ''}`}
+            onClick={() => setActiveTab('data')}
+          >
+            <i className="fas fa-database"></i> Data Management
+          </button>
+          <button
+            className={`settings-tab ${activeTab === 'admin' ? 'active' : ''}`}
+            onClick={() => setActiveTab('admin')}
+          >
+            <i className="fas fa-user-shield"></i> Admin Info
+          </button>
+        </div>
+
+        <div className="settings-content">
+          {activeTab === 'general' && (
+            <div className="settings-section">
+              <h3>Tournament Settings</h3>
+              <div className="settings-card">
+                <div className="setting-item">
+                  <div className="setting-info">
+                    <h4>Registration Status</h4>
+                    <p>Enable or disable team registrations</p>
+                  </div>
+                  <button className="toggle-btn active">
+                    <span>Enabled</span>
+                  </button>
+                </div>
+
+                <div className="setting-item">
+                  <div className="setting-info">
+                    <h4>Tournament Year</h4>
+                    <p>Current tournament season</p>
+                  </div>
+                  <input type="text" value="2026" readOnly className="setting-input" />
+                </div>
+
+                <div className="setting-item">
+                  <div className="setting-info">
+                    <h4>Registration Fee (Open Age)</h4>
+                    <p>Registration amount for open age category</p>
+                  </div>
+                  <input type="number" value="2500" readOnly className="setting-input" />
+                </div>
+
+                <div className="setting-item">
+                  <div className="setting-info">
+                    <h4>Registration Fee (U17)</h4>
+                    <p>Registration amount for under 17 category</p>
+                  </div>
+                  <input type="number" value="2300" readOnly className="setting-input" />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'data' && (
+            <div className="settings-section">
+              <h3>Data Management</h3>
+              
+              <div className="settings-card">
+                <h4>Export Data</h4>
+                <p>Download data from database tables in JSON format</p>
+                <div className="export-buttons">
+                  <button className="btn-export" onClick={() => exportData('team_registrations')}>
+                    <i className="fas fa-download"></i> Export Registrations
+                  </button>
+                  <button className="btn-export" onClick={() => exportData('teams')}>
+                    <i className="fas fa-download"></i> Export Teams
+                  </button>
+                  <button className="btn-export" onClick={() => exportData('team_players')}>
+                    <i className="fas fa-download"></i> Export Players
+                  </button>
+                  <button className="btn-export" onClick={() => exportData('matches')}>
+                    <i className="fas fa-download"></i> Export Matches
+                  </button>
+                  <button className="btn-export" onClick={() => exportData('goals')}>
+                    <i className="fas fa-download"></i> Export Goals
+                  </button>
+                </div>
+              </div>
+
+              <div className="settings-card danger">
+                <h4><i className="fas fa-exclamation-triangle"></i> Danger Zone</h4>
+                <p>These actions are irreversible. Proceed with caution!</p>
+                <div className="danger-actions">
+                  <button 
+                    className="btn-danger"
+                    onClick={handleResetStandings}
+                  >
+                    <i className="fas fa-undo"></i> Reset All Standings
+                  </button>
+                  <button 
+                    className="btn-danger"
+                    onClick={handleClearAllGoals}
+                  >
+                    <i className="fas fa-trash"></i> Clear All Goals
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'admin' && (
+            <div className="settings-section">
+              <h3>Admin Information</h3>
+              <div className="settings-card">
+                <div className="admin-info-grid">
+                  <div className="info-item">
+                    <label>Super Admin Emails</label>
+                    <div className="email-list">
+                      {SUPER_ADMIN_EMAILS.map((email, idx) => (
+                        <div key={idx} className="email-badge">
+                          <i className="fas fa-shield-alt"></i>
+                          {email}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="info-item">
+                    <label>Admin Panel Version</label>
+                    <p>v1.0.0</p>
+                  </div>
+
+                  <div className="info-item">
+                    <label>Last Updated</label>
+                    <p>{new Date().toLocaleDateString()}</p>
+                  </div>
+
+                  <div className="info-item">
+                    <label>Configuration File</label>
+                    <code>admin/config/adminConfig.js</code>
+                  </div>
+                </div>
+
+                <div className="info-note">
+                  <i className="fas fa-info-circle"></i>
+                  <p>To add more admin users, edit the <code>SUPER_ADMIN_EMAILS</code> array in the admin configuration file.</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </AdminLayout>
+  );
+}
+

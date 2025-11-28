@@ -393,6 +393,75 @@ ${mainJsLinks}
     console.log('⚠️ statistics.html not found, skipping...');
   }
 
+  // Process admin.html
+  console.log('\n📄 Processing admin app (admin.html)...');
+  const adminHtmlPath = join(distDir, 'admin.html');
+  if (existsSync(adminHtmlPath)) {
+    const adminHtml = readFileSync(adminHtmlPath, 'utf-8');
+    const adminCssMatches = adminHtml.match(/<link[^>]*href="([^"]*\.css)"[^>]*>/g) || [];
+    const adminJsMatches = adminHtml.match(/<script[^>]*src="([^"]*\.js)"[^>]*>/g) || [];
+
+    const adminCssFiles = adminCssMatches.map(match => {
+      const href = match.match(/href="([^"]*)"/);
+      return href ? href[1] : null;
+    }).filter(Boolean);
+
+    const adminJsFiles = adminJsMatches.map(match => {
+      const src = match.match(/src="([^"]*)"/);
+      return src ? src[1] : null;
+    }).filter(Boolean);
+
+    console.log('📦 Admin CSS files:', adminCssFiles);
+    console.log('📦 Admin JS files:', adminJsFiles);
+
+    adminCssFiles.forEach(file => {
+      if (!file.startsWith('http')) {
+        const sourceFile = join(distDir, file.replace('/muqawamah/', ''));
+        const targetFile = join(jekyllAssetsDir, 'admin-style.css');
+        if (existsSync(sourceFile)) {
+          cpSync(sourceFile, targetFile);
+          console.log('✅ Copied admin CSS: admin-style.css');
+        }
+      }
+    });
+
+    adminJsFiles.forEach(file => {
+      if (!file.startsWith('http')) {
+        const sourceFile = join(distDir, file.replace('/muqawamah/', ''));
+        const targetFile = join(jekyllAssetsDir, 'admin-main.js');
+        if (existsSync(sourceFile)) {
+          cpSync(sourceFile, targetFile);
+          console.log('✅ Copied admin JS: admin-main.js');
+        }
+      }
+    });
+
+    // Create admin Jekyll page
+    const adminJekyllDir = join(__dirname, '..', 'admin');
+    if (!existsSync(adminJekyllDir)) {
+      mkdirSync(adminJekyllDir, { recursive: true });
+    }
+
+    const adminMdContent = `---
+layout: fullwidth
+permalink: /muqawamah/admin/
+title: Admin Panel
+---
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="/assets/muqawamah-react/admin-style.css">
+
+<div id="admin-root"></div>
+
+<script type="module" src="/assets/muqawamah-react/admin-main.js"></script>
+`;
+
+    writeFileSync(join(adminJekyllDir, 'index.md'), adminMdContent);
+    console.log('✅ Created admin/index.md (permalink: /muqawamah/admin/)');
+  } else {
+    console.log('⚠️ admin.html not found, skipping...');
+  }
+
   console.log('\n🎉 Build complete!');
   console.log('\n📂 Files updated:');
   console.log(`   - ${join(jekyllMuqawamahDir, 'index.md')} → /muqawamah/`);
@@ -405,6 +474,7 @@ ${mainJsLinks}
   console.log(`   - ${join(jekyllMuqawamahDir, '2026-open-age-fixtures.md')} → /muqawamah/2026/open-age/fixtures/`);
   console.log(`   - ${join(jekyllMuqawamahDir, '2026-open-age-table.md')} → /muqawamah/2026/open-age/standings/`);
   console.log(`   - ${join(jekyllMuqawamahDir, '2026-open-age-statistics.md')} → /muqawamah/2026/open-age/statistics/`);
+  console.log(`   - ${join(__dirname, '..', 'admin', 'index.md')} → /muqawamah/admin/`);
   console.log(`   - Assets in: ${jekyllAssetsDir}`);
   console.log('\n📝 Next step: Test your Jekyll site with: make serve');
 

@@ -1,5 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { toPng } from 'html-to-image';
+import { FootballFieldSVG } from './FootballFieldSVG';
 
 export default function FormationPreview({
   players,
@@ -10,7 +11,9 @@ export default function FormationPreview({
   showDownload = false
 }) {
   const fieldNodeRef = useRef(null);
+  const svgRef = useRef(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [draggedPlayer, setDraggedPlayer] = useState(null);
 
   const downloadFileName = useMemo(() => {
     const date = new Date().toISOString().split('T')[0];
@@ -24,7 +27,7 @@ export default function FormationPreview({
       const dataUrl = await toPng(fieldNodeRef.current, {
         cacheBust: true,
         pixelRatio: window.devicePixelRatio || 2,
-        backgroundColor: '#0f1b2c'
+        backgroundColor: '#ffffff'
       });
       const link = document.createElement('a');
       link.download = downloadFileName;
@@ -38,37 +41,134 @@ export default function FormationPreview({
     }
   };
 
-  // Dragging is now disabled for all previews
-  const attachHandlers = (playerId) => ({});
+  const handlePlayerMouseDown = (e, player) => {
+    if (!editable) return;
+    e.preventDefault();
+    setDraggedPlayer(player.id);
+    if (onDragStart) onDragStart(e, player.id);
+  };
+
+  const handlePlayerTouchStart = (e, player) => {
+    if (!editable) return;
+    setDraggedPlayer(player.id);
+    if (onDragStart) onDragStart(e, player.id);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!draggedPlayer || !editable || !fieldNodeRef.current) return;
+    e.preventDefault();
+    if (onDrag) {
+      onDrag(e);
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (!draggedPlayer || !editable || !fieldNodeRef.current) return;
+    e.preventDefault();
+    if (onDrag) {
+      onDrag(e);
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (draggedPlayer) {
+      setDraggedPlayer(null);
+      if (onDragEnd) onDragEnd();
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (draggedPlayer) {
+      setDraggedPlayer(null);
+      if (onDragEnd) onDragEnd();
+    }
+  };
 
   return (
     <div className="formation-preview-wrapper">
-      <div className="football-field" ref={fieldNodeRef}>
-        <div className="football-field-surface" />
-        <div
-          className="formation-overlay"
-          style={{ pointerEvents: 'none' }}
+      <div 
+        className="football-field-svg" 
+        ref={fieldNodeRef}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <FootballFieldSVG 
+          ref={svgRef}
+          style={{ width: '100%', height: 'auto', maxWidth: '400px', display: 'block', margin: '0 auto' }}
         >
-          {players.map((player) => (
-            <div
-              key={player.id}
-              className="player-marker"
-              style={{ left: `${player.x}%`, top: `${player.y}%` }}
-            >
-              <div className={`player-circle ${player.isSubstitute ? 'substitute' : ''}`}>
+          {/* Players */}
+          {players.map((player) => {
+            // Convert percentage to SVG coordinates (accounting for the 3px transform)
+            const svgX = 3 + (player.x / 100) * 68;
+            const svgY = 3 + (player.y / 100) * 105;
+            
+            return (
+              <g 
+                key={player.id}
+                transform={`translate(${svgX}, ${svgY})`}
+                className={editable ? "player-marker-draggable" : "player-marker-static"}
+                style={{ cursor: editable ? 'move' : 'default' }}
+                onMouseDown={(e) => handlePlayerMouseDown(e, player)}
+                onTouchStart={(e) => handlePlayerTouchStart(e, player)}
+              >
+                {/* Player circle with image or position */}
+                <circle 
+                  r="3" 
+                  fill="#4a90e2" 
+                  stroke="#fff" 
+                  strokeWidth="0.5"
+                />
                 {player.image ? (
-                  <img src={player.image} alt={player.name || player.position} />
+                  <image 
+                    href={player.image} 
+                    x="-3" 
+                    y="-3" 
+                    width="6" 
+                    height="6" 
+                    clipPath="circle(3px at center)"
+                    style={{ borderRadius: '50%' }}
+                  />
                 ) : (
-                  <span>{player.position}</span>
+                  <text 
+                    x="0" 
+                    y="1" 
+                    textAnchor="middle" 
+                    fill="#fff" 
+                    fontSize="2.5" 
+                    fontWeight="600"
+                  >
+                    {player.position}
+                  </text>
                 )}
-              </div>
-              <div className="player-label">
-                <strong>{player.position}</strong>
-                <span>{player.name || 'Unnamed'}</span>
-              </div>
-            </div>
-          ))}
-        </div>
+                
+                {/* Player name and position below */}
+                <text 
+                  x="0" 
+                  y="5.5" 
+                  textAnchor="middle" 
+                  fill="#000" 
+                  fontSize="1.8" 
+                  fontWeight="600"
+                >
+                  {player.name || 'Player'}
+                </text>
+                <text 
+                  x="0" 
+                  y="7.5" 
+                  textAnchor="middle" 
+                  fill="#666" 
+                  fontSize="1.5" 
+                  fontWeight="400"
+                >
+                  {player.position}
+                </text>
+              </g>
+            );
+          })}
+        </FootballFieldSVG>
       </div>
 
       {showDownload && (
