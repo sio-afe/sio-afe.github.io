@@ -130,17 +130,17 @@ export const RegistrationProvider = ({ children }) => {
         // Delete existing players first
         await supabaseClient.from('team_players').delete().eq('team_id', teamId);
 
-        // Insert all players
+        // Insert all players with validated positions
         const payload = players.map((player) => ({
           team_id: teamId,
-          player_name: player.name,
+          player_name: player.name || '',
           player_age: player.age ? parseInt(player.age) : null,
           aadhar_no: player.aadhar_no || null,
-          position: player.position,
-          is_substitute: player.isSubstitute,
-          player_image: player.image,
-          position_x: player.x,
-          position_y: player.y
+          position: player.position || 'SUB',
+          is_substitute: player.isSubstitute || false,
+          player_image: player.image || null,
+          position_x: typeof player.x === 'number' && !isNaN(player.x) ? player.x : 50,
+          position_y: typeof player.y === 'number' && !isNaN(player.y) ? player.y : 50
         }));
 
         const { error: playersError } = await supabaseClient.from('team_players').insert(payload);

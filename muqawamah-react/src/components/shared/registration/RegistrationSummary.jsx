@@ -139,7 +139,7 @@ export default function RegistrationSummary({ readOnly = false }) {
 
       <section className="summary-section">
         <h4>Formation Preview</h4>
-        <div ref={fieldRef}>
+        <div>
           <FormationPreview
             players={players.filter((p) => !p.isSubstitute)}
             editable={false}

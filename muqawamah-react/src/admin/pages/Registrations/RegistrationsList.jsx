@@ -96,7 +96,7 @@ export default function RegistrationsList() {
       return;
     }
 
-    if (!confirm(`Add "${registration.team_name}" to the tournament?\n\nThis will create an entry in the teams table for fixtures and standings.`)) {
+    if (!confirm(`Add "${registration.team_name}" to the tournament?\n\nThis will create an entry in the teams table for fixtures and standings, and copy all players.`)) {
       return;
     }
 
@@ -115,7 +115,7 @@ export default function RegistrationsList() {
       }
 
       // Add to tournament teams table
-      const { error } = await supabaseClient
+      const { data: newTeam, error: teamError } = await supabaseClient
         .from('teams')
         .insert({
           name: registration.team_name,
@@ -124,11 +124,40 @@ export default function RegistrationsList() {
           category: registration.category,
           formation: registration.formation,
           registration_id: registration.id
-        });
+        })
+        .select()
+        .single();
 
-      if (error) throw error;
+      if (teamError) throw teamError;
 
-      alert(`✅ "${registration.team_name}" added to tournament successfully!\n\nYou can now create fixtures and matches for this team.`);
+      // Copy players from team_players to players table
+      const { data: teamPlayers, error: playersError } = await supabaseClient
+        .from('team_players')
+        .select('*')
+        .eq('team_id', registration.id);
+
+      if (playersError) throw playersError;
+
+      if (teamPlayers && teamPlayers.length > 0) {
+        const playerInserts = teamPlayers.map(player => ({
+          team_id: newTeam.id,
+          name: player.player_name,
+          position: player.position,
+          is_substitute: player.is_substitute,
+          player_image: player.player_image,
+          position_x: player.position_x,
+          position_y: player.position_y,
+          registration_player_id: player.id
+        }));
+
+        const { error: insertError } = await supabaseClient
+          .from('players')
+          .insert(playerInserts);
+
+        if (insertError) throw insertError;
+      }
+
+      alert(`✅ "${registration.team_name}" added to tournament successfully!\n\n${teamPlayers?.length || 0} players copied.\n\nYou can now create fixtures and matches for this team.`);
       
       // Refresh tournament status
       checkTournamentStatus();
@@ -401,6 +430,48 @@ export default function RegistrationsList() {
                   ))}
                 </div>
               </div>
+
+              {/* Payment Screenshot Section */}
+              {selectedReg.payment_screenshot && (
+                <div className="detail-section payment-section">
+                  <h3><i className="fas fa-receipt"></i> Payment Screenshot</h3>
+                  <div className="payment-screenshot-container">
+                    <img 
+                      src={selectedReg.payment_screenshot} 
+                      alt="Payment Screenshot" 
+                      className="payment-screenshot-image"
+                      onClick={() => window.open(selectedReg.payment_screenshot, '_blank')}
+                    />
+                    <p className="payment-amount">
+                      Amount: <strong>₹{selectedReg.payment_amount}</strong>
+                    </p>
+                  </div>
+                  {selectedReg.status === 'pending_verification' && (
+                    <div className="payment-verify-actions">
+                      <button
+                        className="btn-verify-payment"
+                        onClick={() => {
+                          updateStatus(selectedReg.id, 'confirmed');
+                          setShowModal(false);
+                        }}
+                      >
+                        <i className="fas fa-check"></i> Verify & Confirm
+                      </button>
+                      <button
+                        className="btn-reject-payment"
+                        onClick={() => {
+                          if (confirm('Reject this payment? The registration will be cancelled.')) {
+                            updateStatus(selectedReg.id, 'cancelled');
+                            setShowModal(false);
+                          }
+                        }}
+                      >
+                        <i className="fas fa-times"></i> Reject
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
 
               <div className="detail-section">
                 <h3>Change Status</h3>

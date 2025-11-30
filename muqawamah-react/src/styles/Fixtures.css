@@ -1,4 +1,417 @@
-/* Fixtures Page Styles */
+/* Fixtures Page Styles - Baller League Style */
+
+/* ===== Blue Gradient Accent ===== */
+:root {
+  --fix-accent-start: #4f8cff;
+  --fix-accent-end: #6ecdee;
+  --fix-accent-gradient: linear-gradient(135deg, #4f8cff 0%, #6ecdee 100%);
+}
+
+/* ===== Page Container ===== */
+.fixtures-page-v2 {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0a0e1a 0%, #0d1020 50%, #080b14 100%);
+  color: #fff;
+  padding: 40px 20px 80px;
+}
+
+.fixtures-container-v2 {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ===== Header ===== */
+.fixtures-header-v2 {
+  margin-bottom: 30px;
+}
+
+.fixtures-header-v2 h1 {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0 0 16px;
+}
+
+.fixtures-divider {
+  border: none;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0;
+}
+
+/* ===== Matchday Tabs ===== */
+.matchday-tabs-v2 {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.matchday-tab-v2 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 14px 24px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.matchday-tab-v2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--fix-accent-gradient);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.matchday-tab-v2:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.matchday-tab-v2.active {
+  color: #fff;
+}
+
+.matchday-tab-v2.active::after {
+  opacity: 1;
+}
+
+/* ===== Matches List ===== */
+.matches-list-v2 {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ===== Match Card ===== */
+.match-card-v2 {
+  background: linear-gradient(135deg, #1a1d2e 0%, #13161f 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.match-card-v2:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* ===== Match Row ===== */
+.match-row-v2 {
+  display: grid;
+  grid-template-columns: auto 1fr auto 1fr auto;
+  align-items: center;
+  padding: 16px 20px;
+  gap: 16px;
+}
+
+/* ===== Time ===== */
+.match-time-desktop {
+  display: block;
+}
+
+.match-time-mobile {
+  display: none;
+  text-align: center;
+  padding: 8px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.time-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ===== Team ===== */
+.match-team-v2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.match-team-v2.home {
+  justify-content: flex-end;
+}
+
+.match-team-v2.away {
+  justify-content: flex-start;
+}
+
+.team-name-v2 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.team-logo-v2 {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  flex-shrink: 0;
+}
+
+.team-logo-v2 img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.team-logo-v2 span {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* ===== Score ===== */
+.match-score-v2 {
+  min-width: 80px;
+  text-align: center;
+}
+
+.score-display {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  background: var(--fix-accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 30px rgba(79, 140, 255, 0.3);
+}
+
+.vs-display {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: lowercase;
+}
+
+/* ===== Venue ===== */
+.match-venue-desktop {
+  display: block;
+}
+
+.match-venue-mobile {
+  display: none;
+  text-align: center;
+  padding: 8px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.match-venue-desktop span,
+.match-venue-mobile span {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ===== No Matches ===== */
+.no-matches-v2 {
+  text-align: center;
+  padding: 80px 20px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.no-matches-v2 i {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  background: var(--fix-accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0.5;
+}
+
+.no-matches-v2 p {
+  font-size: 1.1rem;
+  font-family: 'Oswald', sans-serif;
+}
+
+/* ===== Loading ===== */
+.fixtures-loading {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0a0e1a 0%, #0d1020 50%, #080b14 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  color: #fff;
+}
+
+.fixtures-loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.fixtures-loading p {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+/* ===== Responsive - Tablet & Up ===== */
+@media (min-width: 768px) {
+  .fixtures-page-v2 {
+    padding: 60px 40px 100px;
+  }
+
+  .fixtures-container-v2 {
+    max-width: 1100px;
+  }
+
+  .match-row-v2 {
+    padding: 20px 28px;
+    gap: 20px;
+  }
+
+  .team-name-v2 {
+    font-size: 1.1rem;
+  }
+
+  .team-logo-v2 {
+    width: 48px;
+    height: 48px;
+  }
+
+  .score-display {
+    font-size: 1.8rem;
+  }
+}
+
+/* ===== Responsive - Mobile ===== */
+@media (max-width: 768px) {
+  .fixtures-page-v2 {
+    padding: 24px 16px 60px;
+  }
+
+  .fixtures-header-v2 h1 {
+    font-size: 1.6rem;
+  }
+
+  .matchday-tabs-v2 {
+    margin-bottom: 24px;
+    gap: 0;
+  }
+
+  .matchday-tab-v2 {
+    padding: 12px 18px;
+    font-size: 1rem;
+  }
+
+  /* Switch to mobile layout */
+  .match-time-desktop {
+    display: none;
+  }
+
+  .match-time-mobile {
+    display: block;
+  }
+
+  .match-venue-desktop {
+    display: none;
+  }
+
+  .match-venue-mobile {
+    display: block;
+  }
+
+  .match-row-v2 {
+    grid-template-columns: 1fr auto 1fr;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .team-name-v2 {
+    font-size: 0.85rem;
+    max-width: none;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .team-logo-v2 {
+    width: 38px;
+    height: 38px;
+  }
+
+  .match-score-v2 {
+    min-width: 60px;
+  }
+
+  .score-display {
+    font-size: 1.4rem;
+  }
+
+  .vs-display {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .fixtures-header-v2 h1 {
+    font-size: 1.4rem;
+  }
+
+  .matchday-tab-v2 {
+    padding: 10px 14px;
+    font-size: 0.95rem;
+  }
+
+  .team-name-v2 {
+    font-size: 0.75rem;
+    max-width: none;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .team-logo-v2 {
+    width: 32px;
+    height: 32px;
+    padding: 4px;
+  }
+
+  .match-score-v2 {
+    min-width: 50px;
+  }
+
+  .score-display {
+    font-size: 1.2rem;
+  }
+
+  .vs-display {
+    font-size: 0.9rem;
+  }
+}
+
+/* ===== Legacy Styles (keep for backwards compatibility) ===== */
 .fixtures-page {
   min-height: 100vh;
   background: #0a0e27;
@@ -72,7 +485,7 @@
 }
 
 .matchweek-tab.active {
-  background: linear-gradient(135deg, #4f8cff 0%, #6fb1fc 100%);
+  background: var(--fix-accent-gradient);
   color: #000;
   transform: scale(1.05);
   box-shadow: 0 4px 15px rgba(79, 140, 255, 0.3);
@@ -179,7 +592,7 @@
   font-family: 'Oswald', sans-serif;
   font-size: 2rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #4f8cff 0%, #6fb1fc 100%);
+  background: var(--fix-accent-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -209,7 +622,7 @@
 
 .match-venue i {
   margin-right: 6px;
-  color: #4f8cff;
+  color: var(--fix-accent-start);
 }
 
 /* No Matches */
@@ -228,143 +641,3 @@
 .no-matches-found p {
   font-size: 1.1rem;
 }
-
-/* Loading */
-.fixtures-loading {
-  min-height: 100vh;
-  background: #0a0e27;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-  color: #fff;
-}
-
-.fixtures-loading-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-.fixtures-loading p {
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.7);
-  font-weight: 500;
-}
-
-/* Responsive - Desktop */
-@media (min-width: 768px) {
-  .fixtures-page {
-    padding: 60px 40px 100px;
-  }
-
-  .fixtures-container {
-    max-width: 900px;
-  }
-
-  .match-content {
-    gap: 28px;
-    padding: 28px;
-  }
-
-  .team-logo {
-    width: 50px;
-    height: 50px;
-  }
-
-  .team-name {
-    font-size: 1.1rem;
-    max-width: 250px;
-  }
-}
-
-/* Responsive - Mobile */
-@media (max-width: 768px) {
-  .fixtures-page {
-    padding: 24px 16px 60px;
-  }
-
-  .fixtures-title {
-    font-size: 1.8rem;
-    margin-bottom: 28px;
-  }
-
-  .matchweek-selector {
-    gap: 16px;
-    margin-bottom: 28px;
-  }
-
-  .matchweek-tab {
-    width: 45px;
-    height: 45px;
-    font-size: 1rem;
-  }
-
-  .match-content {
-    gap: 12px;
-    padding: 20px 16px;
-  }
-
-  .team-name {
-    font-size: 0.85rem;
-    max-width: 100px;
-  }
-
-  .team-logo {
-    width: 40px;
-    height: 40px;
-  }
-
-  .match-score {
-    font-size: 1.5rem;
-    padding: 8px 12px;
-    gap: 6px;
-  }
-
-  .score-value {
-    min-width: 25px;
-  }
-
-  .score-separator {
-    font-size: 1.2rem;
-  }
-
-  .match-venue {
-    font-size: 0.75rem;
-    padding: 8px 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .fixtures-title {
-    font-size: 1.5rem;
-  }
-
-  .matchweek-tabs {
-    padding: 3px;
-  }
-
-  .matchweek-tab {
-    width: 40px;
-    height: 40px;
-    font-size: 0.95rem;
-  }
-
-  .team-name {
-    font-size: 0.75rem;
-    max-width: 80px;
-  }
-
-  .team-logo {
-    width: 35px;
-    height: 35px;
-  }
-
-  .match-score {
-    font-size: 1.3rem;
-    padding: 6px 10px;
-  }
-}
-

@@ -17,6 +17,7 @@ import FixturesManager from './admin/pages/Fixtures/FixturesManager';
 import MatchRecorder from './admin/pages/Matches/MatchRecorder';
 import GoalsManager from './admin/pages/Goals/GoalsManager';
 import StatisticsViewer from './admin/pages/Statistics/StatisticsViewer';
+import StatsRecalculator from './admin/pages/Utilities/StatsRecalculator';
 import SettingsPanel from './admin/pages/Settings/SettingsPanel';
 
 // Import styles
@@ -157,6 +158,8 @@ function AdminApp() {
       setCurrentPage('goals');
     } else if (path.includes('/admin/statistics')) {
       setCurrentPage('statistics');
+    } else if (path.includes('/admin/utilities')) {
+      setCurrentPage('utilities');
     } else if (path.includes('/admin/settings')) {
       setCurrentPage('settings');
     } else {
@@ -196,6 +199,8 @@ function AdminApp() {
         return <GoalsManager />;
       case 'statistics':
         return <StatisticsViewer />;
+      case 'utilities':
+        return <StatsRecalculator />;
       case 'settings':
         return <SettingsPanel />;
       default:

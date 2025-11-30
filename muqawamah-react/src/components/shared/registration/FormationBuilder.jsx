@@ -10,8 +10,12 @@ export default function FormationBuilder() {
   const [presetApplied, setPresetApplied] = useState(false);
 
   const updatePlayerPosition = (playerId, x, y) => {
+    // Ensure x and y are valid numbers
+    const validX = typeof x === 'number' && !isNaN(x) ? x : 50;
+    const validY = typeof y === 'number' && !isNaN(y) ? y : 50;
+    
     setPlayers((prev) =>
-      prev.map((player) => (player.id === playerId ? { ...player, x, y } : player))
+      prev.map((player) => (player.id === playerId ? { ...player, x: validX, y: validY } : player))
     );
   };
 

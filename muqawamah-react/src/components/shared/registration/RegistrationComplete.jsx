@@ -2,23 +2,26 @@ import React from 'react';
 import { useRegistration } from './RegistrationContext';
 
 export default function RegistrationComplete() {
-  const { teamData, resetForm } = useRegistration();
+  const { teamData, resetForm, paymentStatus } = useRegistration();
 
   const handleBackToHome = () => {
     resetForm();
     window.location.href = '/muqawamah/2026/';
   };
 
+  // Check if registration is confirmed
+  const isConfirmed = paymentStatus === 'confirmed' || paymentStatus === 'success';
+
   return (
     <div className="registration-form registration-complete">
       <div className="complete-container">
         <div className="complete-icon">
-          <div className="icon-circle success">
-            <i className="fas fa-check"></i>
+          <div className={`icon-circle ${isConfirmed ? 'confirmed' : 'pending'}`}>
+            <i className={`fas ${isConfirmed ? 'fa-check' : 'fa-clock'}`}></i>
           </div>
         </div>
 
-        <h2>Thank You for Registering!</h2>
+        <h2>{isConfirmed ? 'Registration Confirmed!' : 'Registration Submitted!'}</h2>
         
         <div className="complete-team-info">
           {teamData.teamLogo && (
@@ -31,25 +34,48 @@ export default function RegistrationComplete() {
         </div>
 
         <div className="complete-message">
-          <p className="main-message">
-            Your registration for <strong>Muqawama 2026</strong> has been successfully submitted!
-          </p>
-          <p className="sub-message">
-            Our team will shortly get in touch with you to follow up with the next steps. 
-            Please keep an eye on your email and phone for updates.
-          </p>
+          {isConfirmed ? (
+            <>
+              <div className="confirmation-badge">
+                <i className="fas fa-check-circle"></i>
+                <span>Payment Verified</span>
+              </div>
+              <p className="main-message">
+                Your registration for <strong>Muqawama 2026</strong> has been confirmed!
+              </p>
+              <p className="sub-message">
+                Welcome to the tournament! Your team is now officially registered.
+              </p>
+            </>
+          ) : (
+            <>
+              <div className="verification-badge">
+                <i className="fas fa-hourglass-half"></i>
+                <span>Payment Verification Pending</span>
+              </div>
+              <p className="main-message">
+                Your registration for <strong>Muqawama 2026</strong> has been submitted successfully!
+              </p>
+              <p className="sub-message">
+                We have received your payment screenshot and it is being verified by our team.
+                You will receive confirmation within <strong>24 hours</strong>.
+              </p>
+            </>
+          )}
         </div>
 
         <div className="complete-details">
           <h4>What Happens Next?</h4>
           <ul className="next-steps-list">
-            <li>
-              <i className="fas fa-envelope"></i>
-              <span>You'll receive a confirmation email at <strong>{teamData.captainEmail}</strong></span>
-            </li>
+            {!isConfirmed && (
+              <li>
+                <i className="fas fa-search-dollar"></i>
+                <span>Our team will verify your payment within 24 hours</span>
+              </li>
+            )}
             <li>
               <i className="fas fa-phone"></i>
-              <span>Our team will contact you within 24-48 hours</span>
+              <span>The organisers will get in touch with you soon</span>
             </li>
             <li>
               <i className="fas fa-calendar-check"></i>

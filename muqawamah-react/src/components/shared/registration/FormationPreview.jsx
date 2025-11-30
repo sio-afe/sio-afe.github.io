@@ -101,9 +101,13 @@ export default function FormationPreview({
         >
           {/* Players */}
           {players.map((player) => {
+            // Ensure x and y are valid numbers, default to center if not
+            const playerX = typeof player.x === 'number' && !isNaN(player.x) ? player.x : 50;
+            const playerY = typeof player.y === 'number' && !isNaN(player.y) ? player.y : 50;
+            
             // Convert percentage to SVG coordinates (accounting for the 3px transform)
-            const svgX = 3 + (player.x / 100) * 68;
-            const svgY = 3 + (player.y / 100) * 105;
+            const svgX = 3 + (playerX / 100) * 68;
+            const svgY = 3 + (playerY / 100) * 105;
             
             return (
               <g 
@@ -114,9 +118,9 @@ export default function FormationPreview({
                 onMouseDown={(e) => handlePlayerMouseDown(e, player)}
                 onTouchStart={(e) => handlePlayerTouchStart(e, player)}
               >
-                {/* Player circle with image or position */}
+                {/* Player circle with image or position - 10% larger */}
                 <circle 
-                  r="3" 
+                  r="3.3" 
                   fill="#4a90e2" 
                   stroke="#fff" 
                   strokeWidth="0.5"
@@ -124,20 +128,20 @@ export default function FormationPreview({
                 {player.image ? (
                   <image 
                     href={player.image} 
-                    x="-3" 
-                    y="-3" 
-                    width="6" 
-                    height="6" 
-                    clipPath="circle(3px at center)"
+                    x="-3.3" 
+                    y="-3.3" 
+                    width="6.6" 
+                    height="6.6" 
+                    clipPath="circle(3.3px at center)"
                     style={{ borderRadius: '50%' }}
                   />
                 ) : (
                   <text 
                     x="0" 
-                    y="1" 
+                    y="1.1" 
                     textAnchor="middle" 
                     fill="#fff" 
-                    fontSize="2.5" 
+                    fontSize="2.75" 
                     fontWeight="600"
                   >
                     {player.position}
@@ -147,20 +151,20 @@ export default function FormationPreview({
                 {/* Player name and position below */}
                 <text 
                   x="0" 
-                  y="5.5" 
+                  y="6" 
                   textAnchor="middle" 
                   fill="#000" 
-                  fontSize="1.8" 
+                  fontSize="2" 
                   fontWeight="600"
                 >
                   {player.name || 'Player'}
                 </text>
                 <text 
                   x="0" 
-                  y="7.5" 
+                  y="8.2" 
                   textAnchor="middle" 
                   fill="#666" 
-                  fontSize="1.5" 
+                  fontSize="1.65" 
                   fontWeight="400"
                 >
                   {player.position}

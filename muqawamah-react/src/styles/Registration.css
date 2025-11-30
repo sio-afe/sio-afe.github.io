@@ -1464,3 +1464,474 @@ body.registration-body h4 {
   }
 }
 
+/* ==========================================
+   QR Payment Checkout Styles
+   ========================================== */
+
+.payment-checkout .checkout-section {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.payment-checkout .checkout-section h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.payment-checkout .checkout-section h4 i {
+  color: #4f46e5;
+}
+
+/* Order Summary */
+.order-summary-card {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.order-item:last-of-type {
+  border-bottom: none;
+}
+
+.order-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.item-name {
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.item-detail {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.item-price {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.order-item.discount .item-price {
+  color: #10b981;
+}
+
+.order-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  margin-top: 8px;
+  border-top: 2px solid #e5e7eb;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.total-price {
+  color: #4f46e5;
+  font-size: 1.3rem;
+}
+
+/* QR Code Payment Section */
+.qr-payment-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.qr-code-wrapper {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e5e7eb;
+}
+
+.qr-code-image {
+  width: 220px;
+  height: 220px;
+  display: block;
+}
+
+.download-qr-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.download-qr-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+  color: white;
+}
+
+.download-qr-btn i {
+  font-size: 1rem;
+}
+
+.qr-instructions {
+  width: 100%;
+  max-width: 400px;
+}
+
+.instruction-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px dashed #e5e7eb;
+}
+
+.instruction-step:last-child {
+  border-bottom: none;
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white;
+  border-radius: 50%;
+  font-weight: 600;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.instruction-step span:last-child {
+  color: #374151;
+  line-height: 1.5;
+}
+
+.instruction-step strong {
+  color: #4f46e5;
+}
+
+/* Screenshot Upload */
+.screenshot-upload-container {
+  margin-top: 8px;
+}
+
+.screenshot-dropzone {
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #fafafa;
+}
+
+.screenshot-dropzone:hover {
+  border-color: #4f46e5;
+  background: #f5f3ff;
+}
+
+.screenshot-dropzone i {
+  font-size: 3rem;
+  color: #9ca3af;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.screenshot-dropzone:hover i {
+  color: #4f46e5;
+}
+
+.screenshot-dropzone p {
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 4px;
+}
+
+.screenshot-dropzone span {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.screenshot-preview {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #10b981;
+  background: #f0fdf4;
+}
+
+.screenshot-preview img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  display: block;
+}
+
+.remove-screenshot-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.remove-screenshot-btn:hover {
+  background: #dc2626;
+}
+
+/* Upload Progress */
+.upload-progress {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.upload-progress span {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+/* Team Summary in Checkout */
+.checkout-team-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.team-mini-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+}
+
+.team-mini-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 2px solid #e5e7eb;
+}
+
+.team-mini-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.team-mini-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #1a1a1a;
+}
+
+.team-mini-category {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.captain-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.captain-info span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.captain-info i {
+  color: #9ca3af;
+}
+
+/* Pay Button */
+.pay-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.pay-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Terms Note */
+.terms-note {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: 16px;
+}
+
+.terms-note i {
+  margin-right: 4px;
+}
+
+.terms-note a {
+  color: #4f46e5;
+  text-decoration: underline;
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+  .payment-checkout .checkout-section {
+    padding: 16px;
+  }
+
+  .qr-code-image {
+    width: 180px;
+    height: 180px;
+  }
+
+  .qr-code-wrapper {
+    padding: 16px;
+  }
+
+  .instruction-step {
+    font-size: 0.9rem;
+  }
+
+  .step-number {
+    width: 24px;
+    height: 24px;
+    font-size: 0.8rem;
+  }
+
+  .screenshot-dropzone {
+    padding: 30px 16px;
+  }
+
+  .screenshot-dropzone i {
+    font-size: 2.5rem;
+  }
+}
+
+/* ==========================================
+   Registration Complete - Verification Badge
+   ========================================== */
+
+.verification-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 2px solid #f59e0b;
+  border-radius: 30px;
+  color: #92400e;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+
+.verification-badge i {
+  font-size: 1.2rem;
+  animation: pulse 2s infinite;
+}
+
+.confirmation-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  border: 2px solid #10b981;
+  border-radius: 30px;
+  color: #065f46;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+
+.confirmation-badge i {
+  font-size: 1.2rem;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.registration-complete .icon-circle.pending {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.registration-complete .icon-circle.pending i {
+  color: white;
+}
+
+.registration-complete .icon-circle.confirmed {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.registration-complete .icon-circle.confirmed i {
+  color: white;
+}
+

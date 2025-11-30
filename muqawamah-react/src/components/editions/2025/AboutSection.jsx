@@ -93,6 +93,8 @@ function AboutSection({ edition }) {
                   className="tournament-btn"
                   type="button"
                   onClick={() => setShowCategoryModal(true)}
+                  disabled
+                  style={{ opacity: 0.5, cursor: 'not-allowed' }}
                 >
                   View Tournament
                 </button>

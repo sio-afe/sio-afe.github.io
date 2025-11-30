@@ -58,6 +58,11 @@ export default function MatchRecorder() {
     if (!selectedMatch) return;
 
     try {
+      // Check if match was previously completed
+      const wasCompleted = selectedMatch.status === 'completed';
+      const oldHomeScore = selectedMatch.home_score || 0;
+      const oldAwayScore = selectedMatch.away_score || 0;
+
       // Update match result
       const { error: matchError } = await supabaseClient
         .from('matches')
@@ -71,19 +76,91 @@ export default function MatchRecorder() {
       if (matchError) throw matchError;
 
       // Update team stats
-      await updateTeamStats(
-        selectedMatch.home_team_id,
-        selectedMatch.away_team_id,
-        matchResult.home_score,
-        matchResult.away_score
-      );
+      if (matchResult.status === 'completed') {
+        if (wasCompleted) {
+          // Match was previously completed - reverse old stats and apply new ones
+          await reverseTeamStats(
+            selectedMatch.home_team_id,
+            selectedMatch.away_team_id,
+            oldHomeScore,
+            oldAwayScore
+          );
+        }
+        await updateTeamStats(
+          selectedMatch.home_team_id,
+          selectedMatch.away_team_id,
+          matchResult.home_score,
+          matchResult.away_score
+        );
+      } else if (wasCompleted && matchResult.status !== 'completed') {
+        // Match was completed but now changed to another status - reverse stats
+        await reverseTeamStats(
+          selectedMatch.home_team_id,
+          selectedMatch.away_team_id,
+          oldHomeScore,
+          oldAwayScore
+        );
+      }
 
       alert('Match result recorded successfully!');
       setShowModal(false);
       fetchMatches();
     } catch (error) {
       console.error('Error recording result:', error);
-      alert('Failed to record match result');
+      alert('Failed to record match result: ' + error.message);
+    }
+  };
+
+  const reverseTeamStats = async (homeTeamId, awayTeamId, homeScore, awayScore) => {
+    try {
+      // Fetch current stats
+      const { data: homeTeam } = await supabaseClient
+        .from('teams')
+        .select('*')
+        .eq('id', homeTeamId)
+        .single();
+
+      const { data: awayTeam } = await supabaseClient
+        .from('teams')
+        .select('*')
+        .eq('id', awayTeamId)
+        .single();
+
+      // Reverse stats for home team
+      let homeStats = {
+        played: Math.max((homeTeam.played || 0) - 1, 0),
+        goals_for: Math.max((homeTeam.goals_for || 0) - homeScore, 0),
+        goals_against: Math.max((homeTeam.goals_against || 0) - awayScore, 0)
+      };
+
+      // Reverse stats for away team
+      let awayStats = {
+        played: Math.max((awayTeam.played || 0) - 1, 0),
+        goals_for: Math.max((awayTeam.goals_for || 0) - awayScore, 0),
+        goals_against: Math.max((awayTeam.goals_against || 0) - homeScore, 0)
+      };
+
+      // Reverse result
+      if (homeScore > awayScore) {
+        homeStats.won = Math.max((homeTeam.won || 0) - 1, 0);
+        homeStats.points = Math.max((homeTeam.points || 0) - 3, 0);
+        awayStats.lost = Math.max((awayTeam.lost || 0) - 1, 0);
+      } else if (homeScore < awayScore) {
+        awayStats.won = Math.max((awayTeam.won || 0) - 1, 0);
+        awayStats.points = Math.max((awayTeam.points || 0) - 3, 0);
+        homeStats.lost = Math.max((homeTeam.lost || 0) - 1, 0);
+      } else {
+        homeStats.drawn = Math.max((homeTeam.drawn || 0) - 1, 0);
+        homeStats.points = Math.max((homeTeam.points || 0) - 1, 0);
+        awayStats.drawn = Math.max((awayTeam.drawn || 0) - 1, 0);
+        awayStats.points = Math.max((awayTeam.points || 0) - 1, 0);
+      }
+
+      // Update both teams
+      await supabaseClient.from('teams').update(homeStats).eq('id', homeTeamId);
+      await supabaseClient.from('teams').update(awayStats).eq('id', awayTeamId);
+    } catch (error) {
+      console.error('Error reversing team stats:', error);
     }
   };
 
@@ -94,7 +171,7 @@ export default function MatchRecorder() {
         .from('teams')
         .select('*')
         .eq('id', homeTeamId)
-        .single();
+.single();
 
       const { data: awayTeam } = await supabaseClient
         .from('teams')

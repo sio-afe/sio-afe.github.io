@@ -19,17 +19,18 @@ const positionLabels = {
 };
 
 const positionGroups = {
-  'Goalkeeper': 'GOALKEEPERS',
-  'Defender': 'DEFENDERS',
-  'Midfielder': 'MIDFIELDERS',
-  'Forward': 'FORWARDS',
-  'Substitute': 'SUBSTITUTES'
+  'Goalkeeper': 'Goalkeepers',
+  'Defender': 'Defenders',
+  'Midfielder': 'Midfielders',
+  'Forward': 'Forwards',
+  'Substitute': 'Substitutes'
 };
 
 export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer }) {
   const [player, setPlayer] = useState(null);
   const [teammates, setTeammates] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [playerIndex, setPlayerIndex] = useState(1);
 
   useEffect(() => {
     if (playerId) {
@@ -40,26 +41,27 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer }) {
 
   const fetchPlayerData = async () => {
     try {
-      // Fetch player with team info - only necessary fields
       const { data: playerData, error: playerError } = await supabaseClient
         .from('team_players')
-        .select('id, player_name, player_image, position, player_age, team_id, team_registrations(id, team_name, team_logo)')
+        .select('id, player_name, player_image, position, player_age, is_substitute, team_id, team_registrations(id, team_name, team_logo)')
         .eq('id', playerId)
         .single();
 
       if (playerError) throw playerError;
       setPlayer(playerData);
 
-      // Fetch teammates in parallel - only necessary fields
       if (playerData?.team_id) {
-        supabaseClient
+        const { data: allPlayers } = await supabaseClient
           .from('team_players')
           .select('id, player_name, player_image, position')
           .eq('team_id', playerData.team_id)
-          .neq('id', playerId)
-          .then(({ data }) => {
-            if (data) setTeammates(data);
-          });
+          .order('player_name', { ascending: true });
+        
+        if (allPlayers) {
+          const idx = allPlayers.findIndex(p => p.id === playerId);
+          setPlayerIndex(idx >= 0 ? idx + 1 : 1);
+          setTeammates(allPlayers.filter(p => p.id !== playerId));
+        }
       }
     } catch (error) {
       console.error('Error fetching player:', error);
@@ -76,7 +78,7 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer }) {
     const groups = {};
     teammates.forEach(tm => {
       const posLabel = getPositionLabel(tm.position);
-      const groupName = positionGroups[posLabel] || 'OTHERS';
+      const groupName = positionGroups[posLabel] || 'Others';
       if (!groups[groupName]) groups[groupName] = [];
       groups[groupName].push(tm);
     });
@@ -113,175 +115,153 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer }) {
   const positionLabel = getPositionLabel(player.position);
   const groupedTeammates = groupTeammates();
 
-  // Mock stats - these would come from a stats table in real implementation
+  // Stats (would come from DB in real implementation)
   const stats = {
-    apps: player.stats?.apps || 0,
-    goals: player.stats?.goals || 0,
-    assists: player.stats?.assists || 0
+    apps: 0,
+    goals: 0,
+    assists: 0
   };
 
-  // Mock match log
-  const matchLog = player.match_log || [];
+  const matchLog = [];
 
   return (
     <>
       <TournamentNavbar />
-      <div className="player-detail">
-        {/* Hero Section */}
-        <div className="player-hero">
-        <div className="player-hero-bg"></div>
-        
-        {/* Top Logos */}
-        <div className="hero-logos">
-          <div className="team-logo-hero">
-            {team?.team_logo ? (
-              <img src={team.team_logo} alt={team.team_name} />
-            ) : (
-              <span>{team?.team_name?.charAt(0) || '?'}</span>
-            )}
-          </div>
-          <div className="tournament-logo-hero">
-            <img src="/assets/img/MuqawamaLogo.png" alt="Muqawama" />
-          </div>
-        </div>
+      <div className="bls-player-page">
+        {/* Hero Section with Background */}
+        <div className="bls-hero-section">
+          <div className="bls-hero-content">
+            {/* Team Logo */}
+            <div className="bls-team-logo">
+              {team?.team_logo ? (
+                <img src={team.team_logo} alt={team?.team_name} />
+              ) : (
+                <span>{team?.team_name?.charAt(0) || '?'}</span>
+              )}
+            </div>
 
-        {/* Player Content */}
-        <div className="player-hero-content">
-          <div className="player-photo-hero">
-            {player.player_image ? (
-              <img src={player.player_image} alt={player.player_name} />
-            ) : (
-              <div className="player-photo-placeholder-hero">
-                <i className="fas fa-user"></i>
-              </div>
-            )}
-          </div>
-          <div className="player-info-hero">
-            <h1 className="player-name-hero">{player.player_name}</h1>
-            <div className="player-meta-hero">
-              <span className="meta-label">Position:</span>
-              <span className="meta-value">{positionLabel}</span>
-              <span className="meta-label">Age:</span>
-              <span className="meta-value">{player.player_age || '-'}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="player-detail-body">
-        <div className="player-detail-main">
-          {/* Season Header */}
-          <div className="season-header">
-            <h2 className="section-title-italic">SEASONS</h2>
-            <div className="season-selector">
-              <span>2026</span>
-              <i className="fas fa-chevron-down"></i>
-            </div>
-          </div>
-
-          {/* Quick Stats */}
-          <div className="quick-stats-card">
-            <div className="quick-stat">
-              <span className="stat-value-big">{stats.apps}</span>
-              <span className="stat-label">APPS</span>
-            </div>
-            <div className="stat-divider"></div>
-            <div className="quick-stat">
-              <span className="stat-value-big">{stats.goals}</span>
-              <span className="stat-label">GOALS</span>
-            </div>
-            <div className="stat-divider"></div>
-            <div className="quick-stat">
-              <span className="stat-value-big">{stats.assists}</span>
-              <span className="stat-label">ASSISTS</span>
-            </div>
-          </div>
-
-          {/* Match Log */}
-          <div className="match-log-section">
-            <h3 className="section-title-italic">MATCH LOG</h3>
-            {matchLog.length > 0 ? (
-              <div className="match-log-table">
-                <div className="match-log-header">
-                  <span>MW</span>
-                  <span>DATE</span>
-                  <span>MATCH</span>
-                  <span>SCORE</span>
-                  <span>MP</span>
-                  <span>G</span>
-                  <span>Y</span>
-                  <span>R</span>
+            {/* Player Photo */}
+            <div className="bls-player-photo">
+              {player.player_image ? (
+                <img src={player.player_image} alt={player.player_name} />
+              ) : (
+                <div className="bls-photo-placeholder">
+                  <i className="fas fa-user"></i>
                 </div>
-                {matchLog.map((match, index) => (
-                  <div className="match-log-row" key={index}>
-                    <span>{match.matchweek}</span>
-                    <span>{match.date}</span>
-                    <span className="match-teams">
-                      <img src={match.home_logo} alt="" className="match-team-logo" />
-                      <span>{match.home_abbr}</span>
-                      <span className="vs">vs</span>
-                      <img src={match.away_logo} alt="" className="match-team-logo" />
-                      <span>{match.away_abbr}</span>
-                    </span>
-                    <span className={`match-score ${match.result}`}>
-                      {match.score}
-                    </span>
-                    <span>{match.minutes}</span>
-                    <span>{match.goals}</span>
-                    <span>{match.yellows}</span>
-                    <span>{match.reds}</span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="no-matches">
-                <p>No matches played yet</p>
-              </div>
-            )}
+              )}
+            </div>
+
+            {/* Player Info */}
+            <div className="bls-player-info">
+              <h1>{player.player_name}</h1>
+              <p>
+                <b>Position:</b> {positionLabel}
+                &nbsp;&nbsp;
+                <b>Age:</b> {player.player_age || '-'}
+              </p>
+            </div>
+
+            {/* Player Number */}
+            <span className="bls-player-number">#{playerIndex}</span>
           </div>
+          <hr />
         </div>
 
-        {/* Sidebar - Teammates */}
-        <div className="player-detail-sidebar">
-          <h3 className="section-title">TEAMMATES</h3>
-          <div className="teammates-list">
-            {Object.entries(groupedTeammates).map(([group, players]) => (
-              <div className="teammate-group" key={group}>
-                <h4 className="teammate-group-title">{group}</h4>
-                {players.map((tm, idx) => (
-                  <div 
-                    className="teammate-row" 
-                    key={tm.id}
-                    onClick={() => onNavigateToPlayer && onNavigateToPlayer(tm.id, tm.player_name)}
-                  >
-                    <span className="teammate-number">{idx + 1}</span>
-                    <div className="teammate-photo">
-                      {tm.player_image ? (
-                        <img src={tm.player_image} alt={tm.player_name} />
-                      ) : (
-                        <i className="fas fa-user"></i>
-                      )}
-                    </div>
-                    <span className="teammate-name">{tm.player_name}</span>
-                  </div>
-                ))}
+        {/* Main Content */}
+        <div className="bls-content-wrapper">
+          {/* Stats Grid */}
+          <div className="bls-stats-grid">
+            {/* Left: Main Stats */}
+            <div className="bls-main-stats">
+              {/* Quick Stats Bar */}
+              <div className="bls-quick-stats">
+                <div className="bls-stat-box">
+                  <div className="bls-stat-value">{stats.goals}</div>
+                  <span>Goals</span>
+                </div>
+                <div className="bls-stat-box">
+                  <div className="bls-stat-value">{stats.assists}</div>
+                  <span>Assists</span>
+                </div>
               </div>
-            ))}
+
+              {/* Match Log */}
+              <div className="bls-match-log">
+                <h4>Match Log</h4>
+                {matchLog.length > 0 ? (
+                  <table className="bls-match-table">
+                    <thead>
+                      <tr>
+                        <th>MW</th>
+                        <th>Date</th>
+                        <th>Match</th>
+                        <th>Score</th>
+                        <th>MP</th>
+                        <th>G</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {matchLog.map((match, idx) => (
+                        <tr key={idx}>
+                          <td>{match.matchweek}</td>
+                          <td>{match.date}</td>
+                          <td>{match.opponent}</td>
+                          <td>
+                            <span className={`bls-result bls-result-${match.result}`}>
+                              {match.result}
+                            </span>
+                            <span>{match.score}</span>
+                          </td>
+                          <td>{match.minutes}</td>
+                          <td>{match.goals}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <p className="bls-no-data">No matches played yet</p>
+                )}
+              </div>
+            </div>
+
+            {/* Right: Teammates */}
+            <div className="bls-teammates">
+              <h4>Teammates</h4>
+              {Object.entries(groupedTeammates).map(([group, players]) => (
+                <div className="bls-teammate-group" key={group}>
+                  <h6>{group}</h6>
+                  {players.map((tm, idx) => (
+                    <a 
+                      key={tm.id}
+                      className="bls-teammate-row"
+                      onClick={() => onNavigateToPlayer && onNavigateToPlayer(tm.id, tm.player_name)}
+                    >
+                      <div className="bls-teammate-number">{idx + 1}</div>
+                      <div className="bls-teammate-image">
+                        {tm.player_image ? (
+                          <img src={tm.player_image} alt={tm.player_name} />
+                        ) : (
+                          <i className="fas fa-user"></i>
+                        )}
+                      </div>
+                      <div className="bls-teammate-name">{tm.player_name}</div>
+                    </a>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Back Button */}
+          <div className="bls-back-section">
+            <button onClick={onBack} className="bls-back-btn">
+              <i className="fas fa-arrow-left"></i> Back to Players
+            </button>
           </div>
         </div>
-      </div>
-
-      {/* Back Button */}
-      <div className="player-detail-footer">
-        <button onClick={onBack} className="back-btn">
-          <i className="fas fa-arrow-left"></i> Back to Players
-        </button>
-      </div>
 
         <Footer edition="2026" />
       </div>
     </>
   );
 }
-

@@ -50,6 +50,11 @@ export default function AdminSidebar() {
       path: ADMIN_ROUTES.STATISTICS 
     },
     { 
+      icon: 'fas fa-tools', 
+      label: 'Utilities', 
+      path: ADMIN_ROUTES.UTILITIES 
+    },
+    { 
       icon: 'fas fa-cog', 
       label: 'Settings', 
       path: ADMIN_ROUTES.SETTINGS 

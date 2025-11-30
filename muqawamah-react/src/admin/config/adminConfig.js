@@ -19,6 +19,7 @@ export const ADMIN_ROUTES = {
   MATCHES: '/muqawamah/admin/matches',
   GOALS: '/muqawamah/admin/goals',
   STATISTICS: '/muqawamah/admin/statistics',
+  UTILITIES: '/muqawamah/admin/utilities',
   SETTINGS: '/muqawamah/admin/settings'
 };
 
@@ -37,8 +38,9 @@ export const PERMISSIONS = {
 
 // Registration Status Options
 export const REGISTRATION_STATUSES = [
+  { value: 'draft', label: 'Draft', color: '#9ca3af' },
   { value: 'submitted', label: 'Submitted', color: '#fbbf24' },
-  { value: 'pending_payment', label: 'Pending Payment', color: '#f59e0b' },
+  { value: 'pending_verification', label: 'Pending Verification', color: '#f59e0b' },
   { value: 'confirmed', label: 'Confirmed', color: '#10b981' },
   { value: 'cancelled', label: 'Cancelled', color: '#ef4444' }
 ];

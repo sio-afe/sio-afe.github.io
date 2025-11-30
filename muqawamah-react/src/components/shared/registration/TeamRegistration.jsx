@@ -210,13 +210,17 @@ function RegistrationFlow() {
         // Check registration status and set appropriate step
         if (data.status === 'confirmed') {
           // Already confirmed, show completion
-          setPaymentStatus('success');
+          setPaymentStatus('confirmed');
+          setStep(6);
+        } else if (data.status === 'pending_verification') {
+          // Payment submitted, awaiting verification
+          setPaymentStatus('pending_verification');
           setStep(6);
         } else if (data.status === 'pending_payment') {
           // Was in payment, go back to review
           setStep(4);
         } else {
-          // Status is 'submitted' - resume from where they left off
+          // Status is 'submitted' or 'draft' - resume from where they left off
           const savedStep = data.last_saved_step || 1;
           setLastSavedStep(savedStep);
           // Go to the next step after their last saved step, or review if complete

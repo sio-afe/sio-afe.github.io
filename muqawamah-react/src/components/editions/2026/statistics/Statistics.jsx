@@ -4,20 +4,26 @@ import TournamentNavbar from '../../../shared/TournamentNavbar';
 import Footer from '../../../shared/Footer';
 
 export default function Statistics() {
-  const [activeTab, setActiveTab] = useState('player'); // 'player' or 'team'
+  const [activeTab, setActiveTab] = useState('goals'); // 'goals', 'assists', 'teams'
   const [playerStats, setPlayerStats] = useState({
     goals: [],
     assists: []
   });
-  const [teamStats, setTeamStats] = useState({
-    goalsScored: [],
-    goalsAgainst: []
-  });
+  const [teamStats, setTeamStats] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Determine category from URL
+  const getCategory = () => {
+    const path = window.location.pathname;
+    if (path.includes('/u17/')) return 'u17';
+    return 'open-age';
+  };
+
+  const [category] = useState(getCategory());
 
   useEffect(() => {
     fetchStatistics();
-  }, []);
+  }, [category]);
 
   const fetchStatistics = async () => {
     try {
@@ -33,16 +39,21 @@ export default function Statistics() {
           goals,
           assists,
           team_id,
-          team_registrations(team_name)
+          team_registrations(team_name, team_logo, category)
         `)
         .order('goals', { ascending: false });
 
       if (playersData) {
-        const topScorers = playersData
+        // Filter by category
+        const categoryPlayers = playersData.filter(
+          p => p.team_registrations?.category === category
+        );
+
+        const topScorers = categoryPlayers
           .filter(p => (p.goals || 0) > 0)
           .slice(0, 10);
 
-        const topAssisters = [...playersData]
+        const topAssisters = [...categoryPlayers]
           .filter(p => (p.assists || 0) > 0)
           .sort((a, b) => (b.assists || 0) - (a.assists || 0))
           .slice(0, 10);
@@ -57,19 +68,11 @@ export default function Statistics() {
       const { data: teamsData } = await supabaseClient
         .from('teams')
         .select('*')
-        .eq('category', 'open-age')
+        .eq('category', category)
         .order('goals_for', { ascending: false });
 
       if (teamsData) {
-        const byGoalsScored = [...teamsData].slice(0, 5);
-        const byGoalsAgainst = [...teamsData]
-          .sort((a, b) => (a.goals_against || 999) - (b.goals_against || 999))
-          .slice(0, 5);
-
-        setTeamStats({
-          goalsScored: byGoalsScored,
-          goalsAgainst: byGoalsAgainst
-        });
+        setTeamStats(teamsData.slice(0, 10));
       }
     } catch (error) {
       console.error('Error fetching statistics:', error);
@@ -78,20 +81,22 @@ export default function Statistics() {
     }
   };
 
-  const handlePlayerClick = (playerId, playerName) => {
-    window.location.href = `/muqawamah/2026/open-age/players/?player=${playerId}`;
+  const handlePlayerClick = (playerId) => {
+    const base = category === 'u17' ? '/muqawamah/2026/u17' : '/muqawamah/2026/open-age';
+    window.location.href = `${base}/players/?player=${playerId}`;
   };
 
   const handleTeamClick = (teamId) => {
-    window.location.href = `/muqawamah/2026/open-age/teams/?team=${teamId}`;
+    const base = category === 'u17' ? '/muqawamah/2026/u17' : '/muqawamah/2026/open-age';
+    window.location.href = `${base}/teams/?team=${teamId}`;
   };
 
   if (loading) {
     return (
       <>
         <TournamentNavbar />
-        <div className="statistics-loading">
-          <div className="statistics-loading-content">
+        <div className="stats-page-v2 stats-loading-v2">
+          <div className="stats-loading-content">
             <div className="logo-loader">
               <div className="logo-ring"></div>
               <img src="/assets/img/MuqawamaLogo.png" alt="Muqawama" className="logo-pulse" />
@@ -104,173 +109,194 @@ export default function Statistics() {
     );
   }
 
+  const tabs = [
+    { id: 'goals', label: 'TOP SCORERS', icon: 'fa-futbol' },
+    { id: 'assists', label: 'TOP ASSISTS', icon: 'fa-hands-helping' },
+    { id: 'teams', label: 'TEAM STATS', icon: 'fa-shield-alt' }
+  ];
+
+  const renderPlayerLeaderboard = (players, statType) => (
+    <div className="leaderboard-v2">
+      {players.length > 0 ? (
+        players.map((player, idx) => (
+          <div 
+            key={player.id} 
+            className={`leaderboard-row-v2 ${idx === 0 ? 'top-player' : ''}`}
+            onClick={() => handlePlayerClick(player.id)}
+          >
+            {/* Rank */}
+            <div className="rank-cell-v2">
+              <span className={`rank-number ${idx < 3 ? 'rank-top' : ''}`}>
+                {idx + 1}
+              </span>
+            </div>
+
+            {/* Player Photo */}
+            <div className="player-photo-v2">
+              {player.player_image ? (
+                <img src={player.player_image} alt={player.player_name} />
+              ) : (
+                <div className="photo-placeholder">
+                  <i className="fas fa-user"></i>
+                </div>
+              )}
+            </div>
+
+            {/* Player Info */}
+            <div className="player-info-v2">
+              <span className="player-name-v2">{player.player_name}</span>
+              <div className="team-info-v2">
+                {player.team_registrations?.team_logo && (
+                  <img 
+                    src={player.team_registrations.team_logo} 
+                    alt="" 
+                    className="mini-team-logo"
+                  />
+                )}
+                <span className="team-name-mini">
+                  {player.team_registrations?.team_name || 'N/A'}
+                </span>
+              </div>
+            </div>
+
+            {/* Stat Value */}
+            <div className="stat-value-v2">
+              <span className="stat-number">
+                {statType === 'goals' ? (player.goals || 0) : (player.assists || 0)}
+              </span>
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="no-data-v2">
+          <i className="fas fa-chart-bar"></i>
+          <p>No statistics available yet</p>
+        </div>
+      )}
+    </div>
+  );
+
+  const renderTeamLeaderboard = () => (
+    <div className="leaderboard-v2 team-leaderboard">
+      {teamStats.length > 0 ? (
+        teamStats.map((team, idx) => (
+          <div 
+            key={team.id} 
+            className={`leaderboard-row-v2 team-row ${idx === 0 ? 'top-team' : ''}`}
+            onClick={() => handleTeamClick(team.id)}
+          >
+            {/* Rank */}
+            <div className="rank-cell-v2">
+              <span className={`rank-number ${idx < 3 ? 'rank-top' : ''}`}>
+                {idx + 1}
+              </span>
+            </div>
+
+            {/* Team Logo */}
+            <div className="team-logo-v2">
+              {team.crest_url ? (
+                <img src={team.crest_url} alt={team.name} />
+              ) : (
+                <div className="logo-placeholder">
+                  <span>{team.name?.charAt(0) || '?'}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Team Name */}
+            <div className="team-info-main-v2">
+              <span className="team-name-v2">{team.name}</span>
+            </div>
+
+            {/* Team Stats */}
+            <div className="team-stats-row">
+              <div className="team-stat-cell">
+                <span className="stat-label-mini">GF</span>
+                <span className="stat-num">{team.goals_for || 0}</span>
+              </div>
+              <div className="team-stat-cell">
+                <span className="stat-label-mini">GA</span>
+                <span className="stat-num">{team.goals_against || 0}</span>
+              </div>
+              <div className="team-stat-cell gd-cell">
+                <span className="stat-label-mini">GD</span>
+                <span className={`stat-num ${(team.goals_for - team.goals_against) >= 0 ? 'positive' : 'negative'}`}>
+                  {(team.goals_for || 0) - (team.goals_against || 0) >= 0 ? '+' : ''}
+                  {(team.goals_for || 0) - (team.goals_against || 0)}
+                </span>
+              </div>
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="no-data-v2">
+          <i className="fas fa-shield-alt"></i>
+          <p>No team statistics available yet</p>
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <>
       <TournamentNavbar />
-      <div className="statistics-page">
-        <div className="statistics-container">
-          <h1 className="statistics-title">STATISTICS</h1>
-
-          {/* Tab Selector */}
-          <div className="stats-tabs">
-            <button
-              className={`stats-tab ${activeTab === 'player' ? 'active' : ''}`}
-              onClick={() => setActiveTab('player')}
-            >
-              PLAYER STATS
-            </button>
-            <button
-              className={`stats-tab ${activeTab === 'team' ? 'active' : ''}`}
-              onClick={() => setActiveTab('team')}
-            >
-              TEAM STATS
-            </button>
+      <div className="stats-page-v2">
+        <div className="stats-container-v2">
+          {/* Header */}
+          <div className="stats-header-v2">
+            <h1>Statistics</h1>
+            <hr className="stats-divider" />
           </div>
 
-          {/* Player Stats */}
-          {activeTab === 'player' && (
-            <div className="stats-content">
-              <h2 className="stats-section-title">PLAYER LEADERBOARDS</h2>
+          {/* Tab Navigation */}
+          <div className="stats-tabs-v2">
+            {tabs.map(tab => (
+              <button
+                key={tab.id}
+                className={`stats-tab-v2 ${activeTab === tab.id ? 'active' : ''}`}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                <i className={`fas ${tab.icon}`}></i>
+                <span>{tab.label}</span>
+              </button>
+            ))}
+          </div>
 
-              <div className="stats-grid">
-                {/* Goals */}
-                <div className="stat-card">
-                  <h3 className="stat-card-title">GOALS</h3>
-                  <div className="stat-list">
-                    {playerStats.goals.map((player, idx) => (
-                      <div
-                        key={player.id}
-                        className="stat-item"
-                        onClick={() => handlePlayerClick(player.id, player.player_name)}
-                      >
-                        <span className="stat-rank">{idx + 1}</span>
-                        <div className="stat-player-photo">
-                          {player.player_image ? (
-                            <img src={player.player_image} alt={player.player_name} />
-                          ) : (
-                            <i className="fas fa-user"></i>
-                          )}
-                        </div>
-                        <div className="stat-player-info">
-                          <span className="stat-player-name">{player.player_name}</span>
-                          <span className="stat-player-team">
-                            {player.team_registrations?.team_name || 'N/A'}
-                          </span>
-                        </div>
-                        <span className="stat-value">{player.goals || 0}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <button className="show-more-btn">
-                    SHOW MORE
-                  </button>
+          {/* Content */}
+          <div className="stats-content-v2">
+            {activeTab === 'goals' && (
+              <div className="stats-section-v2">
+                <div className="section-header-v2">
+                  <h2>Top Scorers</h2>
+                  <span className="section-subtitle">Players with most goals</span>
                 </div>
-
-                {/* Assists */}
-                <div className="stat-card">
-                  <h3 className="stat-card-title">ASSISTS</h3>
-                  <div className="stat-list">
-                    {playerStats.assists.map((player, idx) => (
-                      <div
-                        key={player.id}
-                        className="stat-item"
-                        onClick={() => handlePlayerClick(player.id, player.player_name)}
-                      >
-                        <span className="stat-rank">{idx + 1}</span>
-                        <div className="stat-player-photo">
-                          {player.player_image ? (
-                            <img src={player.player_image} alt={player.player_name} />
-                          ) : (
-                            <i className="fas fa-user"></i>
-                          )}
-                        </div>
-                        <div className="stat-player-info">
-                          <span className="stat-player-name">{player.player_name}</span>
-                          <span className="stat-player-team">
-                            {player.team_registrations?.team_name || 'N/A'}
-                          </span>
-                        </div>
-                        <span className="stat-value">{player.assists || 0}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <button className="show-more-btn">
-                    SHOW MORE
-                  </button>
-                </div>
+                {renderPlayerLeaderboard(playerStats.goals, 'goals')}
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Team Stats */}
-          {activeTab === 'team' && (
-            <div className="stats-content">
-              <h2 className="stats-section-title">TEAM STATISTICS</h2>
-
-              <div className="stats-grid">
-                {/* Goals Scored */}
-                <div className="stat-card">
-                  <h3 className="stat-card-title">GOALS SCORED</h3>
-                  <div className="stat-list">
-                    {teamStats.goalsScored.map((team, idx) => (
-                      <div
-                        key={team.id}
-                        className="stat-item team-stat-item"
-                        onClick={() => handleTeamClick(team.id)}
-                      >
-                        <span className="stat-rank">{idx + 1}</span>
-                        <div className="stat-team-logo">
-                          {team.crest_url ? (
-                            <img src={team.crest_url} alt={team.name} />
-                          ) : (
-                            <span>{team.name?.charAt(0) || '?'}</span>
-                          )}
-                        </div>
-                        <span className="stat-team-name">{team.name}</span>
-                        <span className="stat-value">{team.goals_for || 0}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <button className="show-more-btn">
-                    SHOW MORE
-                  </button>
+            {activeTab === 'assists' && (
+              <div className="stats-section-v2">
+                <div className="section-header-v2">
+                  <h2>Top Assists</h2>
+                  <span className="section-subtitle">Players with most assists</span>
                 </div>
-
-                {/* Goals Against */}
-                <div className="stat-card">
-                  <h3 className="stat-card-title">GOALS AGAINST</h3>
-                  <div className="stat-list">
-                    {teamStats.goalsAgainst.map((team, idx) => (
-                      <div
-                        key={team.id}
-                        className="stat-item team-stat-item"
-                        onClick={() => handleTeamClick(team.id)}
-                      >
-                        <span className="stat-rank">{idx + 1}</span>
-                        <div className="stat-team-logo">
-                          {team.crest_url ? (
-                            <img src={team.crest_url} alt={team.name} />
-                          ) : (
-                            <span>{team.name?.charAt(0) || '?'}</span>
-                          )}
-                        </div>
-                        <span className="stat-team-name">{team.name}</span>
-                        <span className="stat-value">{team.goals_against || 0}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <button className="show-more-btn">
-                    SHOW MORE
-                  </button>
-                </div>
+                {renderPlayerLeaderboard(playerStats.assists, 'assists')}
               </div>
-            </div>
-          )}
+            )}
+
+            {activeTab === 'teams' && (
+              <div className="stats-section-v2">
+                <div className="section-header-v2">
+                  <h2>Team Statistics</h2>
+                  <span className="section-subtitle">Goals scored and conceded</span>
+                </div>
+                {renderTeamLeaderboard()}
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <Footer edition="2026" />
     </>
   );
 }
-
-

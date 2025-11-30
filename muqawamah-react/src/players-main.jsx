@@ -48,6 +48,15 @@ function PlayersApp() {
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
   const [view, setView] = useState('list'); // 'list' or 'detail'
 
+  // Detect category from URL
+  const getCategory = () => {
+    const path = window.location.pathname;
+    if (path.includes('/u17/')) return 'u17';
+    return 'open-age';
+  };
+  
+  const [category] = useState(getCategory());
+
   useEffect(() => {
     // Check URL for player ID in query parameter
     const urlParams = new URLSearchParams(window.location.search);
@@ -81,25 +90,41 @@ function PlayersApp() {
 
   const fetchData = async () => {
     try {
-      const { data: teamsData, error: teamsError } = await supabaseClient
-        .from('team_registrations')
-        .select('id, team_name, team_logo, category')
-        .eq('status', 'confirmed')
-        .eq('category', 'open-age');
+      // Fetch all players with their team info, then filter by team status and category
+      const { data: playersData, error: playersError } = await supabaseClient
+        .from('team_players')
+        .select('*, team_registrations(id, team_name, team_logo, category, status)')
+        .order('player_name', { ascending: true });
 
-      if (teamsError) throw teamsError;
-      setTeams(teamsData || []);
+      if (playersError) throw playersError;
+      
+      // Filter players whose team is confirmed and matches the category
+      const filteredPlayers = (playersData || []).filter(player => {
+        const team = player.team_registrations;
+        return team && team.status === 'confirmed' && team.category === category;
+      });
 
-      if (teamsData && teamsData.length > 0) {
-        const teamIds = teamsData.map(t => t.id);
-        const { data: playersData, error: playersError } = await supabaseClient
-          .from('team_players')
-          .select('*, team_registrations(id, team_name, team_logo)')
-          .in('team_id', teamIds);
+      console.log(`[Players] Found ${playersData?.length || 0} total players`);
+      console.log(`[Players] Filtered to ${filteredPlayers.length} players in ${category} with confirmed status`);
+      
+      // Get unique teams from filtered players
+      const uniqueTeams = [];
+      const teamIds = new Set();
+      filteredPlayers.forEach(player => {
+        const team = player.team_registrations;
+        if (team && !teamIds.has(team.id)) {
+          teamIds.add(team.id);
+          uniqueTeams.push({
+            id: team.id,
+            team_name: team.team_name,
+            team_logo: team.team_logo,
+            category: team.category
+          });
+        }
+      });
 
-        if (playersError) throw playersError;
-        setPlayers(playersData || []);
-      }
+      setTeams(uniqueTeams);
+      setPlayers(filteredPlayers);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -108,7 +133,7 @@ function PlayersApp() {
   };
 
   const openPlayerDetail = (player) => {
-    const newUrl = `/muqawamah/2026/open-age/players/?player=${player.id}`;
+    const newUrl = `/muqawamah/2026/${category}/players/?player=${player.id}`;
     window.history.pushState({ playerId: player.id }, '', newUrl);
     setSelectedPlayerId(player.id);
     setView('detail');
@@ -116,7 +141,7 @@ function PlayersApp() {
   };
 
   const goBackToList = () => {
-    window.history.pushState({}, '', '/muqawamah/2026/open-age/players/');
+    window.history.pushState({}, '', `/muqawamah/2026/${category}/players/`);
     setView('list');
     setSelectedPlayerId(null);
   };
@@ -160,7 +185,7 @@ function PlayersApp() {
         playerId={selectedPlayerId} 
         onBack={goBackToList}
         onNavigateToPlayer={(playerId, playerName) => {
-          const newUrl = `/muqawamah/2026/open-age/players/?player=${playerId}`;
+          const newUrl = `/muqawamah/2026/${category}/players/?player=${playerId}`;
           window.history.pushState({ playerId }, '', newUrl);
           setSelectedPlayerId(playerId);
           window.scrollTo(0, 0);
