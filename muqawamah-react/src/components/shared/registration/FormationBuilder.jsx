@@ -9,7 +9,7 @@ export default function FormationBuilder() {
   const [draggingId, setDraggingId] = useState(null);
   const [presetApplied, setPresetApplied] = useState(false);
 
-  const updatePlayerPosition = (playerId, x, y) => {
+  const updatePlayerPosition = useCallback((playerId, x, y) => {
     // Ensure x and y are valid numbers
     const validX = typeof x === 'number' && !isNaN(x) ? x : 50;
     const validY = typeof y === 'number' && !isNaN(y) ? y : 50;
@@ -17,18 +17,19 @@ export default function FormationBuilder() {
     setPlayers((prev) =>
       prev.map((player) => (player.id === playerId ? { ...player, x: validX, y: validY } : player))
     );
-  };
+  }, [setPlayers]);
 
-  const handleDragStart = (_, playerId) => {
+  const handleDragStart = useCallback((_, playerId) => {
     setDraggingId(playerId);
-  };
+  }, []);
 
-  const handleDrag = (event) => {
-    if (!draggingId || !fieldRef.current) return;
+  const handleDrag = useCallback((event) => {
+    const field = fieldRef.current;
+    if (!draggingId || !field) return;
     event.preventDefault();
     
     // Get the SVG element inside the container
-    const svgElement = fieldRef.current.querySelector('svg');
+    const svgElement = field.querySelector('svg');
     if (!svgElement) return;
     
     const rect = svgElement.getBoundingClientRect();
@@ -44,11 +45,11 @@ export default function FormationBuilder() {
     const clampedY = Math.min(Math.max(y, 0), 100);
     
     updatePlayerPosition(draggingId, clampedX, clampedY);
-  };
+  }, [draggingId, updatePlayerPosition]);
 
-  const handleDragEnd = () => {
+  const handleDragEnd = useCallback(() => {
     setDraggingId(null);
-  };
+  }, []);
 
   const applyPreset = (formation) => {
     console.log('Applying preset formation:', formation);
