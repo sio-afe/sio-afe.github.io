@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabaseClient } from '../../../../lib/supabaseClient';
 import Footer from '../../../shared/Footer';
 import TournamentNavbar from '../../../shared/TournamentNavbar';
+import TeamFormationDisplay from '../../../shared/TeamFormationDisplay';
 
 const positionGroups = {
   'Goalkeeper': 'GOALKEEPERS',
@@ -31,6 +32,7 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
   const [team, setTeam] = useState(null);
   const [players, setPlayers] = useState([]);
   const [standings, setStandings] = useState([]);
+  const [matches, setMatches] = useState([]);
   const [leaderboards, setLeaderboards] = useState({
     topScorers: [],
     topAssists: []
@@ -73,13 +75,30 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
           }));
           setStandings(withPositions);
         }
+
+        // Fetch matches where this team is home or away
+        const { data: matchesData } = await supabaseClient
+          .from('matches')
+          .select(`
+            *,
+            home_team:teams!matches_home_team_id_fkey(id, name, crest_url),
+            away_team:teams!matches_away_team_id_fkey(id, name, crest_url)
+          `)
+          .eq('category', teamData.category)
+          .or(`home_team_id.eq.${teamId},away_team_id.eq.${teamId}`)
+          .order('match_date', { ascending: true })
+          .order('scheduled_time', { ascending: true });
+
+        if (matchesData) {
+          setMatches(matchesData);
+        }
       }
 
-      // Fetch players for this team
+      // Fetch players for this team (including position coordinates)
       if (teamData?.registration_id) {
         const { data: playersData } = await supabaseClient
           .from('team_players')
-          .select('id, player_name, player_image, position, player_age')
+          .select('id, player_name, player_image, position, player_age, position_x, position_y, is_substitute')
           .eq('team_id', teamData.registration_id);
         
         if (playersData) {
@@ -142,8 +161,49 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
 
   const groupedPlayers = groupPlayers();
 
-  // Mock match log
-  const matchLog = team.match_log || [];
+  // Helper to format match data for display
+  const formatMatchForTeam = (match, currentTeamId) => {
+    const isHome = match.home_team_id === currentTeamId;
+    const opponent = isHome ? match.away_team : match.home_team;
+    const goalsFor = isHome ? match.home_score : match.away_score;
+    const goalsAgainst = isHome ? match.away_score : match.home_score;
+    
+    // Determine result
+    let result = 'scheduled';
+    let points = '-';
+    if (match.status === 'completed' && goalsFor !== null && goalsAgainst !== null) {
+      if (goalsFor > goalsAgainst) {
+        result = 'win';
+        points = 3;
+      } else if (goalsFor < goalsAgainst) {
+        result = 'loss';
+        points = 0;
+      } else {
+        result = 'draw';
+        points = 1;
+      }
+    }
+    
+    // Format date
+    const matchDate = match.match_date 
+      ? new Date(match.match_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })
+      : 'TBD';
+
+    return {
+      ...match,
+      isHome,
+      opponent,
+      goalsFor: goalsFor ?? '-',
+      goalsAgainst: goalsAgainst ?? '-',
+      result,
+      points,
+      matchDate,
+      score: match.status === 'completed' ? `${goalsFor} - ${goalsAgainst}` : 'vs'
+    };
+  };
+
+  // Format matches for this team's perspective
+  const matchLog = matches.map(m => formatMatchForTeam(m, teamId));
 
   return (
     <>
@@ -186,39 +246,96 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
               {matchLog.length > 0 ? (
                 <div className="match-log-table">
                   <div className="match-log-header">
-                    <span>MW</span>
-                    <span>DATE</span>
-                    <span>MATCH</span>
-                    <span>SCORE</span>
-                    <span>GF</span>
-                    <span>GA</span>
-                    <span>PTS</span>
+                    <span className="col-mw">#</span>
+                    <span className="col-date">DATE</span>
+                    <span className="col-match">MATCH</span>
+                    <span className="col-score">SCORE</span>
+                    <span className="col-gf">GF</span>
+                    <span className="col-ga">GA</span>
+                    <span className="col-pts">PTS</span>
                   </div>
                   {matchLog.map((match, index) => (
-                    <div className="match-log-row" key={index}>
-                      <span>{match.matchweek}</span>
-                      <span>{match.date}</span>
-                      <span className="match-teams">
-                        <img src={match.home_logo} alt="" className="match-team-logo" />
-                        <span>{match.home_abbr}</span>
-                        <span className="vs">vs</span>
-                        <img src={match.away_logo} alt="" className="match-team-logo" />
-                        <span>{match.away_abbr}</span>
+                    <div 
+                      className={`match-log-row ${match.result} clickable`} 
+                      key={match.id || index}
+                      data-date={match.matchDate}
+                      data-stats={match.status === 'completed' ? `GF: ${match.goalsFor} | GA: ${match.goalsAgainst} | PTS: ${match.points}` : 'Upcoming'}
+                      onClick={() => {
+                        // Navigate to match detail page
+                        const category = team.category || 'open-age';
+                        window.location.href = `/muqawamah/2026/${category}/fixtures/?match=${match.id}`;
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <span className="col-mw">{match.match_number || index + 1}</span>
+                      <span className="col-date">{match.matchDate}</span>
+                      <span className="col-match match-teams">
+                        <div className="match-team home">
+                          {match.home_team?.crest_url ? (
+                            <img src={match.home_team.crest_url} alt="" className="match-team-logo" />
+                          ) : (
+                            <div className="match-team-logo match-team-placeholder">
+                              {match.home_team?.name?.charAt(0) || '?'}
+                            </div>
+                          )}
+                          <span className={match.isHome ? 'team-name current' : 'team-name'}>
+                            {match.home_team?.name || 'TBD'}
+                          </span>
+                        </div>
+                        <span className="vs-separator">
+                          {match.status === 'completed' ? (
+                            <span className={`mobile-score ${match.result}`}>
+                              {match.home_score} - {match.away_score}
+                            </span>
+                          ) : (
+                            <span className="scheduled-badge">
+                              {match.scheduled_time || 'TBD'}
+                            </span>
+                          )}
+                        </span>
+                        <div className="match-team away">
+                          {match.away_team?.crest_url ? (
+                            <img src={match.away_team.crest_url} alt="" className="match-team-logo" />
+                          ) : (
+                            <div className="match-team-logo match-team-placeholder">
+                              {match.away_team?.name?.charAt(0) || '?'}
+                            </div>
+                          )}
+                          <span className={!match.isHome ? 'team-name current' : 'team-name'}>
+                            {match.away_team?.name || 'TBD'}
+                          </span>
+                        </div>
                       </span>
-                      <span className={`match-score ${match.result}`}>
-                        {match.score}
+                      <span className={`col-score match-score ${match.result}`}>
+                        {match.status === 'completed' ? (
+                          <>{match.home_score} - {match.away_score}</>
+                        ) : (
+                          <span className="scheduled-badge">
+                            {match.scheduled_time || 'TBD'}
+                          </span>
+                        )}
                       </span>
-                      <span>{match.goals_for}</span>
-                      <span>{match.goals_against}</span>
-                      <span>{match.points}</span>
+                      <span className="col-gf">{match.goalsFor}</span>
+                      <span className="col-ga">{match.goalsAgainst}</span>
+                      <span className={`col-pts ${match.result}`}>{match.points}</span>
                     </div>
                   ))}
                 </div>
               ) : (
                 <div className="no-matches">
-                  <p>No matches played yet</p>
+                  <i className="fas fa-calendar-alt"></i>
+                  <p>No matches scheduled yet</p>
                 </div>
               )}
+            </div>
+
+            {/* Team Formation */}
+            <div className="team-formation-section">
+              <h3 className="section-title-italic">FORMATION</h3>
+              <TeamFormationDisplay 
+                players={players} 
+                formation={team.formation}
+              />
             </div>
 
             {/* Standings Table */}

@@ -43,6 +43,8 @@ export default function FormationPreview({
 
   const handlePlayerMouseDown = (e, player) => {
     if (!editable) return;
+    // GK is locked - don't allow dragging
+    if (player.position === 'GK') return;
     e.preventDefault();
     setDraggedPlayer(player.id);
     if (onDragStart) onDragStart(e, player.id);
@@ -50,6 +52,8 @@ export default function FormationPreview({
 
   const handlePlayerTouchStart = (e, player) => {
     if (!editable) return;
+    // GK is locked - don't allow dragging
+    if (player.position === 'GK') return;
     setDraggedPlayer(player.id);
     if (onDragStart) onDragStart(e, player.id);
   };
@@ -99,32 +103,58 @@ export default function FormationPreview({
           ref={svgRef}
           style={{ width: '100%', height: 'auto', maxWidth: '400px', display: 'block', margin: '0 auto' }}
         >
-          {/* Players */}
+          {/* Define clip paths for player images */}
+          <defs>
+            {players.map((player) => (
+              <clipPath key={`clip-${player.id}`} id={`player-clip-${player.id}`}>
+                <circle r="3.3" cx="0" cy="0" />
+              </clipPath>
+            ))}
+          </defs>
+          
+          {/* Players - use positions directly */}
           {players.map((player) => {
-            // Ensure x and y are valid numbers, default to center if not
             const playerX = typeof player.x === 'number' && !isNaN(player.x) ? player.x : 50;
             const playerY = typeof player.y === 'number' && !isNaN(player.y) ? player.y : 50;
             
-            // Convert percentage to SVG coordinates (accounting for the 3px transform)
+            // Convert percentage to SVG coordinates
             const svgX = 3 + (playerX / 100) * 68;
             const svgY = 3 + (playerY / 100) * 105;
+            
+            const isGK = player.position === 'GK';
+            const isDraggable = editable && !isGK;
             
             return (
               <g 
                 key={player.id}
                 transform={`translate(${svgX}, ${svgY})`}
-                className={editable ? "player-marker-draggable" : "player-marker-static"}
-                style={{ cursor: editable ? 'move' : 'default' }}
+                className={isDraggable ? "player-marker-draggable" : "player-marker-static"}
+                style={{ cursor: isDraggable ? 'move' : 'default' }}
                 onMouseDown={(e) => handlePlayerMouseDown(e, player)}
                 onTouchStart={(e) => handlePlayerTouchStart(e, player)}
               >
-                {/* Player circle with image or position - 10% larger */}
+                {/* Player circle background - GK has different color to show locked */}
                 <circle 
                   r="3.3" 
-                  fill="#4a90e2" 
-                  stroke="#fff" 
+                  fill={isGK ? '#2d5a27' : '#4a90e2'}
+                  stroke={isGK ? '#4a8c3f' : '#fff'}
                   strokeWidth="0.5"
                 />
+                
+                {/* Lock icon for GK */}
+                {isGK && (
+                  <text 
+                    x="0" 
+                    y="-4.5" 
+                    textAnchor="middle" 
+                    fill="#4a8c3f" 
+                    fontSize="2" 
+                  >
+                    🔒
+                  </text>
+                )}
+                
+                {/* Player image or position text */}
                 {player.image ? (
                   <image 
                     href={player.image} 
@@ -132,8 +162,8 @@ export default function FormationPreview({
                     y="-3.3" 
                     width="6.6" 
                     height="6.6" 
-                    clipPath="circle(3.3px at center)"
-                    style={{ borderRadius: '50%' }}
+                    clipPath={`url(#player-clip-${player.id})`}
+                    preserveAspectRatio="xMidYMid slice"
                   />
                 ) : (
                   <text 

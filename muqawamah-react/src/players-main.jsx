@@ -190,6 +190,9 @@ function PlayersApp() {
           setSelectedPlayerId(playerId);
           window.scrollTo(0, 0);
         }}
+        onNavigateToMatch={(matchId) => {
+          window.location.href = `/muqawamah/2026/${category}/fixtures/?match=${matchId}`;
+        }}
       />
     );
   }

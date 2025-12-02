@@ -26,11 +26,15 @@ const positionGroups = {
   'Substitute': 'Substitutes'
 };
 
-export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer }) {
+export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onNavigateToMatch }) {
   const [player, setPlayer] = useState(null);
   const [teammates, setTeammates] = useState([]);
+  const [matches, setMatches] = useState([]);
+  const [playerGoals, setPlayerGoals] = useState([]);
+  const [actualTeamId, setActualTeamId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [playerIndex, setPlayerIndex] = useState(1);
+  const [matchLogTab, setMatchLogTab] = useState('completed');
 
   useEffect(() => {
     if (playerId) {
@@ -51,6 +55,7 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer }) {
       setPlayer(playerData);
 
       if (playerData?.team_id) {
+        // Fetch teammates
         const { data: allPlayers } = await supabaseClient
           .from('team_players')
           .select('id, player_name, player_image, position')
@@ -61,6 +66,58 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer }) {
           const idx = allPlayers.findIndex(p => p.id === playerId);
           setPlayerIndex(idx >= 0 ? idx + 1 : 1);
           setTeammates(allPlayers.filter(p => p.id !== playerId));
+        }
+
+        // Find the actual team record using registration_id
+        const { data: teamRecord } = await supabaseClient
+          .from('teams')
+          .select('id, name')
+          .eq('registration_id', playerData.team_id)
+          .single();
+        
+        if (teamRecord) {
+          console.log('Found team:', teamRecord);
+          setActualTeamId(teamRecord.id);
+          
+          // Fetch matches where this team participated
+          const { data: matchesData, error: matchError } = await supabaseClient
+            .from('matches')
+            .select(`
+              id, 
+              match_number,
+              match_date, 
+              scheduled_time,
+              home_team_id, 
+              away_team_id, 
+              home_score, 
+              away_score,
+              status,
+              home_team:teams!matches_home_team_id_fkey(id, name),
+              away_team:teams!matches_away_team_id_fkey(id, name)
+            `)
+            .or(`home_team_id.eq.${teamRecord.id},away_team_id.eq.${teamRecord.id}`)
+            .order('match_date', { ascending: false });
+          
+          if (matchError) {
+            console.error('Error fetching matches:', matchError);
+          } else if (matchesData) {
+            console.log('Found matches:', matchesData);
+            setMatches(matchesData);
+          }
+
+          // Fetch goals/assists by this player
+          const { data: goalsData } = await supabaseClient
+            .from('match_goals')
+            .select('*')
+            .or(`scorer_name.eq.${playerData.player_name},assist_name.eq.${playerData.player_name}`)
+            .order('minute', { ascending: true });
+          
+          if (goalsData) {
+            console.log('Found goals:', goalsData);
+            setPlayerGoals(goalsData);
+          }
+        } else {
+          console.log('No team record found for registration_id:', playerData.team_id);
         }
       }
     } catch (error) {
@@ -115,14 +172,46 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer }) {
   const positionLabel = getPositionLabel(player.position);
   const groupedTeammates = groupTeammates();
 
-  // Stats (would come from DB in real implementation)
+  // Calculate stats from fetched data
   const stats = {
-    apps: 0,
-    goals: 0,
-    assists: 0
+    apps: matches.filter(m => m.status === 'completed').length,
+    goals: playerGoals.filter(g => g.scorer_name === player.player_name).length,
+    assists: playerGoals.filter(g => g.assist_name === player.player_name).length
   };
 
-  const matchLog = [];
+  // Build match log and split by status
+  const allMatchLog = matches.map(match => {
+    const isHome = match.home_team_id === actualTeamId;
+    const opponent = isHome ? match.away_team?.name : match.home_team?.name;
+    const teamScore = isHome ? match.home_score : match.away_score;
+    const oppScore = isHome ? match.away_score : match.home_score;
+    
+    let result = '-';
+    if (match.status === 'completed') {
+      if (teamScore > oppScore) result = 'W';
+      else if (teamScore < oppScore) result = 'L';
+      else result = 'D';
+    }
+    
+    const playerGoalsInMatch = playerGoals.filter(g => 
+      g.match_id === match.id && g.scorer_name === player.player_name
+    ).length;
+    
+    return {
+      matchId: match.id,
+      matchweek: match.match_number || '-',
+      date: match.match_date ? new Date(match.match_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : '-',
+      opponent: opponent || 'TBD',
+      result: result,
+      score: match.status === 'completed' ? `${teamScore}-${oppScore}` : 'vs',
+      minutes: match.status === 'completed' ? '90' : '-',
+      goals: playerGoalsInMatch,
+      status: match.status
+    };
+  });
+
+  const completedMatches = allMatchLog.filter(m => m.status === 'completed');
+  const scheduledMatches = allMatchLog.filter(m => m.status !== 'completed');
 
   return (
     <>
@@ -188,38 +277,97 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer }) {
               {/* Match Log */}
               <div className="bls-match-log">
                 <h4>Match Log</h4>
-                {matchLog.length > 0 ? (
-                  <table className="bls-match-table">
-                    <thead>
-                      <tr>
-                        <th>MW</th>
-                        <th>Date</th>
-                        <th>Match</th>
-                        <th>Score</th>
-                        <th>MP</th>
-                        <th>G</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {matchLog.map((match, idx) => (
-                        <tr key={idx}>
-                          <td>{match.matchweek}</td>
-                          <td>{match.date}</td>
-                          <td>{match.opponent}</td>
-                          <td>
-                            <span className={`bls-result bls-result-${match.result}`}>
-                              {match.result}
-                            </span>
-                            <span>{match.score}</span>
-                          </td>
-                          <td>{match.minutes}</td>
-                          <td>{match.goals}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : (
-                  <p className="bls-no-data">No matches played yet</p>
+                
+                {/* Toggle for Completed/Scheduled */}
+                <div className="match-log-toggle-container">
+                  <button 
+                    className="match-log-toggle-btn"
+                    onClick={() => setMatchLogTab(matchLogTab === 'completed' ? 'scheduled' : 'completed')}
+                  >
+                    <span className={`toggle-option ${matchLogTab === 'completed' ? 'active' : ''}`}>
+                      Completed ({completedMatches.length})
+                    </span>
+                    <span className={`toggle-option ${matchLogTab === 'scheduled' ? 'active' : ''}`}>
+                      Scheduled ({scheduledMatches.length})
+                    </span>
+                    <span 
+                      className="toggle-slider" 
+                      style={{ transform: matchLogTab === 'scheduled' ? 'translateX(100%)' : 'translateX(0)' }}
+                    />
+                  </button>
+                </div>
+
+                {/* Completed Matches */}
+                {matchLogTab === 'completed' && (
+                  <>
+                    {completedMatches.length > 0 ? (
+                      <div className="match-log-table-wrapper">
+                        <table className="bls-match-table">
+                          <thead>
+                            <tr>
+                              <th>Match</th>
+                              <th>Score</th>
+                              <th>G</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {completedMatches.map((match, idx) => (
+                              <tr 
+                                key={idx}
+                                onClick={() => onNavigateToMatch && onNavigateToMatch(match.matchId)}
+                                className="match-row-clickable"
+                              >
+                                <td>{match.opponent}</td>
+                                <td>
+                                  <span className={`bls-result bls-result-${match.result}`}>
+                                    {match.result}
+                                  </span>
+                                  <span>{match.score}</span>
+                                </td>
+                                <td>{match.goals}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <p className="bls-no-data">No completed matches yet</p>
+                    )}
+                  </>
+                )}
+
+                {/* Scheduled Matches */}
+                {matchLogTab === 'scheduled' && (
+                  <>
+                    {scheduledMatches.length > 0 ? (
+                      <div className="match-log-table-wrapper">
+                        <table className="bls-match-table">
+                          <thead>
+                            <tr>
+                              <th>Match</th>
+                              <th>Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {scheduledMatches.map((match, idx) => (
+                              <tr 
+                                key={idx}
+                                onClick={() => onNavigateToMatch && onNavigateToMatch(match.matchId)}
+                                className="match-row-clickable"
+                              >
+                                <td>{match.opponent}</td>
+                                <td>
+                                  <span className="match-scheduled-badge">VS</span>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <p className="bls-no-data">No scheduled matches</p>
+                    )}
+                  </>
                 )}
               </div>
             </div>

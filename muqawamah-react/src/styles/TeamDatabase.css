@@ -1251,3 +1251,532 @@
   }
 }
 
+
+/* ========================================
+   UPDATED MATCH LOG STYLES
+   ======================================== */
+
+/* Desktop: Table view */
+.match-log-header,
+.match-log-row {
+  display: grid;
+  grid-template-columns: 45px 70px 1fr 90px 45px 45px 45px;
+  gap: 12px;
+  padding: 14px 16px;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.match-log-header {
+  background: rgba(79, 140, 255, 0.08);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  border-bottom: 1px solid rgba(79, 140, 255, 0.1);
+  font-size: 0.7rem;
+  letter-spacing: 0.5px;
+}
+
+.match-log-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+}
+
+.match-log-row:last-child {
+  border-bottom: none;
+}
+
+.match-log-row:hover {
+  background: rgba(79, 140, 255, 0.05);
+}
+
+/* Result-based row styling */
+.match-log-row.win {
+  border-left: 3px solid #4caf50;
+}
+
+.match-log-row.loss {
+  border-left: 3px solid #f44336;
+}
+
+.match-log-row.draw {
+  border-left: 3px solid #ff9800;
+}
+
+.match-log-row.scheduled {
+  border-left: 3px solid rgba(79, 140, 255, 0.4);
+}
+
+/* Match teams display */
+.col-match.match-teams {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.match-team {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.match-team.home {
+  justify-content: flex-end;
+}
+
+.match-team.away {
+  justify-content: flex-start;
+}
+
+.match-team .team-name {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+}
+
+.match-team .team-name.current {
+  color: #fff;
+  font-weight: 600;
+}
+
+.vs-separator {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 0 4px;
+}
+
+.match-team-logo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+/* Score styling */
+.col-score {
+  text-align: center;
+  font-weight: 700;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.95rem;
+}
+
+.col-score.win {
+  color: #4caf50;
+}
+
+.col-score.draw {
+  color: #ff9800;
+}
+
+.col-score.loss {
+  color: #f44336;
+}
+
+.scheduled-badge {
+  font-size: 0.7rem;
+  padding: 4px 8px;
+  background: rgba(79, 140, 255, 0.15);
+  border-radius: 4px;
+  color: #4f8cff;
+  font-weight: 500;
+}
+
+/* Column alignments */
+.col-mw,
+.col-gf,
+.col-ga,
+.col-pts {
+  text-align: center;
+}
+
+.col-date {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+}
+
+.col-pts.win {
+  color: #4caf50;
+}
+
+.col-pts.loss {
+  color: #f44336;
+}
+
+.col-pts.draw {
+  color: #ff9800;
+}
+
+/* No matches state */
+.no-matches {
+  text-align: center;
+  padding: 60px 20px;
+  color: rgba(255, 255, 255, 0.4);
+  background: linear-gradient(135deg, #151a30 0%, #0d1020 100%);
+  border: 1px solid rgba(79, 140, 255, 0.1);
+  border-radius: 12px;
+}
+
+.no-matches i {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+  display: block;
+  color: rgba(79, 140, 255, 0.3);
+}
+
+.no-matches p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* ========================================
+   MOBILE MATCH LOG - Card Layout
+   ======================================== */
+
+@media (max-width: 768px) {
+  /* Hide header on mobile */
+  .match-log-header {
+    display: none;
+  }
+
+  /* Convert rows to cards */
+  .match-log-table {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: transparent;
+    border: none;
+  }
+
+  .match-log-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #151a30 0%, #0d1020 100%);
+    border: 1px solid rgba(79, 140, 255, 0.1);
+    border-radius: 12px;
+    border-left: 4px solid rgba(79, 140, 255, 0.4);
+    overflow: hidden;
+  }
+
+  .match-log-row.win {
+    border-left: 4px solid #4caf50;
+  }
+
+  .match-log-row.loss {
+    border-left: 4px solid #f44336;
+  }
+
+  .match-log-row.draw {
+    border-left: 4px solid #ff9800;
+  }
+
+  /* Match card content */
+  .col-match.match-teams {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 0;
+    width: 100%;
+    padding: 16px 12px;
+  }
+
+  .match-team {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    text-align: center;
+    min-width: 0;
+  }
+
+  .match-team.home {
+    align-items: center;
+  }
+
+  .match-team.away {
+    align-items: center;
+  }
+
+  .match-team-logo,
+  .match-team-placeholder {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+
+  .match-team-placeholder {
+    font-size: 1rem;
+  }
+
+  .match-team .team-name {
+    max-width: 90px;
+    font-size: 0.72rem;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .match-team .team-name.current {
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .vs-separator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0 10px;
+    min-width: 70px;
+    flex-shrink: 0;
+  }
+
+  /* Hide desktop score column on mobile */
+  .col-score {
+    display: none;
+  }
+
+  .scheduled-badge {
+    font-size: 0.7rem;
+    padding: 6px 12px;
+    white-space: nowrap;
+  }
+
+  /* Hide individual columns on mobile - they'll be in footer */
+  .col-mw,
+  .col-date,
+  .col-gf,
+  .col-ga,
+  .col-pts {
+    display: none;
+  }
+
+  /* Show date and stats in footer row */
+  .match-log-row::after {
+    content: attr(data-date) " • " attr(data-stats);
+    display: block;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    padding: 10px 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 400px) {
+  .match-team-logo,
+  .match-team-placeholder {
+    width: 38px;
+    height: 38px;
+  }
+
+  .match-team .team-name {
+    max-width: 70px;
+    font-size: 0.68rem;
+  }
+
+  .vs-separator {
+    min-width: 60px;
+    padding: 0 6px;
+  }
+
+  .mobile-score {
+    font-size: 1.2rem;
+  }
+
+  .scheduled-badge {
+    font-size: 0.65rem;
+    padding: 5px 10px;
+  }
+
+  .match-log-row::after {
+    font-size: 0.65rem;
+    padding: 8px 10px;
+  }
+}
+
+
+/* ========================================
+   TEAM FORMATION SECTION
+   ======================================== */
+
+.team-formation-section {
+  margin-bottom: 48px;
+}
+
+.team-formation-section .section-title-italic {
+  margin-bottom: 24px;
+}
+
+.team-formation-display {
+  background: linear-gradient(135deg, #151a30 0%, #0d1020 100%);
+  border: 1px solid rgba(79, 140, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px;
+  overflow: hidden;
+}
+
+.formation-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 12px 20px;
+  background: rgba(79, 140, 255, 0.1);
+  border-radius: 8px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.formation-label i {
+  color: #4f8cff;
+  font-size: 1rem;
+}
+
+.formation-label span {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 2px;
+}
+
+.formation-field-wrapper {
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.dark-field-svg {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.formation-player {
+  cursor: default;
+}
+
+.formation-player circle {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+.formation-player text {
+  pointer-events: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.no-formation {
+  text-align: center;
+  padding: 60px 20px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.no-formation i {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+  display: block;
+  color: rgba(79, 140, 255, 0.3);
+}
+
+.no-formation p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Mobile score display - hidden on desktop */
+.mobile-score {
+  display: none;
+}
+
+/* Team placeholder for missing logos */
+.match-team-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(79, 140, 255, 0.15);
+  border: 1px solid rgba(79, 140, 255, 0.3);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Tablet responsive */
+@media (max-width: 900px) {
+  .match-log-header,
+  .match-log-row {
+    grid-template-columns: 40px 65px 1fr 80px 40px 40px 40px;
+    gap: 8px;
+    padding: 12px;
+    font-size: 0.8rem;
+  }
+
+  .match-team .team-name {
+    max-width: 80px;
+    font-size: 0.75rem;
+  }
+
+  .match-team-logo {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Mobile - Card Layout */
+@media (max-width: 768px) {
+  .team-formation-display {
+    padding: 16px;
+  }
+
+  .formation-label span {
+    font-size: 1.1rem;
+  }
+
+  /* Mobile score visible */
+  .mobile-score {
+    display: block;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+
+  .mobile-score.win {
+    color: #4caf50;
+  }
+
+  .mobile-score.draw {
+    color: #ff9800;
+  }
+
+  .mobile-score.loss {
+    color: #f44336;
+  }
+
+  .mobile-score.scheduled {
+    color: #4f8cff;
+    font-size: 0.8rem;
+  }
+}
+

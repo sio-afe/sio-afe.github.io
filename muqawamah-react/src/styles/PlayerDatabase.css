@@ -1561,6 +1561,83 @@
   color: #fff;
 }
 
+/* Match Log Toggle */
+.match-log-toggle-container {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.match-log-toggle-btn {
+  position: relative;
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50px;
+  padding: 4px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  max-width: 100%;
+}
+
+.match-log-toggle-btn .toggle-option {
+  flex: 1;
+  padding: 12px 20px;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+}
+
+.match-log-toggle-btn .toggle-option.active {
+  color: #fff;
+}
+
+.match-log-toggle-btn .toggle-slider {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  background: linear-gradient(135deg, #4f8cff, #6ecdee);
+  border-radius: 50px;
+  transition: transform 0.3s ease;
+  z-index: 1;
+}
+
+/* Match Log Table Wrapper */
+.match-log-table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Clickable Match Rows */
+.match-row-clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.match-row-clickable:hover {
+  background: rgba(79, 140, 255, 0.1) !important;
+  transform: scale(1.01);
+}
+
+.match-scheduled-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 50px;
+  background: rgba(110, 205, 238, 0.2);
+  color: #6ecdee;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid rgba(110, 205, 238, 0.3);
+}
+
 .bls-match-table {
   width: 100%;
   border-collapse: collapse;
@@ -1813,6 +1890,17 @@
   .bls-match-log,
   .bls-teammates {
     padding: 16px;
+  }
+
+  .match-log-toggle-btn .toggle-option {
+    padding: 10px 12px;
+    font-size: 0.8rem;
+  }
+  
+  .bls-match-table th,
+  .bls-match-table td {
+    padding: 10px 6px;
+    font-size: 0.8rem;
   }
 }
 

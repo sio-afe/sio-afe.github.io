@@ -3,7 +3,7 @@ import { supabaseClient } from '../../../../lib/supabaseClient';
 import TournamentNavbar from '../../../shared/TournamentNavbar';
 import Footer from '../../../shared/Footer';
 
-export default function Fixtures() {
+export default function Fixtures({ onMatchClick }) {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeMatchday, setActiveMatchday] = useState(1);
@@ -144,7 +144,12 @@ export default function Fixtures() {
                 const awayScore = match.away_score ?? 0;
                 
                 return (
-                  <div className="match-card-v2" key={match.id}>
+                  <div 
+                    className="match-card-v2 clickable" 
+                    key={match.id}
+                    onClick={() => onMatchClick && onMatchClick(match.id)}
+                    style={{ cursor: onMatchClick ? 'pointer' : 'default' }}
+                  >
                     {/* Time - Mobile */}
                     <div className="match-time-mobile">
                       <span className="time-text">{formatTime(match.scheduled_time)}</span>

@@ -14,14 +14,28 @@ export default function FormationBuilder() {
     const validX = typeof x === 'number' && !isNaN(x) ? x : 50;
     const validY = typeof y === 'number' && !isNaN(y) ? y : 50;
     
+    // Find the player to check if it's GK
+    const player = players.find(p => p.id === playerId);
+    
+    // GK is locked - cannot be moved at all
+    if (player?.position === 'GK') {
+      return; // Don't update GK position
+    }
+    
+    // All other players can go anywhere
     setPlayers((prev) =>
-      prev.map((player) => (player.id === playerId ? { ...player, x: validX, y: validY } : player))
+      prev.map((p) => (p.id === playerId ? { ...p, x: validX, y: validY } : p))
     );
-  }, [setPlayers]);
+  }, [setPlayers, players]);
 
   const handleDragStart = useCallback((_, playerId) => {
+    // Don't allow dragging GK
+    const player = players.find(p => p.id === playerId);
+    if (player?.position === 'GK') {
+      return; // GK is locked
+    }
     setDraggingId(playerId);
-  }, []);
+  }, [players]);
 
   const handleDrag = useCallback((event) => {
     const field = fieldRef.current;
@@ -40,7 +54,7 @@ export default function FormationBuilder() {
     const x = ((clientX - rect.left) / rect.width) * 100;
     const y = ((clientY - rect.top) / rect.height) * 100;
     
-    // Clamp values between 0 and 100
+    // Clamp values between 0 and 100 (field boundaries only)
     const clampedX = Math.min(Math.max(x, 0), 100);
     const clampedY = Math.min(Math.max(y, 0), 100);
     
@@ -92,7 +106,7 @@ export default function FormationBuilder() {
         </div>
         <div className="instruction-content">
           <strong className="instruction-title">Interactive Field</strong>
-          <p className="instruction-text">Click and drag any player on the field to reposition them</p>
+          <p className="instruction-text">Click and drag any player to reposition them (GK is locked)</p>
         </div>
       </div>
 
@@ -146,4 +160,3 @@ export default function FormationBuilder() {
     </form>
   );
 }
-
