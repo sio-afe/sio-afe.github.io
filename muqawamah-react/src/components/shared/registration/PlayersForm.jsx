@@ -32,19 +32,20 @@ export default function PlayersForm() {
     try {
       setCompressingIndex(index);
       
-      // Compress the image before storing
+      // Compress and convert the image to WebP format before storing
       const compressedBase64 = await compressImage(file, {
         maxWidth: 600,
         maxHeight: 600,
         quality: 0.85,
-        outputFormat: 'image/jpeg'
+        outputFormat: 'image/webp' // Convert to WebP for better compression
       });
 
       const compressedSizeKB = getBase64SizeKB(compressedBase64);
-      console.log(`Player photo compressed: ${Math.round(file.size / 1024)}KB → ${compressedSizeKB}KB`);
+      const originalSizeKB = Math.round(file.size / 1024);
+      console.log(`Player photo compressed to WebP: ${originalSizeKB}KB → ${compressedSizeKB}KB`);
 
       handlePlayerChange(index, 'image', compressedBase64);
-      handlePlayerChange(index, 'imageFileName', file.name);
+      handlePlayerChange(index, 'imageFileName', file.name.replace(/\.(jpg|jpeg|png)$/i, '.webp'));
     } catch (error) {
       console.error('Error compressing player photo:', error);
       alert('Failed to process image. Please try another file.');

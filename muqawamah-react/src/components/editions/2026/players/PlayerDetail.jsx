@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { supabaseClient } from '../../../../lib/supabaseClient';
 import Footer from '../../../shared/Footer';
 import TournamentNavbar from '../../../shared/TournamentNavbar';
@@ -25,6 +25,75 @@ const positionGroups = {
   'Forward': 'Forwards',
   'Substitute': 'Substitutes'
 };
+
+// Helper to convert image URL to webp format
+const getWebpImageUrl = (url) => {
+  if (!url) return null;
+  
+  // If it's a Supabase storage URL, add transformation parameters
+  if (url.includes('supabase.co/storage/v1/object/public/')) {
+    // Add webp transformation parameter
+    const separator = url.includes('?') ? '&' : '?';
+    return `${url}${separator}format=webp&quality=80`;
+  }
+  
+  // For other URLs, just return as is
+  return url;
+};
+
+// Lazy loading image component
+function LazyImage({ src, alt, className, style }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const imgRef = useRef(null);
+
+  useEffect(() => {
+    if (!imgRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsInView(true);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        rootMargin: '50px',
+        threshold: 0.01,
+      }
+    );
+
+    observer.observe(imgRef.current);
+
+    return () => {
+      if (imgRef.current) {
+        observer.unobserve(imgRef.current);
+      }
+    };
+  }, []);
+
+  const webpSrc = getWebpImageUrl(src);
+
+  return (
+    <div ref={imgRef} style={{ width: '100%', height: '100%', ...style }}>
+      {isInView && webpSrc && (
+        <img
+          src={webpSrc}
+          alt={alt}
+          className={className}
+          loading="lazy"
+          onLoad={() => setIsLoaded(true)}
+          style={{
+            opacity: isLoaded ? 1 : 0,
+            transition: 'opacity 0.3s ease-in-out',
+          }}
+        />
+      )}
+    </div>
+  );
+}
 
 export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onNavigateToMatch }) {
   const [player, setPlayer] = useState(null);
@@ -223,7 +292,7 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
             {/* Team Logo */}
             <div className="bls-team-logo">
               {team?.team_logo ? (
-                <img src={team.team_logo} alt={team?.team_name} />
+                <LazyImage src={team.team_logo} alt={team?.team_name} />
               ) : (
                 <span>{team?.team_name?.charAt(0) || '?'}</span>
               )}
@@ -232,7 +301,7 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
             {/* Player Photo */}
             <div className="bls-player-photo">
               {player.player_image ? (
-                <img src={player.player_image} alt={player.player_name} />
+                <LazyImage src={player.player_image} alt={player.player_name} />
               ) : (
                 <div className="bls-photo-placeholder">
                   <i className="fas fa-user"></i>
@@ -387,7 +456,7 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
                       <div className="bls-teammate-number">{idx + 1}</div>
                       <div className="bls-teammate-image">
                         {tm.player_image ? (
-                          <img src={tm.player_image} alt={tm.player_name} />
+                          <LazyImage src={tm.player_image} alt={tm.player_name} />
                         ) : (
                           <i className="fas fa-user"></i>
                         )}

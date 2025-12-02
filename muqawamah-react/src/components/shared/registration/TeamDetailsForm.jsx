@@ -33,21 +33,22 @@ export default function TeamDetailsForm() {
     try {
       setCompressing(true);
       
-      // Compress the image before storing
+      // Compress and convert the image to WebP format before storing
       const compressedBase64 = await compressImage(file, {
         maxWidth: 800,
         maxHeight: 800,
         quality: 0.85,
-        outputFormat: 'image/jpeg'
+        outputFormat: 'image/webp' // Convert to WebP for better compression
       });
 
       const compressedSizeKB = getBase64SizeKB(compressedBase64);
-      console.log(`Logo compressed: ${Math.round(file.size / 1024)}KB → ${compressedSizeKB}KB`);
+      const originalSizeKB = Math.round(file.size / 1024);
+      console.log(`Logo compressed to WebP: ${originalSizeKB}KB → ${compressedSizeKB}KB`);
 
       setTeamData((prev) => ({ 
         ...prev, 
         teamLogo: compressedBase64,
-        teamLogoFileName: file.name
+        teamLogoFileName: file.name.replace(/\.(jpg|jpeg|png)$/i, '.webp')
       }));
     } catch (error) {
       console.error('Error compressing logo:', error);

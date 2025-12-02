@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useRegistration } from './RegistrationContext';
 import { supabaseClient } from '../../../lib/supabaseClient';
 import RegistrationComplete from './RegistrationComplete';
+import { compressImage, getBase64SizeKB } from './utils/imageCompression';
 
 // Pricing and QR code configuration
 const PRICING = {
@@ -43,41 +44,44 @@ export default function PaymentCheckout() {
   const totalAmount = pricing.amount;
 
   // Handle screenshot selection
-  const handleScreenshotChange = (e) => {
+  const handleScreenshotChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        setError('Please upload an image file (JPG, PNG, etc.)');
-        return;
-      }
-      
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setError('Image size should be less than 5MB');
-        return;
-      }
+    if (!file) return;
+    
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setError('Please upload an image file (JPG, PNG, etc.)');
+      return;
+    }
+    
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image size should be less than 5MB');
+      return;
+    }
 
-      setScreenshot(file);
+    try {
       setError(null);
       
-      // Create preview
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setScreenshotPreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+      // Compress and convert to WebP format
+      const compressedBase64 = await compressImage(file, {
+        maxWidth: 1200,
+        maxHeight: 1200,
+        quality: 0.85,
+        outputFormat: 'image/webp' // Convert to WebP for better compression
+      });
 
-  // Convert file to base64 for storage
-  const fileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
+      const compressedSizeKB = getBase64SizeKB(compressedBase64);
+      const originalSizeKB = Math.round(file.size / 1024);
+      console.log(`Screenshot compressed to WebP: ${originalSizeKB}KB → ${compressedSizeKB}KB`);
+
+      // Store the compressed base64 string directly
+      setScreenshot(compressedBase64);
+      setScreenshotPreview(compressedBase64);
+    } catch (error) {
+      console.error('Error compressing screenshot:', error);
+      setError('Failed to process image. Please try another file.');
+    }
   };
 
   const submitPayment = async () => {
@@ -101,8 +105,8 @@ export default function PaymentCheckout() {
 
       setUploadProgress(20);
 
-      // Convert screenshot to base64
-      const screenshotBase64 = await fileToBase64(screenshot);
+      // Screenshot is already compressed to WebP and in base64 format
+      const screenshotBase64 = screenshot;
       setUploadProgress(40);
 
       let teamId = existingTeamId;

@@ -266,6 +266,14 @@
   background: linear-gradient(180deg, #1e2333 0%, #12151f 100%);
   color: rgba(79, 140, 255, 0.12);
   font-size: 5rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.player-photo-placeholder .fa-spinner {
+  color: rgba(79, 140, 255, 0.4);
+  font-size: 2rem;
 }
 
 /* Player Info Bar */
@@ -295,10 +303,15 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.team-logo-small img {
+.team-logo-small img,
+.team-logo-small .team-logo-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.team-logo-img {
+  display: block;
 }
 
 .team-logo-small span {

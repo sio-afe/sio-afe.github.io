@@ -1,15 +1,15 @@
             /**
- * Compress an image file before converting to base64
- * @param {File} file - The image file to compress
+ * Compress an image file and convert to WebP format before converting to base64
+ * @param {File} file - The image file to compress (JPEG, PNG, etc.)
  * @param {Object} options - Compression options
- * @returns {Promise<string>} - Base64 string of compressed image
+ * @returns {Promise<string>} - Base64 string of compressed WebP image
  */
 export async function compressImage(file, options = {}) {
   const {
     maxWidth = 800,
     maxHeight = 800,
     quality = 0.8,
-    outputFormat = 'image/jpeg'
+    outputFormat = 'image/webp' // Default to WebP for better compression
   } = options;
 
   return new Promise((resolve, reject) => {
@@ -39,10 +39,22 @@ export async function compressImage(file, options = {}) {
           canvas.height = height;
           
           const ctx = canvas.getContext('2d');
+          
+          // Enable image smoothing for better quality
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          
           ctx.drawImage(img, 0, 0, width, height);
 
           // Convert to base64 with compression
+          // WebP provides superior compression compared to JPEG/PNG
           const compressedBase64 = canvas.toDataURL(outputFormat, quality);
+          
+          // Log compression stats
+          const originalSizeKB = Math.round(file.size / 1024);
+          const compressedSizeKB = getBase64SizeKB(compressedBase64);
+          console.log(`Image compressed (${outputFormat}): ${originalSizeKB}KB → ${compressedSizeKB}KB (${Math.round((1 - compressedSizeKB/originalSizeKB) * 100)}% reduction)`);
+          
           resolve(compressedBase64);
         } catch (error) {
           reject(new Error('Failed to compress image: ' + error.message));

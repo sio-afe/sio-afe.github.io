@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ReactDOM from 'react-dom/client';
 import { supabaseClient } from './lib/supabaseClient';
 import PlayerDetail from './components/editions/2026/players/PlayerDetail';
@@ -37,6 +37,78 @@ const slugify = (name) => {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '');
 };
+
+// Helper to convert image URL to webp format
+const getWebpImageUrl = (url) => {
+  if (!url) return null;
+  
+  // If it's a Supabase storage URL, add transformation parameters
+  if (url.includes('supabase.co/storage/v1/object/public/')) {
+    // Add webp transformation parameter
+    const separator = url.includes('?') ? '&' : '?';
+    return `${url}${separator}format=webp&quality=80`;
+  }
+  
+  // For other URLs, just return as is (assuming they're already optimized)
+  return url;
+};
+
+// Lazy loading image component
+function LazyImage({ src, alt, className, placeholder }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const imgRef = useRef(null);
+
+  useEffect(() => {
+    if (!imgRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsInView(true);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        rootMargin: '50px', // Start loading 50px before the image enters viewport
+        threshold: 0.01,
+      }
+    );
+
+    observer.observe(imgRef.current);
+
+    return () => {
+      if (imgRef.current) {
+        observer.unobserve(imgRef.current);
+      }
+    };
+  }, []);
+
+  const webpSrc = getWebpImageUrl(src);
+
+  return (
+    <div ref={imgRef} className={className} style={{ position: 'relative' }}>
+      {!isLoaded && placeholder}
+      {isInView && webpSrc && (
+        <img
+          src={webpSrc}
+          alt={alt}
+          loading="lazy"
+          onLoad={() => setIsLoaded(true)}
+          style={{
+            opacity: isLoaded ? 1 : 0,
+            transition: 'opacity 0.3s ease-in-out',
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+          }}
+        />
+      )}
+    </div>
+  );
+}
 
 function PlayersApp() {
   const [players, setPlayers] = useState([]);
@@ -274,10 +346,15 @@ function PlayersApp() {
               
               <div className="player-photo-container">
                 {player.player_image ? (
-                  <img 
+                  <LazyImage 
                     src={player.player_image} 
                     alt={player.player_name}
                     className="player-photo"
+                    placeholder={
+                      <div className="player-photo-placeholder">
+                        <i className="fas fa-spinner fa-spin"></i>
+                      </div>
+                    }
                   />
                 ) : (
                   <div className="player-photo-placeholder">
@@ -289,7 +366,12 @@ function PlayersApp() {
               <div className="player-info-bar">
                 <div className="team-logo-small">
                   {team?.team_logo ? (
-                    <img src={team.team_logo} alt={team.team_name} />
+                    <LazyImage 
+                      src={team.team_logo} 
+                      alt={team.team_name}
+                      className="team-logo-img"
+                      placeholder={null}
+                    />
                   ) : (
                     <span>{team?.team_name?.charAt(0) || '?'}</span>
                   )}
