@@ -29,40 +29,72 @@ export default function Statistics() {
     try {
       setLoading(true);
 
-      // Fetch player stats from team_players table
-      const { data: playersData } = await supabaseClient
-        .from('team_players')
+      // Fetch all matches for this category
+      const { data: matches } = await supabaseClient
+        .from('matches')
+        .select('id')
+        .eq('category', category);
+
+      const matchIds = (matches || []).map(m => m.id);
+
+      // Fetch all goals for these matches with player and team details
+      const { data: goalsData } = await supabaseClient
+        .from('goals')
         .select(`
-          id,
-          player_name,
-          player_image,
-          goals,
-          assists,
+          scorer_id,
+          assister_id,
           team_id,
-          team_registrations(team_name, team_logo, category)
+          scorer:team_players!goals_scorer_id_fkey(id, player_name, player_image, team_id, team_registrations(team_name, team_logo)),
+          assister:team_players!goals_assister_id_fkey(id, player_name, player_image, team_id, team_registrations(team_name, team_logo))
         `)
-        .order('goals', { ascending: false });
+        .in('match_id', matchIds);
 
-      if (playersData) {
-        // Filter by category
-        const categoryPlayers = playersData.filter(
-          p => p.team_registrations?.category === category
-        );
+      // Aggregate goals by player
+      const scorersMap = {};
+      const assistsMap = {};
 
-        const topScorers = categoryPlayers
-          .filter(p => (p.goals || 0) > 0)
-          .slice(0, 10);
+      (goalsData || []).forEach(goal => {
+        // Count goals
+        if (goal.scorer?.id) {
+          if (!scorersMap[goal.scorer.id]) {
+            scorersMap[goal.scorer.id] = {
+              id: goal.scorer.id,
+              player_name: goal.scorer.player_name,
+              player_image: goal.scorer.player_image,
+              team_registrations: goal.scorer.team_registrations,
+              goals: 0
+            };
+          }
+          scorersMap[goal.scorer.id].goals += 1;
+        }
 
-        const topAssisters = [...categoryPlayers]
-          .filter(p => (p.assists || 0) > 0)
-          .sort((a, b) => (b.assists || 0) - (a.assists || 0))
-          .slice(0, 10);
+        // Count assists
+        if (goal.assister?.id) {
+          if (!assistsMap[goal.assister.id]) {
+            assistsMap[goal.assister.id] = {
+              id: goal.assister.id,
+              player_name: goal.assister.player_name,
+              player_image: goal.assister.player_image,
+              team_registrations: goal.assister.team_registrations,
+              assists: 0
+            };
+          }
+          assistsMap[goal.assister.id].assists += 1;
+        }
+      });
 
-        setPlayerStats({
-          goals: topScorers,
-          assists: topAssisters
-        });
-      }
+      const topScorers = Object.values(scorersMap)
+        .sort((a, b) => b.goals - a.goals)
+        .slice(0, 10);
+
+      const topAssisters = Object.values(assistsMap)
+        .sort((a, b) => b.assists - a.assists)
+        .slice(0, 10);
+
+      setPlayerStats({
+        goals: topScorers,
+        assists: topAssisters
+      });
 
       // Fetch team stats from teams table
       const { data: teamsData } = await supabaseClient

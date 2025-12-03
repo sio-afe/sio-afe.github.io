@@ -39,9 +39,16 @@ function Statistics({ category }) {
 
       const matchIds = matchRows.map((match) => match.id);
 
-      const { data: goalsData, error: goalsError } = await supabase
+      const { data: goalsData, error: goalsError} = await supabase
         .from('goals')
-        .select('scorer_name, assist_name, team_id, teams(name, crest_url)')
+        .select(`
+          scorer_id,
+          assister_id,
+          team_id,
+          team:teams(name, crest_url),
+          scorer:team_players!goals_scorer_id_fkey(player_name, player_image),
+          assister:team_players!goals_assister_id_fkey(player_name, player_image)
+        `)
         .in('match_id', matchIds);
 
       if (goalsError) throw goalsError;
@@ -50,24 +57,26 @@ function Statistics({ category }) {
       const assistsMap = {};
 
       (goalsData || []).forEach((goalEvent) => {
-        if (goalEvent.scorer_name) {
-          const scorerKey = `${goalEvent.scorer_name}-${goalEvent.team_id}`;
+        if (goalEvent.scorer?.player_name) {
+          const scorerKey = `${goalEvent.scorer.player_name}-${goalEvent.team_id}`;
           if (!scorersMap[scorerKey]) {
             scorersMap[scorerKey] = {
-              player_name: goalEvent.scorer_name,
-              team: goalEvent.teams,
+              player_name: goalEvent.scorer.player_name,
+              player_image: goalEvent.scorer.player_image,
+              team: goalEvent.team,
               goals: 0,
             };
           }
           scorersMap[scorerKey].goals += 1;
         }
 
-        if (goalEvent.assist_name) {
-          const assistKey = `${goalEvent.assist_name}-${goalEvent.team_id}`;
+        if (goalEvent.assister?.player_name) {
+          const assistKey = `${goalEvent.assister.player_name}-${goalEvent.team_id}`;
           if (!assistsMap[assistKey]) {
             assistsMap[assistKey] = {
-              player_name: goalEvent.assist_name,
-              team: goalEvent.teams,
+              player_name: goalEvent.assister.player_name,
+              player_image: goalEvent.assister.player_image,
+              team: goalEvent.team,
               assists: 0,
             };
           }

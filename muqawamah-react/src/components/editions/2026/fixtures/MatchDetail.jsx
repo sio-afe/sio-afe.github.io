@@ -35,10 +35,20 @@ export default function MatchDetail({ matchId, onBack }) {
       if (matchError) throw matchError;
       setMatch(matchData);
 
-      // Fetch goals for this match
+      // Fetch goals for this match with player details
       const { data: goalsData } = await supabaseClient
-        .from('match_goals')
-        .select('*')
+        .from('goals')
+        .select(`
+          id,
+          match_id,
+          team_id,
+          scorer_id,
+          assister_id,
+          minute,
+          goal_type,
+          scorer:team_players!goals_scorer_id_fkey(player_name, player_image),
+          assister:team_players!goals_assister_id_fkey(player_name, player_image)
+        `)
         .eq('match_id', matchId)
         .order('minute', { ascending: true });
 
@@ -123,30 +133,32 @@ export default function MatchDetail({ matchId, onBack }) {
     const statsMap = {};
     
     goals.forEach(goal => {
-      // Count goals
-      if (goal.scorer_name) {
-        if (!statsMap[goal.scorer_name]) {
-          statsMap[goal.scorer_name] = { 
-            name: goal.scorer_name, 
+      // Count goals (using new schema: scorer_id and scorer object)
+      if (goal.scorer?.player_name) {
+        const scorerName = goal.scorer.player_name;
+        if (!statsMap[scorerName]) {
+          statsMap[scorerName] = { 
+            name: scorerName, 
             goals: 0, 
             assists: 0,
             team_id: goal.team_id 
           };
         }
-        statsMap[goal.scorer_name].goals += 1;
+        statsMap[scorerName].goals += 1;
       }
       
-      // Count assists
-      if (goal.assist_name) {
-        if (!statsMap[goal.assist_name]) {
-          statsMap[goal.assist_name] = { 
-            name: goal.assist_name, 
+      // Count assists (using new schema: assister_id and assister object)
+      if (goal.assister?.player_name) {
+        const assisterName = goal.assister.player_name;
+        if (!statsMap[assisterName]) {
+          statsMap[assisterName] = { 
+            name: assisterName, 
             goals: 0, 
             assists: 0,
             team_id: goal.team_id 
           };
         }
-        statsMap[goal.assist_name].assists += 1;
+        statsMap[assisterName].assists += 1;
       }
     });
     
@@ -194,6 +206,19 @@ export default function MatchDetail({ matchId, onBack }) {
   const isFinished = match.status === 'completed';
   const playerStats = getPlayerStats();
 
+  const getMatchStatusBadge = () => {
+    if (match.status === 'completed') {
+      return { label: 'FULL TIME', className: 'status-completed' };
+    } else if (match.status === 'live') {
+      return { label: 'LIVE', className: 'status-live' };
+    } else if (match.status === 'scheduled') {
+      return { label: 'SCHEDULED', className: 'status-scheduled' };
+    }
+    return { label: 'UPCOMING', className: 'status-scheduled' };
+  };
+
+  const statusBadge = getMatchStatusBadge();
+
   return (
     <>
       <TournamentNavbar />
@@ -217,6 +242,7 @@ export default function MatchDetail({ matchId, onBack }) {
                   )}
                 </div>
                 <h4 className="team-name-header">{match.home_team?.name || 'TBD'}</h4>
+                <span className="team-indicator home">HOME</span>
               </div>
 
               {/* Score */}
@@ -226,6 +252,10 @@ export default function MatchDetail({ matchId, onBack }) {
                 ) : (
                   <span className="score-vs">VS</span>
                 )}
+                {/* Match Status Badge */}
+                <span className={`match-status-badge-detail ${statusBadge.className}`}>
+                  {statusBadge.label}
+                </span>
               </div>
 
               {/* Away Team */}
@@ -238,6 +268,7 @@ export default function MatchDetail({ matchId, onBack }) {
                   )}
                 </div>
                 <h4 className="team-name-header">{match.away_team?.name || 'TBD'}</h4>
+                <span className="team-indicator away">AWAY</span>
               </div>
             </div>
 
@@ -251,33 +282,45 @@ export default function MatchDetail({ matchId, onBack }) {
         {/* Main Content */}
         <section className="match-detail-content">
           <div className="match-detail-single-column">
-            {/* Player Stats Section */}
-            <div className="stats-panel">
-              <h3 className="panel-title">PLAYER STATS</h3>
+            {/* Goals Timeline */}
+            <div className="goals-timeline-panel">
+              <h3 className="panel-title">GOALS & HIGHLIGHTS</h3>
               
-              {playerStats.length > 0 ? (
-                <div className="player-stats-list">
-                  <div className="player-stats-header">
-                    <span className="ps-player">Player</span>
-                    <span className="ps-team">Team</span>
-                    <span className="ps-goals">Goals</span>
-                    <span className="ps-assists">Assists</span>
-                  </div>
-                  {playerStats.map((stat, idx) => (
-                    <div className="player-stats-row" key={idx}>
-                      <span className="ps-player">{stat.name}</span>
-                      <span className="ps-team">
-                        {stat.team_id === match.home_team_id ? match.home_team?.name : match.away_team?.name}
-                      </span>
-                      <span className="ps-goals">{stat.goals}</span>
-                      <span className="ps-assists">{stat.assists}</span>
-                    </div>
-                  ))}
+              {goals.length > 0 ? (
+                <div className="goals-timeline">
+                  {goals.map((goal, idx) => {
+                    const isHomeGoal = goal.team_id === match.home_team_id;
+                    return (
+                      <div key={idx} className={`goal-item ${isHomeGoal ? 'home-goal' : 'away-goal'}`}>
+                        <div className="goal-minute">
+                          <span className="minute-badge">{goal.minute}'</span>
+                        </div>
+                        <div className="goal-icon">
+                          <i className="fas fa-futbol"></i>
+                        </div>
+                        <div className="goal-details">
+                          <div className="goal-scorer">
+                            <i className="fas fa-user-circle"></i>
+                            <strong>{goal.scorer?.player_name || 'Unknown'}</strong>
+                          </div>
+                          {goal.assister?.player_name && (
+                            <div className="goal-assist">
+                              <i className="fas fa-hands-helping"></i>
+                              <span>Assist: {goal.assister.player_name}</span>
+                            </div>
+                          )}
+                          <div className="goal-team">
+                            {isHomeGoal ? match.home_team?.name : match.away_team?.name}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               ) : (
                 <div className="no-stats-message">
                   <i className="fas fa-futbol"></i>
-                  <p>{isFinished ? 'No player stats recorded' : 'Player stats will appear here after the match'}</p>
+                  <p>{isFinished ? 'No goals scored in this match' : 'Goals will appear here during the match'}</p>
                 </div>
               )}
             </div>

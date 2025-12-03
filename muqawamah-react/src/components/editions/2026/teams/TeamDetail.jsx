@@ -104,10 +104,60 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
         if (playersData) {
           setPlayers(playersData);
           
-          // Leaderboards will be empty for now since goals/assists aren't in team_players
+          // Fetch goals for this team to build leaderboards
+          const { data: goalsData } = await supabaseClient
+            .from('goals')
+            .select(`
+              scorer_id,
+              assister_id,
+              scorer:team_players!goals_scorer_id_fkey(id, player_name, player_image),
+              assister:team_players!goals_assister_id_fkey(id, player_name, player_image)
+            `)
+            .eq('team_id', teamId);
+
+          // Aggregate goals by player
+          const scorersMap = {};
+          const assistsMap = {};
+
+          (goalsData || []).forEach(goal => {
+            // Count goals
+            if (goal.scorer_id && goal.scorer) {
+              if (!scorersMap[goal.scorer_id]) {
+                scorersMap[goal.scorer_id] = {
+                  id: goal.scorer_id,
+                  player_name: goal.scorer.player_name,
+                  player_image: goal.scorer.player_image,
+                  goals: 0
+                };
+              }
+              scorersMap[goal.scorer_id].goals += 1;
+            }
+
+            // Count assists
+            if (goal.assister_id && goal.assister) {
+              if (!assistsMap[goal.assister_id]) {
+                assistsMap[goal.assister_id] = {
+                  id: goal.assister_id,
+                  player_name: goal.assister.player_name,
+                  player_image: goal.assister.player_image,
+                  assists: 0
+                };
+              }
+              assistsMap[goal.assister_id].assists += 1;
+            }
+          });
+
+          const topScorers = Object.values(scorersMap)
+            .sort((a, b) => b.goals - a.goals)
+            .slice(0, 5);
+
+          const topAssists = Object.values(assistsMap)
+            .sort((a, b) => b.assists - a.assists)
+            .slice(0, 5);
+
           setLeaderboards({
-            topScorers: [],
-            topAssists: []
+            topScorers,
+            topAssists
           });
         }
       }

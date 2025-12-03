@@ -174,12 +174,22 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
             setMatches(matchesData);
           }
 
-          // Fetch goals/assists by this player
+          // Fetch goals/assists by this player using new schema
           const { data: goalsData } = await supabaseClient
-            .from('match_goals')
-            .select('*')
-            .or(`scorer_name.eq.${playerData.player_name},assist_name.eq.${playerData.player_name}`)
-            .order('minute', { ascending: true });
+            .from('goals')
+            .select(`
+              id,
+              match_id,
+              team_id,
+              scorer_id,
+              assister_id,
+              minute,
+              goal_type,
+              scorer:team_players!goals_scorer_id_fkey(id, player_name),
+              assister:team_players!goals_assister_id_fkey(id, player_name)
+            `)
+            .or(`scorer_id.eq.${playerId},assister_id.eq.${playerId}`)
+            .order('minute', { ascending: true});
           
           if (goalsData) {
             console.log('Found goals:', goalsData);
@@ -241,11 +251,11 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
   const positionLabel = getPositionLabel(player.position);
   const groupedTeammates = groupTeammates();
 
-  // Calculate stats from fetched data
+  // Calculate stats from fetched data using new schema
   const stats = {
     apps: matches.filter(m => m.status === 'completed').length,
-    goals: playerGoals.filter(g => g.scorer_name === player.player_name).length,
-    assists: playerGoals.filter(g => g.assist_name === player.player_name).length
+    goals: playerGoals.filter(g => g.scorer_id === playerId).length,
+    assists: playerGoals.filter(g => g.assister_id === playerId).length
   };
 
   // Build match log and split by status
@@ -263,7 +273,7 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
     }
     
     const playerGoalsInMatch = playerGoals.filter(g => 
-      g.match_id === match.id && g.scorer_name === player.player_name
+      g.match_id === match.id && g.scorer_id === playerId
     ).length;
     
     return {

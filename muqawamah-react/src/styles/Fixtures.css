@@ -143,6 +143,64 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
+/* ===== Match Status Badges ===== */
+.match-status-mobile,
+.match-status-desktop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.match-status-mobile {
+  display: none;
+  text-align: center;
+  padding: 8px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.status-live {
+  background: linear-gradient(135deg, #ff4757 0%, #ff6348 100%);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(255, 71, 87, 0.6);
+  animation: pulse-live 2s ease-in-out infinite;
+}
+
+.status-completed {
+  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  color: #fff;
+}
+
+.status-scheduled {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@keyframes pulse-live {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 71, 87, 0.6);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 71, 87, 0.8);
+    transform: scale(1.05);
+  }
+}
+
 /* ===== Team ===== */
 .match-team-v2 {
   display: flex;
@@ -343,6 +401,14 @@
 
   .match-time-mobile {
     display: block;
+  }
+
+  .match-status-desktop {
+    display: none;
+  }
+
+  .match-status-mobile {
+    display: flex;
   }
 
   .match-venue-desktop {
@@ -726,6 +792,21 @@
   align-items: center;
   justify-content: center;
   padding: 12px;
+  position: relative;
+}
+
+/* Home Team Ring (Blue) */
+.header-team.home .team-logo-large {
+  border: 3px solid #4a90e2;
+  box-shadow: 0 0 20px rgba(74, 144, 226, 0.5), 
+              inset 0 0 20px rgba(74, 144, 226, 0.1);
+}
+
+/* Away Team Ring (Red) */
+.header-team.away .team-logo-large {
+  border: 3px solid #e63946;
+  box-shadow: 0 0 20px rgba(230, 57, 70, 0.5),
+              inset 0 0 20px rgba(230, 57, 70, 0.1);
 }
 
 .header-team .team-logo-large img {
@@ -750,9 +831,38 @@
   margin: 0;
 }
 
+/* Team Indicator Labels */
+.team-indicator {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  margin-top: 8px;
+  display: inline-block;
+}
+
+.team-indicator.home {
+  background: rgba(74, 144, 226, 0.2);
+  color: #4a90e2;
+  border: 1px solid rgba(74, 144, 226, 0.4);
+}
+
+.team-indicator.away {
+  background: rgba(230, 57, 70, 0.2);
+  color: #e63946;
+  border: 1px solid rgba(230, 57, 70, 0.4);
+}
+
 /* Score Header */
 .match-score-header {
   min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 
 .score-big {
@@ -770,6 +880,40 @@
   font-size: 1.5rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.4);
+}
+
+/* Match Status Badge in Detail Page */
+.match-status-badge-detail {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 20px;
+  border-radius: 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 8px;
+}
+
+.match-status-badge-detail.status-live {
+  background: linear-gradient(135deg, #ff4757 0%, #ff6348 100%);
+  color: #fff;
+  box-shadow: 0 0 30px rgba(255, 71, 87, 0.8);
+  animation: pulse-live 2s ease-in-out infinite;
+}
+
+.match-status-badge-detail.status-completed {
+  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+}
+
+.match-status-badge-detail.status-scheduled {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 /* Match Meta */
@@ -931,7 +1075,8 @@
 }
 
 /* Stats Panel */
-.stats-panel {
+.stats-panel,
+.goals-timeline-panel {
   background: #2a2a2a;
   border-radius: 12px;
   padding: 24px;
@@ -944,6 +1089,113 @@
   text-transform: uppercase;
   color: #fff;
   margin: 0 0 20px;
+}
+
+/* Goals Timeline */
+.goals-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.goal-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.goal-item.home-goal {
+  background: rgba(74, 144, 226, 0.1);
+  border-left: 4px solid #4a90e2;
+}
+
+.goal-item.away-goal {
+  background: rgba(230, 57, 70, 0.1);
+  border-left: 4px solid #e63946;
+}
+
+.goal-item:hover {
+  transform: translateX(4px);
+}
+
+.goal-minute {
+  flex-shrink: 0;
+}
+
+.minute-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.goal-icon {
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  margin-top: 2px;
+}
+
+.home-goal .goal-icon {
+  color: #4a90e2;
+}
+
+.away-goal .goal-icon {
+  color: #e63946;
+}
+
+.goal-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.goal-scorer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+}
+
+.goal-scorer i {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.goal-scorer strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.goal-assist {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+}
+
+.goal-assist i {
+  font-size: 0.75rem;
+}
+
+.goal-team {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
 }
 
 /* Stats Grid */
@@ -1991,11 +2243,26 @@
   }
 
   .stats-panel,
+  .goals-timeline-panel,
   .squads-section,
   .standings-panel,
   .gameday-results-panel,
   .formation-section {
     padding: 16px;
+  }
+
+  .goal-item {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .goal-minute {
+    align-self: flex-start;
+  }
+
+  .goal-details {
+    gap: 8px;
   }
 
   .stats-toggle-btn {

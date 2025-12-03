@@ -89,6 +89,17 @@ export default function Fixtures({ onMatchClick }) {
     return timeString;
   };
 
+  const getMatchStatus = (match) => {
+    if (match.status === 'completed') {
+      return { label: 'FT', className: 'status-completed' };
+    } else if (match.status === 'live') {
+      return { label: 'LIVE', className: 'status-live' };
+    } else if (match.status === 'scheduled') {
+      return { label: formatTime(match.scheduled_time), className: 'status-scheduled' };
+    }
+    return { label: 'TBD', className: 'status-scheduled' };
+  };
+
   if (loading) {
     return (
       <>
@@ -142,6 +153,7 @@ export default function Fixtures({ onMatchClick }) {
                 const isFinished = match.status === 'completed';
                 const homeScore = match.home_score ?? 0;
                 const awayScore = match.away_score ?? 0;
+                const matchStatus = getMatchStatus(match);
                 
                 return (
                   <div 
@@ -150,16 +162,20 @@ export default function Fixtures({ onMatchClick }) {
                     onClick={() => onMatchClick && onMatchClick(match.id)}
                     style={{ cursor: onMatchClick ? 'pointer' : 'default' }}
                   >
-                    {/* Time - Mobile */}
-                    <div className="match-time-mobile">
-                      <span className="time-text">{formatTime(match.scheduled_time)}</span>
+                    {/* Status Badge - Mobile */}
+                    <div className="match-status-mobile">
+                      <span className={`status-badge ${matchStatus.className}`}>
+                        {matchStatus.label}
+                      </span>
                     </div>
 
                     {/* Match Row */}
                     <div className="match-row-v2">
-                      {/* Time - Desktop */}
-                      <div className="match-time-desktop">
-                        <span className="time-text">{formatTime(match.scheduled_time)}</span>
+                      {/* Status Badge - Desktop */}
+                      <div className="match-status-desktop">
+                        <span className={`status-badge ${matchStatus.className}`}>
+                          {matchStatus.label}
+                        </span>
                       </div>
 
                       {/* Home Team */}

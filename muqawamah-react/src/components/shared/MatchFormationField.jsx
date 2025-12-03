@@ -19,14 +19,15 @@ export default function MatchFormationField({
   const homeStarters = homePlayers.filter(p => !p.is_substitute && p.position !== 'SUB').slice(0, 7);
   const awayStarters = awayPlayers.filter(p => !p.is_substitute && p.position !== 'SUB').slice(0, 7);
 
-  // Calculate player stats from goals
-  const getPlayerStats = (playerName) => {
+  // Calculate player stats from goals using new schema
+  const getPlayerStats = (playerId) => {
     let goalsScored = 0;
     let assists = 0;
     
     goals.forEach(goal => {
-      if (goal.scorer_name === playerName) goalsScored++;
-      if (goal.assist_name === playerName) assists++;
+      // New schema uses scorer_id and assister_id
+      if (goal.scorer_id === playerId) goalsScored++;
+      if (goal.assister_id === playerId) assists++;
     });
     
     return { goalsScored, assists };
@@ -82,7 +83,7 @@ export default function MatchFormationField({
     );
   }
 
-  const playerStats = selectedPlayer ? getPlayerStats(selectedPlayer.player_name) : null;
+  const playerStats = selectedPlayer ? getPlayerStats(selectedPlayer.id) : null;
   const playerAge = selectedPlayer ? calculateAge(selectedPlayer.date_of_birth) : null;
 
   return (

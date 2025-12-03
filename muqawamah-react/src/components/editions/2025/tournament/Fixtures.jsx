@@ -72,22 +72,36 @@ function Fixtures({ fixtures }) {
       const supabase = window.supabaseClient || sharedSupabaseClient;
 
       if (supabase) {
-        const { data, error } = await supabase
-          .rpc('get_match_details', { match_uuid: fixture.id });
-        
-        if (error) {
-          console.error('Error fetching match details:', error);
-          // Use basic fixture data if function doesn't exist
-          setMatchDetails(fixture);
-          await loadPlayerStats(fixture, supabase);
-        } else {
-          const payload = Array.isArray(data) ? data[0] : data;
-          const parsed =
-            typeof payload === 'string' ? safeJSONParse(payload) : payload;
-          const resolvedDetails = parsed || fixture;
-          setMatchDetails(resolvedDetails);
-          await loadPlayerStats(resolvedDetails, supabase);
+        // Fetch goals for this match directly
+        const { data: goalsData, error: goalsError } = await supabase
+          .from('goals')
+          .select(`
+            id,
+            minute,
+            team_id,
+            goal_type,
+            scorer_id,
+            assister_id,
+            scorer:team_players!goals_scorer_id_fkey(player_name, player_image),
+            assister:team_players!goals_assister_id_fkey(player_name, player_image)
+          `)
+          .eq('match_id', fixture.id)
+          .order('minute');
+
+        if (goalsError) {
+          console.error('Error fetching goals:', goalsError);
         }
+
+        // Prepare match details with goals
+        const detailsWithGoals = {
+          ...fixture,
+          goals: goalsData || [],
+          home_team: fixture.home_team,
+          away_team: fixture.away_team
+        };
+
+        setMatchDetails(detailsWithGoals);
+        await loadPlayerStats(fixture, supabase);
       } else {
         setMatchDetails(fixture);
         setPlayerStatsLoading(false);
@@ -145,12 +159,21 @@ function Fixtures({ fixtures }) {
     }
 
     try {
-      const { data, error } = await supabase
+      // Fetch goals for ALL matches in the tournament (for tournament stats)
+      const { data: tournamentGoals, error: tournamentError } = await supabase
         .from('goals')
-        .select('team_id, scorer_name, assist_name')
+        .select(`
+          team_id,
+          scorer_id,
+          assister_id,
+          scorer:team_players!goals_scorer_id_fkey(player_name),
+          assister:team_players!goals_assister_id_fkey(player_name)
+        `)
         .in('team_id', [homeTeam.id, awayTeam.id]);
 
-      if (error) throw error;
+      if (tournamentError) throw tournamentError;
+      
+      const data = tournamentGoals;
 
       const aggregateForTeam = (team) => {
         if (!team?.id) return [];
@@ -172,12 +195,12 @@ function Fixtures({ fixtures }) {
 
         (data || []).forEach((event) => {
           if (event.team_id !== team.id) return;
-          if (event.scorer_name) {
-            const key = event.scorer_name.toLowerCase();
+          if (event.scorer?.player_name) {
+            const key = event.scorer.player_name.toLowerCase();
             if (!playerMap[key]) {
               playerMap[key] = {
-                id: key,
-                name: event.scorer_name,
+                id: event.scorer_id || key,
+                name: event.scorer.player_name,
                 position: '',
                 goals: 0,
                 assists: 0,
@@ -186,12 +209,12 @@ function Fixtures({ fixtures }) {
             playerMap[key].goals += 1;
           }
 
-          if (event.assist_name) {
-            const key = event.assist_name.toLowerCase();
+          if (event.assister?.player_name) {
+            const key = event.assister.player_name.toLowerCase();
             if (!playerMap[key]) {
               playerMap[key] = {
-                id: key,
-                name: event.assist_name,
+                id: event.assister_id || key,
+                name: event.assister.player_name,
                 position: '',
                 goals: 0,
                 assists: 0,
@@ -233,20 +256,26 @@ function Fixtures({ fixtures }) {
       );
     }
 
-    return goalsList.map((goal) => (
-      <div
-        key={goal.id || `${goal.scorer_name}-${goal.minute}`}
-        className={`highlight-card ${goal.team_name === homeName ? 'home' : 'away'}`}
-      >
-        <div className="highlight-minute">{goal.minute}&rsquo;</div>
-        <div className="highlight-details">
-          <span className="highlight-player">{goal.scorer_name}</span>
-          {goal.assist_name && (
-            <span className="highlight-assist">Assist: {goal.assist_name}</span>
-          )}
+    return goalsList.map((goal) => {
+      // Handle both old format (scorer_name) and new format (scorer.player_name)
+      const scorerName = goal.scorer?.player_name || goal.scorer_name || 'Unknown';
+      const assisterName = goal.assister?.player_name || goal.assist_name;
+      
+      return (
+        <div
+          key={goal.id || `${scorerName}-${goal.minute}`}
+          className={`highlight-card ${goal.team_name === homeName ? 'home' : 'away'}`}
+        >
+          <div className="highlight-minute">{goal.minute}&rsquo;</div>
+          <div className="highlight-details">
+            <span className="highlight-player">{scorerName}</span>
+            {assisterName && (
+              <span className="highlight-assist">Assist: {assisterName}</span>
+            )}
+          </div>
         </div>
-      </div>
-    ));
+      );
+    });
   };
 
   const renderFieldPlayers = (players, isAway = false) => {
@@ -558,7 +587,15 @@ function Fixtures({ fixtures }) {
                       <>
                         <div className="match-details-header">
                           <div>
-                            <p className="match-status-pill">{selectedMatch.status === 'completed' ? 'Full-time' : selectedMatch.status}</p>
+                            <span className={`match-status-pill ${
+                              selectedMatch.status === 'completed' ? 'status-completed' : 
+                              selectedMatch.status === 'live' ? 'status-live' : 
+                              'status-scheduled'
+                            }`}>
+                              {selectedMatch.status === 'completed' ? 'FULL TIME' : 
+                               selectedMatch.status === 'live' ? 'LIVE' : 
+                               'SCHEDULED'}
+                            </span>
                             <h2>{(homeTeamInfo.name || selectedMatch.home_team?.name || 'Home')} vs {(awayTeamInfo.name || selectedMatch.away_team?.name || 'Away')}</h2>
                             <p className="match-date">
                               <i className="fas fa-calendar-alt"></i>

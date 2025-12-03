@@ -13,6 +13,7 @@ export default function GoalsManager() {
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [matchFilter, setMatchFilter] = useState('');
   const [newGoal, setNewGoal] = useState({
     match_id: '',
     scorer_id: '',
@@ -33,7 +34,14 @@ export default function GoalsManager() {
       const { data: goalsData, error: goalsError } = await supabaseClient
         .from('goals')
         .select(`
-          *,
+          id,
+          match_id,
+          team_id,
+          scorer_id,
+          assister_id,
+          minute,
+          goal_type,
+          created_at,
           match:matches(id, home_team:teams!matches_home_team_id_fkey(name), away_team:teams!matches_away_team_id_fkey(name)),
           scorer:team_players!goals_scorer_id_fkey(player_name, team_id),
           assister:team_players!goals_assister_id_fkey(player_name)
@@ -81,10 +89,28 @@ export default function GoalsManager() {
     }
 
     try {
+      // Get the scorer's team from team_players table
+      const { data: scorerData, error: scorerError } = await supabaseClient
+        .from('team_players')
+        .select('team_id, team_registrations(tournament_team_id)')
+        .eq('id', newGoal.scorer_id)
+        .single();
+
+      if (scorerError) throw scorerError;
+
+      // Get the tournament team_id from the registration
+      const teamId = scorerData?.team_registrations?.tournament_team_id;
+      
+      if (!teamId) {
+        alert('Could not determine team for this player. Make sure the team is confirmed in the tournament.');
+        return;
+      }
+
       const { error } = await supabaseClient
         .from('goals')
         .insert({
           match_id: newGoal.match_id,
+          team_id: teamId,
           scorer_id: newGoal.scorer_id,
           assister_id: newGoal.assister_id || null,
           minute: parseInt(newGoal.minute) || null,
@@ -105,7 +131,7 @@ export default function GoalsManager() {
       fetchData();
     } catch (error) {
       console.error('Error adding goal:', error);
-      alert('Failed to add goal');
+      alert('Failed to add goal: ' + error.message);
     }
   };
 
@@ -130,6 +156,39 @@ export default function GoalsManager() {
     }
   };
 
+  const clearMatchGoals = async (matchId) => {
+    const match = matches.find(m => m.id === matchId);
+    if (!match) return;
+
+    const matchName = `${match.home_team?.name} vs ${match.away_team?.name}`;
+    const goalsInMatch = filteredGoals.length;
+
+    if (!confirm(`Delete all ${goalsInMatch} goal(s) from this match?\n\n${matchName}\n\nThis cannot be undone!`)) {
+      return;
+    }
+
+    try {
+      const { error } = await supabaseClient
+        .from('goals')
+        .delete()
+        .eq('match_id', matchId);
+
+      if (error) throw error;
+
+      alert(`Successfully deleted ${goalsInMatch} goal(s)!`);
+      setMatchFilter('');
+      fetchData();
+    } catch (error) {
+      console.error('Error clearing match goals:', error);
+      alert('Failed to clear match goals');
+    }
+  };
+
+  // Filter goals by selected match
+  const filteredGoals = matchFilter 
+    ? goals.filter(goal => goal.match_id === matchFilter)
+    : goals;
+
   return (
     <AdminLayout title="Goals & Stats Management">
       <div className="admin-page-header">
@@ -146,6 +205,39 @@ export default function GoalsManager() {
         </div>
       </div>
 
+      {/* Match Filter */}
+      {!loading && (
+        <div className="filter-section">
+          <div className="filter-group">
+            <label><i className="fas fa-filter"></i> Filter by Match:</label>
+            <select
+              value={matchFilter}
+              onChange={(e) => setMatchFilter(e.target.value)}
+              className="filter-select"
+            >
+              <option value="">All Matches ({goals.length} goals)</option>
+              {matches.map(match => {
+                const matchGoals = goals.filter(g => g.match_id === match.id).length;
+                return (
+                  <option key={match.id} value={match.id}>
+                    {match.home_team?.name} vs {match.away_team?.name} ({matchGoals} goals)
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          {matchFilter && (
+            <button 
+              className="btn-danger-outline"
+              onClick={() => clearMatchGoals(matchFilter)}
+              title="Delete all goals from this match"
+            >
+              <i className="fas fa-trash-alt"></i> Clear Match Goals
+            </button>
+          )}
+        </div>
+      )}
+
       {loading ? (
         <div className="admin-loading">
           <div className="admin-spinner"></div>
@@ -154,7 +246,13 @@ export default function GoalsManager() {
       ) : (
         <div className="admin-table-container">
           <div className="table-stats">
-            <p>Total Goals: <strong>{goals.length}</strong></p>
+            <p>
+              {matchFilter ? (
+                <>Showing: <strong>{filteredGoals.length}</strong> goals (filtered)</>
+              ) : (
+                <>Total Goals: <strong>{goals.length}</strong></>
+              )}
+            </p>
           </div>
           <table className="admin-table">
             <thead>
@@ -168,15 +266,15 @@ export default function GoalsManager() {
               </tr>
             </thead>
             <tbody>
-              {goals.length === 0 ? (
+              {filteredGoals.length === 0 ? (
                 <tr>
                   <td colSpan="6" style={{ textAlign: 'center', padding: '40px' }}>
                     <i className="fas fa-trophy" style={{ fontSize: '3rem', color: '#ccc' }}></i>
-                    <p>No goals recorded</p>
+                    <p>{matchFilter ? 'No goals recorded for this match' : 'No goals recorded'}</p>
                   </td>
                 </tr>
               ) : (
-                goals.map((goal) => (
+                filteredGoals.map((goal) => (
                   <tr key={goal.id}>
                     <td>
                       <div>

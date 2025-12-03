@@ -21,8 +21,8 @@ export default function MatchRecorder() {
   const [homePlayers, setHomePlayers] = useState([]);
   const [awayPlayers, setAwayPlayers] = useState([]);
   const [newGoal, setNewGoal] = useState({
-    scorer_name: '',
-    assist_name: '',
+    scorer_id: '',
+    assister_id: '',
     minute: '',
     goal_type: 'open_play',
     team_id: ''
@@ -63,6 +63,16 @@ export default function MatchRecorder() {
       const oldHomeScore = selectedMatch.home_score || 0;
       const oldAwayScore = selectedMatch.away_score || 0;
 
+      // Check if anything actually changed
+      const scoreChanged = (matchResult.home_score !== oldHomeScore) || (matchResult.away_score !== oldAwayScore);
+      const statusChanged = matchResult.status !== selectedMatch.status;
+
+      if (!scoreChanged && !statusChanged) {
+        alert('No changes detected');
+        setShowModal(false);
+        return;
+      }
+
       // Update match result
       const { error: matchError } = await supabaseClient
         .from('matches')
@@ -75,9 +85,9 @@ export default function MatchRecorder() {
 
       if (matchError) throw matchError;
 
-      // Update team stats
+      // Update team stats ONLY if status or score changed
       if (matchResult.status === 'completed') {
-        if (wasCompleted) {
+        if (wasCompleted && scoreChanged) {
           // Match was previously completed - reverse old stats and apply new ones
           await reverseTeamStats(
             selectedMatch.home_team_id,
@@ -85,13 +95,21 @@ export default function MatchRecorder() {
             oldHomeScore,
             oldAwayScore
           );
+          await updateTeamStats(
+            selectedMatch.home_team_id,
+            selectedMatch.away_team_id,
+            matchResult.home_score,
+            matchResult.away_score
+          );
+        } else if (!wasCompleted) {
+          // First time completing - just add stats
+          await updateTeamStats(
+            selectedMatch.home_team_id,
+            selectedMatch.away_team_id,
+            matchResult.home_score,
+            matchResult.away_score
+          );
         }
-        await updateTeamStats(
-          selectedMatch.home_team_id,
-          selectedMatch.away_team_id,
-          matchResult.home_score,
-          matchResult.away_score
-        );
       } else if (wasCompleted && matchResult.status !== 'completed') {
         // Match was completed but now changed to another status - reverse stats
         await reverseTeamStats(
@@ -276,9 +294,20 @@ export default function MatchRecorder() {
 
   const fetchMatchGoals = async (matchId) => {
     try {
-      const { data, error } = await supabaseClient
+      const { data, error} = await supabaseClient
         .from('goals')
-        .select('*')
+        .select(`
+          id,
+          match_id,
+          team_id,
+          scorer_id,
+          assister_id,
+          minute,
+          goal_type,
+          created_at,
+          scorer:team_players!goals_scorer_id_fkey(player_name),
+          assister:team_players!goals_assister_id_fkey(player_name)
+        `)
         .eq('match_id', matchId)
         .order('minute');
 
@@ -290,7 +319,7 @@ export default function MatchRecorder() {
   };
 
   const addGoal = async () => {
-    if (!newGoal.scorer_name || !newGoal.team_id) {
+    if (!newGoal.scorer_id || !newGoal.team_id) {
       alert('Please select scorer and team');
       return;
     }
@@ -301,9 +330,10 @@ export default function MatchRecorder() {
         .insert({
           match_id: selectedMatch.id,
           team_id: newGoal.team_id,
-          scorer_name: newGoal.scorer_name,
-          assist_name: newGoal.assist_name || null,
-          minute: parseInt(newGoal.minute) || null
+          scorer_id: newGoal.scorer_id,
+          assister_id: newGoal.assister_id || null,
+          minute: parseInt(newGoal.minute) || null,
+          goal_type: newGoal.goal_type
         });
 
       if (error) throw error;
@@ -319,8 +349,8 @@ export default function MatchRecorder() {
 
       // Reset goal form
       setNewGoal({
-        scorer_name: '',
-        assist_name: '',
+        scorer_id: '',
+        assister_id: '',
         minute: '',
         goal_type: 'open_play',
         team_id: ''
@@ -527,10 +557,10 @@ export default function MatchRecorder() {
                       <div key={goal.id} className="goal-item">
                         <div className="goal-info">
                           <span className="goal-minute">{goal.minute}'</span>
-                          <span className="goal-scorer">{goal.scorer_name}</span>
-                          {goal.assist_name && (
+                          <span className="goal-scorer">{goal.scorer?.player_name || 'Unknown'}</span>
+                          {goal.assister?.player_name && (
                             <span className="goal-assist">
-                              (Assist: {goal.assist_name})
+                              (Assist: {goal.assister.player_name})
                             </span>
                           )}
                         </div>
@@ -557,8 +587,8 @@ export default function MatchRecorder() {
                           setNewGoal({ 
                             ...newGoal, 
                             team_id: e.target.value,
-                            scorer_name: '',
-                            assist_name: ''
+                            scorer_id: '',
+                            assister_id: ''
                           });
                         }}
                       >
@@ -575,21 +605,21 @@ export default function MatchRecorder() {
                     <div className="form-group">
                       <label>Goal Scorer</label>
                       <select
-                        value={newGoal.scorer_name}
-                        onChange={(e) => setNewGoal({ ...newGoal, scorer_name: e.target.value })}
+                        value={newGoal.scorer_id}
+                        onChange={(e) => setNewGoal({ ...newGoal, scorer_id: e.target.value })}
                         disabled={!newGoal.team_id}
                       >
                         <option value="">Select Scorer</option>
                         {newGoal.team_id === selectedMatch.home_team_id && 
                           homePlayers.map(p => (
-                            <option key={p.id} value={p.player_name}>
+                            <option key={p.id} value={p.id}>
                               {p.player_name} ({p.position})
                             </option>
                           ))
                         }
                         {newGoal.team_id === selectedMatch.away_team_id && 
                           awayPlayers.map(p => (
-                            <option key={p.id} value={p.player_name}>
+                            <option key={p.id} value={p.id}>
                               {p.player_name} ({p.position})
                             </option>
                           ))
@@ -602,25 +632,25 @@ export default function MatchRecorder() {
                     <div className="form-group">
                       <label>Assister (Optional)</label>
                       <select
-                        value={newGoal.assist_name}
-                        onChange={(e) => setNewGoal({ ...newGoal, assist_name: e.target.value })}
+                        value={newGoal.assister_id}
+                        onChange={(e) => setNewGoal({ ...newGoal, assister_id: e.target.value })}
                         disabled={!newGoal.team_id}
                       >
                         <option value="">No Assist</option>
                         {newGoal.team_id === selectedMatch.home_team_id && 
                           homePlayers
-                            .filter(p => p.player_name !== newGoal.scorer_name)
+                            .filter(p => p.id !== newGoal.scorer_id)
                             .map(p => (
-                              <option key={p.id} value={p.player_name}>
+                              <option key={p.id} value={p.id}>
                                 {p.player_name} ({p.position})
                               </option>
                             ))
                         }
                         {newGoal.team_id === selectedMatch.away_team_id && 
                           awayPlayers
-                            .filter(p => p.player_name !== newGoal.scorer_name)
+                            .filter(p => p.id !== newGoal.scorer_id)
                             .map(p => (
-                              <option key={p.id} value={p.player_name}>
+                              <option key={p.id} value={p.id}>
                                 {p.player_name} ({p.position})
                               </option>
                             ))
@@ -644,7 +674,7 @@ export default function MatchRecorder() {
                   <button 
                     className="btn-add-goal"
                     onClick={addGoal}
-                    disabled={!newGoal.scorer_name}
+                    disabled={!newGoal.scorer_id}
                   >
                     <i className="fas fa-plus"></i> Add Goal
                   </button>
