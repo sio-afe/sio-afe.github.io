@@ -114,9 +114,9 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
 
   const fetchPlayerData = async () => {
     try {
-      const { data: playerData, error: playerError } = await supabaseClient
-        .from('team_players')
-        .select('id, player_name, player_image, position, player_age, is_substitute, team_id, team_registrations(id, team_name, team_logo)')
+      const { data: playerData, error: playerError} = await supabaseClient
+        .from('players')
+        .select('id, name, player_image, position, is_substitute, team_id, registration_player_id, team:teams(id, name, crest_url)')
         .eq('id', playerId)
         .single();
 
@@ -126,10 +126,10 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
       if (playerData?.team_id) {
         // Fetch teammates
         const { data: allPlayers } = await supabaseClient
-          .from('team_players')
-          .select('id, player_name, player_image, position')
+          .from('players')
+          .select('id, name, player_image, position')
           .eq('team_id', playerData.team_id)
-          .order('player_name', { ascending: true });
+          .order('name', { ascending: true });
         
         if (allPlayers) {
           const idx = allPlayers.findIndex(p => p.id === playerId);
@@ -137,44 +137,41 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
           setTeammates(allPlayers.filter(p => p.id !== playerId));
         }
 
-        // Find the actual team record using registration_id
-        const { data: teamRecord } = await supabaseClient
-          .from('teams')
-          .select('id, name')
-          .eq('registration_id', playerData.team_id)
-          .single();
+        // Use the team data from the player record
+        const teamId = playerData.team_id;
+        console.log('Player team:', playerData.team);
+        setActualTeamId(teamId);
         
-        if (teamRecord) {
-          console.log('Found team:', teamRecord);
-          setActualTeamId(teamRecord.id);
-          
-          // Fetch matches where this team participated
-          const { data: matchesData, error: matchError } = await supabaseClient
-            .from('matches')
-            .select(`
-              id, 
-              match_number,
-              match_date, 
-              scheduled_time,
-              home_team_id, 
-              away_team_id, 
-              home_score, 
-              away_score,
-              status,
-              home_team:teams!matches_home_team_id_fkey(id, name),
-              away_team:teams!matches_away_team_id_fkey(id, name)
-            `)
-            .or(`home_team_id.eq.${teamRecord.id},away_team_id.eq.${teamRecord.id}`)
-            .order('match_date', { ascending: false });
-          
-          if (matchError) {
-            console.error('Error fetching matches:', matchError);
-          } else if (matchesData) {
-            console.log('Found matches:', matchesData);
-            setMatches(matchesData);
-          }
+        // Fetch matches where this team participated
+        const { data: matchesData, error: matchError } = await supabaseClient
+          .from('matches')
+          .select(`
+            id, 
+            match_number,
+            match_date, 
+            scheduled_time,
+            home_team_id, 
+            away_team_id, 
+            home_score, 
+            away_score,
+            status,
+            home_team:teams!matches_home_team_id_fkey(id, name),
+            away_team:teams!matches_away_team_id_fkey(id, name)
+          `)
+          .or(`home_team_id.eq.${teamId},away_team_id.eq.${teamId}`)
+          .order('match_date', { ascending: false });
+        
+        if (matchError) {
+          console.error('Error fetching matches:', matchError);
+        } else if (matchesData) {
+          console.log('Found matches:', matchesData);
+          setMatches(matchesData);
+        }
 
-          // Fetch goals/assists by this player using new schema
+        // Fetch goals/assists by this player using registration_player_id
+        // Goals reference team_players (registration players), not tournament players
+        const registrationPlayerId = playerData.registration_player_id;
+        if (registrationPlayerId) {
           const { data: goalsData } = await supabaseClient
             .from('goals')
             .select(`
@@ -188,15 +185,13 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
               scorer:team_players!goals_scorer_id_fkey(id, player_name),
               assister:team_players!goals_assister_id_fkey(id, player_name)
             `)
-            .or(`scorer_id.eq.${playerId},assister_id.eq.${playerId}`)
+            .or(`scorer_id.eq.${registrationPlayerId},assister_id.eq.${registrationPlayerId}`)
             .order('minute', { ascending: true});
           
           if (goalsData) {
             console.log('Found goals:', goalsData);
             setPlayerGoals(goalsData);
           }
-        } else {
-          console.log('No team record found for registration_id:', playerData.team_id);
         }
       }
     } catch (error) {
@@ -247,15 +242,16 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
     );
   }
 
-  const team = player.team_registrations;
+  const team = player.team;
   const positionLabel = getPositionLabel(player.position);
   const groupedTeammates = groupTeammates();
+  const registrationPlayerId = player.registration_player_id;
 
   // Calculate stats from fetched data using new schema
   const stats = {
     apps: matches.filter(m => m.status === 'completed').length,
-    goals: playerGoals.filter(g => g.scorer_id === playerId).length,
-    assists: playerGoals.filter(g => g.assister_id === playerId).length
+    goals: playerGoals.filter(g => g.scorer_id === registrationPlayerId).length,
+    assists: playerGoals.filter(g => g.assister_id === registrationPlayerId).length
   };
 
   // Build match log and split by status
@@ -273,7 +269,7 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
     }
     
     const playerGoalsInMatch = playerGoals.filter(g => 
-      g.match_id === match.id && g.scorer_id === playerId
+      g.match_id === match.id && g.scorer_id === registrationPlayerId
     ).length;
     
     return {
@@ -296,47 +292,44 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
     <>
       <TournamentNavbar />
       <div className="bls-player-page">
-        {/* Hero Section with Background */}
-        <div className="bls-hero-section">
-          <div className="bls-hero-content">
-            {/* Team Logo */}
-            <div className="bls-team-logo">
-              {team?.team_logo ? (
-                <LazyImage src={team.team_logo} alt={team?.team_name} />
+        <div className="player-hero-wrapper">
+          {/* Hero Card with Photo and Gradient */}
+          <div className="player-hero-card">
+            {/* Team Logo Badge */}
+            <div className="team-logo-badge">
+              {team?.crest_url ? (
+                <LazyImage src={team.crest_url} alt={team?.name} />
               ) : (
-                <span>{team?.team_name?.charAt(0) || '?'}</span>
+                <span className="team-initial">{team?.name?.charAt(0) || '?'}</span>
               )}
             </div>
 
-            {/* Player Photo */}
-            <div className="bls-player-photo">
+            {/* Player Photo Container */}
+            <div className="player-photo-main">
               {player.player_image ? (
-                <LazyImage src={player.player_image} alt={player.player_name} />
+                <LazyImage src={player.player_image} alt={player.name} />
               ) : (
-                <div className="bls-photo-placeholder">
+                <div className="player-photo-placeholder">
                   <i className="fas fa-user"></i>
                 </div>
               )}
+              
+              {/* Gradient Overlay */}
+              <div className="player-info-gradient"></div>
+              
+            {/* Player Info Overlay */}
+            <div className="player-info-overlay">
+              <div className="player-name-position">
+                <h1 className="player-name-hero">{player.name}</h1>
+                <span className="player-position-hero">Position: {positionLabel}</span>
+              </div>
+              {playerIndex && <span className="player-number-hero">#{playerIndex}</span>}
             </div>
-
-            {/* Player Info */}
-            <div className="bls-player-info">
-              <h1>{player.player_name}</h1>
-              <p>
-                <b>Position:</b> {positionLabel}
-                &nbsp;&nbsp;
-                <b>Age:</b> {player.player_age || '-'}
-              </p>
             </div>
-
-            {/* Player Number */}
-            <span className="bls-player-number">#{playerIndex}</span>
           </div>
-          <hr />
-        </div>
 
-        {/* Main Content */}
-        <div className="bls-content-wrapper">
+          {/* Main Content */}
+          <div className="bls-content-wrapper">
           {/* Stats Grid */}
           <div className="bls-stats-grid">
             {/* Left: Main Stats */}
@@ -461,17 +454,17 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
                     <a 
                       key={tm.id}
                       className="bls-teammate-row"
-                      onClick={() => onNavigateToPlayer && onNavigateToPlayer(tm.id, tm.player_name)}
+                      onClick={() => onNavigateToPlayer && onNavigateToPlayer(tm.id, tm.name)}
                     >
                       <div className="bls-teammate-number">{idx + 1}</div>
                       <div className="bls-teammate-image">
                         {tm.player_image ? (
-                          <LazyImage src={tm.player_image} alt={tm.player_name} />
+                          <LazyImage src={tm.player_image} alt={tm.name} />
                         ) : (
                           <i className="fas fa-user"></i>
                         )}
                       </div>
-                      <div className="bls-teammate-name">{tm.player_name}</div>
+                      <div className="bls-teammate-name">{tm.name}</div>
                     </a>
                   ))}
                 </div>
@@ -485,6 +478,7 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
               <i className="fas fa-arrow-left"></i> Back to Players
             </button>
           </div>
+        </div>
         </div>
 
         <Footer edition="2026" />

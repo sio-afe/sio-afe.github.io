@@ -162,40 +162,42 @@ function PlayersApp() {
 
   const fetchData = async () => {
     try {
-      // Fetch all players with their team info, then filter by team status and category
+      // Fetch teams from the tournament teams table (not registrations)
+      const { data: teamsData, error: teamsError } = await supabaseClient
+        .from('teams')
+        .select('id, name, crest_url, category')
+        .eq('category', category)
+        .order('name', { ascending: true });
+
+      if (teamsError) throw teamsError;
+
+      console.log(`[Players] Found ${teamsData?.length || 0} teams in ${category}`);
+
+      // Fetch players from tournament players table (not registration players)
       const { data: playersData, error: playersError } = await supabaseClient
-        .from('team_players')
-        .select('*, team_registrations(id, team_name, team_logo, category, status)')
-        .order('player_name', { ascending: true });
+        .from('players')
+        .select('*, team:teams(id, name, crest_url, category)')
+        .order('name', { ascending: true });
 
       if (playersError) throw playersError;
-      
-      // Filter players whose team is confirmed and matches the category
+
+      // Filter players by category through their team
       const filteredPlayers = (playersData || []).filter(player => {
-        const team = player.team_registrations;
-        return team && team.status === 'confirmed' && team.category === category;
+        return player.team && player.team.category === category;
       });
 
       console.log(`[Players] Found ${playersData?.length || 0} total players`);
-      console.log(`[Players] Filtered to ${filteredPlayers.length} players in ${category} with confirmed status`);
-      
-      // Get unique teams from filtered players
-      const uniqueTeams = [];
-      const teamIds = new Set();
-      filteredPlayers.forEach(player => {
-        const team = player.team_registrations;
-        if (team && !teamIds.has(team.id)) {
-          teamIds.add(team.id);
-          uniqueTeams.push({
-            id: team.id,
-            team_name: team.team_name,
-            team_logo: team.team_logo,
-            category: team.category
-          });
-        }
-      });
+      console.log(`[Players] Filtered to ${filteredPlayers.length} players in ${category}`);
 
-      setTeams(uniqueTeams);
+      // Map teams data to match expected structure
+      const mappedTeams = (teamsData || []).map(team => ({
+        id: team.id,
+        team_name: team.name,
+        team_logo: team.crest_url,
+        category: team.category
+      }));
+
+      setTeams(mappedTeams);
       setPlayers(filteredPlayers);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -223,7 +225,7 @@ function PlayersApp() {
   };
 
   const filteredPlayers = players.filter(player => {
-    const matchesSearch = player.player_name?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = player.name?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesTeam = selectedTeam === 'all' || player.team_id === selectedTeam;
     const positionLabel = getPositionLabel(player.position);
     const matchesPosition = selectedPosition === 'all' || positionLabel === selectedPosition;
@@ -328,7 +330,7 @@ function PlayersApp() {
         {filteredPlayers.map((player) => {
           const positionLabel = getPositionLabel(player.position);
           const positionColor = positionColors[positionLabel] || '#666';
-          const team = player.team_registrations;
+          const team = player.team;
 
           return (
             <div 
@@ -348,7 +350,7 @@ function PlayersApp() {
                 {player.player_image ? (
                   <LazyImage 
                     src={player.player_image} 
-                    alt={player.player_name}
+                    alt={player.name}
                     className="player-photo"
                     placeholder={
                       <div className="player-photo-placeholder">
@@ -365,18 +367,18 @@ function PlayersApp() {
 
               <div className="player-info-bar">
                 <div className="team-logo-small">
-                  {team?.team_logo ? (
+                  {team?.crest_url ? (
                     <LazyImage 
-                      src={team.team_logo} 
-                      alt={team.team_name}
+                      src={team.crest_url} 
+                      alt={team.name}
                       className="team-logo-img"
                       placeholder={null}
                     />
                   ) : (
-                    <span>{team?.team_name?.charAt(0) || '?'}</span>
+                    <span>{team?.name?.charAt(0) || '?'}</span>
                   )}
                 </div>
-                <span className="player-name-db">{player.player_name}</span>
+                <span className="player-name-db">{player.name}</span>
               </div>
             </div>
           );

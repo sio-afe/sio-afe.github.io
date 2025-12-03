@@ -1336,138 +1336,158 @@
   color: #fff;
 }
 
-/* Hero Section */
-.bls-hero-section {
-  background: linear-gradient(135deg, 
-    rgba(79, 140, 255, 0.08) 0%, 
-    rgba(20, 20, 30, 0.95) 30%,
-    rgba(13, 13, 13, 1) 100%);
-  padding: 0;
-  position: relative;
-}
-
-.bls-hero-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 40%;
-  height: 100%;
-  background: radial-gradient(ellipse at top right, rgba(79, 140, 255, 0.06) 0%, transparent 60%);
-  pointer-events: none;
-}
-
-.bls-hero-content {
-  max-width: 1200px;
+/* Hero Section Wrapper */
+.player-hero-wrapper {
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 24px 20px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
+  padding: 40px 20px;
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+/* Hero Card with Photo */
+.player-hero-card {
   position: relative;
-  z-index: 1;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #1a1a1a;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  position: sticky;
+  top: 100px;
 }
 
-.bls-hero-section hr {
-  margin: 0;
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-/* Team Logo */
-.bls-team-logo {
-  width: 90px;
-  height: 90px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 50%;
+/* Team Logo Badge */
+.team-logo-badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  padding: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
-.bls-team-logo img {
+.team-logo-badge img {
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
 
-.bls-team-logo span {
+.team-logo-badge .team-initial {
   font-size: 2rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.4);
+  color: #333;
 }
 
-/* Player Photo */
-.bls-player-photo {
-  width: 120px;
-  height: 150px;
-  border-radius: 8px;
+/* Player Photo Main */
+.player-photo-main {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  min-height: 500px;
   overflow: hidden;
-  flex-shrink: 0;
-  background: #1a1a1a;
 }
 
-.bls-player-photo img {
+.player-photo-main img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: top;
+  object-position: center top;
 }
 
-.bls-photo-placeholder {
+.player-photo-placeholder {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: rgba(255, 255, 255, 0.2);
-  font-size: 3rem;
+  font-size: 4rem;
+  background: #0d0d0d;
 }
 
-/* Player Info */
-.bls-player-info {
+/* Gradient Overlay at Bottom */
+.player-info-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  background: linear-gradient(to top, 
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.85) 30%,
+    rgba(0, 0, 0, 0.4) 60%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* Player Info Overlay */
+.player-info-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 32px 28px;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+.player-name-position {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.bls-player-info h1 {
+.player-name-hero {
   font-family: 'Oswald', sans-serif;
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   font-weight: 700;
   font-style: italic;
   text-transform: uppercase;
-  margin: 0 0 8px;
-  color: #fff;
-}
-
-.bls-player-info p {
   margin: 0;
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: #fff;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  line-height: 1;
+  letter-spacing: 0.02em;
 }
 
-.bls-player-info b {
-  color: rgba(255, 255, 255, 0.5);
+.player-position-hero {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 500;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
-/* Player Number */
-.bls-player-number {
+.player-number-hero {
   font-family: 'Oswald', sans-serif;
   font-size: 4rem;
   font-weight: 700;
   font-style: italic;
-  color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.3);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  line-height: 1;
   flex-shrink: 0;
 }
 
 /* Content Wrapper */
 .bls-content-wrapper {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px 20px;
+  width: 100%;
+  padding: 0;
 }
 
 /* Season Header */
@@ -1813,35 +1833,57 @@
   }
 }
 
-@media (max-width: 768px) {
-  .bls-hero-content {
-    flex-wrap: wrap;
-    gap: 16px;
+@media (max-width: 1200px) {
+  .player-hero-wrapper {
+    grid-template-columns: 350px 1fr;
+    gap: 40px;
+    padding: 32px 20px;
   }
   
-  .bls-team-logo {
+  .player-hero-card {
+    top: 80px;
+  }
+}
+
+@media (max-width: 968px) {
+  .player-hero-wrapper {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 24px 16px;
+  }
+  
+  .player-hero-card {
+    position: relative;
+    top: 0;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .team-logo-badge {
     width: 70px;
     height: 70px;
+    top: 16px;
+    left: 16px;
   }
   
-  .bls-player-photo {
-    width: 90px;
-    height: 110px;
+  .player-photo-main {
+    min-height: 450px;
   }
   
-  .bls-player-info {
-    flex: 1 1 100%;
-    order: 3;
+  .player-name-hero {
+    font-size: 2.2rem;
   }
   
-  .bls-player-info h1 {
-    font-size: 1.8rem;
+  .player-position-hero {
+    font-size: 1rem;
   }
   
-  .bls-player-number {
-    font-size: 2.5rem;
-    order: 2;
-    margin-left: auto;
+  .player-number-hero {
+    font-size: 3.5rem;
+  }
+  
+  .player-info-overlay {
+    padding: 24px 20px;
   }
   
   .bls-quick-stats {
@@ -1854,30 +1896,39 @@
 }
 
 @media (max-width: 480px) {
-  .bls-hero-content {
-    padding: 16px;
+  .player-hero-wrapper {
+    padding: 20px 12px;
   }
   
-  .bls-team-logo {
+  .player-hero-card {
+    border-radius: 12px;
+  }
+  
+  .team-logo-badge {
     width: 60px;
     height: 60px;
-    padding: 12px;
+    top: 12px;
+    left: 12px;
+    padding: 10px;
   }
   
-  .bls-player-photo {
-    width: 80px;
-    height: 100px;
+  .player-photo-main {
+    min-height: 400px;
   }
   
-  .bls-player-info h1 {
-    font-size: 1.5rem;
+  .player-name-hero {
+    font-size: 1.8rem;
   }
   
-  .bls-player-number {
-    font-size: 2rem;
+  .player-position-hero {
+    font-size: 0.9rem;
   }
   
-  .bls-content-wrapper {
+  .player-number-hero {
+    font-size: 2.8rem;
+  }
+  
+  .player-info-overlay {
     padding: 20px 16px;
   }
   
