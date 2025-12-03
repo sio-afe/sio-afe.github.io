@@ -94,72 +94,76 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
         }
       }
 
-      // Fetch players for this team (including position coordinates)
-      if (teamData?.registration_id) {
-        const { data: playersData } = await supabaseClient
-          .from('team_players')
-          .select('id, player_name, player_image, position, player_age, position_x, position_y, is_substitute')
-          .eq('team_id', teamData.registration_id);
+      // Fetch players for this team from tournament players table
+      const { data: playersData } = await supabaseClient
+        .from('players')
+        .select('id, name, player_image, position, position_x, position_y, is_substitute, registration_player_id')
+        .eq('team_id', teamId);
+      
+      if (playersData) {
+        // Map to expected structure for backwards compatibility
+        const mappedPlayers = playersData.map(p => ({
+          ...p,
+          player_name: p.name,
+          player_age: null // Age not stored in players table
+        }));
+        setPlayers(mappedPlayers);
         
-        if (playersData) {
-          setPlayers(playersData);
-          
-          // Fetch goals for this team to build leaderboards
-          const { data: goalsData } = await supabaseClient
-            .from('goals')
-            .select(`
-              scorer_id,
-              assister_id,
-              scorer:team_players!goals_scorer_id_fkey(id, player_name, player_image),
-              assister:team_players!goals_assister_id_fkey(id, player_name, player_image)
-            `)
-            .eq('team_id', teamId);
+        // Fetch goals for this team to build leaderboards
+        const { data: goalsData } = await supabaseClient
+          .from('goals')
+          .select(`
+            scorer_id,
+            assister_id,
+            scorer:team_players!goals_scorer_id_fkey(id, player_name, player_image),
+            assister:team_players!goals_assister_id_fkey(id, player_name, player_image)
+          `)
+          .eq('team_id', teamId);
 
-          // Aggregate goals by player
-          const scorersMap = {};
-          const assistsMap = {};
+        // Aggregate goals by player
+        const scorersMap = {};
+        const assistsMap = {};
 
-          (goalsData || []).forEach(goal => {
-            // Count goals
-            if (goal.scorer_id && goal.scorer) {
-              if (!scorersMap[goal.scorer_id]) {
-                scorersMap[goal.scorer_id] = {
-                  id: goal.scorer_id,
-                  player_name: goal.scorer.player_name,
-                  player_image: goal.scorer.player_image,
-                  goals: 0
-                };
-              }
-              scorersMap[goal.scorer_id].goals += 1;
+        (goalsData || []).forEach(goal => {
+          // Count goals
+          if (goal.scorer_id && goal.scorer) {
+            if (!scorersMap[goal.scorer_id]) {
+              scorersMap[goal.scorer_id] = {
+                id: goal.scorer_id,
+                player_name: goal.scorer.player_name,
+                player_image: goal.scorer.player_image,
+                goals: 0
+              };
             }
+            scorersMap[goal.scorer_id].goals += 1;
+          }
 
-            // Count assists
-            if (goal.assister_id && goal.assister) {
-              if (!assistsMap[goal.assister_id]) {
-                assistsMap[goal.assister_id] = {
-                  id: goal.assister_id,
-                  player_name: goal.assister.player_name,
-                  player_image: goal.assister.player_image,
-                  assists: 0
-                };
-              }
-              assistsMap[goal.assister_id].assists += 1;
+          // Count assists
+          if (goal.assister_id && goal.assister) {
+            if (!assistsMap[goal.assister_id]) {
+              assistsMap[goal.assister_id] = {
+                id: goal.assister_id,
+                player_name: goal.assister.player_name,
+                player_image: goal.assister.player_image,
+                assists: 0
+              };
             }
-          });
+            assistsMap[goal.assister_id].assists += 1;
+          }
+        });
 
-          const topScorers = Object.values(scorersMap)
-            .sort((a, b) => b.goals - a.goals)
-            .slice(0, 5);
+        const topScorers = Object.values(scorersMap)
+          .sort((a, b) => b.goals - a.goals)
+          .slice(0, 5);
 
-          const topAssists = Object.values(assistsMap)
-            .sort((a, b) => b.assists - a.assists)
-            .slice(0, 5);
+        const topAssists = Object.values(assistsMap)
+          .sort((a, b) => b.assists - a.assists)
+          .slice(0, 5);
 
-          setLeaderboards({
-            topScorers,
-            topAssists
-          });
-        }
+        setLeaderboards({
+          topScorers,
+          topAssists
+        });
       }
     } catch (error) {
       console.error('Error fetching team:', error);
@@ -428,7 +432,7 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
 
           {/* Sidebar - Squad */}
           <div className="team-detail-sidebar">
-            <h3 className="section-title">SQUAD</h3>
+            <h3 className="section-title-italic">SQUAD</h3>
             <div className="squad-list">
               {Object.entries(groupedPlayers).map(([group, groupPlayers]) => (
                 <div className="squad-group" key={group}>

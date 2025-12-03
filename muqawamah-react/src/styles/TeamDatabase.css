@@ -329,7 +329,7 @@
   bottom: 0;
   background: 
     radial-gradient(circle at 20% 50%, rgba(79, 140, 255, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 50%, rgba(255, 61, 113, 0.08) 0%, transparent 50%);
+    radial-gradient(circle at 80% 50%, rgba(110, 205, 238, 0.08) 0%, transparent 50%);
   filter: blur(60px);
 }
 
@@ -767,11 +767,11 @@
   font-weight: 700;
   font-style: italic;
   text-transform: uppercase;
-  color: #ff3d71;
+  color: #4f8cff;
   padding: 16px;
   margin: 0;
-  background: rgba(255, 61, 113, 0.08);
-  border-bottom: 2px solid rgba(255, 61, 113, 0.2);
+  background: rgba(79, 140, 255, 0.08);
+  border-bottom: 2px solid rgba(79, 140, 255, 0.2);
   position: relative;
 }
 
@@ -782,7 +782,7 @@
   left: 16px;
   right: 16px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 61, 113, 0.5), transparent);
+  background: linear-gradient(90deg, transparent, rgba(79, 140, 255, 0.5), transparent);
 }
 
 .squad-row {
@@ -808,7 +808,7 @@
   font-family: 'Oswald', sans-serif;
   font-size: 0.9rem;
   font-weight: 700;
-  color: #ff3d71;
+  color: #4f8cff;
   min-width: 20px;
 }
 
@@ -817,8 +817,8 @@
   height: 40px;
   border-radius: 50%;
   overflow: hidden;
-  background: rgba(255, 61, 113, 0.1);
-  border: 2px solid rgba(255, 61, 113, 0.3);
+  background: rgba(79, 140, 255, 0.1);
+  border: 2px solid rgba(79, 140, 255, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -854,7 +854,7 @@
 .squad-position {
   display: block;
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.85);
   text-transform: uppercase;
 }
 

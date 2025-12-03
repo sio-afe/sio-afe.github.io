@@ -281,17 +281,25 @@ export default function Statistics() {
           </div>
 
           {/* Tab Navigation */}
-          <div className="stats-tabs-v2">
-            {tabs.map(tab => (
-              <button
-                key={tab.id}
-                className={`stats-tab-v2 ${activeTab === tab.id ? 'active' : ''}`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                <i className={`fas ${tab.icon}`}></i>
-                <span>{tab.label}</span>
-              </button>
-            ))}
+          <div className="stats-tabs-container">
+            <div className="stats-tabs-v2">
+              {tabs.map((tab, index) => (
+                <button
+                  key={tab.id}
+                  className={`stats-tab-v2 ${activeTab === tab.id ? 'active' : ''}`}
+                  onClick={() => setActiveTab(tab.id)}
+                >
+                  <i className={`fas ${tab.icon}`}></i>
+                  <span>{tab.label}</span>
+                </button>
+              ))}
+              <span 
+                className="stats-tab-slider" 
+                style={{ 
+                  transform: `translateX(${tabs.findIndex(t => t.id === activeTab) * 100}%)` 
+                }}
+              />
+            </div>
           </div>
 
           {/* Content */}

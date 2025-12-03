@@ -114,14 +114,32 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
 
   const fetchPlayerData = async () => {
     try {
+      // Fetch player data without nested team select
       const { data: playerData, error: playerError} = await supabaseClient
         .from('players')
-        .select('id, name, player_image, position, is_substitute, team_id, registration_player_id, team:teams(id, name, crest_url)')
+        .select('id, name, player_image, position, is_substitute, team_id, registration_player_id')
         .eq('id', playerId)
         .single();
 
       if (playerError) throw playerError;
-      setPlayer(playerData);
+
+      // Separately fetch team data
+      let teamData = null;
+      if (playerData?.team_id) {
+        const { data: fetchedTeam } = await supabaseClient
+          .from('teams')
+          .select('id, name, crest_url')
+          .eq('id', playerData.team_id)
+          .single();
+        
+        teamData = fetchedTeam;
+      }
+
+      // Attach team data to player object
+      setPlayer({
+        ...playerData,
+        team: teamData
+      });
 
       if (playerData?.team_id) {
         // Fetch teammates
@@ -139,7 +157,7 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
 
         // Use the team data from the player record
         const teamId = playerData.team_id;
-        console.log('Player team:', playerData.team);
+        console.log('Player team:', teamData);
         setActualTeamId(teamId);
         
         // Fetch matches where this team participated
@@ -302,6 +320,11 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
               ) : (
                 <span className="team-initial">{team?.name?.charAt(0) || '?'}</span>
               )}
+            </div>
+
+            {/* Muqawama Logo Badge */}
+            <div className="muqawama-logo-badge">
+              <img src="/assets/img/MuqawamaLogo.png" alt="Muqawama" />
             </div>
 
             {/* Player Photo Container */}

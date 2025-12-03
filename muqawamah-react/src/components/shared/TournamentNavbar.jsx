@@ -49,14 +49,19 @@ export default function TournamentNavbar() {
     { name: 'PLAYERS', href: `/muqawamah/2026/${category}/players/`, key: 'players' }
   ];
 
+  const handleBack = () => {
+    window.history.back();
+  };
+
   return (
     <>
       <nav className="tournament-navbar">
         <div className="tournament-navbar-container">
-          <a href="/muqawamah/2026/" className="tournament-navbar-logo">
+          {/* Desktop Logo - Left Side */}
+          <a href="/muqawamah/2026/" className="tournament-navbar-logo desktop-only">
             <img src="/assets/img/MuqawamaLogo.png" alt="Muqawama" />
           </a>
-          
+
           {/* Desktop Links */}
           <div className="tournament-navbar-links desktop-only">
             {navLinks.map((link) => (
@@ -69,6 +74,20 @@ export default function TournamentNavbar() {
               </a>
             ))}
           </div>
+
+          {/* Mobile Back Arrow Button */}
+          <button 
+            className="navbar-back-button mobile-only"
+            onClick={handleBack}
+            aria-label="Go back"
+          >
+            <i className="fas fa-arrow-left"></i>
+          </button>
+
+          {/* Mobile Center Logo */}
+          <a href="/muqawamah/2026/" className="tournament-navbar-center-logo mobile-only">
+            <img src="/assets/img/title_invert.png" alt="Muqawama Tournament" />
+          </a>
 
           {/* Mobile Hamburger Button */}
           <button 
@@ -87,7 +106,7 @@ export default function TournamentNavbar() {
       <div className={`mobile-sidebar ${mobileMenuOpen ? 'open' : ''}`}>
         <div className="mobile-sidebar-header">
           <a href="/muqawamah/2026/" className="mobile-sidebar-logo">
-            <img src="/assets/img/MuqawamaLogo.png" alt="Muqawama" />
+            <img src="/assets/img/title_invert.png" alt="Muqawama Tournament" />
           </a>
           <button 
             className="mobile-close-btn"
