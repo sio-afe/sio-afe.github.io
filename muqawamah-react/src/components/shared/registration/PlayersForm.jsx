@@ -160,10 +160,8 @@ export default function PlayersForm() {
             </div>
             <div className="uploaded-file-info">
               <i className="fas fa-check-circle"></i>
-              <span>
-                {player.imageFileName 
-                  ? `Uploaded: ${player.imageFileName}` 
-                  : 'Photo uploaded'}
+              <span className="file-name-text">
+                <strong>Uploaded:</strong> {player.imageFileName || 'Photo uploaded'}
               </span>
               <span className="file-change-hint">(Click to change)</span>
             </div>

@@ -183,9 +183,9 @@ export default function PaymentCheckout() {
 
       setUploadProgress(100);
 
-      // Show success page
+      // Show success page with pending verification status
       setSuccessTeamId(teamId);
-      setPaymentStatus('success');
+      setPaymentStatus('pending_verification');
       setStep(6);
 
     } catch (err) {
@@ -198,7 +198,7 @@ export default function PaymentCheckout() {
   };
 
   // If payment was already completed, show the thank you page
-  if (paymentStatus === 'success') {
+  if (paymentStatus === 'success' || paymentStatus === 'pending_verification' || paymentStatus === 'confirmed') {
     return <RegistrationComplete />;
   }
 

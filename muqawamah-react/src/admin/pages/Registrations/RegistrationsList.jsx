@@ -168,27 +168,93 @@ export default function RegistrationsList() {
   };
 
   const deleteRegistration = async (id) => {
-    if (!confirm('Are you sure you want to delete this registration? This will also delete all associated players.')) {
+    const reg = registrations.find(r => r.id === id);
+    if (!reg) return;
+
+    const confirmMsg = `⚠️ WARNING: This will permanently delete the registration for "${reg.team_name}" and ALL related data:\n\n` +
+      `✓ All players in this registration\n` +
+      `✓ If added to tournament: the team, all matches, and all goals\n\n` +
+      `This action CANNOT be undone!\n\n` +
+      `Type the team name to confirm: "${reg.team_name}"`;
+
+    const userInput = prompt(confirmMsg);
+    
+    if (userInput !== reg.team_name) {
+      if (userInput !== null) {
+        alert('Team name did not match. Deletion cancelled.');
+      }
       return;
     }
 
     try {
-      // Delete players first
-      await supabaseClient.from('team_players').delete().eq('team_id', id);
-      
-      // Delete registration
-      const { error } = await supabaseClient
+      // Step 1: Check if this registration has a team in the tournament
+      const { data: tournamentTeam, error: teamCheckError } = await supabaseClient
+        .from('teams')
+        .select('id')
+        .eq('registration_id', id)
+        .maybeSingle();
+
+      if (teamCheckError && teamCheckError.code !== 'PGRST116') {
+        throw teamCheckError;
+      }
+
+      // Step 2: If team exists in tournament, delete all related tournament data
+      if (tournamentTeam) {
+        // Delete from players table first (tournament players that reference team_players)
+        const { error: tournamentPlayersError } = await supabaseClient
+          .from('players')
+          .delete()
+          .eq('team_id', tournamentTeam.id);
+
+        if (tournamentPlayersError) throw new Error(`Failed to delete tournament players: ${tournamentPlayersError.message}`);
+
+        // Delete all goals involving this team
+        const { error: goalsError } = await supabaseClient
+          .from('goals')
+          .delete()
+          .eq('team_id', tournamentTeam.id);
+
+        if (goalsError) throw new Error(`Failed to delete goals: ${goalsError.message}`);
+
+        // Delete all matches where this team is home or away
+        const { error: matchesError } = await supabaseClient
+          .from('matches')
+          .delete()
+          .or(`home_team_id.eq.${tournamentTeam.id},away_team_id.eq.${tournamentTeam.id}`);
+
+        if (matchesError) throw new Error(`Failed to delete matches: ${matchesError.message}`);
+
+        // Delete the team from tournament
+        const { error: teamError } = await supabaseClient
+          .from('teams')
+          .delete()
+          .eq('id', tournamentTeam.id);
+
+        if (teamError) throw new Error(`Failed to delete team: ${teamError.message}`);
+      }
+
+      // Step 3: Delete all players from this registration (team_players)
+      const { error: playersError } = await supabaseClient
+        .from('team_players')
+        .delete()
+        .eq('team_id', id);
+
+      if (playersError) throw new Error(`Failed to delete registration players: ${playersError.message}`);
+
+      // Step 4: Finally, delete the registration itself
+      const { error: regError } = await supabaseClient
         .from('team_registrations')
         .delete()
         .eq('id', id);
 
-      if (error) throw error;
+      if (regError) throw new Error(`Failed to delete registration: ${regError.message}`);
 
-      alert('Registration deleted successfully!');
+      alert(`✅ Successfully deleted "${reg.team_name}" and all related data!`);
       fetchRegistrations();
+      checkTournamentStatus();
     } catch (error) {
       console.error('Error deleting registration:', error);
-      alert('Failed to delete registration');
+      alert(`❌ Failed to delete registration: ${error.message}`);
     }
   };
 

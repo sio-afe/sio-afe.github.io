@@ -59,23 +59,84 @@ export default function TeamsList() {
   };
 
   const deleteTeam = async (teamId) => {
-    if (!confirm('Are you sure you want to delete this team? This will remove them from the tournament.')) {
+    const team = teams.find(t => t.id === teamId);
+    if (!team) return;
+
+    const confirmMsg = `⚠️ WARNING: This will permanently delete "${team.name}" and ALL related data:\n\n` +
+      `✓ All players from this team\n` +
+      `✓ All goals scored by this team\n` +
+      `✓ All matches involving this team\n` +
+      `✓ Team registration data\n\n` +
+      `This action CANNOT be undone!\n\n` +
+      `Type the team name to confirm: "${team.name}"`;
+
+    const userInput = prompt(confirmMsg);
+    
+    if (userInput !== team.name) {
+      if (userInput !== null) {
+        alert('Team name did not match. Deletion cancelled.');
+      }
       return;
     }
 
     try {
-      const { error } = await supabaseClient
+      // Step 1: Delete from players table (tournament players that reference team_players)
+      if (team.registration_id) {
+        const { error: tournamentPlayersError } = await supabaseClient
+          .from('players')
+          .delete()
+          .eq('team_id', teamId);
+
+        if (tournamentPlayersError) throw new Error(`Failed to delete tournament players: ${tournamentPlayersError.message}`);
+      }
+
+      // Step 2: Delete all goals involving this team
+      const { error: goalsError } = await supabaseClient
+        .from('goals')
+        .delete()
+        .eq('team_id', teamId);
+
+      if (goalsError) throw new Error(`Failed to delete goals: ${goalsError.message}`);
+
+      // Step 3: Delete all matches where this team is home or away
+      const { error: matchesError } = await supabaseClient
+        .from('matches')
+        .delete()
+        .or(`home_team_id.eq.${teamId},away_team_id.eq.${teamId}`);
+
+      if (matchesError) throw new Error(`Failed to delete matches: ${matchesError.message}`);
+
+      // Step 4: Delete the team itself
+      const { error: teamError } = await supabaseClient
         .from('teams')
         .delete()
         .eq('id', teamId);
 
-      if (error) throw error;
+      if (teamError) throw new Error(`Failed to delete team: ${teamError.message}`);
 
-      alert('Team deleted successfully!');
+      // Step 5: Delete all players from team_players (registration players)
+      if (team.registration_id) {
+        const { error: playersError } = await supabaseClient
+          .from('team_players')
+          .delete()
+          .eq('team_id', team.registration_id);
+
+        if (playersError) throw new Error(`Failed to delete registration players: ${playersError.message}`);
+
+        // Step 6: Delete from team_registrations
+        const { error: registrationError } = await supabaseClient
+          .from('team_registrations')
+          .delete()
+          .eq('id', team.registration_id);
+
+        if (registrationError) throw new Error(`Failed to delete registration: ${registrationError.message}`);
+      }
+
+      alert(`✅ Successfully deleted "${team.name}" and all related data!`);
       fetchTeams();
     } catch (error) {
       console.error('Error deleting team:', error);
-      alert('Failed to delete team');
+      alert(`❌ Failed to delete team: ${error.message}`);
     }
   };
 

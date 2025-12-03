@@ -1,16 +1,66 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRegistration } from './RegistrationContext';
+import { supabaseClient } from '../../../lib/supabaseClient';
 
 export default function RegistrationComplete() {
-  const { teamData, resetForm, paymentStatus } = useRegistration();
+  const { teamData, resetForm, paymentStatus, successTeamId, setPaymentStatus } = useRegistration();
+  const [loading, setLoading] = useState(true);
+
+  // Fetch the latest status from database on mount
+  useEffect(() => {
+    const fetchStatus = async () => {
+      if (!successTeamId) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabaseClient
+          .from('team_registrations')
+          .select('status, payment_status')
+          .eq('id', successTeamId)
+          .single();
+
+        if (error) throw error;
+
+        if (data) {
+          // Update the payment status from database
+          if (data.status === 'confirmed' || data.payment_status === 'confirmed') {
+            setPaymentStatus('confirmed');
+          } else if (data.payment_status) {
+            setPaymentStatus(data.payment_status);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching registration status:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStatus();
+  }, [successTeamId, setPaymentStatus]);
 
   const handleBackToHome = () => {
     resetForm();
     window.location.href = '/muqawamah/2026/';
   };
 
-  // Check if registration is confirmed
-  const isConfirmed = paymentStatus === 'confirmed' || paymentStatus === 'success';
+  // Check if registration is confirmed (only when admin has verified)
+  const isConfirmed = paymentStatus === 'confirmed';
+
+  if (loading) {
+    return (
+      <div className="registration-form registration-complete">
+        <div className="complete-container">
+          <div className="loading-content">
+            <div className="spinner"></div>
+            <p>Loading registration status...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="registration-form registration-complete">
