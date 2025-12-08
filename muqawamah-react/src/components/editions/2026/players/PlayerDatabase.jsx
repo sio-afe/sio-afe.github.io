@@ -168,6 +168,7 @@ export default function PlayerDatabase() {
                     src={player.player_image} 
                     alt={player.player_name}
                     className="player-photo"
+                    loading="lazy"
                   />
                 ) : (
                   <div className="player-photo-placeholder">
@@ -179,7 +180,11 @@ export default function PlayerDatabase() {
               <div className="player-info-bar">
                 <div className="team-logo-small">
                   {team?.team_logo ? (
-                    <img src={team.team_logo} alt={team.team_name} />
+                    <img 
+                      src={team.team_logo} 
+                      alt={team.team_name}
+                      loading="lazy"
+                    />
                   ) : (
                     <span>{team?.team_name?.charAt(0) || '?'}</span>
                   )}
@@ -197,12 +202,6 @@ export default function PlayerDatabase() {
           <p>No players found matching your criteria</p>
         </div>
       )}
-
-      <div className="back-to-tournament">
-        <a href="/muqawamah/2026/" className="back-link">
-          <i className="fas fa-arrow-left"></i> Back to Tournament
-        </a>
-      </div>
 
       {/* Footer */}
       <footer className="player-db-footer">

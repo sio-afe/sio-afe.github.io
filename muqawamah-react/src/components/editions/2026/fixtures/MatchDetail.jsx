@@ -194,9 +194,7 @@ export default function MatchDetail({ matchId, onBack }) {
         <div className="match-detail-error">
           <i className="fas fa-exclamation-triangle"></i>
           <p>Match not found</p>
-          <button onClick={onBack} className="back-btn">
-            <i className="fas fa-arrow-left"></i> Back to Fixtures
-          </button>
+         
         </div>
         <Footer edition="2026" />
       </>
@@ -204,6 +202,8 @@ export default function MatchDetail({ matchId, onBack }) {
   }
 
   const isFinished = match.status === 'completed';
+  const isLive = match.status === 'live';
+  const hasScore = isFinished || isLive;
   const playerStats = getPlayerStats();
 
   const getMatchStatusBadge = () => {
@@ -215,6 +215,16 @@ export default function MatchDetail({ matchId, onBack }) {
       return { label: 'SCHEDULED', className: 'status-scheduled' };
     }
     return { label: 'UPCOMING', className: 'status-scheduled' };
+  };
+
+  const getMatchTypeLabel = () => {
+    const matchType = match.match_type?.toLowerCase();
+    if (!matchType || matchType === 'group') return 'Group Stage';
+    if (matchType === 'quarter-final' || matchType === 'quarterfinal') return 'Quarter Final';
+    if (matchType === 'semi-final' || matchType === 'semifinal') return 'Semi Final';
+    if (matchType === 'final') return 'Final';
+    if (matchType === 'third-place' || matchType === 'thirdplace') return '3rd Place';
+    return matchType.charAt(0).toUpperCase() + matchType.slice(1);
   };
 
   const statusBadge = getMatchStatusBadge();
@@ -236,22 +246,27 @@ export default function MatchDetail({ matchId, onBack }) {
               <div className="header-team home">
                 <div className="team-logo-large">
                   {match.home_team?.crest_url ? (
-                    <img src={match.home_team.crest_url} alt={match.home_team.name} />
+                    <img 
+                      src={match.home_team.crest_url} 
+                      alt={match.home_team.name}
+                      loading="lazy"
+                    />
                   ) : (
                     <span>{match.home_team?.name?.charAt(0) || '?'}</span>
                   )}
                 </div>
                 <h4 className="team-name-header">{match.home_team?.name || 'TBD'}</h4>
-                <span className="team-indicator home">HOME</span>
               </div>
 
               {/* Score */}
               <div className="match-score-header">
-                {isFinished ? (
-                  <span className="score-big">{match.home_score} - {match.away_score}</span>
+                {hasScore ? (
+                  <span className={`score-big ${isLive ? 'live' : ''}`}>{match.home_score ?? 0} - {match.away_score ?? 0}</span>
                 ) : (
                   <span className="score-vs">VS</span>
                 )}
+                {/* Match Type Label */}
+                <span className="match-type-label">{getMatchTypeLabel()}</span>
                 {/* Match Status Badge */}
                 <span className={`match-status-badge-detail ${statusBadge.className}`}>
                   {statusBadge.label}
@@ -262,13 +277,16 @@ export default function MatchDetail({ matchId, onBack }) {
               <div className="header-team away">
                 <div className="team-logo-large">
                   {match.away_team?.crest_url ? (
-                    <img src={match.away_team.crest_url} alt={match.away_team.name} />
+                    <img 
+                      src={match.away_team.crest_url} 
+                      alt={match.away_team.name}
+                      loading="lazy"
+                    />
                   ) : (
                     <span>{match.away_team?.name?.charAt(0) || '?'}</span>
                   )}
                 </div>
                 <h4 className="team-name-header">{match.away_team?.name || 'TBD'}</h4>
-                <span className="team-indicator away">AWAY</span>
               </div>
             </div>
 
@@ -282,46 +300,33 @@ export default function MatchDetail({ matchId, onBack }) {
         {/* Main Content */}
         <section className="match-detail-content">
           <div className="match-detail-single-column">
-            {/* Goals Timeline */}
-            <div className="goals-timeline-panel">
-              <h3 className="panel-title">GOALS & HIGHLIGHTS</h3>
+            {/* Goals Timeline - Compact */}
+            <div className="goals-panel-compact">
+              <h3 className="panel-title-compact">
+                <i className="fas fa-futbol"></i>
+                Goals
+              </h3>
               
               {goals.length > 0 ? (
-                <div className="goals-timeline">
+                <div className="goals-list-compact">
                   {goals.map((goal, idx) => {
                     const isHomeGoal = goal.team_id === match.home_team_id;
                     return (
-                      <div key={idx} className={`goal-item ${isHomeGoal ? 'home-goal' : 'away-goal'}`}>
-                        <div className="goal-minute">
-                          <span className="minute-badge">{goal.minute}'</span>
-                        </div>
-                        <div className="goal-icon">
-                          <i className="fas fa-futbol"></i>
-                        </div>
-                        <div className="goal-details">
-                          <div className="goal-scorer">
-                            <i className="fas fa-user-circle"></i>
-                            <strong>{goal.scorer?.player_name || 'Unknown'}</strong>
-                          </div>
-                          {goal.assister?.player_name && (
-                            <div className="goal-assist">
-                              <i className="fas fa-hands-helping"></i>
-                              <span>Assist: {goal.assister.player_name}</span>
-                            </div>
-                          )}
-                          <div className="goal-team">
-                            {isHomeGoal ? match.home_team?.name : match.away_team?.name}
-                          </div>
-                        </div>
+                      <div key={idx} className={`goal-row-compact ${isHomeGoal ? 'home' : 'away'}`}>
+                        <span className="goal-minute-compact">{goal.minute}'</span>
+                        <span className="goal-scorer-compact">{goal.scorer?.player_name || 'Unknown'}</span>
+                        {goal.assister?.player_name && (
+                          <span className="goal-assist-compact">({goal.assister.player_name})</span>
+                        )}
+                        <span className="goal-team-compact">{isHomeGoal ? match.home_team?.name : match.away_team?.name}</span>
                       </div>
                     );
                   })}
                 </div>
               ) : (
-                <div className="no-stats-message">
-                  <i className="fas fa-futbol"></i>
-                  <p>{isFinished ? 'No goals scored in this match' : 'Goals will appear here during the match'}</p>
-                </div>
+                <p className="no-goals-compact">
+                  {isFinished ? 'No goals' : 'Goals will appear here'}
+                </p>
               )}
             </div>
 
@@ -346,7 +351,12 @@ export default function MatchDetail({ matchId, onBack }) {
                 <div className="squad-column home">
                   <div className="squad-header">
                     {match.home_team?.crest_url && (
-                      <img src={match.home_team.crest_url} alt="" className="squad-team-logo" />
+                      <img 
+                        src={match.home_team.crest_url} 
+                        alt="" 
+                        className="squad-team-logo"
+                        loading="lazy"
+                      />
                     )}
                     <span>{match.home_team?.name}</span>
                   </div>
@@ -368,7 +378,12 @@ export default function MatchDetail({ matchId, onBack }) {
                   <div className="squad-header away">
                     <span>{match.away_team?.name}</span>
                     {match.away_team?.crest_url && (
-                      <img src={match.away_team.crest_url} alt="" className="squad-team-logo" />
+                      <img 
+                        src={match.away_team.crest_url} 
+                        alt="" 
+                        className="squad-team-logo"
+                        loading="lazy"
+                      />
                     )}
                   </div>
                   <div className="squad-list">
@@ -390,9 +405,7 @@ export default function MatchDetail({ matchId, onBack }) {
 
         {/* Back Button */}
         <div className="match-detail-footer">
-          <button onClick={onBack} className="back-btn">
-            <i className="fas fa-arrow-left"></i> Back to Fixtures
-          </button>
+          
         </div>
       </div>
       <Footer edition="2026" />

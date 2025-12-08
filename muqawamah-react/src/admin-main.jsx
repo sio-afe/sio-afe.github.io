@@ -111,11 +111,7 @@ function AdminAuthModal() {
           </button>
         </form>
 
-        <div className="auth-footer">
-          <a href="/muqawamah/" className="back-link">
-            <i className="fas fa-arrow-left"></i> Back to Muqawama
-          </a>
-        </div>
+        
       </div>
     </div>
   );

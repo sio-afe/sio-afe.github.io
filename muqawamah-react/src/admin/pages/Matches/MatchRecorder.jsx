@@ -85,40 +85,10 @@ export default function MatchRecorder() {
 
       if (matchError) throw matchError;
 
-      // Update team stats ONLY if status or score changed
-      if (matchResult.status === 'completed') {
-        if (wasCompleted && scoreChanged) {
-          // Match was previously completed - reverse old stats and apply new ones
-          await reverseTeamStats(
-            selectedMatch.home_team_id,
-            selectedMatch.away_team_id,
-            oldHomeScore,
-            oldAwayScore
-          );
-          await updateTeamStats(
-            selectedMatch.home_team_id,
-            selectedMatch.away_team_id,
-            matchResult.home_score,
-            matchResult.away_score
-          );
-        } else if (!wasCompleted) {
-          // First time completing - just add stats
-          await updateTeamStats(
-            selectedMatch.home_team_id,
-            selectedMatch.away_team_id,
-            matchResult.home_score,
-            matchResult.away_score
-          );
-        }
-      } else if (wasCompleted && matchResult.status !== 'completed') {
-        // Match was completed but now changed to another status - reverse stats
-        await reverseTeamStats(
-          selectedMatch.home_team_id,
-          selectedMatch.away_team_id,
-          oldHomeScore,
-          oldAwayScore
-        );
-      }
+      // NOTE: Team stats are updated automatically by the database trigger
+      // (update_match_team_stats_trigger) when match status changes to 'completed'.
+      // DO NOT update stats here to avoid double-counting!
+      // The trigger also checks for match_type = 'group' to exclude knockout matches.
 
       alert('Match result recorded successfully!');
       setShowModal(false);

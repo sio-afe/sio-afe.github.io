@@ -196,12 +196,7 @@ export default function GoalsManager() {
           <button className="refresh-btn" onClick={fetchData}>
             <i className="fas fa-sync-alt"></i> Refresh
           </button>
-          <button 
-            className="create-btn"
-            onClick={() => setShowModal(true)}
-          >
-            <i className="fas fa-plus"></i> Add Goal
-          </button>
+          
         </div>
       </div>
 

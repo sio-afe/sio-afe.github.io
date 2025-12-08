@@ -114,7 +114,11 @@ export default function Standings() {
                       <div className="team-cell-full">
                         <div className="team-logo-standings">
                           {team.crest_url ? (
-                            <img src={team.crest_url} alt={team.name} />
+                            <img 
+                              src={team.crest_url} 
+                              alt={team.name}
+                              loading="lazy"
+                            />
                           ) : (
                             <span>{team.name?.charAt(0) || '?'}</span>
                           )}

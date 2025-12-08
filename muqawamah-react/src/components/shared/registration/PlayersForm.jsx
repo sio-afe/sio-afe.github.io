@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRegistration } from './RegistrationContext';
 import { compressImage, getBase64SizeKB } from './utils/imageCompression';
 
@@ -7,6 +7,17 @@ const positionOptions = ['GK', 'CB', 'LB', 'RB', 'CDM', 'CM', 'CAM', 'LM', 'RM',
 export default function PlayersForm() {
   const { players, setPlayers, setStep, saveProgress, saving, error, teamData } = useRegistration();
   const [compressingIndex, setCompressingIndex] = useState(null);
+
+  // Prefill captain's name from teamData when component mounts
+  useEffect(() => {
+    if (teamData.captainName && players[0] && !players[0].name) {
+      setPlayers((prev) =>
+        prev.map((player, idx) => 
+          idx === 0 ? { ...player, name: teamData.captainName } : player
+        )
+      );
+    }
+  }, [teamData.captainName, setPlayers]);
 
   const handlePlayerChange = (index, field, value) => {
     setPlayers((prev) =>

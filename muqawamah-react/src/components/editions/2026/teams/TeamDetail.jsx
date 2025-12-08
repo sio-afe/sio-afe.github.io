@@ -28,6 +28,30 @@ const positionLabels = {
   'SUB': 'Substitute'
 };
 
+// Team color themes - 12 unique gradients for each team
+const teamColorThemes = [
+  { primary: '33, 150, 243', name: 'blue' },       // Blue
+  { primary: '156, 39, 176', name: 'purple' },     // Purple
+  { primary: '244, 67, 54', name: 'red' },         // Red
+  { primary: '76, 175, 80', name: 'green' },       // Green
+  { primary: '255, 152, 0', name: 'orange' },      // Orange
+  { primary: '0, 188, 212', name: 'cyan' },        // Cyan
+  { primary: '233, 30, 99', name: 'pink' },        // Pink
+  { primary: '255, 193, 7', name: 'amber' },       // Amber
+  { primary: '63, 81, 181', name: 'indigo' },      // Indigo
+  { primary: '0, 150, 136', name: 'teal' },        // Teal
+  { primary: '121, 85, 72', name: 'brown' },       // Brown
+  { primary: '96, 125, 139', name: 'blue-grey' },  // Blue Grey
+];
+
+// Get consistent color theme based on team ID
+const getTeamColorTheme = (teamId) => {
+  if (!teamId) return teamColorThemes[0];
+  // Simple hash from UUID to get a consistent index
+  const hash = teamId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return teamColorThemes[hash % teamColorThemes.length];
+};
+
 export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
   const [team, setTeam] = useState(null);
   const [players, setPlayers] = useState([]);
@@ -120,35 +144,45 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
           `)
           .eq('team_id', teamId);
 
+        // Build a mapping from team_players ID to tournament players ID
+        const registrationToPlayerMap = {};
+        (playersData || []).forEach(p => {
+          if (p.registration_player_id) {
+            registrationToPlayerMap[p.registration_player_id] = p.id;
+          }
+        });
+
         // Aggregate goals by player
         const scorersMap = {};
         const assistsMap = {};
 
         (goalsData || []).forEach(goal => {
-          // Count goals
+          // Count goals - map to tournament player ID
           if (goal.scorer_id && goal.scorer) {
-            if (!scorersMap[goal.scorer_id]) {
-              scorersMap[goal.scorer_id] = {
-                id: goal.scorer_id,
+            const tournamentPlayerId = registrationToPlayerMap[goal.scorer_id] || goal.scorer_id;
+            if (!scorersMap[tournamentPlayerId]) {
+              scorersMap[tournamentPlayerId] = {
+                id: tournamentPlayerId,
                 player_name: goal.scorer.player_name,
                 player_image: goal.scorer.player_image,
                 goals: 0
               };
             }
-            scorersMap[goal.scorer_id].goals += 1;
+            scorersMap[tournamentPlayerId].goals += 1;
           }
 
-          // Count assists
+          // Count assists - map to tournament player ID
           if (goal.assister_id && goal.assister) {
-            if (!assistsMap[goal.assister_id]) {
-              assistsMap[goal.assister_id] = {
-                id: goal.assister_id,
+            const tournamentPlayerId = registrationToPlayerMap[goal.assister_id] || goal.assister_id;
+            if (!assistsMap[tournamentPlayerId]) {
+              assistsMap[tournamentPlayerId] = {
+                id: tournamentPlayerId,
                 player_name: goal.assister.player_name,
                 player_image: goal.assister.player_image,
                 assists: 0
               };
             }
-            assistsMap[goal.assister_id].assists += 1;
+            assistsMap[tournamentPlayerId].assists += 1;
           }
         });
 
@@ -206,9 +240,7 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
       <div className="team-detail-error">
         <i className="fas fa-exclamation-triangle"></i>
         <p>Team not found</p>
-        <button onClick={onBack} className="back-btn">
-          <i className="fas fa-arrow-left"></i> Back to Teams
-        </button>
+        
       </div>
     );
   }
@@ -259,16 +291,40 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
   // Format matches for this team's perspective
   const matchLog = matches.map(m => formatMatchForTeam(m, teamId));
 
+  // Get team's unique color theme
+  const colorTheme = getTeamColorTheme(teamId);
+  const teamGradientStyle = {
+    background: `linear-gradient(180deg, 
+      rgba(${colorTheme.primary}, 0.15) 0%, 
+      rgba(${colorTheme.primary}, 0.08) 30%,
+      #0d1225 70%,
+      #0a0e1a 100%
+    )`
+  };
+  const teamGlowStyle = {
+    background: `
+      radial-gradient(ellipse at 50% 0%, rgba(${colorTheme.primary}, 0.25) 0%, transparent 60%),
+      radial-gradient(ellipse at 0% 100%, rgba(${colorTheme.primary}, 0.1) 0%, transparent 50%),
+      radial-gradient(ellipse at 100% 100%, rgba(${colorTheme.primary}, 0.1) 0%, transparent 50%)
+    `
+  };
+  const teamCrestStyle = {
+    background: `linear-gradient(135deg, rgba(${colorTheme.primary}, 0.2) 0%, rgba(${colorTheme.primary}, 0.05) 100%)`,
+    borderColor: `rgba(${colorTheme.primary}, 0.4)`,
+    boxShadow: `0 8px 32px rgba(0, 0, 0, 0.4), 0 0 40px rgba(${colorTheme.primary}, 0.2), inset 0 0 20px rgba(${colorTheme.primary}, 0.1)`
+  };
+  const teamAccentColor = `rgb(${colorTheme.primary})`;
+
   return (
     <>
       <TournamentNavbar />
       <div className="team-detail">
         {/* Hero Section */}
-        <div className="team-hero">
-          <div className="team-hero-bg"></div>
+        <div className="team-hero" style={teamGradientStyle}>
+          <div className="team-hero-bg" style={teamGlowStyle}></div>
           
           <div className="team-hero-content">
-            <div className="team-crest-hero">
+            <div className="team-crest-hero" style={teamCrestStyle}>
               {team.crest_url ? (
                 <img src={team.crest_url} alt={team.name} />
               ) : (
@@ -279,11 +335,14 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
               <h1 className="team-name-hero">{team.name}</h1>
               <div className="team-meta-hero">
                 <span className="meta-label">Captain:</span>
-                <span className="meta-value">{team.captain || 'TBA'}</span>
+                <span className="meta-value" style={{ color: teamAccentColor }}>{team.captain || 'TBA'}</span>
               </div>
               {team.formation && (
-                <div className="team-formation-hero">
-                  <i className="fas fa-chess-board"></i>
+                <div className="team-formation-hero" style={{ 
+                  background: `rgba(${colorTheme.primary}, 0.15)`,
+                  borderColor: `rgba(${colorTheme.primary}, 0.3)`
+                }}>
+                  <i className="fas fa-chess-board" style={{ color: teamAccentColor }}></i>
                   <span>{team.formation}</span>
                 </div>
               )}
@@ -294,86 +353,66 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
         {/* Main Content */}
         <div className="team-detail-body">
           <div className="team-detail-main">
-            {/* Match Log */}
-            <div className="match-log-section">
+            {/* Match Log - Simplified like Player Detail */}
+            <div className="team-match-log-section">
               <h3 className="section-title-italic">MATCH LOG</h3>
               {matchLog.length > 0 ? (
-                <div className="match-log-table">
-                  <div className="match-log-header">
-                    <span className="col-mw">#</span>
-                    <span className="col-date">DATE</span>
-                    <span className="col-match">MATCH</span>
-                    <span className="col-score">SCORE</span>
-                    <span className="col-gf">GF</span>
-                    <span className="col-ga">GA</span>
-                    <span className="col-pts">PTS</span>
-                  </div>
-                  {matchLog.map((match, index) => (
-                    <div 
-                      className={`match-log-row ${match.result} clickable`} 
-                      key={match.id || index}
-                      data-date={match.matchDate}
-                      data-stats={match.status === 'completed' ? `GF: ${match.goalsFor} | GA: ${match.goalsAgainst} | PTS: ${match.points}` : 'Upcoming'}
-                      onClick={() => {
-                        // Navigate to match detail page
-                        const category = team.category || 'open-age';
-                        window.location.href = `/muqawamah/2026/${category}/fixtures/?match=${match.id}`;
-                      }}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <span className="col-mw">{match.match_number || index + 1}</span>
-                      <span className="col-date">{match.matchDate}</span>
-                      <span className="col-match match-teams">
-                        <div className="match-team home">
-                          {match.home_team?.crest_url ? (
-                            <img src={match.home_team.crest_url} alt="" className="match-team-logo" />
-                          ) : (
-                            <div className="match-team-logo match-team-placeholder">
-                              {match.home_team?.name?.charAt(0) || '?'}
-                            </div>
-                          )}
-                          <span className={match.isHome ? 'team-name current' : 'team-name'}>
-                            {match.home_team?.name || 'TBD'}
-                          </span>
-                        </div>
-                        <span className="vs-separator">
-                          {match.status === 'completed' ? (
-                            <span className={`mobile-score ${match.result}`}>
-                              {match.home_score} - {match.away_score}
-                            </span>
-                          ) : (
-                            <span className="scheduled-badge">
-                              {match.scheduled_time || 'TBD'}
-                            </span>
-                          )}
-                        </span>
-                        <div className="match-team away">
-                          {match.away_team?.crest_url ? (
-                            <img src={match.away_team.crest_url} alt="" className="match-team-logo" />
-                          ) : (
-                            <div className="match-team-logo match-team-placeholder">
-                              {match.away_team?.name?.charAt(0) || '?'}
-                            </div>
-                          )}
-                          <span className={!match.isHome ? 'team-name current' : 'team-name'}>
-                            {match.away_team?.name || 'TBD'}
-                          </span>
-                        </div>
-                      </span>
-                      <span className={`col-score match-score ${match.result}`}>
-                        {match.status === 'completed' ? (
-                          <>{match.home_score} - {match.away_score}</>
-                        ) : (
-                          <span className="scheduled-badge">
-                            {match.scheduled_time || 'TBD'}
-                          </span>
-                        )}
-                      </span>
-                      <span className="col-gf">{match.goalsFor}</span>
-                      <span className="col-ga">{match.goalsAgainst}</span>
-                      <span className={`col-pts ${match.result}`}>{match.points}</span>
-                    </div>
-                  ))}
+                <div className="team-match-log-wrapper">
+                  <table className="team-match-table">
+                    <thead>
+                      <tr>
+                        <th>OPPONENT</th>
+                        <th>RESULT</th>
+                        <th>PTS</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {matchLog.map((match, index) => {
+                        const opponent = match.isHome ? match.away_team : match.home_team;
+                        return (
+                          <tr 
+                            key={match.id || index}
+                            className="team-match-row"
+                            onClick={() => {
+                              const category = team.category || 'open-age';
+                              window.location.href = `/muqawamah/2026/${category}/fixtures/?match=${match.id}`;
+                            }}
+                          >
+                            <td className="opponent-cell">
+                              <div className="opponent-inner">
+                                {opponent?.crest_url && (
+                                  <img 
+                                    src={opponent.crest_url} 
+                                    alt="" 
+                                    className="opponent-logo"
+                                    loading="lazy"
+                                  />
+                                )}
+                                <span className="opponent-name">{opponent?.name || 'TBD'}</span>
+                              </div>
+                            </td>
+                            <td className="result-cell">
+                              <div className="result-inner">
+                                {match.status === 'completed' ? (
+                                  <>
+                                    <span className={`result-badge result-${match.result}`}>
+                                      {match.result === 'win' ? 'WIN' : match.result === 'loss' ? 'LOSS' : 'DRAW'}
+                                    </span>
+                                    <span className="score-text">{match.goalsFor}-{match.goalsAgainst}</span>
+                                  </>
+                                ) : (
+                                  <span className="scheduled-badge-simple">VS</span>
+                                )}
+                              </div>
+                            </td>
+                            <td className="pts-cell">
+                              <span className={`pts-value ${match.result}`}>{match.points}</span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
               ) : (
                 <div className="no-matches">
@@ -414,7 +453,11 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
                         <div className="team-cell">
                           <div className="team-logo-small">
                             {standingTeam.crest_url ? (
-                              <img src={standingTeam.crest_url} alt={standingTeam.name} />
+                              <img 
+                                src={standingTeam.crest_url} 
+                                alt={standingTeam.name}
+                                loading="lazy"
+                              />
                             ) : (
                               <span>{standingTeam.name?.charAt(0) || '?'}</span>
                             )}
@@ -446,7 +489,11 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
                       <span className="squad-number">{idx + 1}</span>
                       <div className="squad-photo">
                         {player.player_image ? (
-                          <img src={player.player_image} alt={player.player_name} />
+                          <img 
+                            src={player.player_image} 
+                            alt={player.player_name}
+                            loading="lazy"
+                          />
                         ) : (
                           <i className="fas fa-user"></i>
                         )}
@@ -481,7 +528,11 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
                       <span className="lb-rank">{idx + 1}</span>
                       <div className="lb-player-photo">
                         {player.player_image ? (
-                          <img src={player.player_image} alt={player.player_name} />
+                          <img 
+                            src={player.player_image} 
+                            alt={player.player_name}
+                            loading="lazy"
+                          />
                         ) : (
                           <i className="fas fa-user"></i>
                         )}
@@ -513,7 +564,11 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
                       <span className="lb-rank">{idx + 1}</span>
                       <div className="lb-player-photo">
                         {player.player_image ? (
-                          <img src={player.player_image} alt={player.player_name} />
+                          <img 
+                            src={player.player_image} 
+                            alt={player.player_name}
+                            loading="lazy"
+                          />
                         ) : (
                           <i className="fas fa-user"></i>
                         )}
@@ -534,12 +589,7 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
           </div>
         </div>
 
-        {/* Back Button */}
-        <div className="team-detail-footer">
-          <button onClick={onBack} className="back-btn">
-            <i className="fas fa-arrow-left"></i> Back to Teams
-          </button>
-        </div>
+        
 
         <Footer edition="2026" />
       </div>

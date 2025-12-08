@@ -91,16 +91,16 @@
   background: transparent;
   border: none;
   color: #fff;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   cursor: pointer;
   padding: 8px;
   display: none;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  border-radius: 8px;
-  width: 44px;
-  height: 44px;
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
 }
 
@@ -136,14 +136,15 @@
   filter: brightness(1.1);
 }
 
-/* Mobile Menu Toggle */
+/* Mobile Menu Toggle - French Fries Style */
 .mobile-menu-toggle {
   display: none;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  width: 32px;
-  height: 26px;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 5px;
+  width: 44px;
+  height: 40px;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -164,9 +165,9 @@
   transform: scale(0.95);
 }
 
+/* French Fries style - white lines with varying widths */
 .hamburger-line {
-  width: 100%;
-  height: 3.5px;
+  height: 5px;
   background: #fff;
   border-radius: 3px;
   transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -174,23 +175,40 @@
   transform-origin: center;
 }
 
+/* Varying widths for fry effect */
+.hamburger-line:nth-child(1) {
+  width: 22px;
+}
+
+.hamburger-line:nth-child(2) {
+  width: 18px;
+}
+
+.hamburger-line:nth-child(3) {
+  width: 24px;
+}
+
 .mobile-menu-toggle:hover .hamburger-line {
   background: linear-gradient(135deg, #4f8cff, #6ecdee);
   box-shadow: 0 0 8px rgba(79, 140, 255, 0.6);
 }
 
+/* Open state - X animation */
 .hamburger-line.open:nth-child(1) {
-  transform: rotate(45deg) translateY(11px);
+  width: 24px;
+  transform: rotate(45deg) translate(7px, 7px);
   background: linear-gradient(135deg, #4f8cff, #6ecdee);
 }
 
 .hamburger-line.open:nth-child(2) {
   opacity: 0;
+  width: 18px;
   transform: translateX(-20px);
 }
 
 .hamburger-line.open:nth-child(3) {
-  transform: rotate(-45deg) translateY(-11px);
+  width: 24px;
+  transform: rotate(-45deg) translate(7px, -7px);
   background: linear-gradient(135deg, #4f8cff, #6ecdee);
 }
 
@@ -362,8 +380,8 @@
 
   .navbar-back-button {
     font-size: 1.2rem;
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
   }
 
   .tournament-navbar-center-logo {
@@ -376,21 +394,36 @@
 
   .mobile-menu-toggle {
     display: flex !important;
-    width: 30px;
-    height: 24px;
-    padding: 9px;
+    width: 38px;
+    height: 38px;
+    padding: 8px;
+    gap: 4px;
   }
 
   .hamburger-line {
-    height: 3px;
+    height: 4px;
+  }
+
+  .hamburger-line:nth-child(1) {
+    width: 20px;
+  }
+
+  .hamburger-line:nth-child(2) {
+    width: 16px;
+  }
+
+  .hamburger-line:nth-child(3) {
+    width: 22px;
   }
 
   .hamburger-line.open:nth-child(1) {
-    transform: rotate(45deg) translateY(10px);
+    width: 22px;
+    transform: rotate(45deg) translate(6px, 6px);
   }
 
   .hamburger-line.open:nth-child(3) {
-    transform: rotate(-45deg) translateY(-10px);
+    width: 22px;
+    transform: rotate(-45deg) translate(6px, -6px);
   }
 
   .mobile-sidebar-logo img {
@@ -409,27 +442,42 @@
 
   .navbar-back-button {
     font-size: 1.1rem;
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     padding: 6px;
   }
 
   .mobile-menu-toggle {
-    width: 28px;
-    height: 22px;
-    padding: 8px;
+    width: 34px;
+    height: 34px;
+    padding: 7px;
+    gap: 4px;
   }
 
   .hamburger-line {
-    height: 3px;
+    height: 4px;
+  }
+
+  .hamburger-line:nth-child(1) {
+    width: 18px;
+  }
+
+  .hamburger-line:nth-child(2) {
+    width: 14px;
+  }
+
+  .hamburger-line:nth-child(3) {
+    width: 20px;
   }
 
   .hamburger-line.open:nth-child(1) {
-    transform: rotate(45deg) translateY(9px);
+    width: 20px;
+    transform: rotate(45deg) translate(5px, 5px);
   }
 
   .hamburger-line.open:nth-child(3) {
-    transform: rotate(-45deg) translateY(-9px);
+    width: 20px;
+    transform: rotate(-45deg) translate(5px, -5px);
   }
 
   .mobile-sidebar {

@@ -315,9 +315,14 @@
 /* Hero Section */
 .team-hero {
   position: relative;
-  padding: 30px 20px;
-  background: linear-gradient(135deg, #151a30 0%, #0d1020 100%);
-  border-bottom: 1px solid rgba(79, 140, 255, 0.15);
+  padding: 40px 20px;
+  background: linear-gradient(180deg, 
+    #0d1225 0%, 
+    #151a35 40%, 
+    #1a2040 60%,
+    #0d1225 100%
+  );
+  border-bottom: 2px solid rgba(79, 140, 255, 0.2);
   overflow: hidden;
 }
 
@@ -328,9 +333,25 @@
   right: 0;
   bottom: 0;
   background: 
-    radial-gradient(circle at 20% 50%, rgba(79, 140, 255, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 50%, rgba(110, 205, 238, 0.08) 0%, transparent 50%);
-  filter: blur(60px);
+    radial-gradient(ellipse at 50% 0%, rgba(79, 140, 255, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 0% 100%, rgba(110, 205, 238, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 100%, rgba(79, 140, 255, 0.1) 0%, transparent 50%);
+  filter: blur(40px);
+}
+
+/* Subtle shine effect */
+.team-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(79, 140, 255, 0.5) 50%, 
+    transparent 100%
+  );
 }
 
 .team-hero-content {
@@ -338,21 +359,27 @@
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 24px;
+  text-align: center;
+  gap: 16px;
 }
 
 .team-crest-hero {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(79, 140, 255, 0.1) 0%, rgba(110, 205, 238, 0.05) 100%);
+  border: 2px solid rgba(79, 140, 255, 0.25);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(79, 140, 255, 0.15),
+    inset 0 0 20px rgba(79, 140, 255, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px;
+  padding: 16px;
   flex-shrink: 0;
 }
 
@@ -371,7 +398,10 @@
 }
 
 .team-info-hero {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .team-name-hero {
@@ -380,13 +410,15 @@
   font-weight: 700;
   font-style: italic;
   text-transform: uppercase;
-  margin: 0 0 8px;
+  margin: 0 0 12px;
   color: #fff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .team-meta-hero {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   font-size: 1rem;
 }
@@ -404,15 +436,20 @@
 .team-formation-hero {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  margin-top: 8px;
+  margin-top: 10px;
   font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(79, 140, 255, 0.1);
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(79, 140, 255, 0.2);
 }
 
 .team-formation-hero i {
   color: #4f8cff;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .team-formation-hero span {
@@ -1135,14 +1172,13 @@
     padding: 60px 20px 32px;
   }
 
-  .team-hero-content {
-    flex-direction: column;
-    text-align: center;
+  .team-crest-hero {
+    width: 110px;
+    height: 110px;
   }
 
-  .team-crest-hero {
-    width: 120px;
-    height: 120px;
+  .team-name-hero {
+    font-size: 1.6rem;
   }
 
   .team-stats-grid {
@@ -1332,7 +1368,7 @@
 
 .match-team .team-name {
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: #fff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1777,6 +1813,187 @@
   .mobile-score.scheduled {
     color: #4f8cff;
     font-size: 0.8rem;
+  }
+}
+
+/* ================================
+   TEAM MATCH LOG - SIMPLIFIED TABLE
+   ================================ */
+.team-match-log-section {
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(79, 140, 255, 0.1);
+}
+
+.team-match-log-section .section-title-italic {
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.team-match-log-wrapper {
+  overflow-x: auto;
+}
+
+.team-match-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.team-match-table th {
+  padding: 12px 16px;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.team-match-table th:nth-child(2) {
+  text-align: center;
+}
+
+.team-match-table th:last-child {
+  text-align: center;
+}
+
+.team-match-row {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.team-match-row:hover {
+  background: rgba(79, 140, 255, 0.1);
+}
+
+.team-match-table td {
+  padding: 14px 16px;
+  vertical-align: middle;
+}
+
+/* Opponent Cell */
+.team-match-table td.opponent-cell {
+  display: table-cell;
+}
+
+.opponent-cell .opponent-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.opponent-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.opponent-name {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Result Cell */
+.team-match-table td.result-cell {
+  text-align: center;
+}
+
+.result-cell .result-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.result-badge.result-win { background: #22c55e; color: #fff; }
+.result-badge.result-draw { background: #f59e0b; color: #fff; }
+.result-badge.result-loss { background: #ef4444; color: #fff; }
+
+.score-text {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  font-family: 'Oswald', sans-serif;
+}
+
+.scheduled-badge-simple {
+  display: inline-block;
+  padding: 5px 14px;
+  background: rgba(79, 140, 255, 0.2);
+  border: 1px solid rgba(79, 140, 255, 0.3);
+  border-radius: 50px;
+  color: #4f8cff;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* Points Cell */
+.pts-cell {
+  text-align: center;
+}
+
+.pts-value {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.pts-value.win { color: #22c55e; }
+.pts-value.draw { color: #f59e0b; }
+.pts-value.loss { color: #ef4444; }
+
+/* Mobile Styles */
+@media (max-width: 640px) {
+  .team-match-log-section {
+    padding: 16px;
+  }
+
+  .team-match-table th,
+  .team-match-table td {
+    padding: 12px 10px;
+    font-size: 0.85rem;
+  }
+
+  .opponent-logo {
+    width: 24px;
+    height: 24px;
+  }
+
+  .opponent-name {
+    font-size: 0.85rem;
+  }
+
+  .result-badge {
+    min-width: 26px;
+    padding: 4px 8px;
+    font-size: 0.7rem;
+  }
+
+  .score-text {
+    font-size: 0.85rem;
+  }
+
+  .pts-value {
+    font-size: 0.95rem;
   }
 }
 

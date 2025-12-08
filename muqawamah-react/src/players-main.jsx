@@ -392,11 +392,7 @@ function PlayersApp() {
         </div>
       )}
 
-      <div className="back-to-tournament">
-        <a href="/muqawamah/2026/" className="back-link">
-          <i className="fas fa-arrow-left"></i> Back to Tournament
-        </a>
-      </div>
+  
 
       <Footer edition="2026" />
       </div>

@@ -113,9 +113,29 @@ export default function Statistics() {
     }
   };
 
-  const handlePlayerClick = (playerId) => {
-    const base = category === 'u17' ? '/muqawamah/2026/u17' : '/muqawamah/2026/open-age';
-    window.location.href = `${base}/players/?player=${playerId}`;
+  const handlePlayerClick = async (teamPlayerId) => {
+    if (!teamPlayerId) return;
+    
+    try {
+      // team_players.id IS the registration_player_id in players table
+      // So we look up players where registration_player_id = teamPlayerId
+      const { data: tournamentPlayer, error } = await supabaseClient
+        .from('players')
+        .select('id')
+        .eq('registration_player_id', teamPlayerId)
+        .single();
+
+      if (error || !tournamentPlayer) {
+        console.error('Player not found in tournament players:', error);
+        alert('Player details not available');
+        return;
+      }
+
+      const base = category === 'u17' ? '/muqawamah/2026/u17' : '/muqawamah/2026/open-age';
+      window.location.href = `${base}/players/?player=${tournamentPlayer.id}`;
+    } catch (err) {
+      console.error('Error finding player:', err);
+    }
   };
 
   const handleTeamClick = (teamId) => {
@@ -166,7 +186,11 @@ export default function Statistics() {
             {/* Player Photo */}
             <div className="player-photo-v2">
               {player.player_image ? (
-                <img src={player.player_image} alt={player.player_name} />
+                <img 
+                  src={player.player_image} 
+                  alt={player.player_name}
+                  loading="lazy"
+                />
               ) : (
                 <div className="photo-placeholder">
                   <i className="fas fa-user"></i>
@@ -183,6 +207,7 @@ export default function Statistics() {
                     src={player.team_registrations.team_logo} 
                     alt="" 
                     className="mini-team-logo"
+                    loading="lazy"
                   />
                 )}
                 <span className="team-name-mini">
@@ -227,7 +252,11 @@ export default function Statistics() {
             {/* Team Logo */}
             <div className="team-logo-v2">
               {team.crest_url ? (
-                <img src={team.crest_url} alt={team.name} />
+                <img 
+                  src={team.crest_url} 
+                  alt={team.name}
+                  loading="lazy"
+                />
               ) : (
                 <div className="logo-placeholder">
                   <span>{team.name?.charAt(0) || '?'}</span>

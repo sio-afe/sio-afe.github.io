@@ -369,41 +369,35 @@ body.registration-body h4 {
 }
 
 .captain-card {
-  border: 2px solid rgba(79, 140, 255, 0.4);
-  background: linear-gradient(135deg, rgba(79, 140, 255, 0.05), rgba(110, 205, 238, 0.05));
+  border: 2px solid rgba(79, 140, 255, 0.25);
+  background: linear-gradient(135deg, rgba(79, 140, 255, 0.03), rgba(110, 205, 238, 0.03));
   position: relative;
-  box-shadow: 0 4px 16px rgba(79, 140, 255, 0.15);
+  box-shadow: 0 4px 16px rgba(79, 140, 255, 0.12);
 }
 
 .captain-card::before {
   opacity: 1;
-  height: 4px;
-  background: linear-gradient(90deg, #ffd700, #ffa500);
+  height: 3px;
+  background: linear-gradient(90deg, #4f8cff, #6ecdee);
 }
 
 .captain-badge {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, #ffd700, #ffa500);
-  color: #1a1a1a;
-  padding: 8px 16px;
-  border-radius: 25px;
-  font-size: 0.85rem;
-  font-weight: 700;
+  background: linear-gradient(135deg, #4f8cff, #6ecdee);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
   margin-bottom: 16px;
-  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(79, 140, 255, 0.25);
   letter-spacing: 0.03em;
 }
 
 .captain-badge i {
-  font-size: 0.9rem;
-  animation: sparkle 2s ease-in-out infinite;
-}
-
-@keyframes sparkle {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.2); opacity: 0.8; }
+  font-size: 0.85rem;
 }
 
 .player-card-grid {

@@ -15,16 +15,26 @@ export default function TeamDatabase({ teams = [], onTeamClick }) {
 
       <div className="teams-grid">
         {teams.map((team, index) => {
-          // Color gradients for variety
-          const gradients = [
-            'linear-gradient(135deg, rgba(33, 150, 243, 0.15) 0%, rgba(33, 150, 243, 0.02) 100%)',
-            'linear-gradient(135deg, rgba(156, 39, 176, 0.15) 0%, rgba(156, 39, 176, 0.02) 100%)',
-            'linear-gradient(135deg, rgba(244, 67, 54, 0.15) 0%, rgba(244, 67, 54, 0.02) 100%)',
-            'linear-gradient(135deg, rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.02) 100%)',
-            'linear-gradient(135deg, rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.02) 100%)',
-            'linear-gradient(135deg, rgba(158, 158, 158, 0.15) 0%, rgba(158, 158, 158, 0.02) 100%)',
+          // 12 unique color gradients - one for each team
+          const teamColors = [
+            '33, 150, 243',   // Blue
+            '156, 39, 176',   // Purple
+            '244, 67, 54',    // Red
+            '76, 175, 80',    // Green
+            '255, 152, 0',    // Orange
+            '0, 188, 212',    // Cyan
+            '233, 30, 99',    // Pink
+            '255, 193, 7',    // Amber
+            '63, 81, 181',    // Indigo
+            '0, 150, 136',    // Teal
+            '121, 85, 72',    // Brown
+            '96, 125, 139',   // Blue Grey
           ];
-          const gradient = gradients[index % gradients.length];
+          // Get consistent color based on team ID (same as TeamDetail)
+          const hash = team.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+          const colorIndex = hash % teamColors.length;
+          const color = teamColors[colorIndex];
+          const gradient = `linear-gradient(135deg, rgba(${color}, 0.15) 0%, rgba(${color}, 0.02) 100%)`;
 
           return (
             <div 
@@ -35,7 +45,11 @@ export default function TeamDatabase({ teams = [], onTeamClick }) {
             >
               <div className="team-logo-large">
                 {team.crest_url ? (
-                  <img src={team.crest_url} alt={team.name} />
+                  <img 
+                    src={team.crest_url} 
+                    alt={team.name}
+                    loading="lazy"
+                  />
                 ) : (
                   <span>{team.name?.charAt(0) || '?'}</span>
                 )}
@@ -56,12 +70,6 @@ export default function TeamDatabase({ teams = [], onTeamClick }) {
           <p>No teams registered yet</p>
         </div>
       )}
-
-      <div className="back-to-tournament">
-        <a href="/muqawamah/2026/" className="back-link">
-          <i className="fas fa-arrow-left"></i> Back to Tournament
-        </a>
-      </div>
     </div>
   );
 }

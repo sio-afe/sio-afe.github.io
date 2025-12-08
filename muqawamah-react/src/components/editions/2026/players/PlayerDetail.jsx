@@ -253,9 +253,7 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
       <div className="player-detail-error">
         <i className="fas fa-exclamation-triangle"></i>
         <p>Player not found</p>
-        <button onClick={onBack} className="back-btn">
-          <i className="fas fa-arrow-left"></i> Back to Players
-        </button>
+       
       </div>
     );
   }
@@ -274,7 +272,8 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
 
   // Build match log and split by status
   const allMatchLog = matches.map(match => {
-    const isHome = match.home_team_id === actualTeamId;
+    // Compare as strings to avoid UUID comparison issues
+    const isHome = String(match.home_team_id) === String(actualTeamId);
     const opponent = isHome ? match.away_team?.name : match.home_team?.name;
     const teamScore = isHome ? match.home_score : match.away_score;
     const oppScore = isHome ? match.away_score : match.home_score;
@@ -412,12 +411,12 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
                                 onClick={() => onNavigateToMatch && onNavigateToMatch(match.matchId)}
                                 className="match-row-clickable"
                               >
-                                <td>{match.opponent}</td>
+                                <td className="opponent-name">{match.opponent}</td>
                                 <td>
                                   <span className={`bls-result bls-result-${match.result}`}>
                                     {match.result}
                                   </span>
-                                  <span>{match.score}</span>
+                                  <span className="bls-score-text">{match.score}</span>
                                 </td>
                                 <td>{match.goals}</td>
                               </tr>
@@ -450,7 +449,7 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
                                 onClick={() => onNavigateToMatch && onNavigateToMatch(match.matchId)}
                                 className="match-row-clickable"
                               >
-                                <td>{match.opponent}</td>
+                                <td className="opponent-name">{match.opponent}</td>
                                 <td>
                                   <span className="match-scheduled-badge">VS</span>
                                 </td>
@@ -497,9 +496,7 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
 
           {/* Back Button */}
           <div className="bls-back-section">
-            <button onClick={onBack} className="bls-back-btn">
-              <i className="fas fa-arrow-left"></i> Back to Players
-            </button>
+            
           </div>
         </div>
         </div>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { supabaseClient } from '../../lib/supabaseClient';
 
 /**
  * Combined Match Formation Field
@@ -14,6 +15,7 @@ export default function MatchFormationField({
 }) {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [isHome, setIsHome] = useState(true);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   // Filter starters only (exclude substitutes)
   const homeStarters = homePlayers.filter(p => !p.is_substitute && p.position !== 'SUB').slice(0, 7);
@@ -274,12 +276,35 @@ export default function MatchFormationField({
 
             <button 
               className="player-modal-view-btn"
-              onClick={() => {
-                const category = window.location.pathname.includes('/u17/') ? 'u17' : 'open-age';
-                window.location.href = `/muqawamah/2026/${category}/players/?player=${selectedPlayer.id}`;
+              disabled={isNavigating}
+              onClick={async () => {
+                if (isNavigating) return;
+                setIsNavigating(true);
+                
+                try {
+                  // Look up the tournament player using team_players.id as registration_player_id
+                  const { data: tournamentPlayer, error } = await supabaseClient
+                    .from('players')
+                    .select('id')
+                    .eq('registration_player_id', selectedPlayer.id)
+                    .single();
+
+                  if (error || !tournamentPlayer) {
+                    console.error('Player not found:', error);
+                    alert('Player details not available');
+                    setIsNavigating(false);
+                    return;
+                  }
+
+                  const category = window.location.pathname.includes('/u17/') ? 'u17' : 'open-age';
+                  window.location.href = `/muqawamah/2026/${category}/players/?player=${tournamentPlayer.id}`;
+                } catch (err) {
+                  console.error('Error finding player:', err);
+                  setIsNavigating(false);
+                }
               }}
             >
-              View Full Details
+              {isNavigating ? 'Loading...' : 'View Full Details'}
             </button>
           </div>
         </div>

@@ -180,9 +180,11 @@
   border-radius: 20px;
   overflow: hidden;
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(79, 140, 255, 0.15);
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(79, 140, 255, 0.1);
 }
 
 .player-card-db::before {
@@ -285,10 +287,18 @@
   align-items: center;
   gap: 14px;
   padding: 18px 20px;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%);
+  background: linear-gradient(
+    180deg, 
+    rgba(15, 25, 45, 0.95) 0%, 
+    rgba(10, 15, 30, 0.98) 100%
+  );
   position: relative;
   z-index: 5;
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  border-top: 2px solid rgba(79, 140, 255, 0.3);
+  box-shadow: 
+    inset 0 1px 0 rgba(79, 140, 255, 0.15),
+    0 -2px 8px rgba(79, 140, 255, 0.1);
+  backdrop-filter: blur(8px);
 }
 
 /* Team Logo */
@@ -1711,20 +1721,38 @@
 
 .bls-match-table td {
   font-size: 0.9rem;
+  color: #fff;
+}
+
+/* Opponent team name */
+.bls-match-table td:first-child {
+  font-weight: 600;
+  color: #fff;
 }
 
 .bls-result {
-  display: inline-block;
-  padding: 4px 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  padding: 4px 8px;
   border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 700;
   margin-right: 8px;
+  text-transform: uppercase;
 }
 
 .bls-result-W { background: #22c55e; color: #fff; }
 .bls-result-D { background: #f59e0b; color: #fff; }
 .bls-result-L { background: #ef4444; color: #fff; }
+.bls-result-- { background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.5); }
+
+/* Score text */
+.bls-score-text {
+  color: #fff;
+  font-weight: 500;
+}
 
 .bls-no-data {
   text-align: center;

@@ -151,6 +151,8 @@ export default function Fixtures({ onMatchClick }) {
             {currentMatches.length > 0 ? (
               currentMatches.map((match) => {
                 const isFinished = match.status === 'completed';
+                const isLive = match.status === 'live';
+                const hasScore = isFinished || isLive;
                 const homeScore = match.home_score ?? 0;
                 const awayScore = match.away_score ?? 0;
                 const matchStatus = getMatchStatus(match);
@@ -183,7 +185,11 @@ export default function Fixtures({ onMatchClick }) {
                         <span className="team-name-v2">{match.home_team?.name || 'TBD'}</span>
                         <div className="team-logo-v2">
                           {match.home_team?.crest_url ? (
-                            <img src={match.home_team.crest_url} alt={match.home_team.name} />
+                            <img 
+                              src={match.home_team.crest_url} 
+                              alt={match.home_team.name}
+                              loading="lazy"
+                            />
                           ) : (
                             <span>{match.home_team?.name?.charAt(0) || '?'}</span>
                           )}
@@ -192,8 +198,8 @@ export default function Fixtures({ onMatchClick }) {
 
                       {/* Score */}
                       <div className="match-score-v2">
-                        {isFinished ? (
-                          <span className="score-display">{homeScore} - {awayScore}</span>
+                        {hasScore ? (
+                          <span className={`score-display ${isLive ? 'live' : ''}`}>{homeScore} - {awayScore}</span>
                         ) : (
                           <span className="vs-display">vs</span>
                         )}
@@ -203,7 +209,11 @@ export default function Fixtures({ onMatchClick }) {
                       <div className="match-team-v2 away">
                         <div className="team-logo-v2">
                           {match.away_team?.crest_url ? (
-                            <img src={match.away_team.crest_url} alt={match.away_team.name} />
+                            <img 
+                              src={match.away_team.crest_url} 
+                              alt={match.away_team.name}
+                              loading="lazy"
+                            />
                           ) : (
                             <span>{match.away_team?.name?.charAt(0) || '?'}</span>
                           )}
