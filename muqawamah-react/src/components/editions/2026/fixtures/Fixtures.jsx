@@ -17,6 +17,18 @@ export default function Fixtures({ onMatchClick }) {
 
   const [category] = useState(getCategory());
 
+  // Format match type for display
+  const getMatchTypeLabel = (matchType) => {
+    if (!matchType) return null;
+    const type = matchType.toLowerCase();
+    if (type === 'group') return 'Group Stage';
+    if (type === 'quarter-final' || type === 'quarterfinal') return 'Quarter Final';
+    if (type === 'semi-final' || type === 'semifinal') return 'Semi Final';
+    if (type === 'final') return 'Final';
+    if (type === 'third-place' || type === 'thirdplace') return '3rd Place';
+    return matchType.charAt(0).toUpperCase() + matchType.slice(1);
+  };
+
   useEffect(() => {
     fetchMatches();
   }, [category]);
@@ -221,20 +233,24 @@ export default function Fixtures({ onMatchClick }) {
                         <span className="team-name-v2">{match.away_team?.name || 'TBD'}</span>
                       </div>
 
-                      {/* Venue - Desktop */}
-                      {match.venue && (
-                        <div className="match-venue-desktop">
-                          <span>{match.venue}</span>
-                        </div>
-                      )}
+                      {/* Venue & Match Type - Desktop */}
+                      <div className="match-venue-desktop">
+                        <span>
+                          {match.venue || ''}
+                          {match.venue && getMatchTypeLabel(match.match_type) && ' | '}
+                          {getMatchTypeLabel(match.match_type)}
+                        </span>
+                      </div>
                     </div>
 
-                    {/* Venue - Mobile */}
-                    {match.venue && (
-                      <div className="match-venue-mobile">
-                        <span>{match.venue}</span>
-                      </div>
-                    )}
+                    {/* Venue & Match Type - Mobile */}
+                    <div className="match-venue-mobile">
+                      <span>
+                        {match.venue || ''}
+                        {match.venue && getMatchTypeLabel(match.match_type) && ' | '}
+                        {getMatchTypeLabel(match.match_type)}
+                      </span>
+                    </div>
                   </div>
                 );
               })

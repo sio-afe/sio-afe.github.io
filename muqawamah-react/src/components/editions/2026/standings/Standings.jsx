@@ -7,6 +7,15 @@ export default function Standings() {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Determine category from URL
+  const getCategory = () => {
+    const path = window.location.pathname;
+    if (path.includes('/u17/')) return 'u17';
+    return 'open-age';
+  };
+
+  const [category] = useState(getCategory());
+
   useEffect(() => {
     fetchStandings();
 
@@ -31,7 +40,7 @@ export default function Standings() {
       const { data: teamsData, error } = await supabaseClient
         .from('teams')
         .select('*')
-        .eq('category', 'open-age')
+        .eq('category', category)
         .order('points', { ascending: false })
         .order('goals_for', { ascending: false })
         .order('goals_against', { ascending: true });
@@ -54,7 +63,7 @@ export default function Standings() {
   };
 
   const handleTeamClick = (teamId) => {
-    window.location.href = `/muqawamah/2026/open-age/teams/?team=${teamId}`;
+    window.location.href = `/muqawamah/2026/${category}/teams/?team=${teamId}`;
   };
 
   if (loading) {

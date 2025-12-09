@@ -22,6 +22,15 @@ function TeamsApp() {
   const [selectedTeamId, setSelectedTeamId] = useState(null);
   const [view, setView] = useState('list'); // 'list' or 'detail'
 
+  // Determine category from URL
+  const getCategory = () => {
+    const path = window.location.pathname;
+    if (path.includes('/u17/')) return 'u17';
+    return 'open-age';
+  };
+
+  const [category] = useState(getCategory());
+
   useEffect(() => {
     // Check URL for team ID (format: /teams/?team={id})
     const urlParams = new URLSearchParams(window.location.search);
@@ -58,7 +67,7 @@ function TeamsApp() {
       const { data: teamsData, error: teamsError } = await supabaseClient
         .from('teams')
         .select('id, name, crest_url, captain, category')
-        .eq('category', 'open-age')
+        .eq('category', category)
         .order('name', { ascending: true });
 
       if (teamsError) throw teamsError;
@@ -71,7 +80,7 @@ function TeamsApp() {
   };
 
   const openTeamDetail = (team) => {
-    const newUrl = `/muqawamah/2026/open-age/teams/?team=${team.id}`;
+    const newUrl = `/muqawamah/2026/${category}/teams/?team=${team.id}`;
     window.history.pushState({ teamId: team.id }, '', newUrl);
     setSelectedTeamId(team.id);
     setView('detail');
@@ -79,7 +88,7 @@ function TeamsApp() {
   };
 
   const goBackToList = () => {
-    window.history.pushState({}, '', '/muqawamah/2026/open-age/teams/');
+    window.history.pushState({}, '', `/muqawamah/2026/${category}/teams/`);
     setView('list');
     setSelectedTeamId(null);
   };
@@ -105,7 +114,7 @@ function TeamsApp() {
         teamId={selectedTeamId} 
         onBack={goBackToList}
         onNavigateToPlayer={(playerId, playerName) => {
-          window.location.href = `/muqawamah/2026/open-age/players/?player=${playerId}`;
+          window.location.href = `/muqawamah/2026/${category}/players/?player=${playerId}`;
         }}
       />
     );

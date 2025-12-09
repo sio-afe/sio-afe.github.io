@@ -606,6 +606,13 @@ h2 {
   color: #FFB74D;
 }
 
+.status-badge-hero.registrations-open {
+  background: rgba(79, 140, 255, 0.2);
+  border: 2px solid #4f8cff;
+  color: #6ecdee;
+  animation: pulse-badge 2s infinite;
+}
+
 @keyframes pulse-badge {
   0%, 100% {
     opacity: 1;

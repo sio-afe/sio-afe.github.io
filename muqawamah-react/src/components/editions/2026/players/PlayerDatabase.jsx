@@ -32,9 +32,18 @@ export default function PlayerDatabase() {
   const [selectedTeam, setSelectedTeam] = useState('all');
   const [selectedPosition, setSelectedPosition] = useState('all');
 
+  // Determine category from URL
+  const getCategory = () => {
+    const path = window.location.pathname;
+    if (path.includes('/u17/')) return 'u17';
+    return 'open-age';
+  };
+
+  const [category] = useState(getCategory());
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [category]);
 
   const fetchData = async () => {
     try {
@@ -43,7 +52,7 @@ export default function PlayerDatabase() {
         .from('team_registrations')
         .select('id, team_name, team_logo, category')
         .eq('status', 'confirmed')
-        .eq('category', 'open-age');
+        .eq('category', category);
 
       if (teamsError) throw teamsError;
       setTeams(teamsData || []);

@@ -3,11 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import CountdownTimer from '../../shared/CountdownTimer';
 
 const highlightImages = [
-  '/assets/img/highlight5.jpeg',
-  '/assets/img/highlight6.jpeg',
-  '/assets/img/highlight7.jpeg',
-  '/assets/img/highlight8.jpeg',
-  '/assets/img/highlight9.jpeg'
+  '/assets/img/highlight5.webp',
+  '/assets/img/highlight6.webp',
+  '/assets/img/highlight7.webp',
+  '/assets/img/highlight8.webp',
+  '/assets/img/highlight9.webp'
 ];
 
 const teamLogos = [
@@ -42,12 +42,12 @@ const editions = [
   {
     year: '2026',
     title: 'MUQAWAMA 2026',
-    countdownTarget: '2026-01-03T09:00:00+05:30',
+    countdownTarget: '2026-01-14T09:00:00+05:30',
     stats: [
-      { number: 'January 3, 4 2026', label: '' }
+      { number: 'January 14, 15 2026', label: '' }
     ],
-    status: 'coming-soon',
-    statusLabel: 'Coming Soon'
+    status: 'registrations-open',
+    statusLabel: 'Registrations Open'
   }
 ];
 
@@ -116,6 +116,12 @@ function Hero({ selectedEdition, setSelectedEdition }) {
               {currentEdition.status === 'coming-soon' && (
                 <div className="status-badge-hero coming-soon">
                   <i className="fas fa-clock"></i> {currentEdition.statusLabel}
+                </div>
+              )}
+
+              {currentEdition.status === 'registrations-open' && (
+                <div className="status-badge-hero registrations-open">
+                  <i className="fas fa-clipboard-list"></i> {currentEdition.statusLabel}
                 </div>
               )}
 
