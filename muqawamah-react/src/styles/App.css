@@ -1581,12 +1581,64 @@ h2 {
 }
 
 @media (max-width: 480px) {
+  .hero-content-modern {
+    text-align: center;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-content-modern > div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .hero-title-modern {
     font-size: 2.5rem;
+    text-align: center;
   }
 
   .hero-subtitle-modern {
     font-size: 1rem;
+    text-align: center;
+  }
+
+  .status-badge-hero {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-stats-modern {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .stat-box.condensed {
+    width: 100%;
+    min-width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .stat-box.condensed .stat-number {
+    font-size: 1.5rem;
+    margin-bottom: 0;
+    min-width: 60px;
+  }
+
+  .stat-box.condensed .stat-label {
+    font-size: 0.8rem;
   }
 
   /* Team Logos Extra Small Screens */
