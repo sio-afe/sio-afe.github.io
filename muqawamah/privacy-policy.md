@@ -56,6 +56,24 @@ permalink: /muqawamah/privacy-policy/
     </p>
   </section>
 
+      <section id="ai-image-processing" class="privacy-section">
+        <h2>Enhanced Player Images</h2>
+    <p>
+      As part of our tournament experience, we may use artificial intelligence (AI) tools to enhance and transform 
+      player photographs into professional-looking images for player cards, promotional materials, and tournament displays.
+    </p>
+    <ul>
+      <li>Your submitted photos may be processed through AI image enhancement tools to create stylized, professional player portraits.</li>
+      <li>These AI-generated images may be used on our website, social media, printed materials, and tournament displays.</li>
+      <li>Original photos are retained and AI-processed versions are created as additional assets.</li>
+    </ul>
+    <p class="info-note">
+      <strong>By registering for the tournament, you consent to having your photographs processed using AI enhancement tools 
+      and agree that the resulting images may be used for tournament-related purposes.</strong> If you do not wish to have 
+      your images AI-enhanced, please contact us at <a href="mailto:muqawamah@sio-abulfazal.org">muqawamah@sio-abulfazal.org</a> before or during registration.
+    </p>
+  </section>
+
       <section id="sharing-disclosure" class="privacy-section">
         <h2>Sharing & Disclosure</h2>
     <ul>
@@ -83,7 +101,7 @@ permalink: /muqawamah/privacy-policy/
       <li>Withdraw consent for marketing communications.</li>
       <li>Limit how we profile or publish their imagery.</li>
     </ul>
-    <p>Send requests to <a href="mailto:info@sio-abulfazal.org">info@sio-abulfazal.org</a>. We respond within 30 minutes.</p>
+    <p>Send requests to <a href="mailto:muqawamah@sio-abulfazal.org">muqawamah@sio-abulfazal.org</a>. We respond within 30 minutes.</p>
   </section>
 
 
@@ -91,7 +109,7 @@ permalink: /muqawamah/privacy-policy/
         <h2>Contact</h2>
         <p>For any privacy-related inquiries or requests, please contact us:</p>
         <ul>
-          <li><strong>Email:</strong> <a href="mailto:info@sio-abulfazal.org">info@sio-abulfazal.org</a></li>
+          <li><strong>Email:</strong> <a href="mailto:muqawamah@sio-abulfazal.org">muqawamah@sio-abulfazal.org</a></li>
           <li><strong>Instagram:</strong> <a href="https://www.instagram.com/muqawama2026/" target="_blank" rel="noopener">instagram.com/muqawama2026</a></li>
         </ul>
       </section>
@@ -103,6 +121,7 @@ permalink: /muqawamah/privacy-policy/
         <nav class="toc-nav">
           <a href="#information-we-collect">Information We Collect</a>
           <a href="#how-we-use">How We Use Your Data</a>
+          <a href="#ai-image-processing">AI-Enhanced Images</a>
           <a href="#sharing-disclosure">Sharing & Disclosure</a>
           <a href="#storage-security">Storage, Retention & Security</a>
           <a href="#your-rights">Your Rights</a>

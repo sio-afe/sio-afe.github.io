@@ -24,7 +24,7 @@ permalink: /muqawamah/about/
         <div class="info-grid">
           <div class="info-card">
             <h4>Date</h4>
-            <p>3-4 January 2026</p>
+            <p>14-15 January 2026</p>
           </div>
           <div class="info-card">
             <h4>Format</h4>
@@ -45,7 +45,7 @@ permalink: /muqawamah/about/
         <h2>Why Join?</h2>
         <ul>
           <li>Guaranteed minimum two matches (group + knockout)</li>
-          <li>Professional referees, medical desk, and live statistics</li>
+          <li>Proper referees, medical desk, and live statistics</li>
           <li>Cash prizes plus trophies, medals, and custom merch</li>
           <li>Individual honors: Top Goal Scorer, Top Goalkeeper, Best Player</li>
           <li>Branded photo wall, highlight reels, and social coverage</li>
@@ -94,7 +94,7 @@ permalink: /muqawamah/about/
         <p>For more information, please contact us:</p>
         <ul>
           <li><strong>Instagram:</strong> <a href="https://www.instagram.com/muqawama2026/" target="_blank" rel="noopener">instagram.com/muqawama2026</a></li>
-          <li><strong>Email:</strong> <a href="mailto:info@sio-abulfazal.org">info@sio-abulfazal.org</a></li>
+          <li><strong>Email:</strong> <a href="mailto:muqawamah@sio-abulfazal.org">muqawamah@sio-abulfazal.org</a></li>
         </ul>
       </section>
     </div>

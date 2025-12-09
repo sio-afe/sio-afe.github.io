@@ -8,13 +8,13 @@ import { compressImage, getBase64SizeKB } from './utils/imageCompression';
 const PRICING = {
   'open-age': {
     label: 'Open Age',
-    amount: 2200,
-    qrCode: '/assets/img/Muqawama/qr-2200.svg'
+    amount: 2000,
+    qrCode: '/assets/img/Muqawama/qr-2000.svg'
   },
   'u17': {
     label: 'Under 17',
-    amount: 2000,
-    qrCode: '/assets/img/Muqawama/qr-2000.svg'
+    amount: 1800,
+    qrCode: '/assets/img/Muqawama/qr-1800.svg'
   }
 };
 
@@ -37,6 +37,8 @@ export default function PaymentCheckout() {
   const [screenshot, setScreenshot] = useState(null);
   const [screenshotPreview, setScreenshotPreview] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const fileInputRef = useRef(null);
 
   const category = teamData.category || 'open-age';
@@ -359,7 +361,7 @@ export default function PaymentCheckout() {
         <button
           type="button"
           className="primary-btn pay-btn"
-          onClick={submitPayment}
+          onClick={() => setShowConfirmModal(true)}
           disabled={loading || !screenshot}
         >
           {loading ? (
@@ -377,6 +379,91 @@ export default function PaymentCheckout() {
       <p className="terms-note">
         <i className="fas fa-info-circle"></i> Your registration will be verified within 24 hours after payment confirmation.
       </p>
+
+      {/* Terms Confirmation Modal */}
+      {showConfirmModal && (
+        <div className="terms-modal-overlay" onClick={() => setShowConfirmModal(false)}>
+          <div className="terms-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="terms-modal-header">
+              <i className="fas fa-file-contract"></i>
+              <h3>Confirm Registration</h3>
+            </div>
+            
+            <div className="terms-modal-content">
+              <p>By submitting this registration, you confirm that:</p>
+              
+              <ul className="terms-checklist">
+                <li>
+                  <i className="fas fa-check"></i>
+                  <span>All information provided is accurate and complete</span>
+                </li>
+                <li>
+                  <i className="fas fa-check"></i>
+                  <span>You agree to the <a href="/muqawamah/terms-and-conditions/" target="_blank" rel="noopener noreferrer">Terms & Conditions</a></span>
+                </li>
+                <li>
+                  <i className="fas fa-check"></i>
+                  <span>You agree to the <a href="/muqawamah/privacy-policy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a></span>
+                </li>
+                <li>
+                  <i className="fas fa-check"></i>
+                  <span>You consent to AI-enhanced player images</span>
+                </li>
+                <li>
+                  <i className="fas fa-check"></i>
+                  <span>You understand the <a href="/muqawamah/refund-policy/" target="_blank" rel="noopener noreferrer">Refund Policy</a></span>
+                </li>
+                <li>
+                  <i className="fas fa-check"></i>
+                  <span>All players meet the category age requirements</span>
+                </li>
+              </ul>
+
+              <div 
+                className={`terms-checkbox-label ${termsAccepted ? 'checked' : ''}`}
+                onClick={() => setTermsAccepted(!termsAccepted)}
+              >
+                <div className="custom-checkbox">
+                  {termsAccepted && <i className="fas fa-check"></i>}
+                </div>
+                <span>I accept all the above terms and conditions</span>
+              </div>
+            </div>
+
+            <div className="terms-modal-actions">
+              <button 
+                type="button" 
+                className="secondary-btn"
+                onClick={() => {
+                  setShowConfirmModal(false);
+                  setTermsAccepted(false);
+                }}
+              >
+                Cancel
+              </button>
+              <button 
+                type="button" 
+                className="primary-btn"
+                disabled={!termsAccepted || loading}
+                onClick={() => {
+                  setShowConfirmModal(false);
+                  submitPayment();
+                }}
+              >
+                {loading ? (
+                  <>
+                    <i className="fas fa-spinner fa-spin"></i> Submitting...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-check-circle"></i> Confirm & Submit
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

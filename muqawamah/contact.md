@@ -24,7 +24,7 @@ permalink: /muqawamah/contact/
         <div class="info-grid contact-links">
           <div class="info-card">
             <h4>Email</h4>
-            <p><a href="mailto:info@sio-abulfazal.org">info@sio-abulfazal.org</a></p>
+            <p><a href="mailto:muqawamah@sio-abulfazal.org">muqawamah@sio-abulfazal.org</a></p>
           </div>
           <div class="info-card">
             <h4>Instagram</h4>

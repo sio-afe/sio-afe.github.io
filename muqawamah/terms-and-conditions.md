@@ -24,7 +24,7 @@ permalink: /muqawamah/terms-and-conditions/
         <ul>
           <li>Only amateur footballers may participate. Professional club-affiliated players are prohibited. Violations lead to disqualification without refund.</li>
           <li>Teams must register 7–11 players (7 starters + up to 4 substitutes) before the published deadline.</li>
-          <li>Players must match the category (Open/U-17/others) they select during registration and carry valid photo ID at the venue.</li>
+          <li>Players must match the category (Open/U-17) they select during registration and carry valid photo ID at the venue.</li>
           <li>Squads are locked once fixtures are released. No inter-team transfers or additions between matches.</li>
         </ul>
       </section>
@@ -96,7 +96,7 @@ permalink: /muqawamah/terms-and-conditions/
         <h2>Contact</h2>
         <p>For any queries regarding these terms, please contact us:</p>
         <ul>
-          <li><strong>Email:</strong> <a href="mailto:info@sio-abulfazal.org">info@sio-abulfazal.org</a></li>
+          <li><strong>Email:</strong> <a href="mailto:muqawamah@sio-abulfazal.org">muqawamah@sio-abulfazal.org</a></li>
           <li><strong>Instagram:</strong> <a href="https://www.instagram.com/muqawama2026/" target="_blank" rel="noopener">instagram.com/muqawama2026</a></li>
         </ul>
       </section>

@@ -141,8 +141,8 @@ export default function RegistrationComplete() {
         <div className="complete-contact">
           <p>Questions? Reach out to us:</p>
           <div className="contact-links">
-            <a href="mailto:info@sio-abulfazal.org">
-              <i className="fas fa-envelope"></i> info@sio-abulfazal.org
+            <a href="mailto:muqawamah@sio-abulfazal.org">
+              <i className="fas fa-envelope"></i> muqawamah@sio-abulfazal.org
             </a>
             <a href="https://instagram.com/muqawama2026" target="_blank" rel="noopener noreferrer">
               <i className="fab fa-instagram"></i> @muqawama2026

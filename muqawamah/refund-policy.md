@@ -39,7 +39,7 @@ permalink: /muqawamah/refund-policy/
         <ul>
           <li>Withdrawals after payment are not eligible for cash refunds.</li>
           <li>Teams may nominate a replacement squad before fixtures are published. The replacement must complete the waiver process and honor all rules.</li>
-          <li>No-shows or late arrivals (over 3 minutes after kick-off) count as forfeits. Fees will not be refunded or transferred.</li>
+          <li>No-shows or late arrivals (over 5 minutes after kick-off) count as forfeits. Fees will not be refunded or transferred.</li>
         </ul>
       </section>
 
@@ -53,7 +53,7 @@ permalink: /muqawamah/refund-policy/
 
       <section id="request-support" class="privacy-section">
         <h2>How to Request Support</h2>
-        <p>Send the following to <a href="mailto:info@sio-abulfazal.org">info@sio-abulfazal.org</a>:</p>
+        <p>Send the following to <a href="mailto:muqawamah@sio-abulfazal.org">muqawamah@sio-abulfazal.org</a>:</p>
         <ul>
           <li>Team name and captain contact</li>
           <li>Payment reference or UTR number</li>
@@ -66,7 +66,7 @@ permalink: /muqawamah/refund-policy/
         <h2>Need Assistance?</h2>
         <p>For any refund-related inquiries, please contact us:</p>
         <ul>
-          <li><strong>Email:</strong> <a href="mailto:info@sio-abulfazal.org">info@sio-abulfazal.org</a></li>
+          <li><strong>Email:</strong> <a href="mailto:muqawamah@sio-abulfazal.org">muqawamah@sio-abulfazal.org</a></li>
           <li><strong>Instagram:</strong> <a href="https://www.instagram.com/muqawama2026/" target="_blank" rel="noopener">instagram.com/muqawama2026</a></li>
         </ul>
       </section>

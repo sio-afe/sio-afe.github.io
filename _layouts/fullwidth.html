@@ -6,9 +6,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
     <!-- Content Security Policy - Allow scripts and styles -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https: wss: wss://*.supabase.co">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://static.cloudflareinsights.com https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https: wss: wss://*.supabase.co https://www.google-analytics.com">
     
     <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+    
+    <!-- Google Analytics -->
+    {% if jekyll.environment == 'production' and site.analytics.google.id %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.analytics.google.id }}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '{{ site.analytics.google.id }}');
+    </script>
+    {% endif %}
     
     <!-- Favicons -->
     {% include favicons.html %}
