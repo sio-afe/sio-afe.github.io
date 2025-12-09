@@ -193,7 +193,8 @@
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .table-stats {
@@ -440,13 +441,243 @@
 }
 
 /* Responsive */
+  @media (max-width: 1024px) {
+  .admin-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .page-header-left,
+  .page-header-right {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .search-box {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .filter-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-group {
+    min-width: auto;
+    width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
   .admin-table-container {
+    margin: 0 -16px;
+    border-radius: 0;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .admin-table {
-    min-width: 800px;
+    min-width: 700px;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 12px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  .filter-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+  }
+
+  .filter-tab {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+
+  .refresh-btn,
+  .create-btn {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+
+  .btn-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-table {
+    min-width: 600px;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 10px 8px;
+    font-size: 0.8rem;
+  }
+
+  .table-stats {
+    padding: 12px 16px;
+    font-size: 0.85rem;
+  }
+
+  .status-badge,
+  .category-badge,
+  .position-badge {
+    padding: 3px 8px;
+    font-size: 0.7rem;
+  }
+
+  .team-logo-small,
+  .player-image-small {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Statistics Page Styles */
+.stats-overview {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stats-overview h3 {
+  margin: 0 0 20px 0;
+  font-size: 1.2rem;
+  color: #1f2937;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.stat-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: #f9fafb;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.stat-box i {
+  font-size: 2rem;
+  color: #3b82f6;
+  flex-shrink: 0;
+}
+
+.stat-box .stat-label {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin: 0 0 4px 0;
+}
+
+.stat-box .stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.stats-tables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.stats-table-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.stats-table-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 1.1rem;
+  color: #1f2937;
+}
+
+/* Statistics mobile responsive */
+@media (max-width: 768px) {
+  .stats-overview {
+    padding: 16px;
+    margin: 0 -16px 16px -16px;
+    border-radius: 0;
+  }
+
+  .stats-grid {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 12px;
+    padding-bottom: 8px;
+  }
+
+  .stat-box {
+    flex: 0 0 auto;
+    min-width: 160px;
+    padding: 16px;
+  }
+
+  .stat-box i {
+    font-size: 1.5rem;
+  }
+
+  .stat-box .stat-value {
+    font-size: 1.25rem;
+  }
+
+  .stats-tables-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .stats-table-section {
+    padding: 16px;
+    margin: 0 -16px;
+    border-radius: 0;
+  }
+
+  .stats-table-section .admin-table {
+    min-width: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stat-box {
+    min-width: 140px;
+    padding: 12px;
+  }
+
+  .stat-box i {
+    font-size: 1.2rem;
+  }
+
+  .stat-box .stat-label {
+    font-size: 0.75rem;
+  }
+
+  .stat-box .stat-value {
+    font-size: 1.1rem;
   }
 }
 

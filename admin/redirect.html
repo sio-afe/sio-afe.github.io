@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=/muqawamah/admin/">
   <title>Redirecting...</title>
   <style>
     body {
@@ -19,6 +18,15 @@
       text-align: center;
     }
   </style>
+  <script>
+    // Redirect /admin/* to /muqawamah/admin/* preserving path and query params
+    (function() {
+      var path = window.location.pathname;
+      var search = window.location.search;
+      var newPath = path.replace(/^\/admin/, '/muqawamah/admin');
+      window.location.replace(newPath + search);
+    })();
+  </script>
 </head>
 <body>
   <div class="redirect-message">

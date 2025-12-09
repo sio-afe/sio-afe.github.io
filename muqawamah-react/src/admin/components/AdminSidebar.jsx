@@ -5,7 +5,7 @@
 import React, { useState } from 'react';
 import { ADMIN_ROUTES } from '../config/adminConfig';
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ isOpen = false, onClose }) {
   const [activePath, setActivePath] = useState(window.location.pathname);
 
   const navItems = [
@@ -63,11 +63,17 @@ export default function AdminSidebar() {
 
   const handleNavigation = (path) => {
     setActivePath(path);
+    if (onClose) onClose(); // Close sidebar on mobile after navigation
     window.location.href = path;
   };
 
   return (
-    <aside className="admin-sidebar">
+    <aside className={`admin-sidebar ${isOpen ? 'open' : ''}`}>
+      {/* Mobile close button */}
+      <button className="admin-sidebar-close" onClick={onClose}>
+        <i className="fas fa-times"></i>
+      </button>
+
       <div className="admin-sidebar-header">
         <img 
           src="/assets/img/MuqawamaLogo.png" 

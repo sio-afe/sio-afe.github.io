@@ -217,13 +217,6 @@ export default function FixturesManager() {
                     </td>
                     <td>
                       <div className="action-buttons">
-                        <a
-                          href={`/admin/matches?fixture=${fixture.id}`}
-                          className="btn-icon btn-edit"
-                          title="Record Result"
-                        >
-                          <i className="fas fa-edit"></i>
-                        </a>
                         <button 
                           className="btn-icon btn-delete"
                           onClick={() => deleteFixture(fixture.id)}

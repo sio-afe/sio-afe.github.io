@@ -5,7 +5,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabaseClient } from '../../lib/supabaseClient';
 
-export default function AdminHeader({ title }) {
+export default function AdminHeader({ title, onMenuToggle }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -24,6 +24,10 @@ export default function AdminHeader({ title }) {
   return (
     <header className="admin-header">
       <div className="admin-header-left">
+        {/* Mobile menu toggle */}
+        <button className="admin-mobile-toggle" onClick={onMenuToggle}>
+          <i className="fas fa-bars"></i>
+        </button>
         <h1 className="admin-page-title">{title}</h1>
       </div>
 

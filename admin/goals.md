@@ -2,6 +2,9 @@
 layout: fullwidth
 permalink: /muqawamah/admin/goals
 title: Admin - Goals & Stats
+redirect_from:
+  - /admin/goals
+  - /admin/goals/
 ---
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">

@@ -2,6 +2,9 @@
 layout: fullwidth
 permalink: /muqawamah/admin/registrations
 title: Admin - Registrations
+redirect_from:
+  - /admin/registrations
+  - /admin/registrations/
 ---
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
