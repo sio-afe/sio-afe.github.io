@@ -93,7 +93,9 @@ export default function RegistrationSummary({ readOnly = false }) {
       <section className="summary-section">
         <h4>Players</h4>
         <div className="player-card-grid">
-          {players.map((player, index) => (
+          {players
+            .filter((player) => player.name && player.name.trim() !== '')
+            .map((player, index) => (
             <div
               className={`player-card-badge simple ${player.isSubstitute ? 'substitute' : ''}`}
               key={player.id || index}
@@ -130,7 +132,7 @@ export default function RegistrationSummary({ readOnly = false }) {
                 )}
               </div>
               <div className="badge-player-info">
-                <span className="player-name">{player.name || 'Unnamed Player'}</span>
+                <span className="player-name">{player.name}</span>
               </div>
             </div>
           ))}

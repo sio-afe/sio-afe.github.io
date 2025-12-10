@@ -125,15 +125,16 @@ export const RegistrationProvider = ({ children }) => {
       }
 
       // Save players if we have any with data
-      const playersWithData = players.filter(p => p.name || p.image);
+      // Only save players that have at least a name (substitutes can be skipped)
+      const playersWithData = players.filter(p => p.name && p.name.trim() !== '');
       if (playersWithData.length > 0 && teamId) {
         // Delete existing players first
         await supabaseClient.from('team_players').delete().eq('team_id', teamId);
 
-        // Insert all players with validated positions
-        const payload = players.map((player) => ({
+        // Insert only players with names (empty substitute cards won't be saved)
+        const payload = playersWithData.map((player) => ({
           team_id: teamId,
-          player_name: player.name || '',
+          player_name: player.name,
           player_age: player.age ? parseInt(player.age) : null,
           aadhar_no: player.aadhar_no || null,
           position: player.position || 'SUB',

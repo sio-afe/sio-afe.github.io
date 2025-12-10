@@ -8,6 +8,8 @@ import { supabaseClient } from '../../../lib/supabaseClient';
 import AdminLayout from '../../components/AdminLayout';
 import { REGISTRATION_STATUSES } from '../../config/adminConfig';
 
+const positionOptions = ['GK', 'CB', 'LB', 'RB', 'CDM', 'CM', 'CAM', 'LM', 'RM', 'CF', 'ST', 'SUB'];
+
 export default function RegistrationsList() {
   const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,6 +18,13 @@ export default function RegistrationsList() {
   const [selectedReg, setSelectedReg] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [inTournament, setInTournament] = useState({});
+  
+  // Player editing state
+  const [editingPlayer, setEditingPlayer] = useState(null);
+  const [showPlayerModal, setShowPlayerModal] = useState(false);
+  const [playerSaving, setPlayerSaving] = useState(false);
+  const [showAddPlayerModal, setShowAddPlayerModal] = useState(false);
+  const [newPlayer, setNewPlayer] = useState({ player_name: '', player_age: '', aadhar_no: '', position: 'SUB', is_substitute: true, player_image: null });
 
   useEffect(() => {
     fetchRegistrations();
@@ -276,6 +285,139 @@ export default function RegistrationsList() {
     }
   };
 
+  // Edit player functions
+  const openEditPlayer = (player) => {
+    setEditingPlayer({ ...player });
+    setShowPlayerModal(true);
+  };
+
+  const handlePlayerEdit = (field, value) => {
+    setEditingPlayer(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handlePlayerImage = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Image must be under 2MB');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setEditingPlayer(prev => ({ ...prev, player_image: reader.result }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const savePlayerEdit = async () => {
+    if (!editingPlayer) return;
+
+    setPlayerSaving(true);
+    try {
+      const { error } = await supabaseClient
+        .from('team_players')
+        .update({
+          player_name: editingPlayer.player_name,
+          player_age: editingPlayer.player_age ? parseInt(editingPlayer.player_age) : null,
+          aadhar_no: editingPlayer.aadhar_no || null,
+          position: editingPlayer.position,
+          is_substitute: editingPlayer.is_substitute,
+          player_image: editingPlayer.player_image
+        })
+        .eq('id', editingPlayer.id);
+
+      if (error) throw error;
+
+      alert('Player updated successfully!');
+      setShowPlayerModal(false);
+      setEditingPlayer(null);
+      
+      // Refresh the registration details
+      viewDetails(selectedReg.id);
+    } catch (error) {
+      console.error('Error updating player:', error);
+      alert('Failed to update player: ' + error.message);
+    } finally {
+      setPlayerSaving(false);
+    }
+  };
+
+  const deletePlayer = async (playerId, playerName) => {
+    if (!confirm(`Delete player "${playerName}" from this team?\n\nThis action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      const { error } = await supabaseClient
+        .from('team_players')
+        .delete()
+        .eq('id', playerId);
+
+      if (error) throw error;
+
+      alert('Player deleted successfully!');
+      viewDetails(selectedReg.id);
+    } catch (error) {
+      console.error('Error deleting player:', error);
+      alert('Failed to delete player: ' + error.message);
+    }
+  };
+
+  // Add new player
+  const handleNewPlayerImage = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Image must be under 2MB');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setNewPlayer(prev => ({ ...prev, player_image: reader.result }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const addNewPlayer = async () => {
+    if (!newPlayer.player_name) {
+      alert('Please enter player name');
+      return;
+    }
+
+    setPlayerSaving(true);
+    try {
+      const { error } = await supabaseClient
+        .from('team_players')
+        .insert({
+          team_id: selectedReg.id,
+          player_name: newPlayer.player_name,
+          player_age: newPlayer.player_age ? parseInt(newPlayer.player_age) : null,
+          aadhar_no: newPlayer.aadhar_no || null,
+          position: newPlayer.position,
+          is_substitute: newPlayer.is_substitute,
+          player_image: newPlayer.player_image
+        });
+
+      if (error) throw error;
+
+      alert('Player added successfully!');
+      setShowAddPlayerModal(false);
+      setNewPlayer({ player_name: '', player_age: '', aadhar_no: '', position: 'SUB', is_substitute: true, player_image: null });
+      
+      // Refresh the registration details
+      viewDetails(selectedReg.id);
+    } catch (error) {
+      console.error('Error adding player:', error);
+      alert('Failed to add player: ' + error.message);
+    } finally {
+      setPlayerSaving(false);
+    }
+  };
+
   const filteredRegistrations = registrations.filter(reg =>
     reg.team_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     reg.captain_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -481,16 +623,44 @@ export default function RegistrationsList() {
               </div>
 
               <div className="detail-section">
-                <h3>Players ({selectedReg.team_players?.length || 0})</h3>
+                <h3>
+                  Players ({selectedReg.team_players?.length || 0})
+                  <button 
+                    className="btn-add-player"
+                    onClick={() => setShowAddPlayerModal(true)}
+                  >
+                    <i className="fas fa-plus"></i> Add Player
+                  </button>
+                </h3>
                 <div className="players-list">
                   {selectedReg.team_players?.map((player, idx) => (
-                    <div key={idx} className="player-item">
+                    <div key={idx} className="player-item player-item-editable">
                       {player.player_image && (
                         <img src={player.player_image} alt="" className="player-image-small" />
                       )}
-                      <div>
+                      <div className="player-info-section">
                         <strong>{player.player_name}</strong>
-                        <small>{player.position} {player.is_substitute && '(SUB)'}</small>
+                        <small>
+                          {player.position} {player.is_substitute && '(SUB)'}
+                          {player.player_age && ` • Age: ${player.player_age}`}
+                          {player.aadhar_no && ` • Aadhar: ${player.aadhar_no.slice(-4)}`}
+                        </small>
+                      </div>
+                      <div className="player-actions">
+                        <button 
+                          className="btn-icon btn-edit-small"
+                          onClick={() => openEditPlayer(player)}
+                          title="Edit Player"
+                        >
+                          <i className="fas fa-edit"></i>
+                        </button>
+                        <button 
+                          className="btn-icon btn-delete-small"
+                          onClick={() => deletePlayer(player.id, player.player_name)}
+                          title="Delete Player"
+                        >
+                          <i className="fas fa-trash"></i>
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -572,6 +742,225 @@ export default function RegistrationsList() {
                   </p>
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Player Modal */}
+      {showPlayerModal && editingPlayer && (
+        <div className="modal-overlay" onClick={() => setShowPlayerModal(false)}>
+          <div className="modal-content modal-small" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Edit Player</h2>
+              <button className="modal-close" onClick={() => setShowPlayerModal(false)}>
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            
+            <div className="modal-body">
+              <div className="form-group">
+                <label>Player Name</label>
+                <input
+                  type="text"
+                  value={editingPlayer.player_name || ''}
+                  onChange={(e) => handlePlayerEdit('player_name', e.target.value)}
+                  placeholder="Player Name"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Age</label>
+                <input
+                  type="number"
+                  value={editingPlayer.player_age || ''}
+                  onChange={(e) => handlePlayerEdit('player_age', e.target.value)}
+                  placeholder="Age"
+                  min="10"
+                  max="60"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Aadhar Number</label>
+                <input
+                  type="text"
+                  value={editingPlayer.aadhar_no || ''}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '');
+                    if (value.length <= 12) {
+                      handlePlayerEdit('aadhar_no', value);
+                    }
+                  }}
+                  placeholder="12-digit Aadhar number"
+                  maxLength="12"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Position</label>
+                <select
+                  value={editingPlayer.position || 'SUB'}
+                  onChange={(e) => handlePlayerEdit('position', e.target.value)}
+                >
+                  {positionOptions.map(pos => (
+                    <option key={pos} value={pos}>{pos}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={editingPlayer.is_substitute || false}
+                    onChange={(e) => handlePlayerEdit('is_substitute', e.target.checked)}
+                  />
+                  Is Substitute
+                </label>
+              </div>
+
+              <div className="form-group">
+                <label>Player Photo</label>
+                {editingPlayer.player_image && (
+                  <div className="current-image-preview">
+                    <img src={editingPlayer.player_image} alt="Current photo" />
+                  </div>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePlayerImage}
+                />
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button 
+                className="btn-secondary" 
+                onClick={() => setShowPlayerModal(false)}
+                disabled={playerSaving}
+              >
+                Cancel
+              </button>
+              <button 
+                className="btn-primary" 
+                onClick={savePlayerEdit}
+                disabled={playerSaving}
+              >
+                {playerSaving ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Player Modal */}
+      {showAddPlayerModal && (
+        <div className="modal-overlay" onClick={() => setShowAddPlayerModal(false)}>
+          <div className="modal-content modal-small" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Add New Player</h2>
+              <button className="modal-close" onClick={() => setShowAddPlayerModal(false)}>
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            
+            <div className="modal-body">
+              <div className="form-group">
+                <label>Player Name *</label>
+                <input
+                  type="text"
+                  value={newPlayer.player_name}
+                  onChange={(e) => setNewPlayer(prev => ({ ...prev, player_name: e.target.value }))}
+                  placeholder="Player Name"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Age</label>
+                <input
+                  type="number"
+                  value={newPlayer.player_age}
+                  onChange={(e) => setNewPlayer(prev => ({ ...prev, player_age: e.target.value }))}
+                  placeholder="Age"
+                  min="10"
+                  max="60"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Aadhar Number</label>
+                <input
+                  type="text"
+                  value={newPlayer.aadhar_no}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '');
+                    if (value.length <= 12) {
+                      setNewPlayer(prev => ({ ...prev, aadhar_no: value }));
+                    }
+                  }}
+                  placeholder="12-digit Aadhar number"
+                  maxLength="12"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Position</label>
+                <select
+                  value={newPlayer.position}
+                  onChange={(e) => setNewPlayer(prev => ({ ...prev, position: e.target.value }))}
+                >
+                  {positionOptions.map(pos => (
+                    <option key={pos} value={pos}>{pos}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={newPlayer.is_substitute}
+                    onChange={(e) => setNewPlayer(prev => ({ ...prev, is_substitute: e.target.checked }))}
+                  />
+                  Is Substitute
+                </label>
+              </div>
+
+              <div className="form-group">
+                <label>Player Photo</label>
+                {newPlayer.player_image && (
+                  <div className="current-image-preview">
+                    <img src={newPlayer.player_image} alt="Player photo" />
+                  </div>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleNewPlayerImage}
+                />
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button 
+                className="btn-secondary" 
+                onClick={() => {
+                  setShowAddPlayerModal(false);
+                  setNewPlayer({ player_name: '', player_age: '', aadhar_no: '', position: 'SUB', is_substitute: true, player_image: null });
+                }}
+                disabled={playerSaving}
+              >
+                Cancel
+              </button>
+              <button 
+                className="btn-primary" 
+                onClick={addNewPlayer}
+                disabled={playerSaving || !newPlayer.player_name}
+              >
+                {playerSaving ? 'Adding...' : 'Add Player'}
+              </button>
             </div>
           </div>
         </div>

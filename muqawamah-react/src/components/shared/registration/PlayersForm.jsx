@@ -8,6 +8,9 @@ export default function PlayersForm() {
   const { players, setPlayers, setStep, saveProgress, saving, error, teamData } = useRegistration();
   const [compressingIndex, setCompressingIndex] = useState(null);
 
+  // Check if category is Open Age (no Aadhar required)
+  const isOpenAge = teamData.category === 'open-age';
+
   // Prefill captain's name from teamData when component mounts
   useEffect(() => {
     if (teamData.captainName && players[0] && !players[0].name) {
@@ -66,17 +69,34 @@ export default function PlayersForm() {
   };
 
   const validatePlayers = () => {
-    const filledMain = mainPlayers.every(
-      (player) => player.name && player.age && player.aadhar_no && player.aadhar_no.length === 12 && player.position && player.image
-    );
-    const filledSubs = subs.every((player) => player.name && player.age && player.aadhar_no && player.aadhar_no.length === 12 && player.image);
+    // Main players are always required
+    const filledMain = mainPlayers.every((player) => {
+      const baseValid = player.name && player.age && player.position && player.image;
+      // Aadhar only required for U17
+      if (!isOpenAge) {
+        return baseValid && player.aadhar_no && player.aadhar_no.length === 12;
+      }
+      return baseValid;
+    });
+    
+    // Substitutes are optional - only validate those that have been started (have a name)
+    const filledSubs = subs.filter(player => player.name).every((player) => {
+      const baseValid = player.name && player.age && player.image;
+      // Aadhar only required for U17
+      if (!isOpenAge) {
+        return baseValid && player.aadhar_no && player.aadhar_no.length === 12;
+      }
+      return baseValid;
+    });
+    
     return filledMain && filledSubs;
   };
 
   const handleNext = async (e) => {
     e.preventDefault();
     if (!validatePlayers()) {
-      alert('Please fill out all required fields including name, age, Aadhar number, and photo for all players.');
+      const aadharMsg = isOpenAge ? '' : ', Aadhar number,';
+      alert(`Please fill out all required fields including name, age${aadharMsg} and photo for all main players. Substitutes are optional.`);
       return;
     }
     
@@ -87,11 +107,22 @@ export default function PlayersForm() {
     }
   };
 
-  const renderPlayerCard = (player, index, isCaptain = false) => (
-    <div className={`player-card ${isCaptain ? 'captain-card' : ''}`} key={player.id}>
+  const renderPlayerCard = (player, index, isCaptain = false) => {
+    // Substitutes are optional - only require fields if they've started filling it
+    const isSubstitute = player.isSubstitute;
+    const isSubStarted = isSubstitute && player.name; // Started if they entered a name
+    const isRequired = !isSubstitute || isSubStarted;
+
+    return (
+    <div className={`player-card ${isCaptain ? 'captain-card' : ''} ${isSubstitute ? 'substitute-card' : ''}`} key={player.id}>
       {isCaptain && (
         <div className="captain-badge">
           <i className="fas fa-star"></i> Team Captain
+        </div>
+      )}
+      {isSubstitute && !isSubStarted && (
+        <div className="optional-badge">
+          <i className="fas fa-plus-circle"></i> Optional
         </div>
       )}
       <label>
@@ -100,8 +131,8 @@ export default function PlayersForm() {
           type="text"
           value={player.name}
           onChange={(e) => handlePlayerChange(index, 'name', e.target.value)}
-          placeholder={isCaptain ? teamData.captainName || 'Captain Name' : (player.isSubstitute ? 'Substitute Name' : `${player.position} Player`)}
-          required
+          placeholder={isCaptain ? teamData.captainName || 'Captain Name' : (isSubstitute ? 'Substitute Name (optional)' : `${player.position} Player`)}
+          required={!isSubstitute}
         />
       </label>
 
@@ -114,28 +145,31 @@ export default function PlayersForm() {
           placeholder="e.g., 22"
           min="10"
           max="60"
-          required
+          required={isRequired}
         />
       </label>
 
-      <label>
-        Aadhar Number
-        <input
-          type="text"
-          value={player.aadhar_no || ''}
-          onChange={(e) => {
-            const value = e.target.value.replace(/\D/g, ''); // Only allow digits
-            if (value.length <= 12) {
-              handlePlayerChange(index, 'aadhar_no', value);
-            }
-          }}
-          placeholder="12-digit Aadhar number"
-          maxLength="12"
-          pattern="[0-9]{12}"
-          required
-        />
-        <span className="input-hint">Enter 12-digit Aadhar number</span>
-      </label>
+      {/* Aadhar Number - Only for U17 category */}
+      {!isOpenAge && (
+        <label>
+          Aadhar Number
+          <input
+            type="text"
+            value={player.aadhar_no || ''}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, ''); // Only allow digits
+              if (value.length <= 12) {
+                handlePlayerChange(index, 'aadhar_no', value);
+              }
+            }}
+            placeholder="12-digit Aadhar number"
+            maxLength="12"
+            pattern="[0-9]{12}"
+            required={isRequired}
+          />
+          <span className="input-hint">Enter 12-digit Aadhar number (required for U17)</span>
+        </label>
+      )}
 
       {!player.isSubstitute && (
         <label>
@@ -185,11 +219,12 @@ export default function PlayersForm() {
           disabled={compressingIndex === index}
         />
         {!player.image && compressingIndex !== index && (
-          <span className="input-hint">JPG/PNG up to 2MB. Required.</span>
+          <span className="input-hint">{isSubstitute ? 'JPG/PNG up to 2MB. Optional.' : 'JPG/PNG up to 2MB. Required.'}</span>
         )}
       </label>
     </div>
   );
+  };
 
   return (
     <form className="registration-form" onSubmit={handleNext}>
@@ -206,7 +241,10 @@ export default function PlayersForm() {
         {otherMainPlayers.map((player) => renderPlayerCard(player, players.indexOf(player)))}
       </div>
 
-      <h4>Substitutes</h4>
+      <h4>Substitutes <span className="optional-label">(Optional)</span></h4>
+      <p className="step-description" style={{ marginTop: '-10px', marginBottom: '15px' }}>
+        Add 1-4 substitutes as needed. You can leave any substitute cards empty if you don't have players.
+      </p>
       <div className="players-grid">
         {subs.map((player) => renderPlayerCard(player, players.indexOf(player)))}
       </div>

@@ -400,6 +400,40 @@ body.registration-body h4 {
   font-size: 0.85rem;
 }
 
+.optional-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-bottom: 12px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+.optional-badge i {
+  font-size: 0.7rem;
+}
+
+.optional-label {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.5);
+  margin-left: 8px;
+}
+
+.substitute-card {
+  border-style: dashed !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.substitute-card:not(:has(input:valid)) {
+  opacity: 0.7;
+}
+
 .player-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
