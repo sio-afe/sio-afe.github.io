@@ -892,3 +892,107 @@
   cursor: not-allowed;
 }
 
+/* Team Editing Styles */
+.btn-edit-team {
+  float: right;
+  background: linear-gradient(135deg, #4f8cff, #6ecdee);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.btn-edit-team:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 140, 255, 0.3);
+}
+
+.team-edit-form {
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.team-edit-form .form-group {
+  margin-bottom: 16px;
+}
+
+.team-edit-form .form-group label {
+  display: block;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.team-edit-form .current-image-preview {
+  margin-bottom: 10px;
+}
+
+.team-edit-form .current-image-preview img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 2px solid #e5e7eb;
+  background: white;
+  padding: 8px;
+}
+
+.team-edit-form input[type="file"] {
+  padding: 8px;
+  border: 2px dashed #e5e7eb;
+  border-radius: 8px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.team-edit-form input[type="file"]:hover {
+  border-color: #4f8cff;
+}
+
+.edit-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: #4f8cff;
+  box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.1);
+}
+
+.team-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.team-logo-preview {
+  display: inline-block;
+}
+
+.team-logo-preview img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 2px solid #e5e7eb;
+  background: white;
+  padding: 8px;
+}
+

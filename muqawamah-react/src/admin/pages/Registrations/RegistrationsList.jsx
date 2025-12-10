@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { supabaseClient } from '../../../lib/supabaseClient';
 import AdminLayout from '../../components/AdminLayout';
 import { REGISTRATION_STATUSES } from '../../config/adminConfig';
+import { compressImage, getBase64SizeKB } from '../../../components/shared/registration/utils/imageCompression';
 
 const positionOptions = ['GK', 'CB', 'LB', 'RB', 'CDM', 'CM', 'CAM', 'LM', 'RM', 'CF', 'ST', 'SUB'];
 
@@ -25,6 +26,11 @@ export default function RegistrationsList() {
   const [playerSaving, setPlayerSaving] = useState(false);
   const [showAddPlayerModal, setShowAddPlayerModal] = useState(false);
   const [newPlayer, setNewPlayer] = useState({ player_name: '', player_age: '', aadhar_no: '', position: 'SUB', is_substitute: true, player_image: null });
+  
+  // Team editing state
+  const [editingTeam, setEditingTeam] = useState(false);
+  const [teamSaving, setTeamSaving] = useState(false);
+  const [teamEditData, setTeamEditData] = useState({});
 
   useEffect(() => {
     fetchRegistrations();
@@ -278,6 +284,8 @@ export default function RegistrationsList() {
       if (error) throw error;
 
       setSelectedReg(data);
+      setEditingTeam(false);
+      setTeamEditData({});
       setShowModal(true);
     } catch (error) {
       console.error('Error fetching details:', error);
@@ -304,11 +312,24 @@ export default function RegistrationsList() {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setEditingPlayer(prev => ({ ...prev, player_image: reader.result }));
-    };
-    reader.readAsDataURL(file);
+    try {
+      // Compress and convert the image to WebP format
+      const compressedBase64 = await compressImage(file, {
+        maxWidth: 600,
+        maxHeight: 600,
+        quality: 0.85,
+        outputFormat: 'image/webp'
+      });
+
+      const compressedSizeKB = getBase64SizeKB(compressedBase64);
+      const originalSizeKB = Math.round(file.size / 1024);
+      console.log(`Player image compressed to WebP: ${originalSizeKB}KB → ${compressedSizeKB}KB`);
+
+      setEditingPlayer(prev => ({ ...prev, player_image: compressedBase64 }));
+    } catch (error) {
+      console.error('Error compressing player image:', error);
+      alert('Failed to process image. Please try another file.');
+    }
   };
 
   const savePlayerEdit = async () => {
@@ -375,11 +396,24 @@ export default function RegistrationsList() {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setNewPlayer(prev => ({ ...prev, player_image: reader.result }));
-    };
-    reader.readAsDataURL(file);
+    try {
+      // Compress and convert the image to WebP format
+      const compressedBase64 = await compressImage(file, {
+        maxWidth: 600,
+        maxHeight: 600,
+        quality: 0.85,
+        outputFormat: 'image/webp'
+      });
+
+      const compressedSizeKB = getBase64SizeKB(compressedBase64);
+      const originalSizeKB = Math.round(file.size / 1024);
+      console.log(`Player image compressed to WebP: ${originalSizeKB}KB → ${compressedSizeKB}KB`);
+
+      setNewPlayer(prev => ({ ...prev, player_image: compressedBase64 }));
+    } catch (error) {
+      console.error('Error compressing player image:', error);
+      alert('Failed to process image. Please try another file.');
+    }
   };
 
   const addNewPlayer = async () => {
@@ -416,6 +450,88 @@ export default function RegistrationsList() {
     } finally {
       setPlayerSaving(false);
     }
+  };
+
+  // Team editing functions
+  const startEditTeam = () => {
+    setTeamEditData({
+      team_name: selectedReg.team_name,
+      category: selectedReg.category,
+      formation: selectedReg.formation,
+      team_logo: selectedReg.team_logo
+    });
+    setEditingTeam(true);
+  };
+
+  const handleTeamEdit = (field, value) => {
+    setTeamEditData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleTeamLogoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Image must be under 2MB');
+      return;
+    }
+
+    try {
+      // Compress and convert the image to WebP format
+      const compressedBase64 = await compressImage(file, {
+        maxWidth: 800,
+        maxHeight: 800,
+        quality: 0.85,
+        outputFormat: 'image/webp'
+      });
+
+      const compressedSizeKB = getBase64SizeKB(compressedBase64);
+      const originalSizeKB = Math.round(file.size / 1024);
+      console.log(`Team logo compressed to WebP: ${originalSizeKB}KB → ${compressedSizeKB}KB`);
+
+      setTeamEditData(prev => ({ ...prev, team_logo: compressedBase64 }));
+    } catch (error) {
+      console.error('Error compressing team logo:', error);
+      alert('Failed to process image. Please try another file.');
+    }
+  };
+
+  const saveTeamEdit = async () => {
+    if (!teamEditData.team_name || !teamEditData.team_name.trim()) {
+      alert('Team name is required');
+      return;
+    }
+
+    setTeamSaving(true);
+    try {
+      const { error } = await supabaseClient
+        .from('team_registrations')
+        .update({
+          team_name: teamEditData.team_name,
+          category: teamEditData.category,
+          formation: teamEditData.formation,
+          team_logo: teamEditData.team_logo
+        })
+        .eq('id', selectedReg.id);
+
+      if (error) throw error;
+
+      alert('Team details updated successfully!');
+      setEditingTeam(false);
+      
+      // Refresh the registration details
+      viewDetails(selectedReg.id);
+    } catch (error) {
+      console.error('Error updating team:', error);
+      alert('Failed to update team: ' + error.message);
+    } finally {
+      setTeamSaving(false);
+    }
+  };
+
+  const cancelTeamEdit = () => {
+    setEditingTeam(false);
+    setTeamEditData({});
   };
 
   const filteredRegistrations = registrations.filter(reg =>
@@ -583,25 +699,120 @@ export default function RegistrationsList() {
             
             <div className="modal-body">
               <div className="detail-section">
-                <h3>Team Information</h3>
-                <div className="detail-grid">
-                  <div className="detail-item">
-                    <label>Team Name:</label>
-                    <span>{selectedReg.team_name}</span>
+                <h3>
+                  Team Information
+                  {!editingTeam && (
+                    <button 
+                      className="btn-edit-team"
+                      onClick={startEditTeam}
+                      title="Edit Team Details"
+                    >
+                      <i className="fas fa-edit"></i> Edit
+                    </button>
+                  )}
+                </h3>
+                {editingTeam ? (
+                  <div className="team-edit-form">
+                    <div className="form-group">
+                      <label>Team Logo</label>
+                      {teamEditData.team_logo && (
+                        <div className="current-image-preview">
+                          <img src={teamEditData.team_logo} alt="Team logo" />
+                        </div>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleTeamLogoUpload}
+                      />
+                    </div>
+                    <div className="detail-grid">
+                      <div className="detail-item">
+                        <label>Team Name:</label>
+                        <input
+                          type="text"
+                          value={teamEditData.team_name || ''}
+                          onChange={(e) => handleTeamEdit('team_name', e.target.value)}
+                          className="edit-input"
+                        />
+                      </div>
+                      <div className="detail-item">
+                        <label>Category:</label>
+                        <select
+                          value={teamEditData.category || 'open-age'}
+                          onChange={(e) => handleTeamEdit('category', e.target.value)}
+                          className="edit-input"
+                        >
+                          <option value="open-age">Open Age</option>
+                          <option value="u17">U17</option>
+                        </select>
+                      </div>
+                      <div className="detail-item">
+                        <label>Formation:</label>
+                        <select
+                          value={teamEditData.formation || '1-3-2-1'}
+                          onChange={(e) => handleTeamEdit('formation', e.target.value)}
+                          className="edit-input"
+                        >
+                          <option value="1-3-2-1">1-3-2-1</option>
+                          <option value="1-2-3-1">1-2-3-1</option>
+                          <option value="1-4-1-1">1-4-1-1</option>
+                          <option value="1-3-1-2">1-3-1-2</option>
+                          <option value="1-2-2-2">1-2-2-2</option>
+                        </select>
+                      </div>
+                      <div className="detail-item">
+                        <label>Status:</label>
+                        {getStatusBadge(selectedReg.status)}
+                      </div>
+                    </div>
+                    <div className="team-edit-actions">
+                      <button 
+                        className="btn-secondary" 
+                        onClick={cancelTeamEdit}
+                        disabled={teamSaving}
+                      >
+                        Cancel
+                      </button>
+                      <button 
+                        className="btn-primary" 
+                        onClick={saveTeamEdit}
+                        disabled={teamSaving}
+                      >
+                        {teamSaving ? 'Saving...' : 'Save Changes'}
+                      </button>
+                    </div>
                   </div>
-                  <div className="detail-item">
-                    <label>Category:</label>
-                    <span>{selectedReg.category}</span>
+                ) : (
+                  <div className="detail-grid">
+                    <div className="detail-item">
+                      <label>Team Logo:</label>
+                      {selectedReg.team_logo ? (
+                        <div className="team-logo-preview">
+                          <img src={selectedReg.team_logo} alt="Team logo" />
+                        </div>
+                      ) : (
+                        <span style={{ color: '#9ca3af' }}>No logo</span>
+                      )}
+                    </div>
+                    <div className="detail-item">
+                      <label>Team Name:</label>
+                      <span>{selectedReg.team_name}</span>
+                    </div>
+                    <div className="detail-item">
+                      <label>Category:</label>
+                      <span>{selectedReg.category}</span>
+                    </div>
+                    <div className="detail-item">
+                      <label>Formation:</label>
+                      <span>{selectedReg.formation}</span>
+                    </div>
+                    <div className="detail-item">
+                      <label>Status:</label>
+                      {getStatusBadge(selectedReg.status)}
+                    </div>
                   </div>
-                  <div className="detail-item">
-                    <label>Formation:</label>
-                    <span>{selectedReg.formation}</span>
-                  </div>
-                  <div className="detail-item">
-                    <label>Status:</label>
-                    {getStatusBadge(selectedReg.status)}
-                  </div>
-                </div>
+                )}
               </div>
 
               <div className="detail-section">
