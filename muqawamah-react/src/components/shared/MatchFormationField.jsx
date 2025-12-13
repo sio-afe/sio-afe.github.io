@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabaseClient } from '../../lib/supabaseClient';
 
 /**
@@ -17,6 +17,8 @@ export default function MatchFormationField({
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [isHome, setIsHome] = useState(true);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [overallPlayerStats, setOverallPlayerStats] = useState(null);
+  const [loadingStats, setLoadingStats] = useState(false);
 
   // Filter starters only (exclude substitutes)
   const homeStarters = homePlayers.filter(p => !p.is_substitute && p.position !== 'SUB').slice(0, 7);
@@ -113,7 +115,141 @@ export default function MatchFormationField({
   const handlePlayerClick = (player, isHomeTeam) => {
     setSelectedPlayer(player);
     setIsHome(isHomeTeam);
+    setOverallPlayerStats(null); // Reset stats when selecting new player
   };
+
+  // Fetch overall player statistics when a player is selected
+  useEffect(() => {
+    const fetchOverallStats = async () => {
+      if (!selectedPlayer) {
+        setOverallPlayerStats(null);
+        return;
+      }
+
+      setLoadingStats(true);
+      try {
+        const playerName = selectedPlayer.name || selectedPlayer.player_name || '';
+        const registrationPlayerId = selectedPlayer.registration_player_id;
+
+        // Fetch all goals for this player across all matches
+        let allGoals = [];
+        if (registrationPlayerId) {
+          // Fetch goals where this player is scorer or assister
+          const { data: goalsAsScorer } = await supabaseClient
+            .from('goals')
+            .select('id, scorer_id, assister_id')
+            .eq('scorer_id', registrationPlayerId);
+
+          const { data: goalsAsAssister } = await supabaseClient
+            .from('goals')
+            .select('id, scorer_id, assister_id')
+            .eq('assister_id', registrationPlayerId);
+
+          // Combine and deduplicate by goal id
+          const goalsMap = new Map();
+          (goalsAsScorer || []).forEach(goal => goalsMap.set(goal.id, goal));
+          (goalsAsAssister || []).forEach(goal => goalsMap.set(goal.id, goal));
+          allGoals = Array.from(goalsMap.values());
+        }
+
+        // Also try to fetch by name if we have player name and no goals found by ID
+        if (playerName && allGoals.length === 0) {
+          // Get all goals and filter by name matching
+          const { data: allGoalsData } = await supabaseClient
+            .from('goals')
+            .select(`
+              id,
+              scorer_id,
+              assister_id,
+              scorer:team_players!goals_scorer_id_fkey(player_name),
+              assister:team_players!goals_assister_id_fkey(player_name)
+            `);
+
+          if (allGoalsData) {
+            allGoals = allGoalsData.filter(goal => {
+              const scorerName = goal.scorer?.player_name || '';
+              const assisterName = goal.assister?.player_name || '';
+              return (
+                (scorerName && scorerName.toLowerCase().trim() === playerName.toLowerCase().trim()) ||
+                (assisterName && assisterName.toLowerCase().trim() === playerName.toLowerCase().trim())
+              );
+            });
+          }
+        }
+
+        // Fetch all cards for this player across all matches
+        let allCards = [];
+        if (registrationPlayerId) {
+          const { data: cardsData } = await supabaseClient
+            .from('cards')
+            .select('id, player_id, card_type')
+            .eq('player_id', registrationPlayerId);
+
+          allCards = cardsData || [];
+        }
+
+        // Also try to fetch by name if we have player name and no cards found by ID
+        if (playerName && allCards.length === 0) {
+          const { data: allCardsData } = await supabaseClient
+            .from('cards')
+            .select(`
+              id,
+              player_id,
+              card_type,
+              player:team_players!cards_player_id_fkey(player_name)
+            `);
+
+          if (allCardsData) {
+            allCards = allCardsData.filter(card => {
+              const cardPlayerName = card.player?.player_name || '';
+              return cardPlayerName && cardPlayerName.toLowerCase().trim() === playerName.toLowerCase().trim();
+            });
+          }
+        }
+
+        // Calculate overall stats
+        let goalsScored = 0;
+        let assists = 0;
+        let yellowCards = 0;
+        let redCards = 0;
+
+        allGoals.forEach(goal => {
+          if (registrationPlayerId) {
+            if (goal.scorer_id === registrationPlayerId) goalsScored++;
+            if (goal.assister_id === registrationPlayerId) assists++;
+          } else {
+            const scorerName = goal.scorer?.player_name || '';
+            const assisterName = goal.assister?.player_name || '';
+            if (scorerName && scorerName.toLowerCase().trim() === playerName.toLowerCase().trim()) {
+              goalsScored++;
+            }
+            if (assisterName && assisterName.toLowerCase().trim() === playerName.toLowerCase().trim()) {
+              assists++;
+            }
+          }
+        });
+
+        allCards.forEach(card => {
+          if (card.card_type === 'yellow') yellowCards++;
+          if (card.card_type === 'red') redCards++;
+        });
+
+        setOverallPlayerStats({
+          goalsScored,
+          assists,
+          yellowCards,
+          redCards
+        });
+      } catch (error) {
+        console.error('Error fetching overall player stats:', error);
+        setOverallPlayerStats({ goalsScored: 0, assists: 0, yellowCards: 0, redCards: 0 });
+      } finally {
+        setLoadingStats(false);
+      }
+    };
+
+    fetchOverallStats();
+  }, [selectedPlayer]);
 
   const closeModal = () => {
     setSelectedPlayer(null);
@@ -147,8 +283,11 @@ export default function MatchFormationField({
     );
   }
 
-  const playerStats = selectedPlayer ? getPlayerStats(selectedPlayer) : null;
+  // Use overall stats for modal, match-specific stats for field icons
+  const matchPlayerStats = selectedPlayer ? getPlayerStats(selectedPlayer) : null;
   const playerAge = selectedPlayer ? calculateAge(selectedPlayer.date_of_birth) : null;
+  // Use overall stats in modal, fallback to match stats if overall not loaded yet
+  const displayStats = overallPlayerStats !== null ? overallPlayerStats : matchPlayerStats;
 
   return (
     <div className="match-formation-field">
@@ -430,24 +569,16 @@ export default function MatchFormationField({
                   )}
                   <tr>
                     <td className="stat-label">Goals</td>
-                    <td className="stat-value stat-highlight goals">{playerStats?.goalsScored || 0}</td>
+                    <td className="stat-value stat-highlight goals">
+                      {loadingStats ? '...' : (displayStats?.goalsScored || 0)}
+                    </td>
                   </tr>
                   <tr>
                     <td className="stat-label">Assists</td>
-                    <td className="stat-value stat-highlight assists">{playerStats?.assists || 0}</td>
+                    <td className="stat-value stat-highlight assists">
+                      {loadingStats ? '...' : (displayStats?.assists || 0)}
+                    </td>
                   </tr>
-                  {playerStats?.yellowCards > 0 && (
-                    <tr>
-                      <td className="stat-label">Yellow Cards</td>
-                      <td className="stat-value stat-highlight yellow-card">{playerStats.yellowCards}</td>
-                    </tr>
-                  )}
-                  {playerStats?.redCards > 0 && (
-                    <tr>
-                      <td className="stat-label">Red Cards</td>
-                      <td className="stat-value stat-highlight red-card">{playerStats.redCards}</td>
-                    </tr>
-                  )}
                 </tbody>
               </table>
             </div>
