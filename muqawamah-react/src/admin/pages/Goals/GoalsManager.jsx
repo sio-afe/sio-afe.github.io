@@ -9,10 +9,12 @@ import AdminLayout from '../../components/AdminLayout';
 
 export default function GoalsManager() {
   const [goals, setGoals] = useState([]);
+  const [cards, setCards] = useState([]);
   const [matches, setMatches] = useState([]);
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showCardModal, setShowCardModal] = useState(false);
   const [matchFilter, setMatchFilter] = useState('');
   const [newGoal, setNewGoal] = useState({
     match_id: '',
@@ -20,6 +22,12 @@ export default function GoalsManager() {
     assister_id: '',
     minute: '',
     goal_type: 'open_play'
+  });
+  const [newCard, setNewCard] = useState({
+    match_id: '',
+    player_id: '',
+    card_type: 'yellow',
+    minute: ''
   });
 
   useEffect(() => {
@@ -48,7 +56,24 @@ export default function GoalsManager() {
         `)
         .order('created_at', { ascending: false });
 
+      // Fetch cards
+      const { data: cardsData, error: cardsError } = await supabaseClient
+        .from('cards')
+        .select(`
+          id,
+          match_id,
+          team_id,
+          player_id,
+          card_type,
+          minute,
+          created_at,
+          match:matches(id, home_team:teams!matches_home_team_id_fkey(name), away_team:teams!matches_away_team_id_fkey(name)),
+          player:team_players!cards_player_id_fkey(player_name, team_id)
+        `)
+        .order('created_at', { ascending: false });
+
       if (goalsError) throw goalsError;
+      if (cardsError) throw cardsError;
 
       // Fetch recent matches for dropdown
       const { data: matchesData, error: matchesError } = await supabaseClient
@@ -72,6 +97,7 @@ export default function GoalsManager() {
       if (playersError) throw playersError;
 
       setGoals(goalsData || []);
+      setCards(cardsData || []);
       setMatches(matchesData || []);
       setPlayers(playersData || []);
     } catch (error) {
@@ -135,6 +161,78 @@ export default function GoalsManager() {
     }
   };
 
+  const addCard = async () => {
+    if (!newCard.match_id || !newCard.player_id) {
+      alert('Please select match and player');
+      return;
+    }
+
+    try {
+      // Get the player's team from team_players table
+      const { data: playerData, error: playerError } = await supabaseClient
+        .from('team_players')
+        .select('team_id, team_registrations(tournament_team_id)')
+        .eq('id', newCard.player_id)
+        .single();
+
+      if (playerError) throw playerError;
+
+      // Get the tournament team_id from the registration
+      const teamId = playerData?.team_registrations?.tournament_team_id;
+      
+      if (!teamId) {
+        alert('Could not determine team for this player. Make sure the team is confirmed in the tournament.');
+        return;
+      }
+
+      const { error } = await supabaseClient
+        .from('cards')
+        .insert({
+          match_id: newCard.match_id,
+          team_id: teamId,
+          player_id: newCard.player_id,
+          card_type: newCard.card_type,
+          minute: parseInt(newCard.minute) || null
+        });
+
+      if (error) throw error;
+
+      alert('Card added successfully!');
+      setShowCardModal(false);
+      setNewCard({
+        match_id: '',
+        player_id: '',
+        card_type: 'yellow',
+        minute: ''
+      });
+      fetchData();
+    } catch (error) {
+      console.error('Error adding card:', error);
+      alert('Failed to add card: ' + error.message);
+    }
+  };
+
+  const deleteCard = async (cardId) => {
+    if (!confirm('Are you sure you want to delete this card?')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabaseClient
+        .from('cards')
+        .delete()
+        .eq('id', cardId);
+
+      if (error) throw error;
+
+      alert('Card deleted successfully!');
+      fetchData();
+    } catch (error) {
+      console.error('Error deleting card:', error);
+      alert('Failed to delete card: ' + error.message);
+    }
+  };
+
   const deleteGoal = async (goalId) => {
     if (!confirm('Are you sure you want to delete this goal?')) {
       return;
@@ -190,13 +288,18 @@ export default function GoalsManager() {
     : goals;
 
   return (
-    <AdminLayout title="Goals & Stats Management">
+    <AdminLayout title="Goals & Cards Management">
       <div className="admin-page-header">
         <div className="page-header-left">
           <button className="refresh-btn" onClick={fetchData}>
             <i className="fas fa-sync-alt"></i> Refresh
           </button>
-          
+          <button className="btn-primary" onClick={() => setShowModal(true)}>
+            <i className="fas fa-plus"></i> Add Goal
+          </button>
+          <button className="btn-primary" onClick={() => setShowCardModal(true)} style={{ marginLeft: '10px' }}>
+            <i className="fas fa-id-card"></i> Add Card
+          </button>
         </div>
       </div>
 
@@ -296,9 +399,69 @@ export default function GoalsManager() {
               )}
             </tbody>
           </table>
+
+          {/* Cards Table */}
+          <div className="table-stats" style={{ marginTop: '40px' }}>
+            <h3 style={{ marginBottom: '16px' }}>Cards</h3>
+            <p>
+              Total Cards: <strong>{cards.length}</strong>
+            </p>
+          </div>
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Match</th>
+                <th>Player</th>
+                <th>Card Type</th>
+                <th>Minute</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cards.length === 0 ? (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: 'center', padding: '40px' }}>
+                    <i className="fas fa-id-card" style={{ fontSize: '3rem', color: '#ccc' }}></i>
+                    <p>No cards recorded</p>
+                  </td>
+                </tr>
+              ) : (
+                cards.map((card) => (
+                  <tr key={card.id}>
+                    <td>
+                      <div>
+                        {card.match?.home_team?.name} vs {card.match?.away_team?.name}
+                      </div>
+                    </td>
+                    <td><strong>{card.player?.player_name || 'Unknown'}</strong></td>
+                    <td>
+                      <span className={`card-type-badge ${card.card_type}`}>
+                        {card.card_type === 'yellow' ? (
+                          <><i className="fas fa-square" style={{ color: '#ffd700' }}></i> Yellow</>
+                        ) : (
+                          <><i className="fas fa-square" style={{ color: '#ff0000' }}></i> Red</>
+                        )}
+                      </span>
+                    </td>
+                    <td>{card.minute ? `${card.minute}'` : '-'}</td>
+                    <td>
+                      <button 
+                        className="btn-icon btn-delete"
+                        onClick={() => deleteCard(card.id)}
+                        title="Delete"
+                      >
+                        <i className="fas fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       )}
 
+      {/* Add Goal Modal */}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -395,6 +558,92 @@ export default function GoalsManager() {
                   onClick={addGoal}
                 >
                   <i className="fas fa-plus"></i> Add Goal
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Card Modal */}
+      {showCardModal && (
+        <div className="modal-overlay" onClick={() => setShowCardModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Add Card</h2>
+              <button className="modal-close" onClick={() => setShowCardModal(false)}>
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            
+            <div className="modal-body">
+              <div className="form-group">
+                <label>Match</label>
+                <select
+                  value={newCard.match_id}
+                  onChange={(e) => setNewCard({ ...newCard, match_id: e.target.value })}
+                >
+                  <option value="">Select Match</option>
+                  {matches.map(match => (
+                    <option key={match.id} value={match.id}>
+                      {match.home_team?.name} vs {match.away_team?.name} - {new Date(match.match_date).toLocaleDateString()}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Player</label>
+                <select
+                  value={newCard.player_id}
+                  onChange={(e) => setNewCard({ ...newCard, player_id: e.target.value })}
+                >
+                  <option value="">Select Player</option>
+                  {players.map(player => (
+                    <option key={player.id} value={player.id}>
+                      {player.player_name} ({player.team_registrations?.team_name})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Card Type</label>
+                  <select
+                    value={newCard.card_type}
+                    onChange={(e) => setNewCard({ ...newCard, card_type: e.target.value })}
+                  >
+                    <option value="yellow">Yellow Card</option>
+                    <option value="red">Red Card</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Minute</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="120"
+                    value={newCard.minute}
+                    onChange={(e) => setNewCard({ ...newCard, minute: e.target.value })}
+                    placeholder="e.g., 45"
+                  />
+                </div>
+              </div>
+
+              <div className="form-actions">
+                <button 
+                  className="btn-secondary"
+                  onClick={() => setShowCardModal(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="btn-primary"
+                  onClick={addCard}
+                >
+                  <i className="fas fa-plus"></i> Add Card
                 </button>
               </div>
             </div>

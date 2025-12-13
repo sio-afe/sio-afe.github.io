@@ -39,6 +39,14 @@ function Statistics({ category }) {
 
       const matchIds = matchRows.map((match) => match.id);
 
+      // First, get all teams for this category
+      const { data: categoryTeams } = await supabase
+        .from('teams')
+        .select('id')
+        .eq('category', category);
+
+      const teamIds = categoryTeams?.map(t => t.id) || [];
+
       const { data: goalsData, error: goalsError} = await supabase
         .from('goals')
         .select(`
@@ -53,30 +61,80 @@ function Statistics({ category }) {
 
       if (goalsError) throw goalsError;
 
+      // Fetch all players from players table for this category to get proper player data
+      const { data: allPlayers } = await supabase
+        .from('players')
+        .select('id, name, player_image, registration_player_id, team_id, team:teams(name, crest_url)')
+        .in('team_id', teamIds);
+
+      // Create mapping from registration_player_id to players table data
+      const registrationToPlayerMap = {};
+      (allPlayers || []).forEach(p => {
+        if (p.registration_player_id) {
+          registrationToPlayerMap[p.registration_player_id] = p;
+        }
+      });
+
       const scorersMap = {};
       const assistsMap = {};
 
       (goalsData || []).forEach((goalEvent) => {
-        if (goalEvent.scorer?.player_name) {
-          const scorerKey = `${goalEvent.scorer.player_name}-${goalEvent.team_id}`;
+        // Try to get player from players table first, fallback to team_players
+        let scorerPlayer = null;
+        let assisterPlayer = null;
+
+        if (goalEvent.scorer_id) {
+          scorerPlayer = registrationToPlayerMap[goalEvent.scorer_id];
+          if (!scorerPlayer && goalEvent.scorer) {
+            // Fallback to team_players data
+            scorerPlayer = {
+              name: goalEvent.scorer.player_name,
+              player_image: goalEvent.scorer.player_image,
+              team: goalEvent.team
+            };
+          }
+        }
+
+        if (goalEvent.assister_id) {
+          assisterPlayer = registrationToPlayerMap[goalEvent.assister_id];
+          if (!assisterPlayer && goalEvent.assister) {
+            // Fallback to team_players data
+            assisterPlayer = {
+              name: goalEvent.assister.player_name,
+              player_image: goalEvent.assister.player_image,
+              team: goalEvent.team
+            };
+          }
+        }
+
+        // Count goals - use players table data if available
+        if (scorerPlayer) {
+          const playerName = scorerPlayer.name || scorerPlayer.player_name || '';
+          const teamId = scorerPlayer.team_id || goalEvent.team_id;
+          const scorerKey = `${playerName}-${teamId}`;
+          
           if (!scorersMap[scorerKey]) {
             scorersMap[scorerKey] = {
-              player_name: goalEvent.scorer.player_name,
-              player_image: goalEvent.scorer.player_image,
-              team: goalEvent.team,
+              player_name: playerName,
+              player_image: scorerPlayer.player_image,
+              team: scorerPlayer.team || goalEvent.team,
               goals: 0,
             };
           }
           scorersMap[scorerKey].goals += 1;
         }
 
-        if (goalEvent.assister?.player_name) {
-          const assistKey = `${goalEvent.assister.player_name}-${goalEvent.team_id}`;
+        // Count assists - use players table data if available
+        if (assisterPlayer) {
+          const playerName = assisterPlayer.name || assisterPlayer.player_name || '';
+          const teamId = assisterPlayer.team_id || goalEvent.team_id;
+          const assistKey = `${playerName}-${teamId}`;
+          
           if (!assistsMap[assistKey]) {
             assistsMap[assistKey] = {
-              player_name: goalEvent.assister.player_name,
-              player_image: goalEvent.assister.player_image,
-              team: goalEvent.team,
+              player_name: playerName,
+              player_image: assisterPlayer.player_image,
+              team: assisterPlayer.team || goalEvent.team,
               assists: 0,
             };
           }

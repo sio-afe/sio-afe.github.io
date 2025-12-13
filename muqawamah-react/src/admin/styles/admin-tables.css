@@ -346,6 +346,30 @@
   border-radius: 6px;
   background: #fef3c7;
   color: #92400e;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.card-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.card-type-badge.yellow {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.card-type-badge.red {
+  background: #fee2e2;
+  color: #991b1b;
   font-size: 0.8rem;
   font-weight: 600;
   text-transform: capitalize;

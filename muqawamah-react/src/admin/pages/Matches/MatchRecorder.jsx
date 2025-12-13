@@ -18,6 +18,7 @@ export default function MatchRecorder() {
     status: 'completed'
   });
   const [matchGoals, setMatchGoals] = useState([]);
+  const [matchCards, setMatchCards] = useState([]);
   const [homePlayers, setHomePlayers] = useState([]);
   const [awayPlayers, setAwayPlayers] = useState([]);
   const [newGoal, setNewGoal] = useState({
@@ -25,6 +26,12 @@ export default function MatchRecorder() {
     assister_id: '',
     minute: '',
     goal_type: 'open_play',
+    team_id: ''
+  });
+  const [newCard, setNewCard] = useState({
+    player_id: '',
+    card_type: 'yellow',
+    minute: '',
     team_id: ''
   });
 
@@ -218,6 +225,9 @@ export default function MatchRecorder() {
     
     // Fetch existing goals for this match
     await fetchMatchGoals(match.id);
+    
+    // Fetch existing cards for this match
+    await fetchMatchCards(match.id);
 
     setShowModal(true);
   };
@@ -285,6 +295,30 @@ export default function MatchRecorder() {
       setMatchGoals(data || []);
     } catch (error) {
       console.error('Error fetching goals:', error);
+    }
+  };
+
+  const fetchMatchCards = async (matchId) => {
+    try {
+      const { data, error} = await supabaseClient
+        .from('cards')
+        .select(`
+          id,
+          match_id,
+          team_id,
+          player_id,
+          card_type,
+          minute,
+          created_at,
+          player:team_players!cards_player_id_fkey(player_name)
+        `)
+        .eq('match_id', matchId)
+        .order('minute');
+
+      if (error) throw error;
+      setMatchCards(data || []);
+    } catch (error) {
+      console.error('Error fetching cards:', error);
     }
   };
 
@@ -361,6 +395,62 @@ export default function MatchRecorder() {
     } catch (error) {
       console.error('Error deleting goal:', error);
       alert('Failed to delete goal');
+    }
+  };
+
+  const addCard = async () => {
+    if (!newCard.player_id || !newCard.team_id) {
+      alert('Please select player and team');
+      return;
+    }
+
+    try {
+      const { error } = await supabaseClient
+        .from('cards')
+        .insert({
+          match_id: selectedMatch.id,
+          team_id: newCard.team_id,
+          player_id: newCard.player_id,
+          card_type: newCard.card_type,
+          minute: parseInt(newCard.minute) || null
+        });
+
+      if (error) throw error;
+
+      // Reset card form
+      setNewCard({
+        player_id: '',
+        card_type: 'yellow',
+        minute: '',
+        team_id: ''
+      });
+
+      // Refresh cards list
+      await fetchMatchCards(selectedMatch.id);
+      
+      alert('Card added successfully!');
+    } catch (error) {
+      console.error('Error adding card:', error);
+      alert('Failed to add card: ' + error.message);
+    }
+  };
+
+  const deleteCard = async (cardId) => {
+    if (!confirm('Delete this card?')) return;
+
+    try {
+      const { error } = await supabaseClient
+        .from('cards')
+        .delete()
+        .eq('id', cardId);
+
+      if (error) throw error;
+
+      await fetchMatchCards(selectedMatch.id);
+      alert('Card deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting card:', error);
+      alert('Failed to delete card');
     }
   };
 
@@ -647,6 +737,122 @@ export default function MatchRecorder() {
                     disabled={!newGoal.scorer_id}
                   >
                     <i className="fas fa-plus"></i> Add Goal
+                  </button>
+                </div>
+              </div>
+
+              <div className="cards-section" style={{ marginTop: '30px' }}>
+                <h3>🟨🟥 Cards ({matchCards.length})</h3>
+                
+                {matchCards.length > 0 && (
+                  <div className="goals-list">
+                    {matchCards.map((card) => (
+                      <div key={card.id} className="goal-item">
+                        <div className="goal-info">
+                          <span className="goal-minute">{card.minute}'</span>
+                          <span className={`card-type-badge ${card.card_type}`} style={{ marginRight: '8px' }}>
+                            {card.card_type === 'yellow' ? (
+                              <><i className="fas fa-square" style={{ color: '#ffd700' }}></i> Yellow</>
+                            ) : (
+                              <><i className="fas fa-square" style={{ color: '#ff0000' }}></i> Red</>
+                            )}
+                          </span>
+                          <span className="goal-scorer">{card.player?.player_name || 'Unknown'}</span>
+                        </div>
+                        <button 
+                          className="goal-delete-btn"
+                          onClick={() => deleteCard(card.id)}
+                        >
+                          <i className="fas fa-times"></i>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div className="add-goal-form">
+                  <h4>Add Card</h4>
+                  
+                  <div className="form-grid">
+                    <div className="form-group">
+                      <label>Team</label>
+                      <select
+                        value={newCard.team_id}
+                        onChange={(e) => {
+                          setNewCard({ 
+                            ...newCard, 
+                            team_id: e.target.value,
+                            player_id: ''
+                          });
+                        }}
+                      >
+                        <option value="">Select Team</option>
+                        <option value={selectedMatch.home_team_id}>
+                          {selectedMatch.home_team?.name}
+                        </option>
+                        <option value={selectedMatch.away_team_id}>
+                          {selectedMatch.away_team?.name}
+                        </option>
+                      </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label>Player</label>
+                      <select
+                        value={newCard.player_id}
+                        onChange={(e) => setNewCard({ ...newCard, player_id: e.target.value })}
+                        disabled={!newCard.team_id}
+                      >
+                        <option value="">Select Player</option>
+                        {newCard.team_id === selectedMatch.home_team_id && 
+                          homePlayers.map(p => (
+                            <option key={p.id} value={p.id}>
+                              {p.player_name} ({p.position})
+                            </option>
+                          ))
+                        }
+                        {newCard.team_id === selectedMatch.away_team_id && 
+                          awayPlayers.map(p => (
+                            <option key={p.id} value={p.id}>
+                              {p.player_name} ({p.position})
+                            </option>
+                          ))
+                        }
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="form-grid">
+                    <div className="form-group">
+                      <label>Card Type</label>
+                      <select
+                        value={newCard.card_type}
+                        onChange={(e) => setNewCard({ ...newCard, card_type: e.target.value })}
+                      >
+                        <option value="yellow">Yellow Card</option>
+                        <option value="red">Red Card</option>
+                      </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label>Minute</label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="120"
+                        value={newCard.minute}
+                        onChange={(e) => setNewCard({ ...newCard, minute: e.target.value })}
+                        placeholder="e.g., 45"
+                      />
+                    </div>
+                  </div>
+
+                  <button 
+                    className="btn-add-goal"
+                    onClick={addCard}
+                    disabled={!newCard.player_id}
+                  >
+                    <i className="fas fa-id-card"></i> Add Card
                   </button>
                 </div>
               </div>

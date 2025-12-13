@@ -17,6 +17,11 @@ export default defineConfig({
         standings: resolve(process.cwd(), 'standings.html'),
         statistics: resolve(process.cwd(), 'statistics.html'),
         admin: resolve(process.cwd(), 'admin.html')
+      },
+      output: {
+        manualChunks: {
+          'supabase-client': ['@supabase/supabase-js']
+        }
       }
     },
     cssCodeSplit: false,
@@ -26,7 +31,14 @@ export default defineConfig({
       compress: {
         drop_console: true
       }
+    },
+    commonjsOptions: {
+      include: [/node_modules/],
+      transformMixedEsModules: true
     }
+  },
+  optimizeDeps: {
+    include: ['@supabase/supabase-js']
   },
   base: '/muqawamah/'
 });

@@ -49,37 +49,99 @@ export default function Statistics() {
         `)
         .in('match_id', matchIds);
 
-      // Aggregate goals by player
+      // Get all teams for this category
+      const { data: categoryTeams } = await supabaseClient
+        .from('teams')
+        .select('id')
+        .eq('category', category);
+
+      const teamIds = categoryTeams?.map(t => t.id) || [];
+
+      // Fetch all players from players table for this category
+      const { data: allPlayers } = await supabaseClient
+        .from('players')
+        .select('id, name, player_image, registration_player_id, team_id, team:teams(name, crest_url)')
+        .in('team_id', teamIds);
+
+      // Create mapping from registration_player_id (team_players.id) to players table data
+      const registrationToPlayerMap = {};
+      (allPlayers || []).forEach(p => {
+        if (p.registration_player_id) {
+          registrationToPlayerMap[p.registration_player_id] = p;
+        }
+      });
+
+      // Aggregate goals by player - prioritize players table, fallback to team_players
       const scorersMap = {};
       const assistsMap = {};
 
       (goalsData || []).forEach(goal => {
-        // Count goals
-        if (goal.scorer?.id) {
-          if (!scorersMap[goal.scorer.id]) {
-            scorersMap[goal.scorer.id] = {
-              id: goal.scorer.id,
-              player_name: goal.scorer.player_name,
-              player_image: goal.scorer.player_image,
-              team_registrations: goal.scorer.team_registrations,
-              goals: 0
-            };
+        // Count goals - first try players table, then fallback to team_players
+        if (goal.scorer_id) {
+          const tournamentPlayer = registrationToPlayerMap[goal.scorer_id];
+          const playerKey = tournamentPlayer?.id || goal.scorer_id;
+          
+          if (!scorersMap[playerKey]) {
+            if (tournamentPlayer) {
+              // Use players table data
+              scorersMap[playerKey] = {
+                id: tournamentPlayer.id,
+                player_name: tournamentPlayer.name || tournamentPlayer.player_name,
+                player_image: tournamentPlayer.player_image,
+                team_registrations: {
+                  team_name: tournamentPlayer.team?.name || 'Unknown',
+                  team_logo: tournamentPlayer.team?.crest_url || null
+                },
+                goals: 0
+              };
+            } else if (goal.scorer) {
+              // Fallback to team_players data
+              scorersMap[playerKey] = {
+                id: goal.scorer.id,
+                player_name: goal.scorer.player_name,
+                player_image: goal.scorer.player_image,
+                team_registrations: goal.scorer.team_registrations,
+                goals: 0
+              };
+            }
           }
-          scorersMap[goal.scorer.id].goals += 1;
+          if (scorersMap[playerKey]) {
+            scorersMap[playerKey].goals += 1;
+          }
         }
 
-        // Count assists
-        if (goal.assister?.id) {
-          if (!assistsMap[goal.assister.id]) {
-            assistsMap[goal.assister.id] = {
-              id: goal.assister.id,
-              player_name: goal.assister.player_name,
-              player_image: goal.assister.player_image,
-              team_registrations: goal.assister.team_registrations,
-              assists: 0
-            };
+        // Count assists - first try players table, then fallback to team_players
+        if (goal.assister_id) {
+          const tournamentPlayer = registrationToPlayerMap[goal.assister_id];
+          const playerKey = tournamentPlayer?.id || goal.assister_id;
+          
+          if (!assistsMap[playerKey]) {
+            if (tournamentPlayer) {
+              // Use players table data
+              assistsMap[playerKey] = {
+                id: tournamentPlayer.id,
+                player_name: tournamentPlayer.name || tournamentPlayer.player_name,
+                player_image: tournamentPlayer.player_image,
+                team_registrations: {
+                  team_name: tournamentPlayer.team?.name || 'Unknown',
+                  team_logo: tournamentPlayer.team?.crest_url || null
+                },
+                assists: 0
+              };
+            } else if (goal.assister) {
+              // Fallback to team_players data
+              assistsMap[playerKey] = {
+                id: goal.assister.id,
+                player_name: goal.assister.player_name,
+                player_image: goal.assister.player_image,
+                team_registrations: goal.assister.team_registrations,
+                assists: 0
+              };
+            }
           }
-          assistsMap[goal.assister.id].assists += 1;
+          if (assistsMap[playerKey]) {
+            assistsMap[playerKey].assists += 1;
+          }
         }
       });
 
@@ -113,26 +175,40 @@ export default function Statistics() {
     }
   };
 
-  const handlePlayerClick = async (teamPlayerId) => {
-    if (!teamPlayerId) return;
+  const handlePlayerClick = async (playerId) => {
+    if (!playerId) return;
     
     try {
-      // team_players.id IS the registration_player_id in players table
-      // So we look up players where registration_player_id = teamPlayerId
-      const { data: tournamentPlayer, error } = await supabaseClient
+      // Check if this is already a players table ID or a team_players ID
+      // First, try to find in players table directly
+      const { data: tournamentPlayer, error: directError } = await supabaseClient
         .from('players')
         .select('id')
-        .eq('registration_player_id', teamPlayerId)
+        .eq('id', playerId)
         .single();
 
-      if (error || !tournamentPlayer) {
-        console.error('Player not found in tournament players:', error);
+      if (!directError && tournamentPlayer) {
+        // It's already a players table ID
+        const base = category === 'u17' ? '/muqawamah/2026/u17' : '/muqawamah/2026/open-age';
+        window.location.href = `${base}/players/?player=${playerId}`;
+        return;
+      }
+
+      // If not found, try to find by registration_player_id (team_players.id)
+      const { data: tournamentPlayerByReg, error: regError } = await supabaseClient
+        .from('players')
+        .select('id')
+        .eq('registration_player_id', playerId)
+        .single();
+
+      if (regError || !tournamentPlayerByReg) {
+        console.error('Player not found in tournament players:', regError);
         alert('Player details not available');
         return;
       }
 
       const base = category === 'u17' ? '/muqawamah/2026/u17' : '/muqawamah/2026/open-age';
-      window.location.href = `${base}/players/?player=${tournamentPlayer.id}`;
+      window.location.href = `${base}/players/?player=${tournamentPlayerByReg.id}`;
     } catch (err) {
       console.error('Error finding player:', err);
     }

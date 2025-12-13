@@ -13,6 +13,10 @@ export default function SettingsPanel() {
   const [matches, setMatches] = useState([]);
   const [selectedMatch, setSelectedMatch] = useState('');
   const [showMatchClearModal, setShowMatchClearModal] = useState(false);
+  const [showMatchLikesModal, setShowMatchLikesModal] = useState(false);
+  const [showMatchVotesModal, setShowMatchVotesModal] = useState(false);
+  const [selectedMatchForLikes, setSelectedMatchForLikes] = useState('');
+  const [selectedMatchForVotes, setSelectedMatchForVotes] = useState('');
 
   useEffect(() => {
     if (activeTab === 'data') {
@@ -167,6 +171,136 @@ export default function SettingsPanel() {
     }
   };
 
+  const handleClearAllVotes = async () => {
+    if (!confirm('Are you sure you want to delete ALL user predictions (votes)?\n\nThis will remove all community predictions from all matches.\n\nThis action cannot be undone!')) {
+      return;
+    }
+
+    try {
+      // Count votes first
+      const { count } = await supabaseClient
+        .from('match_predictions')
+        .select('*', { count: 'exact', head: true });
+
+      // Delete all votes
+      const { error } = await supabaseClient
+        .from('match_predictions')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all
+
+      if (error) throw error;
+
+      alert(`Successfully deleted ${count || 0} prediction(s)!`);
+    } catch (error) {
+      console.error('Error clearing votes:', error);
+      alert('Failed to clear votes');
+    }
+  };
+
+  const handleClearAllLikes = async () => {
+    if (!confirm('Are you sure you want to delete ALL match likes?\n\nThis will remove all likes from all matches.\n\nThis action cannot be undone!')) {
+      return;
+    }
+
+    try {
+      // Count likes first
+      const { count } = await supabaseClient
+        .from('match_likes')
+        .select('*', { count: 'exact', head: true });
+
+      // Delete all likes
+      const { error } = await supabaseClient
+        .from('match_likes')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all
+
+      if (error) throw error;
+
+      alert(`Successfully deleted ${count || 0} like(s)!`);
+    } catch (error) {
+      console.error('Error clearing likes:', error);
+      alert('Failed to clear likes');
+    }
+  };
+
+  const handleClearMatchLikes = async () => {
+    if (!selectedMatchForLikes) {
+      alert('Please select a match');
+      return;
+    }
+
+    const match = matches.find(m => m.id === selectedMatchForLikes);
+    if (!match) return;
+
+    const matchName = `${match.home_team?.name} vs ${match.away_team?.name}`;
+    
+    if (!confirm(`Are you sure you want to delete all likes for this match?\n\n${matchName}\n\nThis cannot be undone!`)) {
+      return;
+    }
+
+    try {
+      // Count likes first
+      const { count } = await supabaseClient
+        .from('match_likes')
+        .select('*', { count: 'exact', head: true })
+        .eq('match_id', selectedMatchForLikes);
+
+      // Delete all likes for this match
+      const { error } = await supabaseClient
+        .from('match_likes')
+        .delete()
+        .eq('match_id', selectedMatchForLikes);
+
+      if (error) throw error;
+
+      alert(`Successfully deleted ${count || 0} like(s) from this match!`);
+      setShowMatchLikesModal(false);
+      setSelectedMatchForLikes('');
+    } catch (error) {
+      console.error('Error clearing match likes:', error);
+      alert('Failed to clear match likes');
+    }
+  };
+
+  const handleClearMatchVotes = async () => {
+    if (!selectedMatchForVotes) {
+      alert('Please select a match');
+      return;
+    }
+
+    const match = matches.find(m => m.id === selectedMatchForVotes);
+    if (!match) return;
+
+    const matchName = `${match.home_team?.name} vs ${match.away_team?.name}`;
+    
+    if (!confirm(`Are you sure you want to delete all votes (predictions) for this match?\n\n${matchName}\n\nThis cannot be undone!`)) {
+      return;
+    }
+
+    try {
+      // Count votes first
+      const { count } = await supabaseClient
+        .from('match_predictions')
+        .select('*', { count: 'exact', head: true })
+        .eq('match_id', selectedMatchForVotes);
+
+      // Delete all votes for this match
+      const { error } = await supabaseClient
+        .from('match_predictions')
+        .delete()
+        .eq('match_id', selectedMatchForVotes);
+
+      if (error) throw error;
+
+      alert(`Successfully deleted ${count || 0} vote(s) from this match!`);
+      setShowMatchVotesModal(false);
+      setSelectedMatchForVotes('');
+    } catch (error) {
+      console.error('Error clearing match votes:', error);
+      alert('Failed to clear match votes');
+    }
+  };
+
   const exportData = async (table) => {
     try {
       const { data, error } = await supabaseClient
@@ -311,6 +445,30 @@ export default function SettingsPanel() {
                   >
                     <i className="fas fa-futbol"></i> Clear Match Statistics
                   </button>
+                  <button 
+                    className="btn-danger"
+                    onClick={handleClearAllVotes}
+                  >
+                    <i className="fas fa-vote-yea"></i> Clear All Votes
+                  </button>
+                  <button 
+                    className="btn-danger"
+                    onClick={handleClearAllLikes}
+                  >
+                    <i className="fas fa-heart"></i> Clear All Likes
+                  </button>
+                  <button 
+                    className="btn-danger"
+                    onClick={() => setShowMatchLikesModal(true)}
+                  >
+                    <i className="fas fa-heart"></i> Clear Match Likes
+                  </button>
+                  <button 
+                    className="btn-danger"
+                    onClick={() => setShowMatchVotesModal(true)}
+                  >
+                    <i className="fas fa-vote-yea"></i> Clear Match Votes
+                  </button>
                 </div>
               </div>
             </div>
@@ -408,6 +566,118 @@ export default function SettingsPanel() {
                   disabled={!selectedMatch}
                 >
                   <i className="fas fa-trash"></i> Clear Statistics
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Clear Match Likes Modal */}
+      {showMatchLikesModal && (
+        <div className="modal-overlay" onClick={() => setShowMatchLikesModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2><i className="fas fa-heart"></i> Clear Match Likes</h2>
+              <button className="modal-close" onClick={() => setShowMatchLikesModal(false)}>
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            
+            <div className="modal-body">
+              <div className="modal-warning">
+                <i className="fas fa-exclamation-triangle"></i>
+                <p>This will delete all likes for the selected match. This action cannot be undone.</p>
+              </div>
+
+              <div className="form-group">
+                <label>Select Match</label>
+                <select
+                  value={selectedMatchForLikes}
+                  onChange={(e) => setSelectedMatchForLikes(e.target.value)}
+                  className="form-select"
+                >
+                  <option value="">Choose a match...</option>
+                  {matches.map(match => (
+                    <option key={match.id} value={match.id}>
+                      {match.home_team?.name} vs {match.away_team?.name} - {new Date(match.match_date).toLocaleDateString()} ({match.status})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-actions">
+                <button 
+                  className="btn-secondary"
+                  onClick={() => {
+                    setShowMatchLikesModal(false);
+                    setSelectedMatchForLikes('');
+                  }}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="btn-danger"
+                  onClick={handleClearMatchLikes}
+                  disabled={!selectedMatchForLikes}
+                >
+                  <i className="fas fa-trash"></i> Clear Likes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Clear Match Votes Modal */}
+      {showMatchVotesModal && (
+        <div className="modal-overlay" onClick={() => setShowMatchVotesModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2><i className="fas fa-vote-yea"></i> Clear Match Votes</h2>
+              <button className="modal-close" onClick={() => setShowMatchVotesModal(false)}>
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            
+            <div className="modal-body">
+              <div className="modal-warning">
+                <i className="fas fa-exclamation-triangle"></i>
+                <p>This will delete all user predictions (votes) for the selected match. This action cannot be undone.</p>
+              </div>
+
+              <div className="form-group">
+                <label>Select Match</label>
+                <select
+                  value={selectedMatchForVotes}
+                  onChange={(e) => setSelectedMatchForVotes(e.target.value)}
+                  className="form-select"
+                >
+                  <option value="">Choose a match...</option>
+                  {matches.map(match => (
+                    <option key={match.id} value={match.id}>
+                      {match.home_team?.name} vs {match.away_team?.name} - {new Date(match.match_date).toLocaleDateString()} ({match.status})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-actions">
+                <button 
+                  className="btn-secondary"
+                  onClick={() => {
+                    setShowMatchVotesModal(false);
+                    setSelectedMatchForVotes('');
+                  }}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="btn-danger"
+                  onClick={handleClearMatchVotes}
+                  disabled={!selectedMatchForVotes}
+                >
+                  <i className="fas fa-trash"></i> Clear Votes
                 </button>
               </div>
             </div>

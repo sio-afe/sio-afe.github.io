@@ -144,45 +144,75 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
           `)
           .eq('team_id', teamId);
 
-        // Build a mapping from team_players ID to tournament players ID
+        // Build a mapping from registration_player_id (team_players.id) to tournament players
         const registrationToPlayerMap = {};
         (playersData || []).forEach(p => {
           if (p.registration_player_id) {
-            registrationToPlayerMap[p.registration_player_id] = p.id;
+            registrationToPlayerMap[p.registration_player_id] = p;
           }
         });
 
-        // Aggregate goals by player
+        // Aggregate goals by player - prioritize players table, fallback to team_players
         const scorersMap = {};
         const assistsMap = {};
 
         (goalsData || []).forEach(goal => {
-          // Count goals - map to tournament player ID
-          if (goal.scorer_id && goal.scorer) {
-            const tournamentPlayerId = registrationToPlayerMap[goal.scorer_id] || goal.scorer_id;
-            if (!scorersMap[tournamentPlayerId]) {
-              scorersMap[tournamentPlayerId] = {
-                id: tournamentPlayerId,
-                player_name: goal.scorer.player_name,
-                player_image: goal.scorer.player_image,
-                goals: 0
-              };
+          // Count goals - first try players table, then fallback to team_players
+          if (goal.scorer_id) {
+            const tournamentPlayer = registrationToPlayerMap[goal.scorer_id];
+            const playerKey = tournamentPlayer?.id || goal.scorer_id;
+            
+            if (!scorersMap[playerKey]) {
+              if (tournamentPlayer) {
+                // Use players table data
+                scorersMap[playerKey] = {
+                  id: tournamentPlayer.id,
+                  player_name: tournamentPlayer.name || tournamentPlayer.player_name,
+                  player_image: tournamentPlayer.player_image,
+                  goals: 0
+                };
+              } else if (goal.scorer) {
+                // Fallback to team_players data
+                scorersMap[playerKey] = {
+                  id: goal.scorer_id,
+                  player_name: goal.scorer.player_name,
+                  player_image: goal.scorer.player_image,
+                  goals: 0
+                };
+              }
             }
-            scorersMap[tournamentPlayerId].goals += 1;
+            if (scorersMap[playerKey]) {
+              scorersMap[playerKey].goals += 1;
+            }
           }
 
-          // Count assists - map to tournament player ID
-          if (goal.assister_id && goal.assister) {
-            const tournamentPlayerId = registrationToPlayerMap[goal.assister_id] || goal.assister_id;
-            if (!assistsMap[tournamentPlayerId]) {
-              assistsMap[tournamentPlayerId] = {
-                id: tournamentPlayerId,
-                player_name: goal.assister.player_name,
-                player_image: goal.assister.player_image,
-                assists: 0
-              };
+          // Count assists - first try players table, then fallback to team_players
+          if (goal.assister_id) {
+            const tournamentPlayer = registrationToPlayerMap[goal.assister_id];
+            const playerKey = tournamentPlayer?.id || goal.assister_id;
+            
+            if (!assistsMap[playerKey]) {
+              if (tournamentPlayer) {
+                // Use players table data
+                assistsMap[playerKey] = {
+                  id: tournamentPlayer.id,
+                  player_name: tournamentPlayer.name || tournamentPlayer.player_name,
+                  player_image: tournamentPlayer.player_image,
+                  assists: 0
+                };
+              } else if (goal.assister) {
+                // Fallback to team_players data
+                assistsMap[playerKey] = {
+                  id: goal.assister_id,
+                  player_name: goal.assister.player_name,
+                  player_image: goal.assister.player_image,
+                  assists: 0
+                };
+              }
             }
-            assistsMap[tournamentPlayerId].assists += 1;
+            if (assistsMap[playerKey]) {
+              assistsMap[playerKey].assists += 1;
+            }
           }
         });
 

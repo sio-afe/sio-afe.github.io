@@ -11,7 +11,8 @@ export default function MatchFormationField({
   awayPlayers = [], 
   homeTeam = {},
   awayTeam = {},
-  goals = []
+  goals = [],
+  cards = []
 }) {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [isHome, setIsHome] = useState(true);
@@ -21,18 +22,79 @@ export default function MatchFormationField({
   const homeStarters = homePlayers.filter(p => !p.is_substitute && p.position !== 'SUB').slice(0, 7);
   const awayStarters = awayPlayers.filter(p => !p.is_substitute && p.position !== 'SUB').slice(0, 7);
 
-  // Calculate player stats from goals using new schema
-  const getPlayerStats = (playerId) => {
+  // Calculate player stats from goals and cards
+  // Priority: 1) Match via players table (registration_player_id), 2) Fallback to team_players table (name matching)
+  const getPlayerStats = (player) => {
+    if (!player) return { goalsScored: 0, assists: 0, yellowCards: 0, redCards: 0 };
+    
     let goalsScored = 0;
     let assists = 0;
+    let yellowCards = 0;
+    let redCards = 0;
+    
+    // Get player identifiers
+    const playerName = player.name || player.player_name || '';
+    const registrationPlayerId = player.registration_player_id;
     
     goals.forEach(goal => {
-      // New schema uses scorer_id and assister_id
-      if (goal.scorer_id === playerId) goalsScored++;
-      if (goal.assister_id === playerId) assists++;
+      let isScorer = false;
+      let isAssister = false;
+      
+      // FIRST: Try to match via players table using registration_player_id
+      // This is the primary method for tournament players
+      if (registrationPlayerId) {
+        if (goal.scorer_id === registrationPlayerId) {
+          isScorer = true;
+        }
+        if (goal.assister_id === registrationPlayerId) {
+          isAssister = true;
+        }
+      }
+      
+      // FALLBACK: If no match via players table, try team_players table by name
+      // This handles cases where player might not be in players table yet
+      if (!isScorer && !isAssister) {
+        const scorerName = goal.scorer?.player_name || '';
+        const assisterName = goal.assister?.player_name || '';
+        
+        if (scorerName && playerName && scorerName.toLowerCase().trim() === playerName.toLowerCase().trim()) {
+          isScorer = true;
+        }
+        if (assisterName && playerName && assisterName.toLowerCase().trim() === playerName.toLowerCase().trim()) {
+          isAssister = true;
+        }
+      }
+      
+      if (isScorer) goalsScored++;
+      if (isAssister) assists++;
     });
+
+    // Count cards for this player
+    if (cards && cards.length > 0) {
+      cards.forEach(card => {
+        let isCardForPlayer = false;
+        
+        // FIRST: Try to match via players table
+        if (registrationPlayerId && card.player_id === registrationPlayerId) {
+          isCardForPlayer = true;
+        }
+        
+        // FALLBACK: Try to match via team_players table by name
+        if (!isCardForPlayer) {
+          const cardPlayerName = card.player?.player_name || '';
+          if (cardPlayerName && playerName && cardPlayerName.toLowerCase().trim() === playerName.toLowerCase().trim()) {
+            isCardForPlayer = true;
+          }
+        }
+        
+        if (isCardForPlayer) {
+          if (card.card_type === 'yellow') yellowCards++;
+          if (card.card_type === 'red') redCards++;
+        }
+      });
+    }
     
-    return { goalsScored, assists };
+    return { goalsScored, assists, yellowCards, redCards };
   };
 
   // Calculate age from date of birth
@@ -85,7 +147,7 @@ export default function MatchFormationField({
     );
   }
 
-  const playerStats = selectedPlayer ? getPlayerStats(selectedPlayer.id) : null;
+  const playerStats = selectedPlayer ? getPlayerStats(selectedPlayer) : null;
   const playerAge = selectedPlayer ? calculateAge(selectedPlayer.date_of_birth) : null;
 
   return (
@@ -125,6 +187,10 @@ export default function MatchFormationField({
             const pos = getHomePlayerPosition(player);
             const svgX = 3 + (pos.x / 100) * 68;
             const svgY = 3 + (pos.y / 100) * 105;
+            const playerStats = getPlayerStats(player);
+            const hasGoals = playerStats.goalsScored > 0;
+            const hasYellowCard = playerStats.yellowCards > 0;
+            const hasRedCard = playerStats.redCards > 0;
             
             return (
               <g 
@@ -132,7 +198,6 @@ export default function MatchFormationField({
                 transform={`translate(${svgX}, ${svgY})`}
                 style={{ cursor: 'pointer' }}
                 onClick={() => handlePlayerClick(player, true)}
-                onPointerDown={() => handlePlayerClick(player, true)}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handlePlayerClick(player, true); }}
@@ -159,8 +224,57 @@ export default function MatchFormationField({
                   </text>
                 )}
                 <text x="0" y="6.5" textAnchor="middle" fill="#4a90e2" fontSize="1.8" fontWeight="600">
-                  {player.player_name?.split(' ')[0]?.substring(0, 8) || ''}
+                  {player.name?.split(' ')[0]?.substring(0, 8) || player.player_name?.split(' ')[0]?.substring(0, 8) || ''}
                 </text>
+                {/* Football icon - only show if player has goals, positioned on border edge (top-right) */}
+                {hasGoals && (
+                  <g transform="translate(2.7, -2.7)">
+                    <circle r="1.2" fill="#fff" opacity="0.98"/>
+                    <image 
+                      href="/assets/img/Muqawama/ball.svg"
+                      x="-1.2"
+                      y="-1.2"
+                      width="2.4"
+                      height="2.4"
+                      preserveAspectRatio="xMidYMid meet"
+                    />
+                    {/* Goal count badge on ball corner (top-right of ball) */}
+                    {playerStats.goalsScored > 1 && (
+                      <g>
+                        <circle cx="0.9" cy="-0.9" r="0.65" fill="#fff" stroke="#000" strokeWidth="0.18"/>
+                        <text x="0.9" y="-0.75" textAnchor="middle" fontSize="0.75" fill="#000" fontWeight="700">
+                          {playerStats.goalsScored}
+                        </text>
+                      </g>
+                    )}
+                  </g>
+                )}
+                {/* Yellow card icon - positioned on border edge (top-left) */}
+                {hasYellowCard && (
+                  <g transform="translate(-2.7, -2.7)">
+                    <image 
+                      href="/assets/img/Muqawama/Yellow_card.svg"
+                      x="-1.2"
+                      y="-1.2"
+                      width="2.4"
+                      height="2.4"
+                      preserveAspectRatio="xMidYMid meet"
+                    />
+                  </g>
+                )}
+                {/* Red card icon - positioned on border edge (bottom-right) */}
+                {hasRedCard && (
+                  <g transform="translate(2.7, 2.7)">
+                    <image 
+                      href="/assets/img/Muqawama/Red_card.svg"
+                      x="-1.2"
+                      y="-1.2"
+                      width="2.4"
+                      height="2.4"
+                      preserveAspectRatio="xMidYMid meet"
+                    />
+                  </g>
+                )}
               </g>
             );
           })}
@@ -170,6 +284,10 @@ export default function MatchFormationField({
             const pos = getAwayPlayerPosition(player);
             const svgX = 3 + (pos.x / 100) * 68;
             const svgY = 3 + (pos.y / 100) * 105;
+            const playerStats = getPlayerStats(player);
+            const hasGoals = playerStats.goalsScored > 0;
+            const hasYellowCard = playerStats.yellowCards > 0;
+            const hasRedCard = playerStats.redCards > 0;
             
             return (
               <g 
@@ -177,7 +295,6 @@ export default function MatchFormationField({
                 transform={`translate(${svgX}, ${svgY})`}
                 style={{ cursor: 'pointer' }}
                 onClick={() => handlePlayerClick(player, false)}
-                onPointerDown={() => handlePlayerClick(player, false)}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handlePlayerClick(player, false); }}
@@ -204,8 +321,57 @@ export default function MatchFormationField({
                   </text>
                 )}
                 <text x="0" y="6.5" textAnchor="middle" fill="#e63946" fontSize="1.8" fontWeight="600">
-                  {player.player_name?.split(' ')[0]?.substring(0, 8) || ''}
+                  {player.name?.split(' ')[0]?.substring(0, 8) || player.player_name?.split(' ')[0]?.substring(0, 8) || ''}
                 </text>
+                {/* Football icon - only show if player has goals, positioned on border edge (top-right) */}
+                {hasGoals && (
+                  <g transform="translate(2.7, -2.7)">
+                    <circle r="1.2" fill="#fff" opacity="0.98"/>
+                    <image 
+                      href="/assets/img/Muqawama/ball.svg"
+                      x="-1.2"
+                      y="-1.2"
+                      width="2.4"
+                      height="2.4"
+                      preserveAspectRatio="xMidYMid meet"
+                    />
+                    {/* Goal count badge on ball corner (top-right of ball) */}
+                    {playerStats.goalsScored > 1 && (
+                      <g>
+                        <circle cx="0.9" cy="-0.9" r="0.65" fill="#fff" stroke="#000" strokeWidth="0.18"/>
+                        <text x="0.9" y="-0.75" textAnchor="middle" fontSize="0.75" fill="#000" fontWeight="700">
+                          {playerStats.goalsScored}
+                        </text>
+                      </g>
+                    )}
+                  </g>
+                )}
+                {/* Yellow card icon - positioned on border edge (top-left) */}
+                {hasYellowCard && (
+                  <g transform="translate(-2.7, -2.7)">
+                    <image 
+                      href="/assets/img/Muqawama/Yellow_card.svg"
+                      x="-1.2"
+                      y="-1.2"
+                      width="2.4"
+                      height="2.4"
+                      preserveAspectRatio="xMidYMid meet"
+                    />
+                  </g>
+                )}
+                {/* Red card icon - positioned on border edge (bottom-right) */}
+                {hasRedCard && (
+                  <g transform="translate(2.7, 2.7)">
+                    <image 
+                      href="/assets/img/Muqawama/Red_card.svg"
+                      x="-1.2"
+                      y="-1.2"
+                      width="2.4"
+                      height="2.4"
+                      preserveAspectRatio="xMidYMid meet"
+                    />
+                  </g>
+                )}
               </g>
             );
           })}
@@ -235,7 +401,7 @@ export default function MatchFormationField({
             <div className={`player-modal-header ${isHome ? 'home' : 'away'}`}>
               <div className="player-modal-image">
                 {selectedPlayer.player_image ? (
-                  <img src={selectedPlayer.player_image} alt={selectedPlayer.player_name} />
+                  <img src={selectedPlayer.player_image} alt={selectedPlayer.name || selectedPlayer.player_name} />
                 ) : (
                   <div className="player-modal-placeholder">
                     <i className="fas fa-user"></i>
@@ -243,7 +409,7 @@ export default function MatchFormationField({
                 )}
                 <div className={`player-modal-ring ${isHome ? 'home' : 'away'}`}></div>
               </div>
-              <h3 className="player-modal-name">{selectedPlayer.player_name}</h3>
+              <h3 className="player-modal-name">{selectedPlayer.name || selectedPlayer.player_name}</h3>
               <p className="player-modal-team">
                 {isHome ? homeTeam.name : awayTeam.name}
               </p>
@@ -270,6 +436,18 @@ export default function MatchFormationField({
                     <td className="stat-label">Assists</td>
                     <td className="stat-value stat-highlight assists">{playerStats?.assists || 0}</td>
                   </tr>
+                  {playerStats?.yellowCards > 0 && (
+                    <tr>
+                      <td className="stat-label">Yellow Cards</td>
+                      <td className="stat-value stat-highlight yellow-card">{playerStats.yellowCards}</td>
+                    </tr>
+                  )}
+                  {playerStats?.redCards > 0 && (
+                    <tr>
+                      <td className="stat-label">Red Cards</td>
+                      <td className="stat-value stat-highlight red-card">{playerStats.redCards}</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -282,24 +460,11 @@ export default function MatchFormationField({
                 setIsNavigating(true);
                 
                 try {
-                  // Look up the tournament player using team_players.id as registration_player_id
-                  const { data: tournamentPlayer, error } = await supabaseClient
-                    .from('players')
-                    .select('id')
-                    .eq('registration_player_id', selectedPlayer.id)
-                    .single();
-
-                  if (error || !tournamentPlayer) {
-                    console.error('Player not found:', error);
-                    alert('Player details not available');
-                    setIsNavigating(false);
-                    return;
-                  }
-
+                  // selectedPlayer is already from players table, so we can use its id directly
                   const category = window.location.pathname.includes('/u17/') ? 'u17' : 'open-age';
-                  window.location.href = `/muqawamah/2026/${category}/players/?player=${tournamentPlayer.id}`;
+                  window.location.href = `/muqawamah/2026/${category}/players/?player=${selectedPlayer.id}`;
                 } catch (err) {
-                  console.error('Error finding player:', err);
+                  console.error('Error navigating to player:', err);
                   setIsNavigating(false);
                 }
               }}
