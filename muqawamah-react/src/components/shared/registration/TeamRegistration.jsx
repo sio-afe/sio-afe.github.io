@@ -134,19 +134,36 @@ function RegistrationFlow() {
     bootstrapUser();
 
     const { data: listener } = supabaseClient.auth.onAuthStateChange(async (event, session) => {
-      console.log('[Registration] Auth state changed:', event);
-      const sessionUser = session?.user ?? null;
+      if (!mounted) return;
       
-      if (!sessionUser) {
+      console.log('[Registration] Auth state changed:', event);
+      
+      // Only handle events that require action - ignore TOKEN_REFRESHED and other passive events
+      // These events don't require any state changes when tab regains focus
+      const passiveEvents = ['TOKEN_REFRESHED', 'USER_UPDATED'];
+      if (passiveEvents.includes(event)) {
+        console.log('[Registration] Ignoring passive auth event:', event);
+        return;
+      }
+      
+      if (event === 'SIGNED_OUT' || !session?.user) {
+        // User signed out or session expired
+        console.log('[Registration] User signed out, resetting form');
         setUser(null);
         resetForm();
         setStep(1);
         hasHydratedRef.current = false;
-      } else if (event === 'SIGNED_IN') {
-        setUser(sessionUser);
-        setLoading(true); // Show loading while hydrating
-        await hydrateExistingRegistration(sessionUser, { force: true });
-        setLoading(false);
+      } else if (event === 'SIGNED_IN' && session?.user) {
+        // New sign-in - only hydrate if we haven't already hydrated
+        if (!hasHydratedRef.current) {
+          console.log('[Registration] New sign-in, hydrating registration');
+          setUser(session.user);
+          setLoading(true);
+          await hydrateExistingRegistration(session.user, { force: true });
+          setLoading(false);
+        } else {
+          console.log('[Registration] Already hydrated, skipping');
+        }
       }
     });
 
