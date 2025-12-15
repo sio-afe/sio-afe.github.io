@@ -599,20 +599,20 @@ export default function MatchDetail({ matchId, onBack }) {
         />
         
         <MatchHeader match={match} />
-        
-        <MatchPredictions
-          match={match}
-          matchId={matchId}
-          userIdentifier={userIdentifier}
-          userPrediction={userPrediction}
-          userPredictionStats={userPredictionStats}
-          onPredictionUpdate={handlePredictionUpdate}
-          onStatsUpdate={handleStatsUpdate}
-        />
 
         {/* Main Content */}
         <section className="match-detail-content">
           <div className="match-detail-single-column">
+            <MatchPredictions
+              match={match}
+              matchId={matchId}
+              userIdentifier={userIdentifier}
+              userPrediction={userPrediction}
+              userPredictionStats={userPredictionStats}
+              onPredictionUpdate={handlePredictionUpdate}
+              onStatsUpdate={handleStatsUpdate}
+            />
+
             <GoalsAndHighlights 
               goals={goals} 
               cards={cards} 

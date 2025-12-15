@@ -884,7 +884,7 @@
 .prediction-content {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 0;
 }
 
 .prediction-label {
@@ -971,14 +971,14 @@
 .prediction-bars-compact {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-bottom: 12px;
+  gap: 0;
+  margin-bottom: 0;
 }
 
 .prediction-bar-item {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0;
 }
 
 .prediction-bar-label {
@@ -1167,8 +1167,9 @@
 /* Compact Voting Buttons */
 .user-prediction-buttons-compact {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   justify-content: center;
+  margin-top: 12px;
 }
 
 .user-pred-btn-compact {
@@ -1176,17 +1177,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 8px 6px;
+  gap: 2px;
+  padding: 6px 4px;
   background: rgba(255, 255, 255, 0.05);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.7rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Inter', sans-serif;
+  min-width: 0;
 }
 
 .user-pred-btn-compact:hover {
@@ -1339,6 +1341,7 @@
   margin: 0;
   height: 24px;
   border-radius: 12px;
+  width: 100%;
 }
 
 .user-prob-segment {

@@ -131,7 +131,7 @@ export default function MatchPredictions({
 
             {/* Show voting buttons below the bar if user hasn't voted and match is not finished */}
             {!userPrediction && !isMatchFinished && (
-              <div className="user-prediction-buttons-compact" style={{ marginTop: '12px' }}>
+              <div className="user-prediction-buttons-compact">
                 <button
                   className="user-pred-btn-compact home"
                   onClick={() => handleUserPrediction('home')}
