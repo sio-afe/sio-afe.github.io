@@ -6,12 +6,15 @@
 import React, { useEffect, useState } from 'react';
 import { supabaseClient } from '../../../lib/supabaseClient';
 import AdminLayout from '../../components/AdminLayout';
+import AdminFormationEditor from '../../components/AdminFormationEditor';
 
 export default function TeamsList() {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [showFormationEditor, setShowFormationEditor] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState(null);
 
   useEffect(() => {
     fetchTeams();
@@ -229,6 +232,16 @@ export default function TeamsList() {
                     <td><strong>{team.points || 0}</strong></td>
                     <td>
                       <div className="action-buttons">
+                        <button
+                          className="btn-icon btn-edit"
+                          onClick={() => {
+                            setSelectedTeam(team);
+                            setShowFormationEditor(true);
+                          }}
+                          title="Edit Formation"
+                        >
+                          <i className="fas fa-chess-board"></i>
+                        </button>
                         <a 
                           href={`/muqawamah/2026/${team.category}/teams/?team=${team.id}`}
                           className="btn-icon btn-view"
@@ -252,6 +265,20 @@ export default function TeamsList() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {showFormationEditor && selectedTeam && (
+        <AdminFormationEditor
+          teamId={selectedTeam.id}
+          teamName={selectedTeam.name}
+          onClose={() => {
+            setShowFormationEditor(false);
+            setSelectedTeam(null);
+          }}
+          onSave={() => {
+            fetchTeams();
+          }}
+        />
       )}
     </AdminLayout>
   );
