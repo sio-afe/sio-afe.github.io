@@ -227,7 +227,7 @@ export default function Statistics() {
           <div className="stats-loading-content">
             <div className="logo-loader">
               <div className="logo-ring"></div>
-              <img src="/assets/img/MuqawamaLogo.png" alt="Muqawama" className="logo-pulse" />
+              <img src="/assets/img/muq_invert.png" alt="Muqawama" className="logo-pulse" />
             </div>
             <p>Loading statistics...</p>
           </div>

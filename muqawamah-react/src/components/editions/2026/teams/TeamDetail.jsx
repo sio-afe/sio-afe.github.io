@@ -72,68 +72,84 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
 
   const fetchTeamData = async () => {
     try {
-      // Fetch team info
+      // Fetch team info - only select needed columns
       const { data: teamData, error: teamError } = await supabaseClient
         .from('teams')
-        .select('*')
+        .select('id, name, crest_url, category, formation, captain')
         .eq('id', teamId)
         .single();
 
       if (teamError) throw teamError;
       setTeam(teamData);
 
-      // Fetch all teams for standings (same category)
-      if (teamData?.category) {
-        const { data: standingsData } = await supabaseClient
+      if (!teamData?.category) {
+        setLoading(false);
+        return;
+      }
+
+      // Parallelize independent queries for better performance
+      const [standingsResult, matchesResult, playersResult] = await Promise.all([
+        // Fetch all teams for standings (same category)
+        supabaseClient
           .from('teams')
           .select('id, name, crest_url, played, won, drawn, lost, goals_for, goals_against, points')
           .eq('category', teamData.category)
           .order('points', { ascending: false })
-          .order('goals_for', { ascending: false });
+          .order('goals_for', { ascending: false }),
         
-        if (standingsData) {
-          // Add position numbers
-          const withPositions = standingsData.map((t, idx) => ({
-            ...t,
-            position: idx + 1
-          }));
-          setStandings(withPositions);
-        }
-
-        // Fetch matches where this team is home or away
-        const { data: matchesData } = await supabaseClient
+        // Fetch matches where this team is home or away - only select needed columns
+        supabaseClient
           .from('matches')
           .select(`
-            *,
+            id,
+            match_date,
+            scheduled_time,
+            home_team_id,
+            away_team_id,
+            home_score,
+            away_score,
+            status,
+            category,
             home_team:teams!matches_home_team_id_fkey(id, name, crest_url),
             away_team:teams!matches_away_team_id_fkey(id, name, crest_url)
           `)
           .eq('category', teamData.category)
           .or(`home_team_id.eq.${teamId},away_team_id.eq.${teamId}`)
           .order('match_date', { ascending: true })
-          .order('scheduled_time', { ascending: true });
+          .order('scheduled_time', { ascending: true }),
+        
+        // Fetch players for this team from tournament players table
+        supabaseClient
+          .from('players')
+          .select('id, name, player_image, position, position_x, position_y, is_substitute, registration_player_id')
+          .eq('team_id', teamId)
+      ]);
 
-        if (matchesData) {
-          setMatches(matchesData);
-        }
+      // Process standings
+      if (standingsResult.data) {
+        const withPositions = standingsResult.data.map((t, idx) => ({
+          ...t,
+          position: idx + 1
+        }));
+        setStandings(withPositions);
       }
 
-      // Fetch players for this team from tournament players table
-      const { data: playersData } = await supabaseClient
-        .from('players')
-        .select('id, name, player_image, position, position_x, position_y, is_substitute, registration_player_id')
-        .eq('team_id', teamId);
-      
-      if (playersData) {
+      // Process matches
+      if (matchesResult.data) {
+        setMatches(matchesResult.data);
+      }
+
+      // Process players and fetch goals
+      if (playersResult.data) {
         // Map to expected structure for backwards compatibility
-        const mappedPlayers = playersData.map(p => ({
+        const mappedPlayers = playersResult.data.map(p => ({
           ...p,
           player_name: p.name,
           player_age: null // Age not stored in players table
         }));
         setPlayers(mappedPlayers);
         
-        // Fetch goals for this team to build leaderboards
+        // Fetch goals for this team to build leaderboards - only select needed columns
         const { data: goalsData } = await supabaseClient
           .from('goals')
           .select(`
@@ -146,7 +162,7 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
 
         // Build a mapping from registration_player_id (team_players.id) to tournament players
         const registrationToPlayerMap = {};
-        (playersData || []).forEach(p => {
+        (playersResult.data || []).forEach(p => {
           if (p.registration_player_id) {
             registrationToPlayerMap[p.registration_player_id] = p;
           }
@@ -257,7 +273,7 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
         <div className="teams-loading-content">
           <div className="logo-loader">
             <div className="logo-ring"></div>
-            <img src="/assets/img/MuqawamaLogo.png" alt="Muqawama" className="logo-pulse" />
+            <img src="/assets/img/muq_invert.png" alt="Muqawama" className="logo-pulse" />
           </div>
           <p>Loading team...</p>
         </div>

@@ -87,13 +87,24 @@ export default function MatchDetail({ matchId, onBack }) {
     try {
       setLoading(true);
 
-      // Fetch match details
+      // Fetch match details - only select needed columns
       const { data: matchData, error: matchError } = await supabaseClient
         .from('matches')
         .select(`
-          *,
-          home_team:teams!matches_home_team_id_fkey(*),
-          away_team:teams!matches_away_team_id_fkey(*)
+          id,
+          match_number,
+          match_date,
+          scheduled_time,
+          home_team_id,
+          away_team_id,
+          home_score,
+          away_score,
+          status,
+          category,
+          match_type,
+          venue,
+          home_team:teams!matches_home_team_id_fkey(id, name, crest_url, category),
+          away_team:teams!matches_away_team_id_fkey(id, name, crest_url, category)
         `)
         .eq('id', matchId)
         .single();
@@ -101,135 +112,159 @@ export default function MatchDetail({ matchId, onBack }) {
       if (matchError) throw matchError;
       setMatch(matchData);
 
-      // Fetch goals for this match with player details
-      const { data: goalsData } = await supabaseClient
-        .from('goals')
-        .select(`
-          id,
-          match_id,
-          team_id,
-          scorer_id,
-          assister_id,
-          minute,
-          goal_type,
-          scorer:team_players!goals_scorer_id_fkey(id, player_name, player_image),
-          assister:team_players!goals_assister_id_fkey(id, player_name, player_image)
-        `)
-        .eq('match_id', matchId)
-        .order('minute', { ascending: true });
+      // Fetch goals and cards in parallel
+      const [goalsResult, cardsResult] = await Promise.all([
+        supabaseClient
+          .from('goals')
+          .select(`
+            id,
+            match_id,
+            team_id,
+            scorer_id,
+            assister_id,
+            minute,
+            goal_type,
+            scorer:team_players!goals_scorer_id_fkey(id, player_name, player_image),
+            assister:team_players!goals_assister_id_fkey(id, player_name, player_image)
+          `)
+          .eq('match_id', matchId)
+          .order('minute', { ascending: true }),
+        supabaseClient
+          .from('cards')
+          .select(`
+            id,
+            match_id,
+            team_id,
+            player_id,
+            card_type,
+            minute,
+            player:team_players!cards_player_id_fkey(id, player_name, player_image)
+          `)
+          .eq('match_id', matchId)
+          .order('minute', { ascending: true })
+      ]);
+
+      const goalsData = goalsResult.data;
+      const cardsData = cardsResult.data;
 
       if (goalsData) {
-        // Map goals to include players table data if available
-        const goalsWithPlayers = await Promise.all(
-          goalsData.map(async (goal) => {
-            let scorerName = goal.scorer?.player_name || null;
-            let assisterName = goal.assister?.player_name || null;
-            let scorerImage = goal.scorer?.player_image || null;
-            let assisterImage = goal.assister?.player_image || null;
+        // Batch fetch all player IDs that need lookup from players table
+        const playerIdsToLookup = new Set();
+        goalsData.forEach(goal => {
+          if (goal.scorer_id && !goal.scorer?.player_name) {
+            playerIdsToLookup.add(goal.scorer_id);
+          }
+          if (goal.assister_id && !goal.assister?.player_name) {
+            playerIdsToLookup.add(goal.assister_id);
+          }
+        });
 
-            // If scorer_id exists but no name from team_players, try to get from players table
-            if (goal.scorer_id && !scorerName) {
-              const { data: playerData } = await supabaseClient
-                .from('players')
-                .select('name, player_image')
-                .eq('registration_player_id', goal.scorer_id)
-                .maybeSingle();
-              
-              if (playerData) {
-                scorerName = playerData.name || playerData.player_name;
-                scorerImage = playerData.player_image || scorerImage;
+        // Batch fetch all players in one query
+        let playersMap = {};
+        if (playerIdsToLookup.size > 0) {
+          const { data: playersData } = await supabaseClient
+            .from('players')
+            .select('name, player_image, registration_player_id')
+            .in('registration_player_id', Array.from(playerIdsToLookup));
+          
+          if (playersData) {
+            playersData.forEach(player => {
+              if (player.registration_player_id) {
+                playersMap[player.registration_player_id] = player;
               }
-            }
+            });
+          }
+        }
 
-            // If assister_id exists but no name from team_players, try to get from players table
-            if (goal.assister_id && !assisterName) {
-              const { data: playerData } = await supabaseClient
-                .from('players')
-                .select('name, player_image')
-                .eq('registration_player_id', goal.assister_id)
-                .maybeSingle();
-              
-              if (playerData) {
-                assisterName = playerData.name || playerData.player_name;
-                assisterImage = playerData.player_image || assisterImage;
-              }
-            }
+        // Map goals with player data
+        const goalsWithPlayers = goalsData.map((goal) => {
+          let scorerName = goal.scorer?.player_name || null;
+          let assisterName = goal.assister?.player_name || null;
+          let scorerImage = goal.scorer?.player_image || null;
+          let assisterImage = goal.assister?.player_image || null;
 
-            return {
-              ...goal,
-              scorer: scorerName ? { player_name: scorerName, player_image: scorerImage } : null,
-              assister: assisterName ? { player_name: assisterName, player_image: assisterImage } : null
-            };
-          })
-        );
+          // Use players table data if available
+          if (goal.scorer_id && !scorerName && playersMap[goal.scorer_id]) {
+            scorerName = playersMap[goal.scorer_id].name;
+            scorerImage = playersMap[goal.scorer_id].player_image || scorerImage;
+          }
+
+          if (goal.assister_id && !assisterName && playersMap[goal.assister_id]) {
+            assisterName = playersMap[goal.assister_id].name;
+            assisterImage = playersMap[goal.assister_id].player_image || assisterImage;
+          }
+
+          return {
+            ...goal,
+            scorer: scorerName ? { player_name: scorerName, player_image: scorerImage } : null,
+            assister: assisterName ? { player_name: assisterName, player_image: assisterImage } : null
+          };
+        });
 
         setGoals(goalsWithPlayers);
       }
 
-      // Fetch cards for this match
-      const { data: cardsData } = await supabaseClient
-        .from('cards')
-        .select(`
-          id,
-          match_id,
-          team_id,
-          player_id,
-          card_type,
-          minute,
-          player:team_players!cards_player_id_fkey(id, player_name, player_image)
-        `)
-        .eq('match_id', matchId)
-        .order('minute', { ascending: true });
-
       if (cardsData) {
-        // Map cards to include players table data if available
-        const cardsWithPlayers = await Promise.all(
-          cardsData.map(async (card) => {
-            let playerName = card.player?.player_name || null;
+        // Batch fetch all player IDs that need lookup from players table
+        const cardPlayerIdsToLookup = new Set();
+        cardsData.forEach(card => {
+          if (card.player_id && !card.player?.player_name) {
+            cardPlayerIdsToLookup.add(card.player_id);
+          }
+        });
 
-            // If player_id exists but no name from team_players, try to get from players table
-            if (card.player_id && !playerName) {
-              const { data: playerData } = await supabaseClient
-                .from('players')
-                .select('name, player_image')
-                .eq('registration_player_id', card.player_id)
-                .maybeSingle();
-              
-              if (playerData) {
-                playerName = playerData.name || playerData.player_name;
+        // Batch fetch all players in one query
+        let cardPlayersMap = {};
+        if (cardPlayerIdsToLookup.size > 0) {
+          const { data: cardPlayersData } = await supabaseClient
+            .from('players')
+            .select('name, player_image, registration_player_id')
+            .in('registration_player_id', Array.from(cardPlayerIdsToLookup));
+          
+          if (cardPlayersData) {
+            cardPlayersData.forEach(player => {
+              if (player.registration_player_id) {
+                cardPlayersMap[player.registration_player_id] = player;
               }
-            }
+            });
+          }
+        }
 
-            return {
-              ...card,
-              player: playerName ? { player_name: playerName } : null
-            };
-          })
-        );
+        // Map cards with player data
+        const cardsWithPlayers = cardsData.map((card) => {
+          let playerName = card.player?.player_name || null;
+
+          // Use players table data if available
+          if (card.player_id && !playerName && cardPlayersMap[card.player_id]) {
+            playerName = cardPlayersMap[card.player_id].name;
+          }
+
+          return {
+            ...card,
+            player: playerName ? { player_name: playerName } : null
+          };
+        });
 
         setCards(cardsWithPlayers);
       }
 
-      // Fetch home team players (with position coordinates) from players table
-      if (matchData.home_team?.id) {
-        const { data: homePlayers } = await supabaseClient
-          .from('players')
-          .select('*')
-          .eq('team_id', matchData.home_team.id)
-          .order('position');
-        
-        if (homePlayers) setHomeTeamPlayers(homePlayers);
-      }
+      // Fetch both teams' players in parallel - only select needed columns
+      if (matchData.home_team?.id && matchData.away_team?.id) {
+        const [homePlayersResult, awayPlayersResult] = await Promise.all([
+          supabaseClient
+            .from('players')
+            .select('id, name, player_image, position, position_x, position_y, is_substitute, team_id, registration_player_id')
+            .eq('team_id', matchData.home_team.id)
+            .order('position'),
+          supabaseClient
+            .from('players')
+            .select('id, name, player_image, position, position_x, position_y, is_substitute, team_id, registration_player_id')
+            .eq('team_id', matchData.away_team.id)
+            .order('position')
+        ]);
 
-      // Fetch away team players (with position coordinates) from players table
-      if (matchData.away_team?.id) {
-        const { data: awayPlayers } = await supabaseClient
-          .from('players')
-          .select('*')
-          .eq('team_id', matchData.away_team.id)
-          .order('position');
-        
-        if (awayPlayers) setAwayTeamPlayers(awayPlayers);
+        if (homePlayersResult.data) setHomeTeamPlayers(homePlayersResult.data);
+        if (awayPlayersResult.data) setAwayTeamPlayers(awayPlayersResult.data);
       }
 
     } catch (error) {
@@ -527,7 +562,7 @@ export default function MatchDetail({ matchId, onBack }) {
           <div className="fixtures-loading-content">
             <div className="logo-loader">
               <div className="logo-ring"></div>
-              <img src="/assets/img/MuqawamaLogo.png" alt="Muqawama" className="logo-pulse" />
+              <img src="/assets/img/muq_invert.png" alt="Muqawama" className="logo-pulse" />
             </div>
             <p>Loading match details...</p>
           </div>
@@ -565,17 +600,15 @@ export default function MatchDetail({ matchId, onBack }) {
         
         <MatchHeader match={match} />
         
-        {!isFinished && (
-          <MatchPredictions
-            match={match}
-            matchId={matchId}
-            userIdentifier={userIdentifier}
-            userPrediction={userPrediction}
-            userPredictionStats={userPredictionStats}
-            onPredictionUpdate={handlePredictionUpdate}
-            onStatsUpdate={handleStatsUpdate}
-          />
-        )}
+        <MatchPredictions
+          match={match}
+          matchId={matchId}
+          userIdentifier={userIdentifier}
+          userPrediction={userPrediction}
+          userPredictionStats={userPredictionStats}
+          onPredictionUpdate={handlePredictionUpdate}
+          onStatsUpdate={handleStatsUpdate}
+        />
 
         {/* Main Content */}
         <section className="match-detail-content">

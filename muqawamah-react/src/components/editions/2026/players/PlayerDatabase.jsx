@@ -120,7 +120,7 @@ export default function PlayerDatabase() {
             />
           </div>
 
-          <div className="filter-row">
+          <div className="player-filters">
             <select
               value={selectedTeam}
               onChange={(e) => setSelectedTeam(e.target.value)}
@@ -135,7 +135,7 @@ export default function PlayerDatabase() {
             <select
               value={selectedPosition}
               onChange={(e) => setSelectedPosition(e.target.value)}
-              className="filter-select"
+              className="player-filters"
             >
               <option value="all">ALL POSITIONS</option>
               <option value="Goalkeeper">Goalkeeper</option>

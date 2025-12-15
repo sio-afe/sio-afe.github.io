@@ -74,10 +74,7 @@ export default function MatchPredictions({
     }
   };
 
-  if (match.status === 'completed' || match.status === 'live') {
-    return null; // Don't show predictions for completed/live matches
-  }
-
+  const isMatchFinished = match.status === 'completed' || match.status === 'live';
   const totalVotes = userPredictionStats.home + userPredictionStats.draw + userPredictionStats.away;
   
   // Calculate percentages (0% if no votes)
@@ -92,14 +89,14 @@ export default function MatchPredictions({
     : 0;
 
   return (
-    <div className="match-prediction-bar">
+    <div className="goals-panel-compact">
+      <h3 className="panel-title-compact">
+        <i className="fas fa-users"></i>
+        Community Predictions
+      </h3>
       <div className="prediction-content">
         <div className="prediction-bars-compact">
           <div className="prediction-bar-item">
-            <div className="prediction-bar-label">
-              <i className="fas fa-users"></i>
-              <span>Community Predictions</span>
-            </div>
             
             {/* Always show the prediction bar */}
             <div className="user-prediction-probability-bar compact">
@@ -132,8 +129,8 @@ export default function MatchPredictions({
               </div>
             </div>
 
-            {/* Show voting buttons below the bar if user hasn't voted */}
-            {!userPrediction && (
+            {/* Show voting buttons below the bar if user hasn't voted and match is not finished */}
+            {!userPrediction && !isMatchFinished && (
               <div className="user-prediction-buttons-compact" style={{ marginTop: '12px' }}>
                 <button
                   className="user-pred-btn-compact home"
@@ -161,6 +158,8 @@ export default function MatchPredictions({
                 </button>
               </div>
             )}
+            
+         
           </div>
         </div>
       </div>

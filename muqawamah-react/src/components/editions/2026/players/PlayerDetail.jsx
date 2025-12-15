@@ -240,7 +240,7 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
         <div className="players-loading-content">
           <div className="logo-loader">
             <div className="logo-ring"></div>
-            <img src="/assets/img/MuqawamaLogo.png" alt="Muqawama" className="logo-pulse" />
+            <img src="/assets/img/muq_invert.png" alt="Muqawama" className="logo-pulse" />
           </div>
           <p>Loading player...</p>
         </div>
@@ -323,7 +323,7 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
 
             {/* Muqawama Logo Badge */}
             <div className="muqawama-logo-badge">
-              <img src="/assets/img/MuqawamaLogo.png" alt="Muqawama" />
+              <img src="/assets/img/muq_invert.png" alt="Muqawama" />
             </div>
 
             {/* Player Photo Container */}

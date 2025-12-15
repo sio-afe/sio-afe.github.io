@@ -59,7 +59,7 @@ export default function TournamentNavbar() {
         <div className="tournament-navbar-container">
           {/* Desktop Logo - Left Side */}
           <a href="/muqawamah/2026/" className="tournament-navbar-logo desktop-only">
-            <img src="/assets/img/MuqawamaLogo.png" alt="Muqawama" />
+            <img src="/assets/img/muq_invert.png" alt="Muqawama" />
           </a>
 
           {/* Desktop Links */}
