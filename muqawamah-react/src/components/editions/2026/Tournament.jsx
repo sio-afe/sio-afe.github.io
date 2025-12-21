@@ -106,7 +106,7 @@ function Tournament2026() {
       setFixtures(matchesData || []);
       
       console.log('[2026 Tournament] Loaded:', {
-        teams: teamsWithGD.length,
+        teams: teamsWithGDAndForm.length,
         matches: matchesData?.length || 0,
         category
       });

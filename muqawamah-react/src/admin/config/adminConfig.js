@@ -19,6 +19,7 @@ export const ADMIN_ROUTES = {
   MATCHES: '/muqawamah/admin/matches',
   GOALS: '/muqawamah/admin/goals',
   STATISTICS: '/muqawamah/admin/statistics',
+  TOURNAMENT: '/muqawamah/admin/tournament',
   UTILITIES: '/muqawamah/admin/utilities',
   SETTINGS: '/muqawamah/admin/settings'
 };

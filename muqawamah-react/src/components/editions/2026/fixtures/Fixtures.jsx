@@ -7,6 +7,8 @@ export default function Fixtures({ onMatchClick }) {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeMatchday, setActiveMatchday] = useState(1);
+  const [viewMode, setViewMode] = useState('list'); // 'list', 'all'
+  const [searchQuery, setSearchQuery] = useState('');
   
   // Determine category from URL
   const getCategory = () => {
@@ -112,6 +114,29 @@ export default function Fixtures({ onMatchClick }) {
     return { label: 'TBD', className: 'status-scheduled' };
   };
 
+  // Get current matches for the active matchday
+  const currentMatches = matchesByDay[activeMatchday] || [];
+
+  // Filter matches based on search query
+  const filteredMatches = useMemo(() => {
+    if (!searchQuery.trim()) return currentMatches;
+    const query = searchQuery.toLowerCase().trim();
+    return currentMatches.filter(match => 
+      match.home_team?.name?.toLowerCase().includes(query) ||
+      match.away_team?.name?.toLowerCase().includes(query)
+    );
+  }, [currentMatches, searchQuery]);
+
+  // Get all matches filtered by search (for "all" view)
+  const allFilteredMatches = useMemo(() => {
+    if (!searchQuery.trim()) return matches;
+    const query = searchQuery.toLowerCase().trim();
+    return matches.filter(match => 
+      match.home_team?.name?.toLowerCase().includes(query) ||
+      match.away_team?.name?.toLowerCase().includes(query)
+    );
+  }, [matches, searchQuery]);
+
   if (loading) {
     return (
       <>
@@ -130,8 +155,6 @@ export default function Fixtures({ onMatchClick }) {
     );
   }
 
-  const currentMatches = matchesByDay[activeMatchday] || [];
-
   return (
     <>
       <TournamentNavbar />
@@ -143,8 +166,46 @@ export default function Fixtures({ onMatchClick }) {
             <hr className="fixtures-divider" />
           </div>
 
-          {/* Matchday Tabs */}
-          {matchdays.length > 0 && (
+          {/* View Toggle & Search */}
+          <div className="fixtures-controls">
+            <div className="view-toggle-fixtures">
+              <button 
+                className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
+                onClick={() => setViewMode('list')}
+                title="List View"
+              >
+                <i className="fas fa-list"></i>
+                <span>Matchday</span>
+              </button>
+              <button 
+                className={`view-btn ${viewMode === 'all' ? 'active' : ''}`}
+                onClick={() => setViewMode('all')}
+                title="All Matches"
+              >
+                <i className="fas fa-th-list"></i>
+                <span>All</span>
+              </button>
+            </div>
+
+            {/* Search Box */}
+            <div className="fixtures-search">
+              <i className="fas fa-search"></i>
+              <input
+                type="text"
+                placeholder="Search by team name..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button className="clear-search" onClick={() => setSearchQuery('')}>
+                  <i className="fas fa-times"></i>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* List View - Matchday Tabs */}
+          {viewMode === 'list' && matchdays.length > 0 && (
             <div className="matchday-tabs-v2">
               {matchdays.map(day => (
                 <button
@@ -160,8 +221,8 @@ export default function Fixtures({ onMatchClick }) {
 
           {/* Matches List */}
           <div className="matches-list-v2">
-            {currentMatches.length > 0 ? (
-              currentMatches.map((match) => {
+            {(viewMode === 'all' ? allFilteredMatches : filteredMatches).length > 0 ? (
+              (viewMode === 'all' ? allFilteredMatches : filteredMatches).map((match) => {
                 const isFinished = match.status === 'completed';
                 const isLive = match.status === 'live';
                 const hasScore = isFinished || isLive;
@@ -257,13 +318,139 @@ export default function Fixtures({ onMatchClick }) {
             ) : (
               <div className="no-matches-v2">
                 <i className="fas fa-calendar-times"></i>
-                <p>No fixtures scheduled for Matchday {activeMatchday}</p>
+                <p>
+                  {searchQuery 
+                    ? `No matches found for "${searchQuery}"` 
+                    : `No fixtures scheduled for Matchday ${activeMatchday}`
+                  }
+                </p>
               </div>
             )}
           </div>
         </div>
       </div>
       <Footer edition="2026" />
+
+      <style>{`
+        .fixtures-controls {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 24px;
+          flex-wrap: wrap;
+        }
+
+        .view-toggle-fixtures {
+          display: flex;
+          gap: 4px;
+          background: rgba(255, 255, 255, 0.05);
+          padding: 4px;
+          border-radius: 10px;
+        }
+
+        .view-btn {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 16px;
+          background: transparent;
+          border: none;
+          color: rgba(255, 255, 255, 0.5);
+          cursor: pointer;
+          border-radius: 8px;
+          font-size: 13px;
+          font-weight: 500;
+          transition: all 0.2s;
+        }
+
+        .view-btn:hover {
+          color: rgba(255, 255, 255, 0.8);
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        .view-btn.active {
+          background: linear-gradient(135deg, #4f8cff, #6fb1fc);
+          color: #fff;
+        }
+
+        .view-btn i {
+          font-size: 14px;
+        }
+
+        .fixtures-search {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
+          padding: 10px 16px;
+          min-width: 250px;
+          transition: all 0.2s;
+        }
+
+        .fixtures-search:focus-within {
+          border-color: #4f8cff;
+          background: rgba(79, 140, 255, 0.05);
+        }
+
+        .fixtures-search i {
+          color: rgba(255, 255, 255, 0.4);
+        }
+
+        .fixtures-search input {
+          flex: 1;
+          background: transparent;
+          border: none;
+          outline: none;
+          color: #fff;
+          font-size: 14px;
+        }
+
+        .fixtures-search input::placeholder {
+          color: rgba(255, 255, 255, 0.4);
+        }
+
+        .clear-search {
+          background: none;
+          border: none;
+          color: rgba(255, 255, 255, 0.4);
+          cursor: pointer;
+          padding: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: color 0.2s;
+        }
+
+        .clear-search:hover {
+          color: #fff;
+        }
+
+        @media (max-width: 768px) {
+          .fixtures-controls {
+            flex-direction: column;
+            align-items: stretch;
+          }
+
+          .view-toggle-fixtures {
+            justify-content: center;
+          }
+
+          .fixtures-search {
+            min-width: 100%;
+          }
+
+          .view-btn span {
+            display: none;
+          }
+
+          .view-btn {
+            padding: 10px 14px;
+          }
+        }
+      `}</style>
     </>
   );
 }

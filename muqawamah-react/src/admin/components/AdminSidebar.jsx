@@ -50,6 +50,11 @@ export default function AdminSidebar({ isOpen = false, onClose }) {
       path: ADMIN_ROUTES.STATISTICS 
     },
     { 
+      icon: 'fas fa-sitemap', 
+      label: 'Tournament', 
+      path: ADMIN_ROUTES.TOURNAMENT 
+    },
+    { 
       icon: 'fas fa-tools', 
       label: 'Utilities', 
       path: ADMIN_ROUTES.UTILITIES 

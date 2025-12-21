@@ -19,6 +19,7 @@ import GoalsManager from './admin/pages/Goals/GoalsManager';
 import StatisticsViewer from './admin/pages/Statistics/StatisticsViewer';
 import StatsRecalculator from './admin/pages/Utilities/StatsRecalculator';
 import SettingsPanel from './admin/pages/Settings/SettingsPanel';
+import TournamentConfig from './admin/pages/Tournament/TournamentConfig';
 
 // Import styles
 import './admin/styles/admin.css';
@@ -158,6 +159,8 @@ function AdminApp() {
       setCurrentPage('utilities');
     } else if (path.includes('/admin/settings')) {
       setCurrentPage('settings');
+    } else if (path.includes('/admin/tournament')) {
+      setCurrentPage('tournament');
     } else {
       setCurrentPage('dashboard');
     }
@@ -199,6 +202,8 @@ function AdminApp() {
         return <StatsRecalculator />;
       case 'settings':
         return <SettingsPanel />;
+      case 'tournament':
+        return <TournamentConfig />;
       default:
         return <AdminDashboard />;
     }

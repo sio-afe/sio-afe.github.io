@@ -55,15 +55,23 @@ export default function MatchFormationField({
       
       // FALLBACK: If no match via players table, try team_players table by name
       // This handles cases where player might not be in players table yet
+      // IMPORTANT: Also check team_id to avoid matching players with same name on different teams
       if (!isScorer && !isAssister) {
         const scorerName = goal.scorer?.player_name || '';
         const assisterName = goal.assister?.player_name || '';
+        const playerTeamId = player.team_id;
         
         if (scorerName && playerName && scorerName.toLowerCase().trim() === playerName.toLowerCase().trim()) {
-          isScorer = true;
+          // Only match if goal's team matches player's team
+          if (goal.team_id === playerTeamId) {
+            isScorer = true;
+          }
         }
         if (assisterName && playerName && assisterName.toLowerCase().trim() === playerName.toLowerCase().trim()) {
-          isAssister = true;
+          // Only match if goal's team matches player's team
+          if (goal.team_id === playerTeamId) {
+            isAssister = true;
+          }
         }
       }
       
@@ -82,10 +90,15 @@ export default function MatchFormationField({
         }
         
         // FALLBACK: Try to match via team_players table by name
+        // IMPORTANT: Also check team_id to avoid matching players with same name on different teams
         if (!isCardForPlayer) {
           const cardPlayerName = card.player?.player_name || '';
+          const playerTeamId = player.team_id;
           if (cardPlayerName && playerName && cardPlayerName.toLowerCase().trim() === playerName.toLowerCase().trim()) {
-            isCardForPlayer = true;
+            // Only match if card's team matches player's team
+            if (card.team_id === playerTeamId) {
+              isCardForPlayer = true;
+            }
           }
         }
         

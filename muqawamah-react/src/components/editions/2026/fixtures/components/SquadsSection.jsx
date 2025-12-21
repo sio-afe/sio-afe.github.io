@@ -35,15 +35,23 @@ export default function SquadsSection({ homeTeamPlayers, awayTeamPlayers, match,
       }
       
       // Fallback to team_players by name
+      // IMPORTANT: Also check team_id to avoid matching players with same name on different teams
       if (!isScorer && !isAssister) {
         const scorerName = goal.scorer?.player_name || '';
         const assisterName = goal.assister?.player_name || '';
+        const playerTeamId = player.team_id;
         
         if (scorerName && playerName && scorerName.toLowerCase().trim() === playerName.toLowerCase().trim()) {
-          isScorer = true;
+          // Only match if goal's team matches player's team
+          if (goal.team_id === playerTeamId) {
+            isScorer = true;
+          }
         }
         if (assisterName && playerName && assisterName.toLowerCase().trim() === playerName.toLowerCase().trim()) {
-          isAssister = true;
+          // Only match if goal's team matches player's team
+          if (goal.team_id === playerTeamId) {
+            isAssister = true;
+          }
         }
       }
       
@@ -60,10 +68,15 @@ export default function SquadsSection({ homeTeamPlayers, awayTeamPlayers, match,
           isCardForPlayer = true;
         }
         
+        // IMPORTANT: Also check team_id to avoid matching players with same name on different teams
         if (!isCardForPlayer) {
           const cardPlayerName = card.player?.player_name || '';
+          const playerTeamId = player.team_id;
           if (cardPlayerName && playerName && cardPlayerName.toLowerCase().trim() === playerName.toLowerCase().trim()) {
-            isCardForPlayer = true;
+            // Only match if card's team matches player's team
+            if (card.team_id === playerTeamId) {
+              isCardForPlayer = true;
+            }
           }
         }
         

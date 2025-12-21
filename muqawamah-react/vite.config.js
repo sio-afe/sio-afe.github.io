@@ -3,7 +3,22 @@ import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    // Dev server middleware to handle tournament URLs
+    {
+      name: 'tournament-redirects',
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          // Redirect /muqawamah/2026/open-age/ to tournament.html
+          if (req.url?.match(/^\/muqawamah\/2026\/(open-age|u17)\/?$/)) {
+            req.url = '/muqawamah/tournament.html';
+          }
+          next();
+        });
+      }
+    }
+  ],
   build: {
     outDir: 'dist',
     rollupOptions: {
