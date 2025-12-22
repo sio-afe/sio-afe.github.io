@@ -1185,40 +1185,12 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  box-shadow: 
-    0 0 20px rgba(91, 155, 243, 0.3),
-    0 0 40px rgba(91, 155, 243, 0.15),
-    inset 0 0 15px rgba(91, 155, 243, 0.1);
   backdrop-filter: blur(10px);
   z-index: 100;
-  overflow: visible;
-}
-
-.stats-share-btn-fixed::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 50%;
-  background: linear-gradient(145deg, rgba(91, 155, 243, 0.4), rgba(74, 127, 213, 0.2));
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: -1;
-}
-
-.stats-share-btn-fixed::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  box-shadow: 0 0 30px rgba(91, 155, 243, 0.6);
-  opacity: 0;
-  transition: opacity 0.3s ease;
 }
 
 .stats-share-btn-fixed i {
-  filter: drop-shadow(0 0 8px rgba(91, 155, 243, 0.5));
   transition: all 0.3s ease;
-  z-index: 1;
 }
 
 .stats-share-btn-fixed:hover {
@@ -1226,22 +1198,6 @@
   background: rgba(91, 155, 243, 0.25);
   border-color: rgba(91, 155, 243, 0.5);
   color: #6BAAF5;
-  box-shadow: 
-    0 0 25px rgba(91, 155, 243, 0.5),
-    0 0 50px rgba(91, 155, 243, 0.25),
-    inset 0 0 20px rgba(91, 155, 243, 0.15);
-}
-
-.stats-share-btn-fixed:hover::before {
-  opacity: 1;
-}
-
-.stats-share-btn-fixed:hover::after {
-  opacity: 0.6;
-}
-
-.stats-share-btn-fixed:hover i {
-  filter: drop-shadow(0 0 12px rgba(107, 170, 245, 0.8));
 }
 
 .stats-share-btn-fixed:active {

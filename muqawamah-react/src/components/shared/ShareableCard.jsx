@@ -37,9 +37,8 @@ const InstagramIcon = ({ size = 18, color = "rgba(255,255,255,0.6)" }) => (
 // Match Share Card
 export function MatchShareCard({ match, onClose }) {
   const cardRef = useRef(null);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [shareReady, setShareReady] = useState(false);
-  const [imageBlob, setImageBlob] = useState(null);
+  const [isGenerating, setIsGenerating] = useState(true);
+  const [imageData, setImageData] = useState(null);
 
   const formatDate = (dateString) => {
     if (!dateString) return 'TBD';
@@ -64,48 +63,47 @@ export function MatchShareCard({ match, onClose }) {
   const isFinished = match.status === 'completed';
   const isLive = match.status === 'live';
 
-  const generateImage = async () => {
-    if (!cardRef.current) return null;
-    
-    setIsGenerating(true);
-    try {
-      const dataUrl = await toPng(cardRef.current, {
-        quality: 1,
-        pixelRatio: 3,
-        backgroundColor: '#0a0e1a',
-      });
+  // Pre-generate image when modal opens
+  React.useEffect(() => {
+    const generateImage = async () => {
+      if (!cardRef.current) return;
       
-      // Convert to blob without using fetch (avoids CSP issues)
-      const blob = dataURLtoBlob(dataUrl);
-      setImageBlob(blob);
-      setShareReady(true);
-      return { dataUrl, blob };
-    } catch (error) {
-      console.error('Error generating image:', error);
-      return null;
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+      try {
+        const dataUrl = await toPng(cardRef.current, {
+          quality: 1,
+          pixelRatio: 3,
+          backgroundColor: '#0a0e1a',
+        });
+        
+        const blob = dataURLtoBlob(dataUrl);
+        setImageData({ dataUrl, blob });
+      } catch (error) {
+        console.error('Error generating image:', error);
+      } finally {
+        setIsGenerating(false);
+      }
+    };
 
-  const downloadImage = async () => {
-    const result = await generateImage();
-    if (result) {
-      const link = document.createElement('a');
-      link.download = `match-${match.home_team?.name}-vs-${match.away_team?.name}.png`;
-      link.href = result.dataUrl;
-      link.click();
-    }
+    // Use requestAnimationFrame for instant generation on next paint
+    const frameId = requestAnimationFrame(generateImage);
+    return () => cancelAnimationFrame(frameId);
+  }, []);
+
+  const downloadImage = () => {
+    if (!imageData) return;
+    
+    const link = document.createElement('a');
+    link.download = `match-${match.home_team?.name}-vs-${match.away_team?.name}.png`;
+    link.href = imageData.dataUrl;
+    link.click();
   };
 
   // Native Share - Opens device share sheet directly
   const nativeShare = async () => {
-    const result = await generateImage();
-    if (!result) return;
+    if (!imageData) return;
 
     const fileName = `muqawamah-${match.home_team?.name || 'match'}-vs-${match.away_team?.name || 'match'}.png`;
-    const file = new File([result.blob], fileName, { type: 'image/png' });
-    const shareText = `⚽ ${match.home_team?.name} ${isFinished ? match.home_score : ''} - ${isFinished ? match.away_score : ''} ${match.away_team?.name}\n🏆 Muqawamah 2026 • ${getMatchTypeLabel()}\n📅 ${formatDate(match.match_date)}\n\n📲 muqawama2026`;
+    const file = new File([imageData.blob], fileName, { type: 'image/png' });
 
     // Check if native sharing with files is supported
     if (navigator.share && navigator.canShare) {
@@ -256,47 +254,49 @@ export function MatchShareCard({ match, onClose }) {
 // Team Share Card
 export function TeamShareCard({ team, stats, onClose }) {
   const cardRef = useRef(null);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(true);
+  const [imageData, setImageData] = useState(null);
 
-  const generateImage = async () => {
-    if (!cardRef.current) return null;
-    
-    setIsGenerating(true);
-    try {
-      const dataUrl = await toPng(cardRef.current, {
-        quality: 1,
-        pixelRatio: 3,
-        backgroundColor: '#0a0e1a',
-      });
+  // Pre-generate image when modal opens
+  React.useEffect(() => {
+    const generateImage = async () => {
+      if (!cardRef.current) return;
       
-      // Convert to blob without using fetch (avoids CSP issues)
-      const blob = dataURLtoBlob(dataUrl);
-      return { dataUrl, blob };
-    } catch (error) {
-      console.error('Error generating image:', error);
-      return null;
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+      try {
+        const dataUrl = await toPng(cardRef.current, {
+          quality: 1,
+          pixelRatio: 3,
+          backgroundColor: '#0a0e1a',
+        });
+        
+        const blob = dataURLtoBlob(dataUrl);
+        setImageData({ dataUrl, blob });
+      } catch (error) {
+        console.error('Error generating image:', error);
+      } finally {
+        setIsGenerating(false);
+      }
+    };
 
-  const downloadImage = async () => {
-    const result = await generateImage();
-    if (result) {
-      const link = document.createElement('a');
-      link.download = `team-${team.name}.png`;
-      link.href = result.dataUrl;
-      link.click();
-    }
+    const frameId = requestAnimationFrame(generateImage);
+    return () => cancelAnimationFrame(frameId);
+  }, []);
+
+  const downloadImage = () => {
+    if (!imageData) return;
+    
+    const link = document.createElement('a');
+    link.download = `team-${team.name}.png`;
+    link.href = imageData.dataUrl;
+    link.click();
   };
 
   // Native Share - Opens device share sheet directly
   const nativeShare = async () => {
-    const result = await generateImage();
-    if (!result) return;
+    if (!imageData) return;
 
     const fileName = `muqawamah-${team.name || 'team'}.png`;
-    const file = new File([result.blob], fileName, { type: 'image/png' });
+    const file = new File([imageData.blob], fileName, { type: 'image/png' });
 
     // Check if native sharing with files is supported
     if (navigator.share && navigator.canShare) {
@@ -433,45 +433,48 @@ export function TeamShareCard({ team, stats, onClose }) {
 // Player Share Card
 export function PlayerShareCard({ player, team, onClose }) {
   const cardRef = useRef(null);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(true);
+  const [imageData, setImageData] = useState(null);
 
-  const generateImage = async () => {
-    if (!cardRef.current) return null;
-    
-    setIsGenerating(true);
-    try {
-      const dataUrl = await toPng(cardRef.current, {
-        quality: 1,
-        pixelRatio: 3,
-        backgroundColor: '#0a0e1a',
-      });
+  // Pre-generate image when modal opens
+  React.useEffect(() => {
+    const generateImage = async () => {
+      if (!cardRef.current) return;
       
-      const blob = dataURLtoBlob(dataUrl);
-      return { dataUrl, blob };
-    } catch (error) {
-      console.error('Error generating image:', error);
-      return null;
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+      try {
+        const dataUrl = await toPng(cardRef.current, {
+          quality: 1,
+          pixelRatio: 3,
+          backgroundColor: '#0a0e1a',
+        });
+        
+        const blob = dataURLtoBlob(dataUrl);
+        setImageData({ dataUrl, blob });
+      } catch (error) {
+        console.error('Error generating image:', error);
+      } finally {
+        setIsGenerating(false);
+      }
+    };
 
-  const downloadImage = async () => {
-    const result = await generateImage();
-    if (result) {
-      const link = document.createElement('a');
-      link.download = `player-${player.name || 'player'}.png`;
-      link.href = result.dataUrl;
-      link.click();
-    }
+    const frameId = requestAnimationFrame(generateImage);
+    return () => cancelAnimationFrame(frameId);
+  }, []);
+
+  const downloadImage = () => {
+    if (!imageData) return;
+    
+    const link = document.createElement('a');
+    link.download = `player-${player.name || 'player'}.png`;
+    link.href = imageData.dataUrl;
+    link.click();
   };
 
   const nativeShare = async () => {
-    const result = await generateImage();
-    if (!result) return;
+    if (!imageData) return;
 
     const fileName = `muqawamah-${player.name || 'player'}.png`;
-    const file = new File([result.blob], fileName, { type: 'image/png' });
+    const file = new File([imageData.blob], fileName, { type: 'image/png' });
 
     if (navigator.share && navigator.canShare) {
       try {
@@ -623,45 +626,48 @@ export function PlayerShareCard({ player, team, onClose }) {
 // Stats Share Card - Top 3 Leaderboard
 export function StatsShareCard({ statType, items, onClose }) {
   const cardRef = useRef(null);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(true);
+  const [imageData, setImageData] = useState(null);
 
-  const generateImage = async () => {
-    if (!cardRef.current) return null;
-    
-    setIsGenerating(true);
-    try {
-      const dataUrl = await toPng(cardRef.current, {
-        quality: 1,
-        pixelRatio: 3,
-        backgroundColor: '#0a0e1a',
-      });
+  // Pre-generate image when modal opens
+  React.useEffect(() => {
+    const generateImage = async () => {
+      if (!cardRef.current) return;
       
-      const blob = dataURLtoBlob(dataUrl);
-      return { dataUrl, blob };
-    } catch (error) {
-      console.error('Error generating image:', error);
-      return null;
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+      try {
+        const dataUrl = await toPng(cardRef.current, {
+          quality: 1,
+          pixelRatio: 3,
+          backgroundColor: '#0a0e1a',
+        });
+        
+        const blob = dataURLtoBlob(dataUrl);
+        setImageData({ dataUrl, blob });
+      } catch (error) {
+        console.error('Error generating image:', error);
+      } finally {
+        setIsGenerating(false);
+      }
+    };
 
-  const downloadImage = async () => {
-    const result = await generateImage();
-    if (result) {
-      const link = document.createElement('a');
-      link.download = `muqawamah-top-${statType}.png`;
-      link.href = result.dataUrl;
-      link.click();
-    }
+    const frameId = requestAnimationFrame(generateImage);
+    return () => cancelAnimationFrame(frameId);
+  }, []);
+
+  const downloadImage = () => {
+    if (!imageData) return;
+    
+    const link = document.createElement('a');
+    link.download = `muqawamah-top-${statType}.png`;
+    link.href = imageData.dataUrl;
+    link.click();
   };
 
   const nativeShare = async () => {
-    const result = await generateImage();
-    if (!result) return;
+    if (!imageData) return;
 
     const fileName = `muqawamah-top-${statType}.png`;
-    const file = new File([result.blob], fileName, { type: 'image/png' });
+    const file = new File([imageData.blob], fileName, { type: 'image/png' });
 
     if (navigator.share && navigator.canShare) {
       try {
