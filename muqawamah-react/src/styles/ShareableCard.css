@@ -233,7 +233,8 @@
   font-family: 'Oswald', sans-serif;
   font-size: 2rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(91, 155, 243, 0.6);
+  filter: drop-shadow(0 2px 6px rgba(91, 155, 243, 0.3));
 }
 
 .card-team-name {
@@ -386,9 +387,19 @@
   font-family: 'Oswald', sans-serif;
   font-size: 3rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.05);
+  color: rgba(91, 155, 243, 0.7);
+  background: linear-gradient(135deg, rgba(91, 155, 243, 0.12) 0%, rgba(74, 127, 213, 0.12) 100%);
   border-radius: 50%;
+  border: 3px solid rgba(91, 155, 243, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.team-logo-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
 }
 
 .team-info-wrapper {
@@ -561,14 +572,25 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(91, 155, 243, 0.15) 0%, rgba(74, 127, 213, 0.15) 100%);
   border-radius: 50%;
-  border: 3px solid rgba(255, 255, 255, 0.1);
+  border: 3px solid rgba(91, 155, 243, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.player-photo-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
 }
 
 .player-photo-placeholder i {
-  font-size: 2.5rem;
-  color: rgba(255, 255, 255, 0.3);
+  font-size: 3rem;
+  color: rgba(91, 155, 243, 0.6);
+  z-index: 1;
+  filter: drop-shadow(0 2px 8px rgba(91, 155, 243, 0.3));
 }
 
 .player-position-badge {
@@ -765,24 +787,37 @@
   height: 40px;
   border-radius: 50%;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(91, 155, 243, 0.15) 0%, rgba(74, 127, 213, 0.15) 100%);
+  border: 2px solid rgba(91, 155, 243, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  position: relative;
+}
+
+.rank-avatar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
 }
 
 .rank-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  position: relative;
+  z-index: 1;
 }
 
 .rank-initial {
   font-family: 'Oswald', sans-serif;
   font-size: 1.1rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(91, 155, 243, 0.8);
+  z-index: 1;
+  filter: drop-shadow(0 1px 4px rgba(91, 155, 243, 0.3));
 }
 
 .rank-info {
