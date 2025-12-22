@@ -147,7 +147,7 @@ describe('MatchShareCard', () => {
   it('renders Instagram handle', () => {
     render(<MatchShareCard match={mockMatch} onClose={mockOnClose} />);
     
-    expect(screen.getByText('@muqawamah2026')).toBeInTheDocument();
+    expect(screen.getByText('muqawama2026')).toBeInTheDocument();
   });
 
   it('renders tournament logo', () => {
@@ -296,7 +296,7 @@ describe('TeamShareCard', () => {
   it('renders Instagram handle', () => {
     render(<TeamShareCard team={mockTeam} stats={mockStats} onClose={mockOnClose} />);
     
-    expect(screen.getByText('@muqawamah2026')).toBeInTheDocument();
+    expect(screen.getByText('muqawama2026')).toBeInTheDocument();
   });
 
   it('renders logo placeholder when crest_url is missing', () => {
@@ -537,7 +537,7 @@ describe('StatsShareCard', () => {
   it('renders Instagram handle', () => {
     render(<StatsShareCard statType="goals" items={mockItems} onClose={mockOnClose} />);
     
-    expect(screen.getByText('@muqawamah2026')).toBeInTheDocument();
+    expect(screen.getByText('muqawama2026')).toBeInTheDocument();
   });
 
   it('renders initial when image is missing', () => {

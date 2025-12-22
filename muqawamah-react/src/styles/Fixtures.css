@@ -801,27 +801,41 @@
 }
 
 .match-action-buttons .share-trigger-btn {
-  width: 54px;
-  height: 54px;
+  width: 56px;
+  height: 56px;
   padding: 0;
   border-radius: 50%;
   justify-content: center;
-  background: linear-gradient(145deg, 
-    rgba(59, 130, 246, 0.95) 0%, 
-    rgba(37, 99, 235, 1) 50%,
-    rgba(29, 78, 216, 1) 100%
-  );
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(91, 155, 243, 0.15);
+  border: 2px solid rgba(91, 155, 243, 0.3);
   box-shadow: 
-    0 6px 24px rgba(59, 130, 246, 0.4),
-    0 2px 8px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(12px);
+    0 0 20px rgba(91, 155, 243, 0.3),
+    0 0 40px rgba(91, 155, 243, 0.15),
+    inset 0 0 15px rgba(91, 155, 243, 0.1);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: visible;
 }
 
 .match-action-buttons .share-trigger-btn::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
   border-radius: 50%;
-  height: 45%;
+  background: linear-gradient(145deg, rgba(91, 155, 243, 0.4), rgba(74, 127, 213, 0.2));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.match-action-buttons .share-trigger-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 30px rgba(91, 155, 243, 0.6);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .match-action-buttons .share-trigger-btn span {
@@ -830,21 +844,33 @@
 
 .match-action-buttons .share-trigger-btn i {
   font-size: 1.25rem;
-  color: #fff;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  color: #5B9BF3;
+  filter: drop-shadow(0 0 8px rgba(91, 155, 243, 0.5));
+  transition: all 0.3s ease;
+  z-index: 1;
 }
 
 .match-action-buttons .share-trigger-btn:hover {
-  transform: scale(1.1) translateY(-2px);
+  transform: scale(1.05);
+  background: rgba(91, 155, 243, 0.25);
+  border-color: rgba(91, 155, 243, 0.5);
   box-shadow: 
-    0 10px 35px rgba(59, 130, 246, 0.5),
-    0 4px 12px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  background: linear-gradient(145deg, 
-    rgba(79, 150, 255, 1) 0%, 
-    rgba(59, 130, 246, 1) 50%,
-    rgba(37, 99, 235, 1) 100%
-  );
+    0 0 25px rgba(91, 155, 243, 0.5),
+    0 0 50px rgba(91, 155, 243, 0.25),
+    inset 0 0 20px rgba(91, 155, 243, 0.15);
+}
+
+.match-action-buttons .share-trigger-btn:hover::before {
+  opacity: 1;
+}
+
+.match-action-buttons .share-trigger-btn:hover::after {
+  opacity: 0.6;
+}
+
+.match-action-buttons .share-trigger-btn:hover i {
+  color: #6BAAF5;
+  filter: drop-shadow(0 0 12px rgba(107, 170, 245, 0.8));
 }
 
 .match-action-buttons .share-trigger-btn:active {

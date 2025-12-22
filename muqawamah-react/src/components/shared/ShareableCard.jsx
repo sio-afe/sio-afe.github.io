@@ -105,7 +105,7 @@ export function MatchShareCard({ match, onClose }) {
 
     const fileName = `muqawamah-${match.home_team?.name || 'match'}-vs-${match.away_team?.name || 'match'}.png`;
     const file = new File([result.blob], fileName, { type: 'image/png' });
-    const shareText = `⚽ ${match.home_team?.name} ${isFinished ? match.home_score : ''} - ${isFinished ? match.away_score : ''} ${match.away_team?.name}\n🏆 Muqawamah 2026 • ${getMatchTypeLabel()}\n📅 ${formatDate(match.match_date)}\n\n📲 @muqawamah2026`;
+    const shareText = `⚽ ${match.home_team?.name} ${isFinished ? match.home_score : ''} - ${isFinished ? match.away_score : ''} ${match.away_team?.name}\n🏆 Muqawamah 2026 • ${getMatchTypeLabel()}\n📅 ${formatDate(match.match_date)}\n\n📲 muqawama2026`;
 
     // Check if native sharing with files is supported
     if (navigator.share && navigator.canShare) {
@@ -214,7 +214,7 @@ export function MatchShareCard({ match, onClose }) {
             <div className="card-footer">
               <span className="card-instagram">
                 <InstagramIcon size={18} color="rgba(255,255,255,0.85)" />
-                @muqawamah2026
+                muqawama2026
               </span>
             </div>
           </div>
@@ -399,7 +399,7 @@ export function TeamShareCard({ team, stats, onClose }) {
             <div className="card-footer">
               <span className="card-instagram">
                 <InstagramIcon size={18} color="rgba(255,255,255,0.85)" />
-                @muqawamah2026
+                muqawama2026
               </span>
             </div>
           </div>
@@ -589,7 +589,7 @@ export function PlayerShareCard({ player, team, onClose }) {
             <div className="card-footer">
               <span className="card-instagram">
                 <InstagramIcon size={18} color="rgba(255,255,255,0.85)" />
-                @muqawamah2026
+                muqawama2026
               </span>
             </div>
           </div>
@@ -775,7 +775,7 @@ export function StatsShareCard({ statType, items, onClose }) {
             <div className="card-footer">
               <span className="card-instagram">
                 <InstagramIcon size={18} color="rgba(255,255,255,0.85)" />
-                @muqawamah2026
+                muqawama2026
               </span>
             </div>
           </div>
