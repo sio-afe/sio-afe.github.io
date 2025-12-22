@@ -69,14 +69,94 @@
   flex-direction: column;
 }
 
+/* Card with mosaic pattern */
+.team-card-db.team-card-mosaic {
+  background: #0a0e27;
+}
+
 .team-card-db:hover {
   transform: translateY(-8px);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(79, 140, 255, 0.15);
   border-color: rgba(79, 140, 255, 0.3);
 }
 
-/* Gradient overlay effect */
-.team-card-db::before {
+/* Content layer above mosaic - CENTERED LAYOUT (legacy) */
+.team-card-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* NEW LAYOUT: Logo center, Info bottom-left */
+.team-card-content-new {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  padding: 20px;
+  height: 100%;
+}
+
+/* Logo - Center (Transparent, just the image) */
+.team-logo-center {
+  width: 180px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: auto;
+  margin-top: 20px;
+}
+
+.team-logo-center img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.6));
+}
+
+.team-logo-center span {
+  font-family: 'Oswald', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.4);
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Team Info - Bottom Left Corner */
+.team-info-corner {
+  text-align: left;
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+.team-name-corner {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0 0 4px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  line-height: 1.2;
+}
+
+.team-captain-corner {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  font-weight: 500;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Gradient overlay effect - only for non-mosaic cards */
+.team-card-db:not(.team-card-mosaic)::before {
   content: '';
   position: absolute;
   top: 0;
@@ -89,7 +169,7 @@
   transition: opacity 0.3s ease;
 }
 
-.team-card-db:hover::before {
+.team-card-db:not(.team-card-mosaic):hover::before {
   opacity: 0.8;
 }
 
@@ -101,12 +181,12 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(79, 140, 255, 0.4) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(79, 140, 255, 0.25) 0%, transparent 70%);
   opacity: 0;
   transform: translate(-50%, -50%);
   transition: opacity 0.5s ease;
   pointer-events: none;
-  z-index: 1;
+  z-index: 3;
 }
 
 .team-card-db:hover::after {
@@ -121,7 +201,21 @@
   50% {
     transform: translate(-70%, -70%);
   }
+
 }
+
+/* P5.js canvas container */
+.team-mosaic-pattern {
+  pointer-events: none;
+}
+
+.team-mosaic-pattern canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+
 
 .team-logo-large {
   width: 120px;
@@ -272,7 +366,7 @@
   }
 
   .team-card-db {
-    min-height: 280px;
+    min-height: 260px;
   }
 
   .team-logo-large {
@@ -283,6 +377,30 @@
 
   .team-database-logo img {
     height: 60px;
+  }
+
+  /* New layout mobile */
+  .team-card-content-new {
+    padding: 16px;
+  }
+
+  .team-logo-center {
+    width: 140px;
+    height: 140px;
+    margin-top: 15px;
+  }
+
+
+  .team-logo-center span {
+    font-size: 2rem;
+  }
+
+  .team-name-corner {
+    font-size: 1.2rem;
+  }
+
+  .team-captain-corner {
+    font-size: 0.8rem;
   }
 }
 

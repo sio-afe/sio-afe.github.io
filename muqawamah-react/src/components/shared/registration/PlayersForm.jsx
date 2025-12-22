@@ -69,9 +69,9 @@ export default function PlayersForm() {
   };
 
   const validatePlayers = () => {
-    // Main players are always required
+    // Main players - only require name and age (position has default, image optional)
     const filledMain = mainPlayers.every((player) => {
-      const baseValid = player.name && player.age && player.position && player.image;
+      const baseValid = player.name && player.name.trim() !== '' && player.age;
       // Aadhar only required for U17
       if (!isOpenAge) {
         return baseValid && player.aadhar_no && player.aadhar_no.length === 12;
@@ -80,8 +80,8 @@ export default function PlayersForm() {
     });
     
     // Substitutes are optional - only validate those that have been started (have a name)
-    const filledSubs = subs.filter(player => player.name).every((player) => {
-      const baseValid = player.name && player.age && player.image;
+    const filledSubs = subs.filter(player => player.name && player.name.trim() !== '').every((player) => {
+      const baseValid = player.name && player.age;
       // Aadhar only required for U17
       if (!isOpenAge) {
         return baseValid && player.aadhar_no && player.aadhar_no.length === 12;
@@ -95,8 +95,8 @@ export default function PlayersForm() {
   const handleNext = async (e) => {
     e.preventDefault();
     if (!validatePlayers()) {
-      const aadharMsg = isOpenAge ? '' : ', Aadhar number,';
-      alert(`Please fill out all required fields including name, age${aadharMsg} and photo for all main players. Substitutes are optional.`);
+      const aadharMsg = isOpenAge ? '' : ' and Aadhar number (12 digits)';
+      alert(`Please fill out name and age${aadharMsg} for all main players. Substitutes are optional.`);
       return;
     }
     
@@ -219,7 +219,7 @@ export default function PlayersForm() {
           disabled={compressingIndex === index}
         />
         {!player.image && compressingIndex !== index && (
-          <span className="input-hint">{isSubstitute ? 'JPG/PNG up to 2MB. Optional.' : 'JPG/PNG up to 2MB. Required.'}</span>
+          <span className="input-hint">JPG/PNG up to 2MB. Optional.</span>
         )}
       </label>
     </div>
