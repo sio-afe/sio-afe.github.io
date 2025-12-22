@@ -38,6 +38,21 @@ const POSITION_X_MAP = {
   ST: 50        // Striker - center
 };
 
+// Position-based Y coordinates (percentage from top, 0=top, 100=bottom)
+const POSITION_Y_MAP = {
+  GK: 92,       // Goalkeeper - bottom
+  CB: 78,       // Center Back - defense line
+  LB: 78,       // Left Back - defense line
+  RB: 78,       // Right Back - defense line
+  CDM: 65,      // Defensive Midfielder - deep midfield
+  CM: 55,       // Central Midfielder - midfield
+  CAM: 45,      // Attacking Midfielder - advanced midfield
+  LM: 55,       // Left Midfielder - midfield
+  RM: 55,       // Right Midfielder - midfield
+  CF: 30,       // Center Forward - attack
+  ST: 25        // Striker - forward
+};
+
 // Apply smart positioning based on player positions
 export const applySmartPositioning = (players) => {
   const updated = [...players];

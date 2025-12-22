@@ -7,7 +7,14 @@
     "build": "vite build",
     "preview": "vite preview",
     "build:jekyll": "vite build && node build-config.js",
-    "deploy": "npm run build:jekyll && ./deploy-update.sh"
+    "deploy": "npm run build:jekyll && ./deploy-update.sh",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest --watch",
+    "test:supabase": "vitest run src/__tests__/integration/supabaseConnection.test.js",
+    "precommit": "SKIP_SUPABASE_TESTS=true npm run test:run && npm run build"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.44.3",
@@ -24,10 +31,17 @@
     "react-p5": "^1.4.1"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
+    "@testing-library/user-event": "^14.6.1",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@vitejs/plugin-react": "^4.2.1",
+    "happy-dom": "^20.0.11",
+    "jsdom": "^27.3.0",
+    "msw": "^2.12.4",
     "terser": "^5.44.1",
-    "vite": "^5.0.8"
+    "vite": "^5.0.8",
+    "vitest": "^4.0.16"
   }
 }

@@ -8,6 +8,7 @@ import MatchHeader from './components/MatchHeader';
 import MatchPredictions from './components/MatchPredictions';
 import GoalsAndHighlights from './components/GoalsAndHighlights';
 import SquadsSection from './components/SquadsSection';
+import { MatchShareCard, ShareButton } from '../../../shared/ShareableCard';
 
 export default function MatchDetail({ matchId, onBack }) {
   const [match, setMatch] = useState(null);
@@ -20,6 +21,9 @@ export default function MatchDetail({ matchId, onBack }) {
   // Interaction states
   const [likeCount, setLikeCount] = useState(0);
   const [userIdentifier, setUserIdentifier] = useState(null);
+  
+  // Share modal state
+  const [showShareModal, setShowShareModal] = useState(false);
   
   // Prediction states
   const [prediction, setPrediction] = useState(null);
@@ -592,11 +596,15 @@ export default function MatchDetail({ matchId, onBack }) {
     <>
       <TournamentNavbar />
       <div className="match-detail-page">
-        <LikeButton 
-          matchId={matchId} 
-          userIdentifier={userIdentifier} 
-          initialLikeCount={likeCount}
-        />
+        {/* Floating Action Buttons */}
+        <div className="match-action-buttons">
+          <LikeButton 
+            matchId={matchId} 
+            userIdentifier={userIdentifier} 
+            initialLikeCount={likeCount}
+          />
+          <ShareButton onClick={() => setShowShareModal(true)} />
+        </div>
         
         <MatchHeader match={match} />
 
@@ -649,6 +657,14 @@ export default function MatchDetail({ matchId, onBack }) {
         </div>
       </div>
       <Footer edition="2026" />
+      
+      {/* Share Modal */}
+      {showShareModal && (
+        <MatchShareCard 
+          match={match} 
+          onClose={() => setShowShareModal(false)} 
+        />
+      )}
     </>
   );
 }

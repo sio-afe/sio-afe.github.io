@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabaseClient } from '../../../../lib/supabaseClient';
 import TournamentNavbar from '../../../shared/TournamentNavbar';
 import Footer from '../../../shared/Footer';
+import { StatsShareCard } from '../../../shared/ShareableCard';
 
 export default function Statistics() {
   const [activeTab, setActiveTab] = useState('goals'); // 'goals', 'assists', 'teams'
@@ -11,6 +12,7 @@ export default function Statistics() {
   });
   const [teamStats, setTeamStats] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showShareCard, setShowShareCard] = useState(false);
 
   // Determine category from URL
   const getCategory = () => {
@@ -217,6 +219,31 @@ export default function Statistics() {
   const handleTeamClick = (teamId) => {
     const base = category === 'u17' ? '/muqawamah/2026/u17' : '/muqawamah/2026/open-age';
     window.location.href = `${base}/teams/?team=${teamId}`;
+  };
+
+  // Get data for share card
+  const getShareData = () => {
+    if (activeTab === 'goals') {
+      return playerStats.goals.slice(0, 3).map(p => ({
+        name: p.player_name,
+        image: p.player_image,
+        team_name: p.team_registrations?.team_name,
+        value: p.goals || 0
+      }));
+    } else if (activeTab === 'assists') {
+      return playerStats.assists.slice(0, 3).map(p => ({
+        name: p.player_name,
+        image: p.player_image,
+        team_name: p.team_registrations?.team_name,
+        value: p.assists || 0
+      }));
+    } else {
+      return teamStats.slice(0, 3).map(t => ({
+        name: t.name,
+        crest_url: t.crest_url,
+        value: t.goals_for || 0
+      }));
+    }
   };
 
   if (loading) {
@@ -440,6 +467,24 @@ export default function Statistics() {
             )}
           </div>
         </div>
+
+        {/* Share Button - Fixed Bottom Right */}
+        <button 
+          className="stats-share-btn-fixed"
+          onClick={() => setShowShareCard(true)}
+          title="Share Top 3"
+        >
+          <i className="fas fa-share-alt"></i>
+        </button>
+
+        {/* Share Card Modal */}
+        {showShareCard && (
+          <StatsShareCard 
+            statType={activeTab === 'teams' ? 'points' : activeTab}
+            items={getShareData()}
+            onClose={() => setShowShareCard(false)}
+          />
+        )}
       </div>
       <Footer edition="2026" />
     </>

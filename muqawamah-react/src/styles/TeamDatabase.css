@@ -428,6 +428,82 @@
   min-height: 100vh;
   background: #0a0e27;
   color: #fff;
+  position: relative;
+}
+
+/* Team Action Buttons (Share) */
+.team-action-buttons {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 100;
+}
+
+.team-action-buttons .share-trigger-btn {
+  width: 54px;
+  height: 54px;
+  padding: 0;
+  border-radius: 50%;
+  justify-content: center;
+  background: linear-gradient(145deg, 
+    rgba(59, 130, 246, 0.95) 0%, 
+    rgba(37, 99, 235, 1) 50%,
+    rgba(29, 78, 216, 1) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 
+    0 6px 24px rgba(59, 130, 246, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+}
+
+.team-action-buttons .share-trigger-btn::before {
+  border-radius: 50%;
+  height: 45%;
+}
+
+.team-action-buttons .share-trigger-btn span {
+  display: none;
+}
+
+.team-action-buttons .share-trigger-btn i {
+  font-size: 1.25rem;
+  color: #fff;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.team-action-buttons .share-trigger-btn:hover {
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 
+    0 10px 35px rgba(59, 130, 246, 0.5),
+    0 4px 12px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  background: linear-gradient(145deg, 
+    rgba(79, 150, 255, 1) 0%, 
+    rgba(59, 130, 246, 1) 50%,
+    rgba(37, 99, 235, 1) 100%
+  );
+}
+
+.team-action-buttons .share-trigger-btn:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+  .team-action-buttons {
+    top: auto;
+    bottom: 20px;
+    right: 16px;
+  }
+  
+  .team-action-buttons .share-trigger-btn {
+    width: 48px;
+    height: 48px;
+  }
 }
 
 /* Hero Section */

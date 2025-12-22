@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { supabaseClient } from '../../../../lib/supabaseClient';
 import Footer from '../../../shared/Footer';
 import TournamentNavbar from '../../../shared/TournamentNavbar';
+import { PlayerShareCard, ShareButton } from '../../../shared/ShareableCard';
 
 const positionLabels = {
   'GK': 'Goalkeeper',
@@ -104,6 +105,7 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
   const [loading, setLoading] = useState(true);
   const [playerIndex, setPlayerIndex] = useState(1);
   const [matchLogTab, setMatchLogTab] = useState('completed');
+  const [showShareCard, setShowShareCard] = useState(false);
 
   useEffect(() => {
     if (playerId) {
@@ -500,6 +502,32 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
           </div>
         </div>
         </div>
+
+        {/* Share Button - Fixed Bottom Right */}
+        <button 
+          className="player-share-btn-fixed"
+          onClick={() => setShowShareCard(true)}
+          title="Share Player Card"
+        >
+          <i className="fas fa-share-alt"></i>
+        </button>
+
+        {/* Share Card Modal */}
+        {showShareCard && (
+          <PlayerShareCard 
+            player={{
+              name: player.name,
+              image: player.player_image,
+              position: player.position,
+              jersey_number: playerIndex,
+              goals: stats.goals,
+              assists: stats.assists,
+              is_captain: player.is_captain
+            }}
+            team={team}
+            onClose={() => setShowShareCard(false)}
+          />
+        )}
 
         <Footer edition="2026" />
       </div>

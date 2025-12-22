@@ -51,4 +51,27 @@ open: ## Open the cheating page in browser
 
 quickstart: install-deps bundle-setup serve ## Install all and serve
 
-.PHONY: help install-deps bundle-setup webrick serve serve-poll build build-prod clean doctor update open quickstart 
+# ============== React Tests ==============
+
+test: ## Run all React tests once
+	cd muqawamah-react && npm run test:run
+
+test-watch: ## Run React tests in watch mode
+	cd muqawamah-react && npm run test:watch
+
+test-coverage: ## Run React tests with coverage report
+	cd muqawamah-react && npm run test:coverage
+
+unittest: ## Run unit tests only
+	cd muqawamah-react && npx vitest run src/__tests__/unit/
+
+integration: ## Run integration tests only
+	cd muqawamah-react && npx vitest run src/__tests__/integration/
+
+test-supabase: ## Run Supabase connection tests (requires network)
+	cd muqawamah-react && npm run test:supabase
+
+precommit: ## Run tests and build (pre-push check)
+	cd muqawamah-react && SKIP_SUPABASE_TESTS=true npm run test:run && npm run build
+
+.PHONY: help install-deps bundle-setup webrick serve serve-poll build build-prod clean doctor update open quickstart test test-watch test-coverage unittest integration test-supabase precommit 

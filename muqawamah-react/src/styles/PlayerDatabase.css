@@ -1360,6 +1360,79 @@
   align-items: start;
 }
 
+/* Player Share Button - Fixed Bottom Right */
+.player-share-btn-fixed {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, 
+    rgba(59, 130, 246, 0.95) 0%, 
+    rgba(37, 99, 235, 1) 50%,
+    rgba(29, 78, 216, 1) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-size: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 6px 24px rgba(59, 130, 246, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+  overflow: hidden;
+}
+
+.player-share-btn-fixed::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%);
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.player-share-btn-fixed i {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.player-share-btn-fixed:hover {
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 
+    0 10px 35px rgba(59, 130, 246, 0.5),
+    0 4px 12px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  background: linear-gradient(145deg, 
+    rgba(79, 150, 255, 1) 0%, 
+    rgba(59, 130, 246, 1) 50%,
+    rgba(37, 99, 235, 1) 100%
+  );
+}
+
+.player-share-btn-fixed:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+  .player-share-btn-fixed {
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    font-size: 1.15rem;
+  }
+}
+
 /* Hero Card with Photo */
 .player-hero-card {
   position: relative;

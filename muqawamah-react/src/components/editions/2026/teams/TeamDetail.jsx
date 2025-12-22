@@ -3,6 +3,7 @@ import { supabaseClient } from '../../../../lib/supabaseClient';
 import Footer from '../../../shared/Footer';
 import TournamentNavbar from '../../../shared/TournamentNavbar';
 import TeamFormationDisplay from '../../../shared/TeamFormationDisplay';
+import { TeamShareCard, ShareButton } from '../../../shared/ShareableCard';
 
 const positionGroups = {
   'Goalkeeper': 'GOALKEEPERS',
@@ -62,6 +63,7 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
     topAssists: []
   });
   const [loading, setLoading] = useState(true);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   useEffect(() => {
     if (teamId) {
@@ -361,10 +363,18 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
   };
   const teamAccentColor = `rgb(${colorTheme.primary})`;
 
+  // Get team stats for sharing
+  const teamStats = standings.find(s => s.id === teamId) || team;
+
   return (
     <>
       <TournamentNavbar />
       <div className="team-detail">
+        {/* Share Button - Floating */}
+        <div className="team-action-buttons">
+          <ShareButton onClick={() => setShowShareModal(true)} />
+        </div>
+
         {/* Hero Section */}
         <div className="team-hero" style={teamGradientStyle}>
           <div className="team-hero-bg" style={teamGlowStyle}></div>
@@ -639,6 +649,15 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
 
         <Footer edition="2026" />
       </div>
+      
+      {/* Share Modal */}
+      {showShareModal && (
+        <TeamShareCard 
+          team={team}
+          stats={teamStats}
+          onClose={() => setShowShareModal(false)} 
+        />
+      )}
     </>
   );
 }
