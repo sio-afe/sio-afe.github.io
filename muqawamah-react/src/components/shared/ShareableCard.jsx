@@ -7,6 +7,35 @@ import React, { useRef, useState } from 'react';
 import { toBlob, toPng } from 'html-to-image';
 import '../../styles/ShareableCard.css';
 
+const SHARE_CARD_BASE_WIDTH = 420;
+const SHARE_CARD_BASE_HEIGHT = Math.round(SHARE_CARD_BASE_WIDTH * 1.2);
+
+const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+
+const useShareCardPreviewScale = (modalRef) => {
+  const [scale, setScale] = useState(1);
+
+  React.useEffect(() => {
+    const compute = () => {
+      try {
+        const modalEl = modalRef?.current;
+        const available = (modalEl?.clientWidth || window.innerWidth || SHARE_CARD_BASE_WIDTH) - 2; // tiny safety
+        const next = clamp(available / SHARE_CARD_BASE_WIDTH, 0.6, 1);
+        // Round to avoid noisy reflows
+        setScale(Math.round(next * 1000) / 1000);
+      } catch {
+        setScale(1);
+      }
+    };
+
+    compute();
+    window.addEventListener('resize', compute);
+    return () => window.removeEventListener('resize', compute);
+  }, [modalRef]);
+
+  return scale;
+};
+
 // Schedule work "soon after mount".
 // We always schedule a timeout so this also works in test envs where rAF exists but doesn't advance.
 const scheduleNextPaint = (fn) => {
@@ -274,9 +303,11 @@ const InstagramIcon = ({ size = 18, color = "rgba(255,255,255,0.6)" }) => (
 
 // Match Share Card
 export function MatchShareCard({ match, onClose }) {
+  const modalRef = useRef(null);
   const cardRef = useRef(null);
   const [isGenerating, setIsGenerating] = useState(true);
   const [imageData, setImageData] = useState(null);
+  const previewScale = useShareCardPreviewScale(modalRef);
 
   const isFinished = match.status === 'completed';
   const isLive = match.status === 'live';
@@ -340,14 +371,22 @@ export function MatchShareCard({ match, onClose }) {
 
   return (
     <div className="share-modal-overlay" onClick={onClose}>
-      <div className="share-modal-content" onClick={e => e.stopPropagation()}>
+      <div ref={modalRef} className="share-modal-content" onClick={e => e.stopPropagation()}>
         <button className="share-modal-close" onClick={onClose}>
           <i className="fas fa-times"></i>
         </button>
 
         {/* The Shareable Card */}
         <div className="shareable-card-wrapper">
-          <div ref={cardRef} className="shareable-card match-card">
+          <div
+            className="shareable-card-scale"
+            style={{
+              height: `${SHARE_CARD_BASE_HEIGHT * previewScale}px`,
+              '--share-card-scale': previewScale,
+              '--share-card-base-width': `${SHARE_CARD_BASE_WIDTH}px`
+            }}
+          >
+            <div ref={cardRef} className="shareable-card match-card">
             {/* Background Effects */}
             <div className="card-bg-effects">
               <div className="card-glow glow-1"></div>
@@ -428,6 +467,7 @@ export function MatchShareCard({ match, onClose }) {
                 muqawama2026
               </span>
             </div>
+            </div>
           </div>
         </div>
 
@@ -466,9 +506,11 @@ export function MatchShareCard({ match, onClose }) {
 
 // Team Share Card
 export function TeamShareCard({ team, stats, onClose }) {
+  const modalRef = useRef(null);
   const cardRef = useRef(null);
   const [isGenerating, setIsGenerating] = useState(true);
   const [imageData, setImageData] = useState(null);
+  const previewScale = useShareCardPreviewScale(modalRef);
 
   // Pre-generate image when modal opens
   React.useEffect(() => {
@@ -528,14 +570,22 @@ export function TeamShareCard({ team, stats, onClose }) {
 
   return (
     <div className="share-modal-overlay" onClick={onClose}>
-      <div className="share-modal-content" onClick={e => e.stopPropagation()}>
+      <div ref={modalRef} className="share-modal-content" onClick={e => e.stopPropagation()}>
         <button className="share-modal-close" onClick={onClose}>
           <i className="fas fa-times"></i>
         </button>
 
         {/* The Shareable Card */}
         <div className="shareable-card-wrapper">
-          <div ref={cardRef} className="shareable-card team-card">
+          <div
+            className="shareable-card-scale"
+            style={{
+              height: `${SHARE_CARD_BASE_HEIGHT * previewScale}px`,
+              '--share-card-scale': previewScale,
+              '--share-card-base-width': `${SHARE_CARD_BASE_WIDTH}px`
+            }}
+          >
+            <div ref={cardRef} className="shareable-card team-card">
             {/* Background Effects */}
             <div className="card-bg-effects">
               <div className="card-glow glow-team" style={{ background: team.primary_color || '#4f8cff' }}></div>
@@ -610,6 +660,7 @@ export function TeamShareCard({ team, stats, onClose }) {
                 muqawama2026
               </span>
             </div>
+            </div>
           </div>
         </div>
 
@@ -640,9 +691,11 @@ export function TeamShareCard({ team, stats, onClose }) {
 
 // Player Share Card
 export function PlayerShareCard({ player, team, onClose }) {
+  const modalRef = useRef(null);
   const cardRef = useRef(null);
   const [isGenerating, setIsGenerating] = useState(true);
   const [imageData, setImageData] = useState(null);
+  const previewScale = useShareCardPreviewScale(modalRef);
 
   // Pre-generate image when modal opens
   React.useEffect(() => {
@@ -708,14 +761,22 @@ export function PlayerShareCard({ player, team, onClose }) {
 
   return (
     <div className="share-modal-overlay" onClick={onClose}>
-      <div className="share-modal-content" onClick={e => e.stopPropagation()}>
+      <div ref={modalRef} className="share-modal-content" onClick={e => e.stopPropagation()}>
         <button className="share-modal-close" onClick={onClose}>
           <i className="fas fa-times"></i>
         </button>
 
         {/* The Shareable Card */}
         <div className="shareable-card-wrapper">
-          <div ref={cardRef} className="shareable-card player-card">
+          <div
+            className="shareable-card-scale"
+            style={{
+              height: `${SHARE_CARD_BASE_HEIGHT * previewScale}px`,
+              '--share-card-scale': previewScale,
+              '--share-card-base-width': `${SHARE_CARD_BASE_WIDTH}px`
+            }}
+          >
+            <div ref={cardRef} className="shareable-card player-card">
             {/* Background Effects */}
             <div className="card-bg-effects">
               <div className="card-glow glow-player" style={{ background: getPositionColor(player.position) }}></div>
@@ -798,6 +859,7 @@ export function PlayerShareCard({ player, team, onClose }) {
                 <InstagramIcon size={18} color="rgba(255,255,255,0.85)" />
                 muqawama2026
               </span>
+            </div>
             </div>
           </div>
         </div>
@@ -1414,9 +1476,11 @@ export function PrewarmStatsShareCard({ statType, items }) {
 
 // Stats Share Card - Top 3 Leaderboard
 export function StatsShareCard({ statType, items, onClose }) {
+  const modalRef = useRef(null);
   const cardRef = useRef(null);
   const [isGenerating, setIsGenerating] = useState(true);
   const [imageData, setImageData] = useState(null);
+  const previewScale = useShareCardPreviewScale(modalRef);
 
   // Pre-generate image when modal opens
   React.useEffect(() => {
@@ -1502,14 +1566,22 @@ export function StatsShareCard({ statType, items, onClose }) {
 
   return (
     <div className="share-modal-overlay" onClick={onClose}>
-      <div className="share-modal-content" onClick={e => e.stopPropagation()}>
+      <div ref={modalRef} className="share-modal-content" onClick={e => e.stopPropagation()}>
         <button className="share-modal-close" onClick={onClose}>
           <i className="fas fa-times"></i>
         </button>
 
         {/* The Shareable Card */}
         <div className="shareable-card-wrapper">
-          <div ref={cardRef} className="shareable-card stats-card">
+          <div
+            className="shareable-card-scale"
+            style={{
+              height: `${SHARE_CARD_BASE_HEIGHT * previewScale}px`,
+              '--share-card-scale': previewScale,
+              '--share-card-base-width': `${SHARE_CARD_BASE_WIDTH}px`
+            }}
+          >
+            <div ref={cardRef} className="shareable-card stats-card">
             {/* Background Effects */}
             <div className="card-bg-effects">
               <div className="card-glow glow-1"></div>
@@ -1567,6 +1639,7 @@ export function StatsShareCard({ statType, items, onClose }) {
                 <InstagramIcon size={18} color="rgba(255,255,255,0.85)" />
                 muqawama2026
               </span>
+            </div>
             </div>
           </div>
         </div>

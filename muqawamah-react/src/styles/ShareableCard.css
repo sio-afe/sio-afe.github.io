@@ -92,12 +92,24 @@
 /* ===== Shareable Card Wrapper ===== */
 .shareable-card-wrapper {
   margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Scale wrapper: keeps internal spacing identical by rendering card at a fixed base size,
+   and only scaling the preview with transform. */
+.shareable-card-scale {
+  width: var(--share-card-base-width, 420px);
+  transform: scale(var(--share-card-scale, 1));
+  transform-origin: top center;
 }
 
 /* ===== The Shareable Card (Base) ===== */
 .shareable-card {
   position: relative;
-  width: 100%;
+  /* Fixed base size so layout/spacing never changes across viewports.
+     The modal preview scales using .shareable-card-scale. */
+  width: var(--share-card-base-width, 420px);
   aspect-ratio: 1 / 1.2;
   border-radius: 20px;
   overflow: hidden;
@@ -468,6 +480,8 @@
   background: rgba(255, 255, 255, 0.04);
   border-radius: 12px;
   padding: 12px 20px;
+  /* Lift slightly so the stats sit a bit higher on the card */
+  margin-top: -10px;
   position: relative;
   z-index: 2;
 }
@@ -667,6 +681,8 @@
   position: relative;
   z-index: 2;
   padding: 10px 0;
+  /* Lift slightly so goals/assists sit a bit higher on the card */
+  margin-top: -10px;
 }
 
 .player-stat-block {
@@ -1114,63 +1130,6 @@
   .share-modal-content {
     padding: 16px;
     border-radius: 20px;
-  }
-
-  .shareable-card {
-    padding: 16px;
-  }
-
-  .card-tournament-logo {
-    height: 40px;
-  }
-
-  .card-match-type {
-    font-size: 0.55rem;
-    padding: 4px 8px;
-  }
-
-  .card-team-logo {
-    width: 55px;
-    height: 55px;
-  }
-
-  .card-team-name {
-    font-size: 0.7rem;
-    max-width: 70px;
-  }
-
-  .score-number {
-    font-size: 2.8rem;
-  }
-
-  .score-divider {
-    font-size: 2rem;
-  }
-
-  .card-team-logo.large {
-    width: 90px;
-    height: 90px;
-  }
-
-  .card-team-title {
-    font-size: 1.4rem;
-  }
-
-  .card-team-stats {
-    gap: 10px;
-    padding: 12px;
-  }
-
-  .stat-item .stat-value {
-    font-size: 1.2rem;
-  }
-
-  .card-sio-logo {
-    height: 28px;
-  }
-
-  .card-instagram {
-    font-size: 0.85rem;
   }
 
   .share-btn {

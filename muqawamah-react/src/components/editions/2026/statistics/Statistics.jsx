@@ -291,7 +291,7 @@ export default function Statistics() {
             <div className="player-photo-v2">
               {player.player_image ? (
                 <SmartImg
-                  src={player.player_image}
+                  src={player.player_image} 
                   preset="playerAvatar"
                   alt={player.player_name}
                   loading="lazy"
@@ -310,9 +310,9 @@ export default function Statistics() {
               <div className="team-info-v2">
                 {player.team_registrations?.team_logo && (
                   <SmartImg
-                    src={player.team_registrations.team_logo}
+                    src={player.team_registrations.team_logo} 
                     preset="crestSm"
-                    alt=""
+                    alt="" 
                     className="mini-team-logo"
                     loading="lazy"
                     decoding="async"
@@ -366,7 +366,7 @@ export default function Statistics() {
             <div className="team-logo-v2" aria-hidden="true">
               {team.crest_url ? (
                 <SmartImg
-                  src={team.crest_url}
+                  src={team.crest_url} 
                   preset="crestSm"
                   alt=""
                   loading="lazy"
