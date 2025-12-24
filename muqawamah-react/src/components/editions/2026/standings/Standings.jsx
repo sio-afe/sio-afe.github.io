@@ -129,7 +129,7 @@ export default function Standings() {
                     <div className="team-logo-standings">
                       {team.crest_url ? (
                         <SmartImg
-                          src={team.crest_url}
+                          src={team.crest_url} 
                           preset="crestSm"
                           alt={team.name}
                           loading="lazy"

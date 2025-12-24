@@ -60,7 +60,7 @@ export default function TeamDatabase({ teams = [], onTeamClick }) {
                 <div className="team-logo-center">
                   {team.crest_url ? (
                     <SmartImg
-                      src={team.crest_url}
+                      src={team.crest_url} 
                       preset="crestMd"
                       alt={team.name}
                       loading="lazy"

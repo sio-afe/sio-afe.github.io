@@ -98,9 +98,9 @@ export default function SquadsSection({ homeTeamPlayers, awayTeamPlayers, match,
           <>
             {team?.crest_url && (
               <SmartImg
-                src={team.crest_url}
+                src={team.crest_url} 
                 preset="crestSm"
-                alt=""
+                alt="" 
                 className="squad-team-logo"
                 loading="lazy"
                 decoding="async"
@@ -113,9 +113,9 @@ export default function SquadsSection({ homeTeamPlayers, awayTeamPlayers, match,
             <span>{team?.name}</span>
             {team?.crest_url && (
               <SmartImg
-                src={team.crest_url}
+                src={team.crest_url} 
                 preset="crestSm"
-                alt=""
+                alt="" 
                 className="squad-team-logo"
                 loading="lazy"
                 decoding="async"

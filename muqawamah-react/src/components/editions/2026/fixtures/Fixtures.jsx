@@ -260,7 +260,7 @@ export default function Fixtures({ onMatchClick }) {
                         <div className="team-logo-v2">
                           {match.home_team?.crest_url ? (
                             <SmartImg
-                              src={match.home_team.crest_url}
+                              src={match.home_team.crest_url} 
                               preset="crestSm"
                               alt={match.home_team.name}
                               loading="lazy"
@@ -286,7 +286,7 @@ export default function Fixtures({ onMatchClick }) {
                         <div className="team-logo-v2">
                           {match.away_team?.crest_url ? (
                             <SmartImg
-                              src={match.away_team.crest_url}
+                              src={match.away_team.crest_url} 
                               preset="crestSm"
                               alt={match.away_team.name}
                               loading="lazy"

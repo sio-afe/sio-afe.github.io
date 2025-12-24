@@ -150,11 +150,11 @@ export default function Statistics() {
 
       const topScorers = Object.values(scorersMap)
         .sort((a, b) => b.goals - a.goals)
-        .slice(0, 10);
+        .slice(0, 5);
 
       const topAssisters = Object.values(assistsMap)
         .sort((a, b) => b.assists - a.assists)
-        .slice(0, 10);
+        .slice(0, 5);
 
       setPlayerStats({
         goals: topScorers,
@@ -169,7 +169,7 @@ export default function Statistics() {
         .order('goals_for', { ascending: false });
 
       if (teamsData) {
-        setTeamStats(teamsData.slice(0, 10));
+        setTeamStats(teamsData.slice(0, 5));
       }
     } catch (error) {
       console.error('Error fetching statistics:', error);
@@ -357,13 +357,18 @@ export default function Statistics() {
               </span>
             </div>
 
+            {/* Team Name */}
+            <div className="team-info-main-v2">
+              <span className="team-name-v2">{team.name}</span>
+            </div>
+
             {/* Team Logo */}
-            <div className="team-logo-v2">
+            <div className="team-logo-v2" aria-hidden="true">
               {team.crest_url ? (
                 <SmartImg
                   src={team.crest_url}
                   preset="crestSm"
-                  alt={team.name}
+                  alt=""
                   loading="lazy"
                   decoding="async"
                 />
@@ -372,11 +377,6 @@ export default function Statistics() {
                   <span>{team.name?.charAt(0) || '?'}</span>
                 </div>
               )}
-            </div>
-
-            {/* Team Name */}
-            <div className="team-info-main-v2">
-              <span className="team-name-v2">{team.name}</span>
             </div>
 
             {/* Team Stats */}

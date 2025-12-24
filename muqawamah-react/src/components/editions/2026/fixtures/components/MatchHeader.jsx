@@ -57,7 +57,7 @@ export default function MatchHeader({ match }) {
             <div className="team-logo-large">
               {match.home_team?.crest_url ? (
                 <SmartImg
-                  src={match.home_team.crest_url}
+                  src={match.home_team.crest_url} 
                   preset="matchCrest"
                   alt={match.home_team.name}
                   loading="eager"
@@ -93,7 +93,7 @@ export default function MatchHeader({ match }) {
             <div className="team-logo-large">
               {match.away_team?.crest_url ? (
                 <SmartImg
-                  src={match.away_team.crest_url}
+                  src={match.away_team.crest_url} 
                   preset="matchCrest"
                   alt={match.away_team.name}
                   loading="eager"
