@@ -8,7 +8,7 @@ import MatchHeader from './components/MatchHeader';
 import MatchPredictions from './components/MatchPredictions';
 import GoalsAndHighlights from './components/GoalsAndHighlights';
 import SquadsSection from './components/SquadsSection';
-import { MatchShareCard, ShareButton } from '../../../shared/ShareableCard';
+import { MatchShareCard, PrewarmMatchShareCard, ShareButton } from '../../../shared/ShareableCard';
 
 export default function MatchDetail({ matchId, onBack }) {
   const [match, setMatch] = useState(null);
@@ -657,6 +657,9 @@ export default function MatchDetail({ matchId, onBack }) {
         </div>
       </div>
       <Footer edition="2026" />
+
+      {/* Prewarm share image in the background so first open is instant */}
+      {match && <PrewarmMatchShareCard match={match} />}
       
       {/* Share Modal */}
       {showShareModal && (

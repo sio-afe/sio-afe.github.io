@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabaseClient } from '../../../../lib/supabaseClient';
 import TeamMosaicPattern from '../../../shared/TeamMosaicPattern';
+import SmartImg from '../../../shared/SmartImg';
 
 // 12 unique color gradients - one for each team (moved outside for reuse)
 const teamColors = [
@@ -58,10 +59,12 @@ export default function TeamDatabase({ teams = [], onTeamClick }) {
                 {/* Logo - Center */}
                 <div className="team-logo-center">
                   {team.crest_url ? (
-                    <img 
-                      src={team.crest_url} 
+                    <SmartImg
+                      src={team.crest_url}
+                      preset="crestMd"
                       alt={team.name}
                       loading="lazy"
+                      decoding="async"
                     />
                   ) : (
                     <span>{team.name?.charAt(0) || '?'}</span>

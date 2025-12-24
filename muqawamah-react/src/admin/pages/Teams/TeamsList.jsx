@@ -6,7 +6,9 @@
 import React, { useEffect, useState } from 'react';
 import { supabaseClient } from '../../../lib/supabaseClient';
 import AdminLayout from '../../components/AdminLayout';
+import SmartImg from '../../../components/shared/SmartImg';
 import AdminFormationEditor from '../../components/AdminFormationEditor';
+import { uploadImageVariants } from '../../utils/uploadImageVariants';
 
 export default function TeamsList() {
   const [teams, setTeams] = useState([]);
@@ -15,6 +17,8 @@ export default function TeamsList() {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [showFormationEditor, setShowFormationEditor] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
+  const [logoUploading, setLogoUploading] = useState(false);
+  const [logoTargetTeam, setLogoTargetTeam] = useState(null);
 
   useEffect(() => {
     fetchTeams();
@@ -58,6 +62,33 @@ export default function TeamsList() {
     } catch (error) {
       console.error('Error updating team:', error);
       alert('Failed to update team');
+    }
+  };
+
+  const updateTeamLogo = async (teamId, crestUrl) => {
+    const { error } = await supabaseClient.from('teams').update({ crest_url: crestUrl }).eq('id', teamId);
+    if (error) throw error;
+  };
+
+  const handleTeamLogoFile = async (file) => {
+    if (!file || !logoTargetTeam?.id) return;
+    try {
+      setLogoUploading(true);
+      const { originalUrl } = await uploadImageVariants({
+        entityType: 'teams',
+        entityId: logoTargetTeam.id,
+        file,
+        withCard: false
+      });
+      await updateTeamLogo(logoTargetTeam.id, originalUrl);
+      await fetchTeams();
+      alert('Team logo updated!');
+    } catch (error) {
+      console.error('Error updating team logo:', error);
+      alert(`Failed to update team logo: ${error.message || error}`);
+    } finally {
+      setLogoUploading(false);
+      setLogoTargetTeam(null);
     }
   };
 
@@ -150,6 +181,14 @@ export default function TeamsList() {
 
   return (
     <AdminLayout title="Teams Management">
+      <input
+        type="file"
+        accept="image/*"
+        style={{ display: 'none' }}
+        id="admin-team-logo-input"
+        onChange={(e) => handleTeamLogoFile(e.target.files?.[0])}
+        disabled={logoUploading}
+      />
       <div className="admin-page-header">
         <div className="page-header-left">
           <button className="refresh-btn" onClick={fetchTeams}>
@@ -216,7 +255,14 @@ export default function TeamsList() {
                     <td>
                       <div className="team-cell">
                         {team.crest_url && (
-                          <img src={team.crest_url} alt="" className="team-logo-small" />
+                          <SmartImg
+                            src={team.crest_url}
+                            preset="crestSm"
+                            alt=""
+                            className="team-logo-small"
+                            loading="lazy"
+                            decoding="async"
+                          />
                         )}
                         <strong>{team.name}</strong>
                       </div>
@@ -241,6 +287,17 @@ export default function TeamsList() {
                           title="Edit Formation"
                         >
                           <i className="fas fa-chess-board"></i>
+                        </button>
+                        <button
+                          className="btn-icon btn-image"
+                          onClick={() => {
+                            setLogoTargetTeam(team);
+                            document.getElementById('admin-team-logo-input')?.click();
+                          }}
+                          title="Change Team Logo"
+                          disabled={logoUploading}
+                        >
+                          <i className={`fas ${logoUploading && logoTargetTeam?.id === team.id ? 'fa-spinner fa-spin' : 'fa-image'}`}></i>
                         </button>
                         <a 
                           href={`/muqawamah/2026/${team.category}/teams/?team=${team.id}`}

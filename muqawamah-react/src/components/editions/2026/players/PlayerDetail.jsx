@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { supabaseClient } from '../../../../lib/supabaseClient';
 import Footer from '../../../shared/Footer';
 import TournamentNavbar from '../../../shared/TournamentNavbar';
-import { PlayerShareCard, ShareButton } from '../../../shared/ShareableCard';
+import { PlayerShareCard, PrewarmPlayerShareCard, ShareButton } from '../../../shared/ShareableCard';
+import SmartImg from '../../../shared/SmartImg';
 
 const positionLabels = {
   'GK': 'Goalkeeper',
@@ -27,23 +28,10 @@ const positionGroups = {
   'Substitute': 'Substitutes'
 };
 
-// Helper to convert image URL to webp format
-const getWebpImageUrl = (url) => {
-  if (!url) return null;
-  
-  // If it's a Supabase storage URL, add transformation parameters
-  if (url.includes('supabase.co/storage/v1/object/public/')) {
-    // Add webp transformation parameter
-    const separator = url.includes('?') ? '&' : '?';
-    return `${url}${separator}format=webp&quality=80`;
-  }
-  
-  // For other URLs, just return as is
-  return url;
-};
+const getWebpImageUrl = (url) => url;
 
 // Lazy loading image component
-function LazyImage({ src, alt, className, style }) {
+function LazyImage({ src, alt, className, style, preset }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(false);
   const imgRef = useRef(null);
@@ -80,15 +68,17 @@ function LazyImage({ src, alt, className, style }) {
   return (
     <div ref={imgRef} style={{ width: '100%', height: '100%', ...style }}>
       {isInView && webpSrc && (
-        <img
+        <SmartImg
           src={webpSrc}
+          preset={preset}
           alt={alt}
           className={className}
           loading="lazy"
+          decoding="async"
           onLoad={() => setIsLoaded(true)}
           style={{
             opacity: isLoaded ? 1 : 0,
-            transition: 'opacity 0.3s ease-in-out',
+            transition: 'opacity 0.3s ease-in-out'
           }}
         />
       )}
@@ -317,7 +307,7 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
             {/* Team Logo Badge */}
             <div className="team-logo-badge">
               {team?.crest_url ? (
-                <LazyImage src={team.crest_url} alt={team?.name} />
+                <LazyImage src={team.crest_url} alt={team?.name} preset="crestMd" />
               ) : (
                 <span className="team-initial">{team?.name?.charAt(0) || '?'}</span>
               )}
@@ -331,7 +321,7 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
             {/* Player Photo Container */}
             <div className="player-photo-main">
               {player.player_image ? (
-                <LazyImage src={player.player_image} alt={player.name} />
+                <LazyImage src={player.player_image} alt={player.name} preset="playerCard" />
               ) : (
                 <div className="player-photo-placeholder">
                   <i className="fas fa-user"></i>
@@ -483,7 +473,7 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
                       <div className="bls-teammate-number">{idx + 1}</div>
                       <div className="bls-teammate-image">
                         {tm.player_image ? (
-                          <LazyImage src={tm.player_image} alt={tm.name} />
+                          <LazyImage src={tm.player_image} alt={tm.name} preset="playerAvatar" />
                         ) : (
                           <i className="fas fa-user"></i>
                         )}
@@ -511,6 +501,20 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
         >
           <i className="fas fa-share-alt"></i>
         </button>
+
+        {/* Prewarm share image in the background so the first open is instant */}
+        <PrewarmPlayerShareCard
+          player={{
+            name: player.name,
+            image: player.player_image,
+            position: player.position,
+            jersey_number: playerIndex,
+            goals: stats.goals,
+            assists: stats.assists,
+            is_captain: player.is_captain
+          }}
+          team={team}
+        />
 
         {/* Share Card Modal */}
         {showShareCard && (

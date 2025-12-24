@@ -3,10 +3,15 @@ layout: fullwidth
 permalink: /muqawamah/2026/open-age/
 ---
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="/assets/muqawamah-react/tournament-style.css">
+<meta http-equiv="refresh" content="0; url=/muqawamah/2026/open-age/fixtures/">
+<link rel="canonical" href="/muqawamah/2026/open-age/fixtures/">
 
-<div id="tournament-root"></div>
+<script>
+  // Always redirect the Open Age root to Fixtures.
+  // Use replace() so the back button doesn't bounce users back here.
+  window.location.replace('/muqawamah/2026/open-age/fixtures/');
+</script>
 
-<script type="module" src="/assets/muqawamah-react/tournament-main.js"></script>
+<noscript>
+  This page redirects to <a href="/muqawamah/2026/open-age/fixtures/">Fixtures</a>.
+</noscript>

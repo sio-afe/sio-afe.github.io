@@ -277,10 +277,15 @@ const TeamMosaicPattern = ({ teamId, colorRgb, className = '' }) => {
             const radiusVariation = 0.6 + seededRandom(seed, i * 100 + j) * 0.8;
             const radius = baseSize * radiusVariation;
             
-            // Use bezier curves for smooth blobs
             const x = cx + p.cos(angle) * radius;
             const y = cy + p.sin(angle) * radius;
-            p.curveVertex(x, y);
+            // NOTE: Some bundled p5 builds (or tree-shaken builds) may not include curveVertex.
+            // Use a safe fallback so the Teams page never crashes.
+            if (typeof p.curveVertex === 'function') {
+              p.curveVertex(x, y);
+            } else {
+              p.vertex(x, y);
+            }
           }
           p.endShape(p.CLOSE);
         }

@@ -1,5 +1,35 @@
 import React, { createContext, useContext, useMemo, useState, useCallback } from 'react';
 import { supabaseClient } from '../../../lib/supabaseClient';
+import { ensurePublicImageUrl, sanitizePathSegment } from '../../../lib/storage';
+
+async function resizeDataUrlToWebp(dataUrl, { maxWidth, maxHeight, quality = 0.82 } = {}) {
+  if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) return null;
+
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onerror = () => reject(new Error('Failed to load image for resizing'));
+    img.onload = () => {
+      try {
+        let { width, height } = img;
+        const ratio = Math.min((maxWidth || width) / width, (maxHeight || height) / height, 1);
+        width = Math.floor(width * ratio);
+        height = Math.floor(height * ratio);
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/webp', quality));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    img.src = dataUrl;
+  });
+}
 
 const RegistrationContext = createContext(null);
 
@@ -93,7 +123,8 @@ export const RegistrationProvider = ({ children }) => {
         user_id: user.id,
         team_name: teamData.teamName || 'Draft Team',
         category: teamData.category,
-        team_logo: teamData.teamLogo,
+        // team_logo will be set after we have a teamId (so we can upload to Storage path).
+        team_logo: null,
         captain_name: teamData.captainName,
         captain_email: teamData.captainEmail || user.email,
         captain_phone: teamData.captainPhone,
@@ -124,6 +155,35 @@ export const RegistrationProvider = ({ children }) => {
         if (updateError) throw updateError;
       }
 
+      // Upload team logo (if currently a base64 data URL) and save the public URL in DB.
+      if (teamId) {
+        // Also upload a thumbnail variant for fast lists/grids.
+        const teamLogoUrl = await ensurePublicImageUrl({
+          value: teamData.teamLogo,
+          path: `registrations/${teamId}/team_logo.webp`
+        });
+
+        const teamLogoThumb = await resizeDataUrlToWebp(teamData.teamLogo, {
+          maxWidth: 240,
+          maxHeight: 240,
+          quality: 0.82
+        });
+        await ensurePublicImageUrl({
+          value: teamLogoThumb,
+          path: `registrations/${teamId}/team_logo_thumb.webp`
+        });
+
+        if (teamLogoUrl) {
+          // Update local state so we don't re-upload on subsequent saves.
+          setTeamData((prev) => ({ ...prev, teamLogo: teamLogoUrl }));
+          const { error: logoUpdateError } = await supabaseClient
+            .from('team_registrations')
+            .update({ team_logo: teamLogoUrl })
+            .eq('id', teamId);
+          if (logoUpdateError) throw logoUpdateError;
+        }
+      }
+
       // Save players if we have any with data
       // Only save players that have at least a name (substitutes can be skipped)
       const playersWithData = players.filter(p => p.name && p.name.trim() !== '');
@@ -131,21 +191,63 @@ export const RegistrationProvider = ({ children }) => {
         // Delete existing players first
         await supabaseClient.from('team_players').delete().eq('team_id', teamId);
 
-        // Insert only players with names (empty substitute cards won't be saved)
-        const payload = playersWithData.map((player) => ({
-          team_id: teamId,
-          player_name: player.name,
-          player_age: player.age ? parseInt(player.age) : null,
-          aadhar_no: player.aadhar_no || null,
-          position: player.position || 'SUB',
-          is_substitute: player.isSubstitute || false,
-          player_image: player.image || null,
-          position_x: typeof player.x === 'number' && !isNaN(player.x) ? player.x : 50,
-          position_y: typeof player.y === 'number' && !isNaN(player.y) ? player.y : 50
-        }));
+        // Upload player images (if data URLs) and store public URLs.
+        const payload = await Promise.all(
+          playersWithData.map(async (player) => {
+            const stableId = sanitizePathSegment(player.id || player.name || 'player');
+
+            // Upload thumbnail variants for fast lists/grids.
+            const thumbDataUrl = await resizeDataUrlToWebp(player.image || null, {
+              maxWidth: 240,
+              maxHeight: 240,
+              quality: 0.82
+            });
+            const cardDataUrl = await resizeDataUrlToWebp(player.image || null, {
+              maxWidth: 520,
+              maxHeight: 650,
+              quality: 0.86
+            });
+            await ensurePublicImageUrl({
+              value: thumbDataUrl,
+              path: `registrations/${teamId}/players/${stableId}_thumb.webp`
+            });
+            await ensurePublicImageUrl({
+              value: cardDataUrl,
+              path: `registrations/${teamId}/players/${stableId}_card.webp`
+            });
+
+            const imageUrl = await ensurePublicImageUrl({
+              value: player.image || null,
+              path: `registrations/${teamId}/players/${stableId}.webp`
+            });
+
+            return {
+              team_id: teamId,
+              player_name: player.name,
+              player_age: player.age ? parseInt(player.age) : null,
+              aadhar_no: player.aadhar_no || null,
+              position: player.position || 'SUB',
+              is_substitute: player.isSubstitute || false,
+              player_image: imageUrl || null,
+              position_x: typeof player.x === 'number' && !isNaN(player.x) ? player.x : 50,
+              position_y: typeof player.y === 'number' && !isNaN(player.y) ? player.y : 50
+            };
+          })
+        );
 
         const { error: playersError } = await supabaseClient.from('team_players').insert(payload);
         if (playersError) throw playersError;
+
+        // Update local state to replace any data URLs with uploaded URLs.
+        const imageByName = new Map(payload.map((row) => [row.player_name, row.player_image]));
+        setPlayers((prev) =>
+          prev.map((p) => {
+            if (!p?.name) return p;
+            const uploaded = imageByName.get(p.name);
+            if (!uploaded) return p;
+            return { ...p, image: uploaded };
+          })
+        );
       }
 
       setLastSavedStep(currentStep);

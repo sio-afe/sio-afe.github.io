@@ -7,6 +7,8 @@ import React, { useEffect, useState } from 'react';
 import { supabaseClient } from '../../../lib/supabaseClient';
 import AdminLayout from '../../components/AdminLayout';
 import { POSITIONS } from '../../config/adminConfig';
+import SmartImg from '../../../components/shared/SmartImg';
+import { uploadImageVariants } from '../../utils/uploadImageVariants';
 
 export default function PlayersList() {
   const [players, setPlayers] = useState([]);
@@ -16,6 +18,7 @@ export default function PlayersList() {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
     fetchPlayers();
@@ -55,6 +58,27 @@ export default function PlayersList() {
     } catch (error) {
       console.error('Error updating player:', error);
       alert('Failed to update player');
+    }
+  };
+
+  const handlePlayerImageUpload = async (file) => {
+    if (!file || !selectedPlayer?.id) return;
+    try {
+      setUploadingImage(true);
+      const { originalUrl } = await uploadImageVariants({
+        entityType: 'team_players',
+        entityId: selectedPlayer.id,
+        file,
+        withCard: true
+      });
+
+      // Update local state for preview and saving.
+      setSelectedPlayer((prev) => ({ ...prev, player_image: originalUrl }));
+    } catch (error) {
+      console.error('Error uploading player image:', error);
+      alert(`Failed to upload image: ${error.message || error}`);
+    } finally {
+      setUploadingImage(false);
     }
   };
 
@@ -157,7 +181,14 @@ export default function PlayersList() {
                     <td>
                       <div className="player-cell">
                         {player.player_image && (
-                          <img src={player.player_image} alt="" className="player-image-small" />
+                          <SmartImg
+                            src={player.player_image}
+                            preset="playerAvatar"
+                            alt=""
+                            className="player-image-small"
+                            loading="lazy"
+                            decoding="async"
+                          />
                         )}
                         <strong>{player.player_name}</strong>
                       </div>
@@ -220,7 +251,13 @@ export default function PlayersList() {
             <div className="modal-body">
               {selectedPlayer.player_image && (
                 <div className="player-image-preview">
-                  <img src={selectedPlayer.player_image} alt={selectedPlayer.player_name} />
+                  <SmartImg
+                    src={selectedPlayer.player_image}
+                    preset="playerCard"
+                    alt={selectedPlayer.player_name}
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </div>
               )}
 
@@ -263,6 +300,24 @@ export default function PlayersList() {
                     />
                   </div>
                   <div className="form-group">
+                    <label>Player Photo</label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      disabled={uploadingImage}
+                      onChange={(e) => handlePlayerImageUpload(e.target.files?.[0])}
+                    />
+                    <small style={{ color: '#6b7280' }}>
+                      Uploading creates fast variants automatically (<code>_thumb</code> / <code>_card</code>).
+                    </small>
+                    {uploadingImage && (
+                      <div style={{ marginTop: 8, color: '#6b7280' }}>
+                        <i className="fas fa-spinner fa-spin" /> Uploading image...
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="form-group">
                     <label>Player Type</label>
                     <select
                       value={selectedPlayer.is_substitute ? 'substitute' : 'starter'}
@@ -279,6 +334,7 @@ export default function PlayersList() {
                     <button 
                       className="btn-secondary"
                       onClick={() => setEditing(false)}
+                      disabled={uploadingImage}
                     >
                       Cancel
                     </button>
@@ -288,8 +344,10 @@ export default function PlayersList() {
                         player_name: selectedPlayer.player_name,
                         position: selectedPlayer.position,
                         player_age: selectedPlayer.player_age,
-                        is_substitute: selectedPlayer.is_substitute
+                        is_substitute: selectedPlayer.is_substitute,
+                        player_image: selectedPlayer.player_image || null
                       })}
+                      disabled={uploadingImage}
                     >
                       Save Changes
                     </button>

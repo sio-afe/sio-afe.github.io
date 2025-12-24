@@ -82,3 +82,4 @@ JOIN teams t ON t.id = p.team_id
 WHERE t.registration_id = '3f6dcd32-eb5e-4dec-a325-b4ee89abad6c'
 ORDER BY p.is_substitute, p.name;
 
+

@@ -3,6 +3,7 @@ import { supabaseClient } from '../../../../lib/supabaseClient';
 import TournamentNavbar from '../../../shared/TournamentNavbar';
 import Footer from '../../../shared/Footer';
 import { getGroupStandings, getTournamentSettings, calculateTeamCards } from '../../../../lib/tournamentUtils';
+import SmartImg from '../../../shared/SmartImg';
 
 export default function Standings() {
   const [groupedTeams, setGroupedTeams] = useState({});
@@ -127,10 +128,12 @@ export default function Standings() {
                   <div className="team-cell-full">
                     <div className="team-logo-standings">
                       {team.crest_url ? (
-                        <img 
-                          src={team.crest_url} 
+                        <SmartImg
+                          src={team.crest_url}
+                          preset="crestSm"
                           alt={team.name}
                           loading="lazy"
+                          decoding="async"
                         />
                       ) : (
                         <span>{team.name?.charAt(0) || '?'}</span>

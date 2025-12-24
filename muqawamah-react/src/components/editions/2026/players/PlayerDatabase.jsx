@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { supabaseClient } from '../../../../lib/supabaseClient';
+import SmartImg from '../../../shared/SmartImg';
 
 const positionLabels = {
   'GK': 'Goalkeeper',
@@ -31,6 +32,8 @@ export default function PlayerDatabase() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTeam, setSelectedTeam] = useState('all');
   const [selectedPosition, setSelectedPosition] = useState('all');
+  // Keep initial render small so the browser doesn't fetch/decode too many images at once.
+  const [visibleCount, setVisibleCount] = useState(24);
 
   // Determine category from URL
   const getCategory = () => {
@@ -45,12 +48,19 @@ export default function PlayerDatabase() {
     fetchData();
   }, [category]);
 
+  const teamById = useMemo(() => {
+    const map = new Map();
+    for (const t of teams) map.set(String(t.id), t);
+    return map;
+  }, [teams]);
+
   const fetchData = async () => {
     try {
       // Fetch teams with confirmed status
       const { data: teamsData, error: teamsError } = await supabaseClient
         .from('team_registrations')
-        .select('id, team_name, team_logo, category')
+        // Logos are now Storage URLs (small strings), safe to fetch up-front.
+        .select('id, team_name, category, team_logo')
         .eq('status', 'confirmed')
         .eq('category', category);
 
@@ -62,7 +72,8 @@ export default function PlayerDatabase() {
         const teamIds = teamsData.map(t => t.id);
         const { data: playersData, error: playersError } = await supabaseClient
           .from('team_players')
-          .select('*, team_registrations(id, team_name, team_logo)')
+          // Player images are now Storage URLs (small strings), safe to fetch up-front.
+          .select('id, player_name, position, team_id, player_image')
           .in('team_id', teamIds);
 
         if (playersError) throw playersError;
@@ -79,19 +90,108 @@ export default function PlayerDatabase() {
     return positionLabels[position] || position;
   };
 
-  const filteredPlayers = players.filter(player => {
-    const matchesSearch = player.player_name?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesTeam = selectedTeam === 'all' || player.team_id === selectedTeam;
-    const positionLabel = getPositionLabel(player.position);
-    const matchesPosition = selectedPosition === 'all' || positionLabel === selectedPosition;
-    return matchesSearch && matchesTeam && matchesPosition;
-  });
+  const filteredPlayers = useMemo(() => {
+    const search = searchTerm.trim().toLowerCase();
+    const selectedTeamId = String(selectedTeam);
+
+    return players.filter((player) => {
+      const matchesSearch = !search || player.player_name?.toLowerCase().includes(search);
+      const matchesTeam = selectedTeamId === 'all' || String(player.team_id) === selectedTeamId;
+      const positionLabel = getPositionLabel(player.position);
+      const matchesPosition = selectedPosition === 'all' || positionLabel === selectedPosition;
+      return matchesSearch && matchesTeam && matchesPosition;
+    });
+  }, [players, searchTerm, selectedTeam, selectedPosition]);
+
+  useEffect(() => {
+    // Reset progressive render window when filters change.
+    setVisibleCount(24);
+  }, [searchTerm, selectedTeam, selectedPosition]);
 
   const resetFilters = () => {
     setSearchTerm('');
     setSelectedTeam('all');
     setSelectedPosition('all');
   };
+
+  const displayedPlayers = useMemo(() => {
+    return filteredPlayers.slice(0, visibleCount);
+  }, [filteredPlayers, visibleCount]);
+
+  const loadMoreRef = useRef(null);
+  useEffect(() => {
+    if (!loadMoreRef.current) return;
+    if (visibleCount >= filteredPlayers.length) return;
+
+    const el = loadMoreRef.current;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setVisibleCount((c) => Math.min(c + 24, filteredPlayers.length));
+        }
+      },
+      // Prefetch next chunk ahead of scroll without overloading the network.
+      { rootMargin: '900px', threshold: 0.01 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [visibleCount, filteredPlayers.length]);
+
+  const PlayerCard = React.memo(function PlayerCard({ player, index }) {
+    const positionLabel = getPositionLabel(player.position);
+    const positionColor = positionColors[positionLabel] || '#666';
+    const team = teamById.get(String(player.team_id));
+    const playerImgSrc = player?.player_image || null;
+    const teamLogoSrc = team?.team_logo || null;
+    const isAboveFold = index < 8;
+
+    return (
+      <div className="player-card-db">
+        <div
+          className="position-tag"
+          style={{ backgroundColor: positionColor }}
+        >
+          {positionLabel.toUpperCase()}
+        </div>
+
+        <div className="player-photo-container">
+          {playerImgSrc ? (
+            <SmartImg
+              src={playerImgSrc}
+              preset="playerCard"
+              alt={player.player_name}
+              className="player-photo"
+              loading={isAboveFold ? 'eager' : 'lazy'}
+              decoding="async"
+              fetchpriority={isAboveFold ? 'high' : 'auto'}
+            />
+          ) : (
+            <div className="player-photo-placeholder">
+              <i className="fas fa-user"></i>
+            </div>
+          )}
+        </div>
+
+        <div className="player-info-bar">
+          <div className="team-logo-small">
+            {teamLogoSrc ? (
+              <SmartImg
+                src={teamLogoSrc}
+                preset="crestSm"
+                alt={team?.team_name}
+                loading={isAboveFold ? 'eager' : 'lazy'}
+                decoding="async"
+                fetchpriority={isAboveFold ? 'high' : 'auto'}
+              />
+            ) : (
+              <span>{team?.team_name?.charAt(0) || '?'}</span>
+            )}
+          </div>
+          <span className="player-name-db">{player.player_name}</span>
+        </div>
+      </div>
+    );
+  });
 
   if (loading) {
     return (
@@ -120,7 +220,7 @@ export default function PlayerDatabase() {
             />
           </div>
 
-          <div className="player-filters">
+          <div className="filter-row">
             <select
               value={selectedTeam}
               onChange={(e) => setSelectedTeam(e.target.value)}
@@ -135,7 +235,7 @@ export default function PlayerDatabase() {
             <select
               value={selectedPosition}
               onChange={(e) => setSelectedPosition(e.target.value)}
-              className="player-filters"
+              className="filter-select filter-select-wide"
             >
               <option value="all">ALL POSITIONS</option>
               <option value="Goalkeeper">Goalkeeper</option>
@@ -157,53 +257,22 @@ export default function PlayerDatabase() {
       </div>
 
       <div className="players-grid">
-        {filteredPlayers.map((player) => {
-          const positionLabel = getPositionLabel(player.position);
-          const positionColor = positionColors[positionLabel] || '#666';
-          const team = player.team_registrations;
-
-          return (
-            <div className="player-card-db" key={player.id}>
-              <div 
-                className="position-tag"
-                style={{ backgroundColor: positionColor }}
-              >
-                {positionLabel.toUpperCase()}
-              </div>
-              
-              <div className="player-photo-container">
-                {player.player_image ? (
-                  <img 
-                    src={player.player_image} 
-                    alt={player.player_name}
-                    className="player-photo"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="player-photo-placeholder">
-                    <i className="fas fa-user"></i>
-                  </div>
-                )}
-              </div>
-
-              <div className="player-info-bar">
-                <div className="team-logo-small">
-                  {team?.team_logo ? (
-                    <img 
-                      src={team.team_logo} 
-                      alt={team.team_name}
-                      loading="lazy"
-                    />
-                  ) : (
-                    <span>{team?.team_name?.charAt(0) || '?'}</span>
-                  )}
-                </div>
-                <span className="player-name-db">{player.player_name}</span>
-              </div>
-            </div>
-          );
-        })}
+        {displayedPlayers.map((player, idx) => (
+          <PlayerCard key={player.id} player={player} index={idx} />
+        ))}
       </div>
+
+      {visibleCount < filteredPlayers.length && (
+        <div className="players-load-more">
+          <button
+            className="load-more-btn"
+            onClick={() => setVisibleCount((c) => Math.min(c + 24, filteredPlayers.length))}
+          >
+            LOAD MORE
+          </button>
+          <div ref={loadMoreRef} className="load-more-sentinel" />
+        </div>
+      )}
 
       {filteredPlayers.length === 0 && (
         <div className="no-players">

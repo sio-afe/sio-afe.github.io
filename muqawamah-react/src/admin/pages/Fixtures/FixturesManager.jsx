@@ -6,6 +6,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabaseClient } from '../../../lib/supabaseClient';
 import AdminLayout from '../../components/AdminLayout';
+import { imgUrl } from '../../../lib/imagePresets';
 
 export default function FixturesManager() {
   const [fixtures, setFixtures] = useState([]);
@@ -189,7 +190,13 @@ export default function FixturesManager() {
                     <td>
                       <div className="team-cell">
                         {fixture.home_team?.crest_url && (
-                          <img src={fixture.home_team.crest_url} alt="" className="team-logo-small" />
+                          <img
+                            src={imgUrl(fixture.home_team.crest_url, 'crestSm')}
+                            alt=""
+                            className="team-logo-small"
+                            loading="lazy"
+                            decoding="async"
+                          />
                         )}
                         <span>{fixture.home_team?.name || 'TBD'}</span>
                       </div>
@@ -197,7 +204,13 @@ export default function FixturesManager() {
                     <td>
                       <div className="team-cell">
                         {fixture.away_team?.crest_url && (
-                          <img src={fixture.away_team.crest_url} alt="" className="team-logo-small" />
+                          <img
+                            src={imgUrl(fixture.away_team.crest_url, 'crestSm')}
+                            alt=""
+                            className="team-logo-small"
+                            loading="lazy"
+                            decoding="async"
+                          />
                         )}
                         <span>{fixture.away_team?.name || 'TBD'}</span>
                       </div>

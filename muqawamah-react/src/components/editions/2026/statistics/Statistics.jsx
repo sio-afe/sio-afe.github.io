@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { supabaseClient } from '../../../../lib/supabaseClient';
 import TournamentNavbar from '../../../shared/TournamentNavbar';
 import Footer from '../../../shared/Footer';
-import { StatsShareCard } from '../../../shared/ShareableCard';
+import SmartImg from '../../../shared/SmartImg';
+import { StatsShareCard, PrewarmStatsShareCard } from '../../../shared/ShareableCard';
 
 export default function Statistics() {
   const [activeTab, setActiveTab] = useState('goals'); // 'goals', 'assists', 'teams'
@@ -289,10 +290,12 @@ export default function Statistics() {
             {/* Player Photo */}
             <div className="player-photo-v2">
               {player.player_image ? (
-                <img 
-                  src={player.player_image} 
+                <SmartImg
+                  src={player.player_image}
+                  preset="playerAvatar"
                   alt={player.player_name}
                   loading="lazy"
+                  decoding="async"
                 />
               ) : (
                 <div className="photo-placeholder">
@@ -306,11 +309,13 @@ export default function Statistics() {
               <span className="player-name-v2">{player.player_name}</span>
               <div className="team-info-v2">
                 {player.team_registrations?.team_logo && (
-                  <img 
-                    src={player.team_registrations.team_logo} 
-                    alt="" 
+                  <SmartImg
+                    src={player.team_registrations.team_logo}
+                    preset="crestSm"
+                    alt=""
                     className="mini-team-logo"
                     loading="lazy"
+                    decoding="async"
                   />
                 )}
                 <span className="team-name-mini">
@@ -355,10 +360,12 @@ export default function Statistics() {
             {/* Team Logo */}
             <div className="team-logo-v2">
               {team.crest_url ? (
-                <img 
-                  src={team.crest_url} 
+                <SmartImg
+                  src={team.crest_url}
+                  preset="crestSm"
                   alt={team.name}
                   loading="lazy"
+                  decoding="async"
                 />
               ) : (
                 <div className="logo-placeholder">
@@ -476,6 +483,12 @@ export default function Statistics() {
         >
           <i className="fas fa-share-alt"></i>
         </button>
+
+        {/* Prewarm share image in the background so first open is instant */}
+        <PrewarmStatsShareCard
+          statType={activeTab === 'teams' ? 'points' : activeTab}
+          items={getShareData()}
+        />
 
         {/* Share Card Modal */}
         {showShareCard && (

@@ -6,6 +6,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabaseClient } from '../../../lib/supabaseClient';
 import AdminLayout from '../../components/AdminLayout';
+import { imgUrl } from '../../../lib/imagePresets';
 
 export default function MatchRecorder() {
   const [matches, setMatches] = useState([]);
@@ -497,7 +498,13 @@ export default function MatchRecorder() {
                     <td>
                       <div className="team-cell">
                         {match.home_team?.crest_url && (
-                          <img src={match.home_team.crest_url} alt="" className="team-logo-small" />
+                          <img
+                            src={imgUrl(match.home_team.crest_url, 'crestSm')}
+                            alt=""
+                            className="team-logo-small"
+                            loading="lazy"
+                            decoding="async"
+                          />
                         )}
                         <span>{match.home_team?.name}</span>
                       </div>
@@ -514,7 +521,13 @@ export default function MatchRecorder() {
                     <td>
                       <div className="team-cell">
                         {match.away_team?.crest_url && (
-                          <img src={match.away_team.crest_url} alt="" className="team-logo-small" />
+                          <img
+                            src={imgUrl(match.away_team.crest_url, 'crestSm')}
+                            alt=""
+                            className="team-logo-small"
+                            loading="lazy"
+                            decoding="async"
+                          />
                         )}
                         <span>{match.away_team?.name}</span>
                       </div>
@@ -556,7 +569,7 @@ export default function MatchRecorder() {
                 <div className="team-score-input">
                   <div className="team-name">
                     {selectedMatch.home_team?.crest_url && (
-                      <img src={selectedMatch.home_team.crest_url} alt="" />
+                      <img src={imgUrl(selectedMatch.home_team.crest_url, 'crestMd')} alt="" loading="lazy" decoding="async" />
                     )}
                     <h3>{selectedMatch.home_team?.name}</h3>
                   </div>
@@ -577,7 +590,7 @@ export default function MatchRecorder() {
                 <div className="team-score-input">
                   <div className="team-name">
                     {selectedMatch.away_team?.crest_url && (
-                      <img src={selectedMatch.away_team.crest_url} alt="" />
+                      <img src={imgUrl(selectedMatch.away_team.crest_url, 'crestMd')} alt="" loading="lazy" decoding="async" />
                     )}
                     <h3>{selectedMatch.away_team?.name}</h3>
                   </div>

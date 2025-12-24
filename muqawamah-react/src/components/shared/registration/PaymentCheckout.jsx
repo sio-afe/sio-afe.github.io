@@ -3,6 +3,7 @@ import { useRegistration } from './RegistrationContext';
 import { supabaseClient } from '../../../lib/supabaseClient';
 import RegistrationComplete from './RegistrationComplete';
 import { compressImage, getBase64SizeKB } from './utils/imageCompression';
+import { ensurePublicImageUrl } from '../../../lib/storage';
 
 // Pricing and QR code configuration
 const PRICING = {
@@ -107,8 +108,6 @@ export default function PaymentCheckout() {
 
       setUploadProgress(20);
 
-      // Screenshot is already compressed to WebP and in base64 format
-      const screenshotBase64 = screenshot;
       setUploadProgress(40);
 
       let teamId = existingTeamId;
@@ -128,7 +127,7 @@ export default function PaymentCheckout() {
             formation: teamData.formation,
             status: 'pending_verification', // Pending admin verification
             payment_amount: totalAmount,
-            payment_screenshot: screenshotBase64,
+            payment_screenshot: null,
             payment_status: 'pending_verification',
             submitted_at: new Date().toISOString()
           })
@@ -152,7 +151,7 @@ export default function PaymentCheckout() {
             formation: teamData.formation,
             status: 'pending_verification',
             payment_amount: totalAmount,
-            payment_screenshot: screenshotBase64,
+            payment_screenshot: null,
             payment_status: 'pending_verification',
             submitted_at: new Date().toISOString()
           })
@@ -162,6 +161,19 @@ export default function PaymentCheckout() {
       }
 
       setUploadProgress(60);
+
+      // Upload screenshot after we have a real teamId and update DB with the public URL.
+      const screenshotUrl = await ensurePublicImageUrl({
+        value: screenshot,
+        path: `registrations/${teamId}/payment_screenshot.webp`
+      });
+      if (screenshotUrl) {
+        const { error: screenshotUpdateError } = await supabaseClient
+          .from('team_registrations')
+          .update({ payment_screenshot: screenshotUrl })
+          .eq('id', teamId);
+        if (screenshotUpdateError) throw screenshotUpdateError;
+      }
 
       // Save players
       await supabaseClient.from('team_players').delete().eq('team_id', teamId);

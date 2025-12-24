@@ -1,4 +1,5 @@
 import React from 'react';
+import SmartImg from '../../../../shared/SmartImg';
 
 export default function MatchHeader({ match }) {
   const formatDate = (dateString) => {
@@ -55,10 +56,13 @@ export default function MatchHeader({ match }) {
           <div className="header-team home">
             <div className="team-logo-large">
               {match.home_team?.crest_url ? (
-                <img 
-                  src={match.home_team.crest_url} 
+                <SmartImg
+                  src={match.home_team.crest_url}
+                  preset="matchCrest"
                   alt={match.home_team.name}
-                  loading="lazy"
+                  loading="eager"
+                  decoding="async"
+                  fetchpriority="high"
                 />
               ) : (
                 <span>{match.home_team?.name?.charAt(0) || '?'}</span>
@@ -88,10 +92,13 @@ export default function MatchHeader({ match }) {
           <div className="header-team away">
             <div className="team-logo-large">
               {match.away_team?.crest_url ? (
-                <img 
-                  src={match.away_team.crest_url} 
+                <SmartImg
+                  src={match.away_team.crest_url}
+                  preset="matchCrest"
                   alt={match.away_team.name}
-                  loading="lazy"
+                  loading="eager"
+                  decoding="async"
+                  fetchpriority="high"
                 />
               ) : (
                 <span>{match.away_team?.name?.charAt(0) || '?'}</span>

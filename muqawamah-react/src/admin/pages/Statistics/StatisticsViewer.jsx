@@ -6,6 +6,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabaseClient } from '../../../lib/supabaseClient';
 import AdminLayout from '../../components/AdminLayout';
+import { imgUrl } from '../../../lib/imagePresets';
 
 export default function StatisticsViewer() {
   const [stats, setStats] = useState({
@@ -211,7 +212,13 @@ export default function StatisticsViewer() {
                         <td>
                           <div className="player-cell">
                             {scorer.player?.player_image && (
-                              <img src={scorer.player.player_image} alt="" className="player-image-tiny" />
+                              <img
+                                src={imgUrl(scorer.player.player_image, 'playerAvatar')}
+                                alt=""
+                                className="player-image-tiny"
+                                loading="lazy"
+                                decoding="async"
+                              />
                             )}
                             <span>{scorer.player?.player_name}</span>
                           </div>
@@ -250,7 +257,13 @@ export default function StatisticsViewer() {
                         <td>
                           <div className="player-cell">
                             {assister.player?.player_image && (
-                              <img src={assister.player.player_image} alt="" className="player-image-tiny" />
+                              <img
+                                src={imgUrl(assister.player.player_image, 'playerAvatar')}
+                                alt=""
+                                className="player-image-tiny"
+                                loading="lazy"
+                                decoding="async"
+                              />
                             )}
                             <span>{assister.player?.player_name}</span>
                           </div>
@@ -290,7 +303,13 @@ export default function StatisticsViewer() {
                     <td>
                       <div className="team-cell">
                         {team.crest_url && (
-                          <img src={team.crest_url} alt="" className="team-logo-small" />
+                          <img
+                            src={imgUrl(team.crest_url, 'crestSm')}
+                            alt=""
+                            className="team-logo-small"
+                            loading="lazy"
+                            decoding="async"
+                          />
                         )}
                         <span>{team.name}</span>
                       </div>

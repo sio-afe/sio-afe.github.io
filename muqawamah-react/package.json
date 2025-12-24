@@ -14,7 +14,9 @@
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest --watch",
     "test:supabase": "vitest run src/__tests__/integration/supabaseConnection.test.js",
-    "precommit": "SKIP_SUPABASE_TESTS=true npm run test:run && npm run build"
+    "precommit": "SKIP_SUPABASE_TESTS=true npm run test:run && npm run build",
+    "storage:unused": "node scripts/find-unused-storage-images.mjs",
+    "storage:unused:delete": "node scripts/find-unused-storage-images.mjs --delete"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.44.3",

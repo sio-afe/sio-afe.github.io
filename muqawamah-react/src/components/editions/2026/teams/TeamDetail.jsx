@@ -3,7 +3,8 @@ import { supabaseClient } from '../../../../lib/supabaseClient';
 import Footer from '../../../shared/Footer';
 import TournamentNavbar from '../../../shared/TournamentNavbar';
 import TeamFormationDisplay from '../../../shared/TeamFormationDisplay';
-import { TeamShareCard, ShareButton } from '../../../shared/ShareableCard';
+import { TeamShareCard, PrewarmTeamShareCard, ShareButton } from '../../../shared/ShareableCard';
+import SmartImg from '../../../shared/SmartImg';
 
 const positionGroups = {
   'Goalkeeper': 'GOALKEEPERS',
@@ -382,7 +383,7 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
           <div className="team-hero-content">
             <div className="team-crest-hero" style={teamCrestStyle}>
               {team.crest_url ? (
-                <img src={team.crest_url} alt={team.name} />
+                <SmartImg src={team.crest_url} preset="crestMd" alt={team.name} loading="eager" decoding="async" fetchpriority="high" />
               ) : (
                 <span>{team.name?.charAt(0) || '?'}</span>
               )}
@@ -437,11 +438,13 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
                             <td className="opponent-cell">
                               <div className="opponent-inner">
                                 {opponent?.crest_url && (
-                                  <img 
-                                    src={opponent.crest_url} 
-                                    alt="" 
+                                  <SmartImg
+                                    src={opponent.crest_url}
+                                    preset="crestSm"
+                                    alt=""
                                     className="opponent-logo"
                                     loading="lazy"
+                                    decoding="async"
                                   />
                                 )}
                                 <span className="opponent-name">{opponent?.name || 'TBD'}</span>
@@ -509,10 +512,12 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
                         <div className="team-cell">
                           <div className="team-logo-small">
                             {standingTeam.crest_url ? (
-                              <img 
-                                src={standingTeam.crest_url} 
+                              <SmartImg
+                                src={standingTeam.crest_url}
+                                preset="crestSm"
                                 alt={standingTeam.name}
                                 loading="lazy"
+                                decoding="async"
                               />
                             ) : (
                               <span>{standingTeam.name?.charAt(0) || '?'}</span>
@@ -545,10 +550,12 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
                       <span className="squad-number">{idx + 1}</span>
                       <div className="squad-photo">
                         {player.player_image ? (
-                          <img 
-                            src={player.player_image} 
+                          <SmartImg
+                            src={player.player_image}
+                            preset="playerAvatar"
                             alt={player.player_name}
                             loading="lazy"
+                            decoding="async"
                           />
                         ) : (
                           <i className="fas fa-user"></i>
@@ -649,6 +656,9 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
 
         <Footer edition="2026" />
       </div>
+
+      {/* Prewarm share image in the background so first open is instant */}
+      {team && <PrewarmTeamShareCard team={team} stats={teamStats} />}
       
       {/* Share Modal */}
       {showShareModal && (

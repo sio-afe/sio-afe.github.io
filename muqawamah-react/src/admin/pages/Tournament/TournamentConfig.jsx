@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabaseClient } from '../../../lib/supabaseClient';
 import AdminLayout from '../../components/AdminLayout';
+import { imgUrl } from '../../../lib/imagePresets';
 import { 
   getGroupStandings, 
   getTournamentSettings, 
@@ -321,9 +322,11 @@ export default function TournamentConfig() {
                     <div key={team.id} className="group-team-row">
                       <span className="team-position">{idx + 1}</span>
                       <img 
-                        src={team.crest_url || '/assets/img/default-crest.png'} 
+                        src={team.crest_url ? imgUrl(team.crest_url, 'crestSm') : '/assets/img/default-crest.png'} 
                         alt="" 
                         className="team-crest-mini"
+                        loading="lazy"
+                        decoding="async"
                       />
                       <span className="team-name">{team.name}</span>
                       <span className="team-stats">
@@ -370,9 +373,11 @@ export default function TournamentConfig() {
                 {getUnassignedTeams().map(team => (
                   <div key={team.id} className="unassigned-team">
                     <img 
-                      src={team.crest_url || '/assets/img/default-crest.png'} 
+                      src={team.crest_url ? imgUrl(team.crest_url, 'crestSm') : '/assets/img/default-crest.png'} 
                       alt="" 
                       className="team-crest-mini"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <span>{team.name}</span>
                     <select 
@@ -436,7 +441,7 @@ export default function TournamentConfig() {
                       <div className="bracket-team home">
                         {slot.home_team ? (
                           <>
-                            <img src={slot.home_team.crest_url} alt="" />
+                            <img src={imgUrl(slot.home_team.crest_url, 'crestSm')} alt="" loading="lazy" decoding="async" />
                             <span>{slot.home_team.name}</span>
                           </>
                         ) : (
@@ -449,7 +454,7 @@ export default function TournamentConfig() {
                       <div className="bracket-team away">
                         {slot.away_team ? (
                           <>
-                            <img src={slot.away_team.crest_url} alt="" />
+                            <img src={imgUrl(slot.away_team.crest_url, 'crestSm')} alt="" loading="lazy" decoding="async" />
                             <span>{slot.away_team.name}</span>
                           </>
                         ) : (
@@ -471,7 +476,7 @@ export default function TournamentConfig() {
                       <div className="bracket-team home">
                         {slot.home_team ? (
                           <>
-                            <img src={slot.home_team.crest_url} alt="" />
+                            <img src={imgUrl(slot.home_team.crest_url, 'crestSm')} alt="" loading="lazy" decoding="async" />
                             <span>{slot.home_team.name}</span>
                           </>
                         ) : (
@@ -481,7 +486,7 @@ export default function TournamentConfig() {
                       <div className="bracket-team away">
                         {slot.away_team ? (
                           <>
-                            <img src={slot.away_team.crest_url} alt="" />
+                            <img src={imgUrl(slot.away_team.crest_url, 'crestSm')} alt="" loading="lazy" decoding="async" />
                             <span>{slot.away_team.name}</span>
                           </>
                         ) : (
@@ -500,7 +505,7 @@ export default function TournamentConfig() {
                       <div className="bracket-team home">
                         {slot.home_team ? (
                           <>
-                            <img src={slot.home_team.crest_url} alt="" />
+                            <img src={imgUrl(slot.home_team.crest_url, 'crestSm')} alt="" loading="lazy" decoding="async" />
                             <span>{slot.home_team.name}</span>
                           </>
                         ) : (
@@ -510,7 +515,7 @@ export default function TournamentConfig() {
                       <div className="bracket-team away">
                         {slot.away_team ? (
                           <>
-                            <img src={slot.away_team.crest_url} alt="" />
+                            <img src={imgUrl(slot.away_team.crest_url, 'crestSm')} alt="" loading="lazy" decoding="async" />
                             <span>{slot.away_team.name}</span>
                           </>
                         ) : (

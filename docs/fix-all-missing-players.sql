@@ -116,3 +116,4 @@ FROM teams t
 WHERE t.registration_id IS NOT NULL
   AND NOT EXISTS (SELECT 1 FROM players p WHERE p.team_id = t.id);
 
+

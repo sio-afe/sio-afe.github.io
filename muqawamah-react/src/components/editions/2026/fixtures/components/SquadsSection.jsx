@@ -1,4 +1,5 @@
 import React from 'react';
+import SmartImg from '../../../../shared/SmartImg';
 
 export default function SquadsSection({ homeTeamPlayers, awayTeamPlayers, match, goals, cards }) {
   // Sort players by position for squad display
@@ -96,11 +97,13 @@ export default function SquadsSection({ homeTeamPlayers, awayTeamPlayers, match,
         {isHome ? (
           <>
             {team?.crest_url && (
-              <img 
-                src={team.crest_url} 
-                alt="" 
+              <SmartImg
+                src={team.crest_url}
+                preset="crestSm"
+                alt=""
                 className="squad-team-logo"
                 loading="lazy"
+                decoding="async"
               />
             )}
             <span>{team?.name}</span>
@@ -109,11 +112,13 @@ export default function SquadsSection({ homeTeamPlayers, awayTeamPlayers, match,
           <>
             <span>{team?.name}</span>
             {team?.crest_url && (
-              <img 
-                src={team.crest_url} 
-                alt="" 
+              <SmartImg
+                src={team.crest_url}
+                preset="crestSm"
+                alt=""
                 className="squad-team-logo"
                 loading="lazy"
+                decoding="async"
               />
             )}
           </>

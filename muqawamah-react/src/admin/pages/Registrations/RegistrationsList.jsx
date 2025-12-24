@@ -8,6 +8,7 @@ import { supabaseClient } from '../../../lib/supabaseClient';
 import AdminLayout from '../../components/AdminLayout';
 import { REGISTRATION_STATUSES } from '../../config/adminConfig';
 import { compressImage, getBase64SizeKB } from '../../../components/shared/registration/utils/imageCompression';
+import SmartImg from '../../../components/shared/SmartImg';
 
 const positionOptions = ['GK', 'CB', 'LB', 'RB', 'CDM', 'CM', 'CAM', 'LM', 'RM', 'CF', 'ST', 'SUB'];
 
@@ -624,7 +625,14 @@ export default function RegistrationsList() {
                     <td>
                       <div className="team-cell">
                         {reg.team_logo && (
-                          <img src={reg.team_logo} alt="" className="team-logo-small" />
+                          <SmartImg
+                            src={reg.team_logo}
+                            preset="crestSm"
+                            alt=""
+                            className="team-logo-small"
+                            loading="lazy"
+                            decoding="async"
+                          />
                         )}
                         <strong>{reg.team_name}</strong>
                       </div>
@@ -717,7 +725,7 @@ export default function RegistrationsList() {
                       <label>Team Logo</label>
                       {teamEditData.team_logo && (
                         <div className="current-image-preview">
-                          <img src={teamEditData.team_logo} alt="Team logo" />
+                          <SmartImg src={teamEditData.team_logo} preset="crestMd" alt="Team logo" loading="lazy" decoding="async" />
                         </div>
                       )}
                       <input
@@ -789,7 +797,7 @@ export default function RegistrationsList() {
                       <label>Team Logo:</label>
                       {selectedReg.team_logo ? (
                         <div className="team-logo-preview">
-                          <img src={selectedReg.team_logo} alt="Team logo" />
+                          <SmartImg src={selectedReg.team_logo} preset="crestMd" alt="Team logo" loading="lazy" decoding="async" />
                         </div>
                       ) : (
                         <span style={{ color: '#9ca3af' }}>No logo</span>
@@ -847,7 +855,7 @@ export default function RegistrationsList() {
                   {selectedReg.team_players?.map((player, idx) => (
                     <div key={idx} className="player-item player-item-editable">
                       {player.player_image && (
-                        <img src={player.player_image} alt="" className="player-image-small" />
+                        <SmartImg src={player.player_image} preset="playerAvatar" alt="" className="player-image-small" loading="lazy" decoding="async" />
                       )}
                       <div className="player-info-section">
                         <strong>{player.player_name}</strong>
@@ -883,11 +891,13 @@ export default function RegistrationsList() {
                 <div className="detail-section payment-section">
                   <h3><i className="fas fa-receipt"></i> Payment Screenshot</h3>
                   <div className="payment-screenshot-container">
-                    <img 
-                      src={selectedReg.payment_screenshot} 
-                      alt="Payment Screenshot" 
+                    <SmartImg
+                      src={selectedReg.payment_screenshot}
+                      alt="Payment Screenshot"
                       className="payment-screenshot-image"
                       onClick={() => window.open(selectedReg.payment_screenshot, '_blank')}
+                      loading="lazy"
+                      decoding="async"
                     />
                     <p className="payment-amount">
                       Amount: <strong>₹{selectedReg.payment_amount}</strong>
@@ -1035,7 +1045,7 @@ export default function RegistrationsList() {
                 <label>Player Photo</label>
                 {editingPlayer.player_image && (
                   <div className="current-image-preview">
-                    <img src={editingPlayer.player_image} alt="Current photo" />
+                    <SmartImg src={editingPlayer.player_image} preset="playerCard" alt="Current photo" loading="lazy" decoding="async" />
                   </div>
                 )}
                 <input
@@ -1143,7 +1153,7 @@ export default function RegistrationsList() {
                 <label>Player Photo</label>
                 {newPlayer.player_image && (
                   <div className="current-image-preview">
-                    <img src={newPlayer.player_image} alt="Player photo" />
+                    <SmartImg src={newPlayer.player_image} preset="playerCard" alt="Player photo" loading="lazy" decoding="async" />
                   </div>
                 )}
                 <input

@@ -15,6 +15,7 @@ import {
 
 // Mock html-to-image
 vi.mock('html-to-image', () => ({
+  toBlob: vi.fn(() => Promise.resolve(new Blob(['mock'], { type: 'image/png' }))),
   toPng: vi.fn(() => Promise.resolve('data:image/png;base64,mockImageData'))
 }));
 
@@ -602,7 +603,7 @@ describe('dataURLtoBlob helper', () => {
     expect(blob.size).toBeGreaterThan(0);
   });
 
-  it('download button is rendered and clickable', () => {
+  it('download button is rendered and clickable', async () => {
     const mockMatch = {
       id: '123',
       home_team: { name: 'Team A' },
@@ -615,7 +616,9 @@ describe('dataURLtoBlob helper', () => {
     
     const downloadButton = screen.getByText('Download').closest('button');
     expect(downloadButton).toBeInTheDocument();
-    expect(downloadButton).not.toBeDisabled();
+
+    // The share card pre-generates an image asynchronously; wait until it's ready.
+    await waitFor(() => expect(downloadButton).not.toBeDisabled());
     
     // Click should not throw
     expect(() => fireEvent.click(downloadButton)).not.toThrow();

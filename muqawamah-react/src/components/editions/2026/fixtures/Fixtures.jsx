@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { supabaseClient } from '../../../../lib/supabaseClient';
 import TournamentNavbar from '../../../shared/TournamentNavbar';
 import Footer from '../../../shared/Footer';
+import SmartImg from '../../../shared/SmartImg';
 
 export default function Fixtures({ onMatchClick }) {
   const [matches, setMatches] = useState([]);
@@ -258,10 +259,12 @@ export default function Fixtures({ onMatchClick }) {
                         <span className="team-name-v2">{match.home_team?.name || 'TBD'}</span>
                         <div className="team-logo-v2">
                           {match.home_team?.crest_url ? (
-                            <img 
-                              src={match.home_team.crest_url} 
+                            <SmartImg
+                              src={match.home_team.crest_url}
+                              preset="crestSm"
                               alt={match.home_team.name}
                               loading="lazy"
+                              decoding="async"
                             />
                           ) : (
                             <span>{match.home_team?.name?.charAt(0) || '?'}</span>
@@ -282,10 +285,12 @@ export default function Fixtures({ onMatchClick }) {
                       <div className="match-team-v2 away">
                         <div className="team-logo-v2">
                           {match.away_team?.crest_url ? (
-                            <img 
-                              src={match.away_team.crest_url} 
+                            <SmartImg
+                              src={match.away_team.crest_url}
+                              preset="crestSm"
                               alt={match.away_team.name}
                               loading="lazy"
+                              decoding="async"
                             />
                           ) : (
                             <span>{match.away_team?.name?.charAt(0) || '?'}</span>
