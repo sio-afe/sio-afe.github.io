@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320" role="img" aria-label="Player placeholder">
+  <rect width="320" height="320" fill="#2a2a2a"/>
+  <!-- Head -->
+  <circle cx="160" cy="122" r="58" fill="#8a8a8a"/>
+  <!-- Shoulders / torso -->
+  <path
+    d="M60 292c0-60 44-98 100-98h0c56 0 100 38 100 98v18H60v-18z"
+    fill="#8a8a8a"
+  />
+  <!-- Subtle highlight -->
+  <path
+    d="M160 66c-24 0-44 12-54 30 10-7 22-11 35-11 29 0 52 22 52 50 0 13-5 25-12 34 23-7 39-28 39-52 0-28-23-51-60-51z"
+    fill="#9a9a9a"
+    opacity="0.35"
+  />
+</svg>
+

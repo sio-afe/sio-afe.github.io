@@ -1,11 +1,14 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import ReactDOM from 'react-dom/client';
 import { supabaseClient } from './lib/supabaseClient';
 import PlayerDetail from './components/editions/2026/players/PlayerDetail';
 import Footer from './components/shared/Footer';
 import TournamentNavbar from './components/shared/TournamentNavbar';
+import SmartImg from './components/shared/SmartImg';
 import './styles/PlayerDatabase.css';
 import './styles/TournamentNavbar.css';
+
+const PAGE_SIZE = 15;
 
 const positionLabels = {
   'GK': 'Goalkeeper',
@@ -30,85 +33,80 @@ const positionColors = {
   'Substitute': '#9e9e9e'
 };
 
-// Helper to create URL-safe slug from player name
-const slugify = (name) => {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '');
-};
+const getPositionLabel = (position) => positionLabels[position] || position;
 
-// Helper to convert image URL to webp format
-const getWebpImageUrl = (url) => {
-  if (!url) return null;
-  
-  // If it's a Supabase storage URL, add transformation parameters
-  if (url.includes('supabase.co/storage/v1/object/public/')) {
-    // Add webp transformation parameter
-    const separator = url.includes('?') ? '&' : '?';
-    return `${url}${separator}format=webp&quality=80`;
+const getInitialPage = () => {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const p = parseInt(urlParams.get('page') || '1', 10);
+    return Number.isFinite(p) && p > 0 ? p : 1;
+  } catch {
+    return 1;
   }
-  
-  // For other URLs, just return as is (assuming they're already optimized)
-  return url;
 };
 
-// Lazy loading image component
-function LazyImage({ src, alt, className, placeholder }) {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isInView, setIsInView] = useState(false);
-  const imgRef = useRef(null);
-
-  useEffect(() => {
-    if (!imgRef.current) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsInView(true);
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        rootMargin: '50px', // Start loading 50px before the image enters viewport
-        threshold: 0.01,
-      }
-    );
-
-    observer.observe(imgRef.current);
-
-    return () => {
-      if (imgRef.current) {
-        observer.unobserve(imgRef.current);
-      }
-    };
-  }, []);
-
-  const webpSrc = getWebpImageUrl(src);
+// Memoized player card for performance
+const PlayerCard = React.memo(function PlayerCard({ player, team, onClick, index }) {
+  const positionLabel = getPositionLabel(player.position);
+  const positionColor = positionColors[positionLabel] || '#666';
+  const isAboveFold = index < 10;
 
   return (
-    <div ref={imgRef} className={className} style={{ position: 'relative' }}>
-      {!isLoaded && placeholder}
-      {isInView && webpSrc && (
-        <img
-          src={webpSrc}
-          alt={alt}
-          loading="lazy"
-          onLoad={() => setIsLoaded(true)}
-          style={{
-            opacity: isLoaded ? 1 : 0,
-            transition: 'opacity 0.3s ease-in-out',
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-          }}
-        />
-      )}
+    <div 
+      className="player-card-db" 
+      onClick={onClick}
+      style={{ cursor: 'pointer' }}
+    >
+      <div 
+        className="position-tag"
+        style={{ backgroundColor: positionColor }}
+      >
+        {positionLabel.toUpperCase()}
+      </div>
+      
+      <div className="player-photo-container">
+        {player.player_image ? (
+          <SmartImg 
+            src={player.player_image} 
+            preset="playerCard"
+            alt={player.name}
+            className="player-photo"
+            loading={isAboveFold ? 'eager' : 'lazy'}
+            decoding="async"
+            fetchpriority={isAboveFold ? 'high' : 'auto'}
+          />
+        ) : (
+          <img
+            src="/assets/img/player-placeholder.svg"
+            alt=""
+            className="player-photo player-photo-placeholder-img"
+            loading="lazy"
+            decoding="async"
+          />
+        )}
+      </div>
+
+      <div className="player-info-bar">
+        <div className="team-logo-small">
+          {team?.crest_url ? (
+            <SmartImg 
+              src={team.crest_url} 
+              preset="crestSm"
+              alt={team.name}
+              className="team-logo-img"
+              loading={isAboveFold ? 'eager' : 'lazy'}
+              decoding="async"
+              fetchpriority={isAboveFold ? 'high' : 'auto'}
+            />
+          ) : (
+            <span>{team?.name?.charAt(0) || '?'}</span>
+          )}
+        </div>
+        <span className="player-name-db">{player.name}</span>
+      </div>
     </div>
   );
-}
+});
 
 function PlayersApp() {
   const [players, setPlayers] = useState([]);
@@ -119,6 +117,7 @@ function PlayersApp() {
   const [selectedPosition, setSelectedPosition] = useState('all');
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
   const [view, setView] = useState('list'); // 'list' or 'detail'
+  const [page, setPage] = useState(getInitialPage());
 
   // Detect category from URL
   const getCategory = () => {
@@ -157,6 +156,12 @@ function PlayersApp() {
     } else {
       setView('list');
       setSelectedPlayerId(null);
+      // Restore page from URL
+      const pageParam = urlParams.get('page');
+      if (pageParam) {
+        const p = parseInt(pageParam, 10);
+        if (Number.isFinite(p) && p > 0) setPage(p);
+      }
     }
   };
 
@@ -171,8 +176,6 @@ function PlayersApp() {
 
       if (teamsError) throw teamsError;
 
-      console.log(`[Players] Found ${teamsData?.length || 0} teams in ${category}`);
-
       // Fetch players from tournament players table (not registration players)
       const { data: playersData, error: playersError } = await supabaseClient
         .from('players')
@@ -185,9 +188,6 @@ function PlayersApp() {
       const filteredPlayers = (playersData || []).filter(player => {
         return player.team && player.team.category === category;
       });
-
-      console.log(`[Players] Found ${playersData?.length || 0} total players`);
-      console.log(`[Players] Filtered to ${filteredPlayers.length} players in ${category}`);
 
       // Map teams data to match expected structure
       const mappedTeams = (teamsData || []).map(team => ({
@@ -215,27 +215,79 @@ function PlayersApp() {
   };
 
   const goBackToList = () => {
-    window.history.pushState({}, '', `/muqawamah/2026/${category}/players/`);
+    // Go back to clean URL without query params (page 1 is the default)
+    const baseUrl = `/muqawamah/2026/${category}/players/`;
+    window.history.pushState({}, '', baseUrl);
     setView('list');
     setSelectedPlayerId(null);
+    setPage(1);
   };
 
-  const getPositionLabel = (position) => {
-    return positionLabels[position] || position;
-  };
+  // Filtered players based on search/filter criteria
+  const filteredPlayers = useMemo(() => {
+    const search = searchTerm.trim().toLowerCase();
+    return players.filter(player => {
+      const matchesSearch = !search || player.name?.toLowerCase().includes(search);
+      const matchesTeam = selectedTeam === 'all' || player.team_id === selectedTeam;
+      const positionLabel = getPositionLabel(player.position);
+      const matchesPosition = selectedPosition === 'all' || positionLabel === selectedPosition;
+      return matchesSearch && matchesTeam && matchesPosition;
+    });
+  }, [players, searchTerm, selectedTeam, selectedPosition]);
 
-  const filteredPlayers = players.filter(player => {
-    const matchesSearch = player.name?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesTeam = selectedTeam === 'all' || player.team_id === selectedTeam;
-    const positionLabel = getPositionLabel(player.position);
-    const matchesPosition = selectedPosition === 'all' || positionLabel === selectedPosition;
-    return matchesSearch && matchesTeam && matchesPosition;
-  });
+  // Reset to page 1 when filters change (don't update URL - page 1 is default)
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm, selectedTeam, selectedPosition]);
 
   const resetFilters = () => {
     setSearchTerm('');
     setSelectedTeam('all');
     setSelectedPosition('all');
+  };
+
+  // Pagination logic
+  const totalPages = useMemo(() => Math.max(1, Math.ceil(filteredPlayers.length / PAGE_SIZE)), [filteredPlayers.length]);
+  const clampedPage = Math.min(Math.max(page, 1), totalPages);
+
+  useEffect(() => {
+    if (page !== clampedPage) setPage(clampedPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clampedPage]);
+
+  const displayedPlayers = useMemo(() => {
+    const start = (clampedPage - 1) * PAGE_SIZE;
+    return filteredPlayers.slice(start, start + PAGE_SIZE);
+  }, [filteredPlayers, clampedPage]);
+
+  const goToPage = (nextPage) => {
+    const p = Math.min(Math.max(nextPage, 1), totalPages);
+    setPage(p);
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set('page', String(p));
+      window.history.replaceState({}, '', url.toString());
+    } catch {
+      // ignore
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const getPaginationItems = () => {
+    const items = [];
+    const add = (v) => items.push(v);
+
+    add(1);
+    const left = Math.max(2, clampedPage - 1);
+    const right = Math.min(totalPages - 1, clampedPage + 1);
+
+    if (left > 2) add('…');
+    for (let p = left; p <= right; p++) add(p);
+    if (right < totalPages - 1) add('…');
+    if (totalPages > 1) add(totalPages);
+
+    // De-dupe consecutive duplicates
+    return items.filter((v, idx) => idx === 0 || v !== items[idx - 1]);
   };
 
   if (loading) {
@@ -327,63 +379,53 @@ function PlayersApp() {
       </div>
 
       <div className="players-grid">
-        {filteredPlayers.map((player) => {
-          const positionLabel = getPositionLabel(player.position);
-          const positionColor = positionColors[positionLabel] || '#666';
-          const team = player.team;
-
-          return (
-            <div 
-              className="player-card-db" 
-              key={player.id}
-              onClick={() => openPlayerDetail(player)}
-              style={{ cursor: 'pointer' }}
-            >
-              <div 
-                className="position-tag"
-                style={{ backgroundColor: positionColor }}
-              >
-                {positionLabel.toUpperCase()}
-              </div>
-              
-              <div className="player-photo-container">
-                {player.player_image ? (
-                  <LazyImage 
-                    src={player.player_image} 
-                    alt={player.name}
-                    className="player-photo"
-                    placeholder={
-                      <div className="player-photo-placeholder">
-                        <i className="fas fa-spinner fa-spin"></i>
-                      </div>
-                    }
-                  />
-                ) : (
-                  <div className="player-photo-placeholder">
-                    <i className="fas fa-user"></i>
-                  </div>
-                )}
-              </div>
-
-              <div className="player-info-bar">
-                <div className="team-logo-small">
-                  {team?.crest_url ? (
-                    <LazyImage 
-                      src={team.crest_url} 
-                      alt={team.name}
-                      className="team-logo-img"
-                      placeholder={null}
-                    />
-                  ) : (
-                    <span>{team?.name?.charAt(0) || '?'}</span>
-                  )}
-                </div>
-                <span className="player-name-db">{player.name}</span>
-              </div>
-            </div>
-          );
-        })}
+        {displayedPlayers.map((player, idx) => (
+          <PlayerCard 
+            key={player.id}
+            player={player}
+            team={player.team}
+            onClick={() => openPlayerDetail(player)}
+            index={idx}
+          />
+        ))}
       </div>
+
+      {filteredPlayers.length > 0 && (
+        <div className="players-pagination">
+          <button
+            className="pagination-btn"
+            onClick={() => goToPage(clampedPage - 1)}
+            disabled={clampedPage <= 1}
+            aria-label="Previous page"
+          >
+            «
+          </button>
+
+          {getPaginationItems().map((item, idx) => (
+            item === '…' ? (
+              <span className="pagination-ellipsis" key={`ellipsis-${idx}`}>…</span>
+            ) : (
+              <button
+                key={`page-${item}`}
+                className={`pagination-btn ${item === clampedPage ? 'active' : ''}`}
+                onClick={() => goToPage(item)}
+                aria-current={item === clampedPage ? 'page' : undefined}
+              >
+                {item}
+              </button>
+            )
+          ))}
+
+          <button
+            className="pagination-btn"
+            onClick={() => goToPage(clampedPage + 1)}
+            disabled={clampedPage >= totalPages}
+            aria-label="Next page"
+          >
+            »
+          </button>
+        </div>
+      )}
 
       {filteredPlayers.length === 0 && (
         <div className="no-players">
@@ -391,8 +433,6 @@ function PlayersApp() {
           <p>No players found matching your criteria</p>
         </div>
       )}
-
-  
 
       <Footer edition="2026" />
       </div>
