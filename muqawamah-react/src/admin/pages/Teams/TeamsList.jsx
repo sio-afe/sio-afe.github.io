@@ -288,22 +288,35 @@ export default function TeamsList() {
                         >
                           <i className="fas fa-chess-board"></i>
                         </button>
+                        {team.crest_url && (
+                          <a
+                            href={team.crest_url}
+                            download={`team-${(team.name || 'logo').toString().trim().replace(/\s+/g, '-').toLowerCase()}.png`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn-icon btn-download"
+                            title="Download Logo"
+                          >
+                            <i className="fas fa-download"></i>
+                          </a>
+                        )}
                         <button
                           className="btn-icon btn-image"
                           onClick={() => {
                             setLogoTargetTeam(team);
                             document.getElementById('admin-team-logo-input')?.click();
                           }}
-                          title="Change Team Logo"
+                          title="Upload New Logo"
                           disabled={logoUploading}
                         >
-                          <i className={`fas ${logoUploading && logoTargetTeam?.id === team.id ? 'fa-spinner fa-spin' : 'fa-image'}`}></i>
+                          <i className={`fas ${logoUploading && logoTargetTeam?.id === team.id ? 'fa-spinner fa-spin' : 'fa-upload'}`}></i>
                         </button>
                         <a 
                           href={`/muqawamah/2026/${team.category}/teams/?team=${team.id}`}
                           className="btn-icon btn-view"
                           title="View Team Page"
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
                           <i className="fas fa-external-link-alt"></i>
                         </a>
