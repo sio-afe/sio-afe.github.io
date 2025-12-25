@@ -282,7 +282,7 @@ const TeamMosaicPattern = ({ teamId, colorRgb, className = '' }) => {
             // NOTE: Some bundled p5 builds (or tree-shaken builds) may not include curveVertex.
             // Use a safe fallback so the Teams page never crashes.
             if (typeof p.curveVertex === 'function') {
-              p.curveVertex(x, y);
+            p.curveVertex(x, y);
             } else {
               p.vertex(x, y);
             }

@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { supabaseClient } from '../../../../lib/supabaseClient';
 import TournamentNavbar from '../../../shared/TournamentNavbar';
 import Footer from '../../../shared/Footer';
 import { getGroupStandings, getTournamentSettings, calculateTeamCards } from '../../../../lib/tournamentUtils';
 import SmartImg from '../../../shared/SmartImg';
+import { useTournamentLiveUpdates } from '../../../../hooks/useTournamentLiveUpdates';
+import { useFlashMap } from '../../../../hooks/useFlashMap';
 
 export default function Standings() {
   const [groupedTeams, setGroupedTeams] = useState({});
   const [settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState('groups'); // 'groups' or 'overall'
+  const prevTeamSigRef = useRef(new Map()); // teamId -> signature string
+  const { isFlashing: isTeamFlashing, flashKeys: flashTeams } = useFlashMap(900);
 
   // Determine category from URL
   const getCategory = () => {
@@ -22,30 +26,28 @@ export default function Standings() {
 
   useEffect(() => {
     fetchStandings();
-
-    // Subscribe to real-time updates
-    const subscription = supabaseClient
-      .channel('standings_changes')
-      .on('postgres_changes', 
-        { event: '*', schema: 'public', table: 'teams' }, 
-        () => {
-          fetchStandings();
-        }
-      )
-      .on('postgres_changes', 
-        { event: '*', schema: 'public', table: 'cards' }, 
-        () => {
-          fetchStandings();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      subscription.unsubscribe();
-    };
   }, []);
 
-  const fetchStandings = async () => {
+  const refetchStandings = useCallback(() => {
+    fetchStandings({ silent: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [category]);
+
+  useTournamentLiveUpdates({
+    enabled: true,
+    channelKey: `standings:${category}`,
+    // standings can change from match results/goals/cards/teams updates
+    tables: ['matches', 'teams', 'cards', 'goals'],
+    filtersByTable: {
+      matches: `category=eq.${category}`,
+      teams: `category=eq.${category}`
+    },
+    debounceMs: 800,
+    pollIntervalMs: 10_000,
+    onUpdate: refetchStandings
+  });
+
+  const fetchStandings = async ({ silent = false } = {}) => {
     try {
       // Get tournament settings
       const settingsData = await getTournamentSettings(category);
@@ -53,6 +55,25 @@ export default function Standings() {
 
       // Get grouped standings with tiebreakers applied
       const standings = await getGroupStandings(category);
+
+      // Detect changes (points/GD/GF/cards) and flash changed teams (only on silent refresh)
+      if (silent && standings) {
+        const changed = [];
+        Object.values(standings).flat().forEach((t) => {
+          const sig = `${t.points ?? ''}|${t.goal_difference ?? ''}|${t.goals_for ?? ''}|${t.goals_against ?? ''}|${t.yellow_cards ?? ''}|${t.red_cards ?? ''}`;
+          const prev = prevTeamSigRef.current.get(t.id);
+          if (prev && prev !== sig) changed.push(t.id);
+          prevTeamSigRef.current.set(t.id, sig);
+        });
+        if (changed.length) flashTeams(changed);
+      } else if (!silent && standings) {
+        // initialize map
+        Object.values(standings).flat().forEach((t) => {
+          const sig = `${t.points ?? ''}|${t.goal_difference ?? ''}|${t.goals_for ?? ''}|${t.goals_against ?? ''}|${t.yellow_cards ?? ''}|${t.red_cards ?? ''}`;
+          prevTeamSigRef.current.set(t.id, sig);
+        });
+      }
+
       setGroupedTeams(standings);
 
     } catch (error) {
@@ -160,7 +181,7 @@ export default function Standings() {
                   <span className="card-stat red">{team.red_cards || 0}</span>
                 </td>
                 <td className="col-points">
-                  <span className="points-value">{team.points || 0}</span>
+                  <span className={`points-value ${isTeamFlashing(team.id) ? 'value-flash' : ''}`}>{team.points || 0}</span>
                 </td>
               </tr>
             );

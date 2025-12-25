@@ -270,6 +270,26 @@
   text-shadow: 0 0 30px rgba(79, 140, 255, 0.3);
 }
 
+/* Silent background update feedback (scores/status/etc.) */
+.value-flash {
+  animation: valueFlash 900ms ease-out;
+}
+
+@keyframes valueFlash {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 rgba(79, 140, 255, 0));
+  }
+  25% {
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 10px rgba(79, 140, 255, 0.65));
+  }
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 rgba(79, 140, 255, 0));
+  }
+}
+
 /* Live score with pulsing animation */
 .score-display.live {
   background: linear-gradient(135deg, #4caf50, #8bc34a);
@@ -806,10 +826,14 @@
   padding: 0;
   border-radius: 50%;
   justify-content: center;
-  background: rgba(91, 155, 243, 0.15);
-  border: 2px solid rgba(91, 155, 243, 0.3);
+  background: linear-gradient(135deg, rgba(91, 155, 243, 0.3) 0%, rgba(74, 127, 213, 0.25) 100%);
+  border: 2px solid rgba(91, 155, 243, 0.6);
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
+  box-shadow: 
+    0 0 20px rgba(91, 155, 243, 0.4),
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .match-action-buttons .share-trigger-btn span {
@@ -818,18 +842,24 @@
 
 .match-action-buttons .share-trigger-btn i {
   font-size: 1.25rem;
-  color: #5B9BF3;
+  color: #7BBAFF;
   transition: all 0.3s ease;
+  filter: drop-shadow(0 0 4px rgba(91, 155, 243, 0.5));
 }
 
 .match-action-buttons .share-trigger-btn:hover {
-  transform: scale(1.05);
-  background: rgba(91, 155, 243, 0.25);
-  border-color: rgba(91, 155, 243, 0.5);
+  transform: scale(1.08);
+  background: linear-gradient(135deg, rgba(91, 155, 243, 0.45) 0%, rgba(74, 127, 213, 0.35) 100%);
+  border-color: rgba(91, 155, 243, 0.8);
+  box-shadow: 
+    0 0 30px rgba(91, 155, 243, 0.6),
+    0 6px 20px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .match-action-buttons .share-trigger-btn:hover i {
-  color: #6BAAF5;
+  color: #9DCFFF;
+  filter: drop-shadow(0 0 6px rgba(91, 155, 243, 0.7));
 }
 
 .match-action-buttons .share-trigger-btn:active {

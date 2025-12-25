@@ -1,12 +1,15 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { supabaseClient } from '../../../../lib/supabaseClient';
 import TournamentNavbar from '../../../shared/TournamentNavbar';
 import Footer from '../../../shared/Footer';
 import SmartImg from '../../../shared/SmartImg';
+import { useTournamentLiveUpdates } from '../../../../hooks/useTournamentLiveUpdates';
+import { useFlashMap } from '../../../../hooks/useFlashMap';
 
 export default function Fixtures({ onMatchClick }) {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [bgRefreshing, setBgRefreshing] = useState(false);
   const [activeMatchday, setActiveMatchday] = useState(1);
   const [viewMode, setViewMode] = useState('list'); // 'list', 'all'
   const [searchQuery, setSearchQuery] = useState('');
@@ -19,6 +22,8 @@ export default function Fixtures({ onMatchClick }) {
   };
 
   const [category] = useState(getCategory());
+  const prevMatchSigRef = useRef(new Map()); // matchId -> signature string
+  const { isFlashing: isMatchFlashing, flashKeys: flashMatches } = useFlashMap(900);
 
   // Format match type for display
   const getMatchTypeLabel = (matchType) => {
@@ -33,12 +38,33 @@ export default function Fixtures({ onMatchClick }) {
   };
 
   useEffect(() => {
-    fetchMatches();
+    fetchMatches({ silent: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category]);
 
-  const fetchMatches = async () => {
+  const refetchMatches = useCallback(() => {
+    fetchMatches({ silent: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [category]);
+
+  // Live updates: websocket + fallback polling
+  useTournamentLiveUpdates({
+    enabled: true,
+    channelKey: `fixtures:${category}`,
+    tables: ['matches', 'teams'],
+    filtersByTable: {
+      matches: `category=eq.${category}`,
+      teams: `category=eq.${category}`
+    },
+    debounceMs: 600,
+    pollIntervalMs: 10_000,
+    onUpdate: refetchMatches
+  });
+
+  const fetchMatches = async ({ silent = false } = {}) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
+      else setBgRefreshing(true);
       
       // Fetch all matches for the category
       const { data: matchesData, error: matchesError } = await supabaseClient
@@ -54,7 +80,19 @@ export default function Fixtures({ onMatchClick }) {
 
       if (matchesError) throw matchesError;
 
-      setMatches(matchesData || []);
+      const nextMatches = matchesData || [];
+
+      // Detect changes (scores/status) and flash those match IDs
+      const changedIds = [];
+      nextMatches.forEach((m) => {
+        const sig = `${m.status ?? ''}|${m.home_score ?? ''}|${m.away_score ?? ''}|${m.home_team?.id ?? ''}|${m.away_team?.id ?? ''}`;
+        const prevSig = prevMatchSigRef.current.get(m.id);
+        if (prevSig && prevSig !== sig) changedIds.push(m.id);
+        prevMatchSigRef.current.set(m.id, sig);
+      });
+      if (silent && changedIds.length) flashMatches(changedIds);
+
+      setMatches(nextMatches);
       
       // Find the latest matchday with results or upcoming matches
       if (matchesData && matchesData.length > 0) {
@@ -75,7 +113,8 @@ export default function Fixtures({ onMatchClick }) {
     } catch (error) {
       console.error('Error fetching matches:', error);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
+      setBgRefreshing(false);
     }
   };
 
@@ -275,7 +314,9 @@ export default function Fixtures({ onMatchClick }) {
                       {/* Score */}
                       <div className="match-score-v2">
                         {hasScore ? (
-                          <span className={`score-display ${isLive ? 'live' : ''}`}>{homeScore} - {awayScore}</span>
+                          <span className={`score-display ${isLive ? 'live' : ''} ${isMatchFlashing(match.id) ? 'value-flash' : ''}`}>
+                            {homeScore} - {awayScore}
+                          </span>
                         ) : (
                           <span className="vs-display">vs</span>
                         )}

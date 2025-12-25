@@ -1,7 +1,7 @@
 import React from 'react';
 import SmartImg from '../../../../shared/SmartImg';
 
-export default function MatchHeader({ match }) {
+export default function MatchHeader({ match, animateScore = false }) {
   const formatDate = (dateString) => {
     if (!dateString) return 'TBD';
     const date = new Date(dateString);
@@ -74,7 +74,7 @@ export default function MatchHeader({ match }) {
           {/* Score */}
           <div className="match-score-header">
             {hasScore ? (
-              <span className={`score-big ${isLive ? 'live' : ''}`}>
+              <span className={`score-big ${isLive ? 'live' : ''} ${animateScore ? 'value-flash' : ''}`}>
                 {match.home_score ?? 0} - {match.away_score ?? 0}
               </span>
             ) : (

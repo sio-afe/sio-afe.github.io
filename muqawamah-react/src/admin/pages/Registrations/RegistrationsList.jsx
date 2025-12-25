@@ -892,8 +892,8 @@ export default function RegistrationsList() {
                   <h3><i className="fas fa-receipt"></i> Payment Screenshot</h3>
                   <div className="payment-screenshot-container">
                     <SmartImg
-                      src={selectedReg.payment_screenshot}
-                      alt="Payment Screenshot"
+                      src={selectedReg.payment_screenshot} 
+                      alt="Payment Screenshot" 
                       className="payment-screenshot-image"
                       onClick={() => window.open(selectedReg.payment_screenshot, '_blank')}
                       loading="lazy"

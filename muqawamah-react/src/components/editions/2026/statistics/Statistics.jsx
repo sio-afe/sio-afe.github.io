@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabaseClient } from '../../../../lib/supabaseClient';
 import TournamentNavbar from '../../../shared/TournamentNavbar';
 import Footer from '../../../shared/Footer';
 import SmartImg from '../../../shared/SmartImg';
 import { StatsShareCard, PrewarmStatsShareCard } from '../../../shared/ShareableCard';
+import { useTournamentLiveUpdates } from '../../../../hooks/useTournamentLiveUpdates';
 
 export default function Statistics() {
   const [activeTab, setActiveTab] = useState('goals'); // 'goals', 'assists', 'teams'
@@ -27,6 +28,24 @@ export default function Statistics() {
   useEffect(() => {
     fetchStatistics();
   }, [category]);
+
+  const refetchStatistics = useCallback(() => {
+    fetchStatistics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [category]);
+
+  useTournamentLiveUpdates({
+    enabled: true,
+    channelKey: `statistics:${category}`,
+    tables: ['matches', 'goals', 'players', 'teams'],
+    filtersByTable: {
+      matches: `category=eq.${category}`,
+      teams: `category=eq.${category}`
+    },
+    debounceMs: 700,
+    pollIntervalMs: 10_000,
+    onUpdate: refetchStatistics
+  });
 
   const fetchStatistics = async () => {
     try {

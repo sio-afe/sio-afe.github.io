@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { supabaseClient } from '../../../../lib/supabaseClient';
 import TournamentNavbar from '../../../shared/TournamentNavbar';
 import Footer from '../../../shared/Footer';
@@ -9,6 +9,8 @@ import MatchPredictions from './components/MatchPredictions';
 import GoalsAndHighlights from './components/GoalsAndHighlights';
 import SquadsSection from './components/SquadsSection';
 import { MatchShareCard, PrewarmMatchShareCard, ShareButton } from '../../../shared/ShareableCard';
+import { useTournamentLiveUpdates } from '../../../../hooks/useTournamentLiveUpdates';
+import { useFlashMap } from '../../../../hooks/useFlashMap';
 
 export default function MatchDetail({ matchId, onBack }) {
   const [match, setMatch] = useState(null);
@@ -17,6 +19,9 @@ export default function MatchDetail({ matchId, onBack }) {
   const [goals, setGoals] = useState([]);
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [bgRefreshing, setBgRefreshing] = useState(false);
+  const prevScoreSigRef = useRef('');
+  const { isFlashing: isScoreFlashing, flashKeys: flashScore } = useFlashMap(900);
   
   // Interaction states
   const [likeCount, setLikeCount] = useState(0);
@@ -73,6 +78,30 @@ export default function MatchDetail({ matchId, onBack }) {
     }
   }, [matchId]);
 
+  const refetchMatch = useCallback(({ silent = true } = {}) => {
+    fetchMatchData({ silent });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [matchId]);
+
+  const refetchInteractionsCb = useCallback(() => {
+    // safe: only refetch likes/predictions when we have match + identifier
+    if (matchId && userIdentifier && match) fetchInteractions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [matchId, userIdentifier, match?.id]);
+
+  // Live updates: match score/status/goals/cards/likes/predictions can change
+  useTournamentLiveUpdates({
+    enabled: Boolean(matchId),
+    channelKey: `match-detail:${matchId}`,
+    tables: ['matches', 'goals', 'cards', 'match_likes', 'match_predictions', 'players', 'teams'],
+    debounceMs: 700,
+    pollIntervalMs: 10_000,
+    onUpdate: () => {
+      refetchMatch({ silent: true });
+      refetchInteractionsCb();
+    }
+  });
+
   useEffect(() => {
     if (matchId && userIdentifier && match) {
       fetchInteractions();
@@ -87,9 +116,10 @@ export default function MatchDetail({ matchId, onBack }) {
   }, [match]);
 
 
-  const fetchMatchData = async () => {
+  const fetchMatchData = async ({ silent = false } = {}) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
+      else setBgRefreshing(true);
 
       // Fetch match details - only select needed columns
       const { data: matchData, error: matchError } = await supabaseClient
@@ -114,6 +144,18 @@ export default function MatchDetail({ matchId, onBack }) {
         .single();
 
       if (matchError) throw matchError;
+
+      // Flash header score on background refresh when score/status changes
+      if (silent) {
+        const sig = `${matchData?.status ?? ''}|${matchData?.home_score ?? ''}|${matchData?.away_score ?? ''}`;
+        if (prevScoreSigRef.current && prevScoreSigRef.current !== sig) {
+          flashScore(['score']);
+        }
+        prevScoreSigRef.current = sig;
+      } else {
+        prevScoreSigRef.current = `${matchData?.status ?? ''}|${matchData?.home_score ?? ''}|${matchData?.away_score ?? ''}`;
+      }
+
       setMatch(matchData);
 
       // Fetch goals and cards in parallel
@@ -274,7 +316,8 @@ export default function MatchDetail({ matchId, onBack }) {
     } catch (error) {
       console.error('Error fetching match:', error);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
+      setBgRefreshing(false);
     }
   };
 
@@ -606,7 +649,7 @@ export default function MatchDetail({ matchId, onBack }) {
           <ShareButton onClick={() => setShowShareModal(true)} />
         </div>
         
-        <MatchHeader match={match} />
+        <MatchHeader match={match} animateScore={isScoreFlashing('score')} />
 
         {/* Main Content */}
         <section className="match-detail-content">

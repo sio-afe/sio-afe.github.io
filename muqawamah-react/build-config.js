@@ -11,6 +11,9 @@ console.log('🚀 Starting Jekyll integration build...');
 const distDir = join(__dirname, 'dist');
 const jekyllMuqawamahDir = join(__dirname, '..', 'muqawamah');
 const jekyllAssetsDir = join(__dirname, '..', 'assets', 'muqawamah-react');
+// Some legacy/static HTML entrypoints under /muqawamah/* reference /muqawamah/assets/*.
+// Keep them in sync too so local dev and GitHub Pages don't serve stale bundles.
+const jekyllMuqawamahAssetsDir = join(jekyllMuqawamahDir, 'assets');
 
 try {
   // Create Jekyll assets directory if it doesn't exist
@@ -18,13 +21,43 @@ try {
     mkdirSync(jekyllAssetsDir, { recursive: true });
     console.log('✅ Created assets directory:', jekyllAssetsDir);
   }
+  if (!existsSync(jekyllMuqawamahAssetsDir)) {
+    mkdirSync(jekyllMuqawamahAssetsDir, { recursive: true });
+    console.log('✅ Created muqawamah assets directory:', jekyllMuqawamahAssetsDir);
+  }
 
   // Copy all files from dist/assets to Jekyll assets
   const distAssetsDir = join(distDir, 'assets');
   if (existsSync(distAssetsDir)) {
     cpSync(distAssetsDir, jekyllAssetsDir, { recursive: true });
     console.log('✅ Copied assets to Jekyll directory');
+
+    // Also copy to /muqawamah/assets for legacy/static entrypoints that reference it
+    cpSync(distAssetsDir, jekyllMuqawamahAssetsDir, { recursive: true });
+    console.log('✅ Copied assets to muqawamah/assets (legacy entrypoints)');
   }
+
+  // Keep legacy/static HTML entrypoints in /muqawamah in sync with the latest dist output.
+  // These files reference /muqawamah/assets/* hashed bundles.
+  const htmlEntrypoints = [
+    'index.html',
+    'tournament.html',
+    'players.html',
+    'teams.html',
+    'fixtures.html',
+    'standings.html',
+    'statistics.html',
+    'registration.html',
+    'admin.html',
+  ];
+  htmlEntrypoints.forEach((name) => {
+    const source = join(distDir, name);
+    const target = join(jekyllMuqawamahDir, name);
+    if (existsSync(source)) {
+      cpSync(source, target);
+      console.log(`✅ Updated legacy HTML: muqawamah/${name}`);
+    }
+  });
 
   // Process main index.html
   console.log('\n📄 Processing main app (index.html)...');

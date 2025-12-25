@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabaseClient } from '../../../../lib/supabaseClient';
 import Footer from '../../../shared/Footer';
 import TournamentNavbar from '../../../shared/TournamentNavbar';
 import TeamFormationDisplay from '../../../shared/TeamFormationDisplay';
 import { TeamShareCard, PrewarmTeamShareCard, ShareButton } from '../../../shared/ShareableCard';
 import SmartImg from '../../../shared/SmartImg';
+import { useTournamentLiveUpdates } from '../../../../hooks/useTournamentLiveUpdates';
 
 const positionGroups = {
   'Goalkeeper': 'GOALKEEPERS',
@@ -72,6 +73,21 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teamId]);
+
+  const refetchTeam = useCallback(() => {
+    fetchTeamData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teamId]);
+
+  // Live updates: if anything affecting this team changes, refetch.
+  useTournamentLiveUpdates({
+    enabled: Boolean(teamId),
+    channelKey: `team-detail:${teamId}`,
+    tables: ['teams', 'matches', 'players', 'goals', 'cards'],
+    debounceMs: 800,
+    pollIntervalMs: 10_000,
+    onUpdate: refetchTeam
+  });
 
   const fetchTeamData = async () => {
     try {
@@ -439,9 +455,9 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
                               <div className="opponent-inner">
                                 {opponent?.crest_url && (
                                   <SmartImg
-                                    src={opponent.crest_url}
+                                    src={opponent.crest_url} 
                                     preset="crestSm"
-                                    alt=""
+                                    alt="" 
                                     className="opponent-logo"
                                     loading="lazy"
                                     decoding="async"
@@ -513,7 +529,7 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
                           <div className="team-logo-small">
                             {standingTeam.crest_url ? (
                               <SmartImg
-                                src={standingTeam.crest_url}
+                                src={standingTeam.crest_url} 
                                 preset="crestSm"
                                 alt={standingTeam.name}
                                 loading="lazy"
@@ -551,7 +567,7 @@ export default function TeamDetail({ teamId, onBack, onNavigateToPlayer }) {
                       <div className="squad-photo">
                         {player.player_image ? (
                           <SmartImg
-                            src={player.player_image}
+                            src={player.player_image} 
                             preset="playerAvatar"
                             alt={player.player_name}
                             loading="lazy"

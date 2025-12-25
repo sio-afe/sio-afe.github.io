@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { supabaseClient } from '../../../../lib/supabaseClient';
 import Footer from '../../../shared/Footer';
 import TournamentNavbar from '../../../shared/TournamentNavbar';
 import { PlayerShareCard, PrewarmPlayerShareCard, ShareButton } from '../../../shared/ShareableCard';
 import SmartImg from '../../../shared/SmartImg';
+import { useTournamentLiveUpdates } from '../../../../hooks/useTournamentLiveUpdates';
 
 const positionLabels = {
   'GK': 'Goalkeeper',
@@ -103,6 +104,20 @@ export default function PlayerDetail({ playerId, onBack, onNavigateToPlayer, onN
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerId]);
+
+  const refetchPlayer = useCallback(() => {
+    fetchPlayerData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playerId]);
+
+  useTournamentLiveUpdates({
+    enabled: Boolean(playerId),
+    channelKey: `player-detail:${playerId}`,
+    tables: ['players', 'goals', 'matches', 'teams'],
+    debounceMs: 800,
+    pollIntervalMs: 10_000,
+    onUpdate: refetchPlayer
+  });
 
   const fetchPlayerData = async () => {
     try {

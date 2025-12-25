@@ -224,8 +224,11 @@ const getTeamCacheKey = (team, stats) =>
     stats
   });
 
+// Bump this if stats-card markup/styles change, to avoid serving stale cached snapshots.
+const STATS_SNAPSHOT_VERSION = 2;
 const getStatsCacheKey = (statType, items) =>
   makeCacheKey('stats', {
+    v: STATS_SNAPSHOT_VERSION,
     statType,
     items: (items || []).slice(0, 3).map((i) => ({
       id: i?.id,
@@ -386,7 +389,7 @@ export function MatchShareCard({ match, onClose }) {
               '--share-card-base-width': `${SHARE_CARD_BASE_WIDTH}px`
             }}
           >
-            <div ref={cardRef} className="shareable-card match-card">
+          <div ref={cardRef} className="shareable-card match-card">
             {/* Background Effects */}
             <div className="card-bg-effects">
               <div className="card-glow glow-1"></div>
@@ -585,7 +588,7 @@ export function TeamShareCard({ team, stats, onClose }) {
               '--share-card-base-width': `${SHARE_CARD_BASE_WIDTH}px`
             }}
           >
-            <div ref={cardRef} className="shareable-card team-card">
+          <div ref={cardRef} className="shareable-card team-card">
             {/* Background Effects */}
             <div className="card-bg-effects">
               <div className="card-glow glow-team" style={{ background: team.primary_color || '#4f8cff' }}></div>
@@ -776,7 +779,7 @@ export function PlayerShareCard({ player, team, onClose }) {
               '--share-card-base-width': `${SHARE_CARD_BASE_WIDTH}px`
             }}
           >
-            <div ref={cardRef} className="shareable-card player-card">
+          <div ref={cardRef} className="shareable-card player-card">
             {/* Background Effects */}
             <div className="card-bg-effects">
               <div className="card-glow glow-player" style={{ background: getPositionColor(player.position) }}></div>
@@ -929,18 +932,12 @@ export function PrewarmPlayerShareCard({ player, team }) {
       }
     };
 
-    // Use idle time if available; fallback to soon-after-paint.
-    let cancelIdle = null;
-    if (typeof requestIdleCallback === 'function') {
-      const id = requestIdleCallback(() => run(), { timeout: 2000 });
-      cancelIdle = () => cancelIdleCallback(id);
-    } else {
-      cancelIdle = scheduleNextPaint(() => run());
-    }
+    // Run quickly after mount (100ms delay to let page render first)
+    const timeoutId = setTimeout(() => run(), 100);
 
     return () => {
       cancelled = true;
-      if (typeof cancelIdle === 'function') cancelIdle();
+      clearTimeout(timeoutId);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -1080,17 +1077,12 @@ export function PrewarmMatchShareCard({ match }) {
       }
     };
 
-    let cancelIdle = null;
-    if (typeof requestIdleCallback === 'function') {
-      const id = requestIdleCallback(() => run(), { timeout: 2000 });
-      cancelIdle = () => cancelIdleCallback(id);
-    } else {
-      cancelIdle = scheduleNextPaint(() => run());
-    }
+    // Run quickly after mount (100ms delay to let page render first)
+    const timeoutId = setTimeout(() => run(), 100);
 
     return () => {
       cancelled = true;
-      if (typeof cancelIdle === 'function') cancelIdle();
+      clearTimeout(timeoutId);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -1222,17 +1214,12 @@ export function PrewarmTeamShareCard({ team, stats }) {
       }
     };
 
-    let cancelIdle = null;
-    if (typeof requestIdleCallback === 'function') {
-      const id = requestIdleCallback(() => run(), { timeout: 2000 });
-      cancelIdle = () => cancelIdleCallback(id);
-    } else {
-      cancelIdle = scheduleNextPaint(() => run());
-    }
+    // Run quickly after mount (100ms delay to let page render first)
+    const timeoutId = setTimeout(() => run(), 100);
 
     return () => {
       cancelled = true;
-      if (typeof cancelIdle === 'function') cancelIdle();
+      clearTimeout(timeoutId);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -1360,17 +1347,12 @@ export function PrewarmStatsShareCard({ statType, items }) {
       }
     };
 
-    let cancelIdle = null;
-    if (typeof requestIdleCallback === 'function') {
-      const id = requestIdleCallback(() => run(), { timeout: 2000 });
-      cancelIdle = () => cancelIdleCallback(id);
-    } else {
-      cancelIdle = scheduleNextPaint(() => run());
-    }
+    // Run quickly after mount (100ms delay to let page render first)
+    const timeoutId = setTimeout(() => run(), 100);
 
     return () => {
       cancelled = true;
-      if (typeof cancelIdle === 'function') cancelIdle();
+      clearTimeout(timeoutId);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done, statType, top3?.[0]?.id, top3?.[0]?.name, top3?.[0]?.value, top3?.[1]?.id, top3?.[1]?.name, top3?.[1]?.value, top3?.[2]?.id, top3?.[2]?.name, top3?.[2]?.value]);
@@ -1439,28 +1421,36 @@ export function PrewarmStatsShareCard({ statType, items }) {
           />
         </div>
 
-        <div className="stats-card-header">
-          <div className="stats-card-title">
-            <span className="stats-icon">{getStatIcon()}</span>
-            <span className="stats-title-text">{getStatLabel()}</span>
-          </div>
+        {/* Match the same markup/classes as StatsShareCard (modal) so cached snapshots are identical */}
+        <div className="stats-card-title">
+          <span className="stats-icon">{getStatIcon()}</span>
+          <h2>{getStatLabel()}</h2>
         </div>
 
-        <div className="stats-top3">
-          {top3.map((item, idx) => (
-            <div className="stats-row" key={item?.id || idx}>
-              <div className="stats-rank" style={{ color: getMedalColor(idx) }}>{idx + 1}</div>
-              <div className="stats-avatar">
-                {item?.image || item?.crest_url ? (
-                  <img src={item.image || item.crest_url} alt={item.name} crossOrigin="anonymous" />
-                ) : (
-                  <span className="avatar-placeholder">{item?.name?.charAt(0)}</span>
-                )}
+        <div className="stats-leaderboard">
+          {top3.map((item, index) => {
+            const hasPlayerPhoto = Boolean(item?.image);
+            const avatarClass = hasPlayerPhoto ? 'player-avatar' : 'team-avatar';
+            return (
+              <div key={item?.id || index} className={`stats-rank-item rank-${index + 1}`}>
+                <div className="rank-medal" style={{ background: getMedalColor(index) }}>
+                  {index + 1}
+                </div>
+                <div className={`rank-avatar ${avatarClass}`}>
+                  {item?.image || item?.crest_url ? (
+                    <img src={item.image || item.crest_url} alt={item.name} crossOrigin="anonymous" />
+                  ) : (
+                    <span className="rank-initial">{item?.name?.charAt(0)}</span>
+                  )}
+                </div>
+                <div className="rank-info">
+                  <span className="rank-name">{item?.name}</span>
+                  {item?.team_name && <span className="rank-team">{item?.team_name}</span>}
+                </div>
+                <div className="rank-value">{item?.value ?? 0}</div>
               </div>
-              <div className="stats-name">{item?.name}</div>
-              <div className="stats-value">{item?.value ?? 0}</div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="card-footer">
@@ -1581,7 +1571,7 @@ export function StatsShareCard({ statType, items, onClose }) {
               '--share-card-base-width': `${SHARE_CARD_BASE_WIDTH}px`
             }}
           >
-            <div ref={cardRef} className="shareable-card stats-card">
+          <div ref={cardRef} className="shareable-card stats-card">
             {/* Background Effects */}
             <div className="card-bg-effects">
               <div className="card-glow glow-1"></div>
@@ -1617,7 +1607,11 @@ export function StatsShareCard({ statType, items, onClose }) {
                   <div className="rank-medal" style={{ background: getMedalColor(index) }}>
                     {index + 1}
                   </div>
-                  <div className="rank-avatar">
+                  {/*
+                    Player photos should be "cover", team crests should be "contain".
+                    We tag the avatar so CSS can render the right fit for snapshots.
+                  */}
+                  <div className={`rank-avatar ${item?.image ? 'player-avatar' : 'team-avatar'}`}>
                     {item.image || item.crest_url ? (
                       <img src={item.image || item.crest_url} alt={item.name} crossOrigin="anonymous" />
                     ) : (
@@ -1670,9 +1664,35 @@ export function StatsShareCard({ statType, items, onClose }) {
 }
 
 // Simple Share Button Component
-export function ShareButton({ onClick, className = '' }) {
+// onHover: optional callback to trigger pre-generation when user hovers (buys ~200ms)
+export function ShareButton({ onClick, onHover, className = '' }) {
+  const hoverTriggered = useRef(false);
+
+  const handleMouseEnter = () => {
+    if (hoverTriggered.current) return;
+    hoverTriggered.current = true;
+    if (typeof onHover === 'function') {
+      onHover();
+    }
+  };
+
+  // For touch devices, trigger on touchstart (before click)
+  const handleTouchStart = () => {
+    if (hoverTriggered.current) return;
+    hoverTriggered.current = true;
+    if (typeof onHover === 'function') {
+      onHover();
+    }
+  };
+
   return (
-    <button className={`share-trigger-btn ${className}`} onClick={onClick} title="Share">
+    <button
+      className={`share-trigger-btn ${className}`}
+      onClick={onClick}
+      onMouseEnter={handleMouseEnter}
+      onTouchStart={handleTouchStart}
+      title="Share"
+    >
       <i className="fas fa-share-alt"></i>
       <span>Share</span>
     </button>

@@ -76,11 +76,11 @@ const PlayerCard = React.memo(function PlayerCard({ player, team, onClick, index
             fetchpriority={isAboveFold ? 'high' : 'auto'}
           />
         ) : (
-          <img
+        <img
             src="/assets/img/player-placeholder.svg"
             alt=""
             className="player-photo player-photo-placeholder-img"
-            loading="lazy"
+          loading="lazy"
             decoding="async"
           />
         )}
@@ -228,11 +228,11 @@ function PlayersApp() {
     const search = searchTerm.trim().toLowerCase();
     return players.filter(player => {
       const matchesSearch = !search || player.name?.toLowerCase().includes(search);
-      const matchesTeam = selectedTeam === 'all' || player.team_id === selectedTeam;
-      const positionLabel = getPositionLabel(player.position);
-      const matchesPosition = selectedPosition === 'all' || positionLabel === selectedPosition;
-      return matchesSearch && matchesTeam && matchesPosition;
-    });
+    const matchesTeam = selectedTeam === 'all' || player.team_id === selectedTeam;
+    const positionLabel = getPositionLabel(player.position);
+    const matchesPosition = selectedPosition === 'all' || positionLabel === selectedPosition;
+    return matchesSearch && matchesTeam && matchesPosition;
+  });
   }, [players, searchTerm, selectedTeam, selectedPosition]);
 
   // Reset to page 1 when filters change (don't update URL - page 1 is default)
@@ -381,10 +381,10 @@ function PlayersApp() {
       <div className="players-grid">
         {displayedPlayers.map((player, idx) => (
           <PlayerCard 
-            key={player.id}
+              key={player.id}
             player={player}
             team={player.team}
-            onClick={() => openPlayerDetail(player)}
+              onClick={() => openPlayerDetail(player)}
             index={idx}
           />
         ))}
@@ -424,8 +424,8 @@ function PlayersApp() {
           >
             »
           </button>
-        </div>
-      )}
+                  </div>
+                )}
 
       {filteredPlayers.length === 0 && (
         <div className="no-players">
