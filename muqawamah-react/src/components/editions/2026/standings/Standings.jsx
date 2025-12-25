@@ -100,8 +100,9 @@ export default function Standings() {
     }).map((team, idx) => ({ ...team, position: idx + 1 }));
   };
 
-  const renderTable = (teams, groupName = null) => (
-    <div className="standings-table-wrapper" key={groupName || 'overall'}>
+  // isGroupView = true means we hide YC/RC columns for cleaner look
+  const renderTable = (teams, groupName = null, isGroupView = false) => (
+    <div className={`standings-table-wrapper ${isGroupView ? 'group-card' : ''}`} key={groupName || 'overall'}>
       {groupName && groupName !== 'Ungrouped' && (
         <div className="group-header">
           <span className="group-badge">Group {groupName}</span>
@@ -124,15 +125,19 @@ export default function Standings() {
             <th className="col-stat hide-mobile">GF</th>
             <th className="col-stat hide-mobile">GA</th>
             <th className="col-stat">GD</th>
-            <th className="col-stat hide-mobile" title="Yellow Cards">YC</th>
-            <th className="col-stat hide-mobile" title="Red Cards">RC</th>
+            {!isGroupView && <th className="col-stat hide-mobile" title="Yellow Cards">YC</th>}
+            {!isGroupView && <th className="col-stat hide-mobile" title="Red Cards">RC</th>}
             <th className="col-points">PTS</th>
           </tr>
         </thead>
         <tbody>
           {teams.map((team, idx) => {
-            const position = team.group_position || team.position || idx + 1;
-            const isLastQualifier = position === (settings?.teams_qualifying_per_group || 2);
+            // In group view use group_position, in overall use the passed position (overall rank)
+            const position = isGroupView ? (team.group_position || idx + 1) : (team.position || idx + 1);
+            const teamsPerGroup = settings?.teams_qualifying_per_group || 2;
+            const numGroups = Object.keys(groupedTeams).filter(g => g !== 'Ungrouped').length || 1;
+            const totalQualifyingSpots = isGroupView ? teamsPerGroup : (numGroups * teamsPerGroup);
+            const isLastQualifier = position === totalQualifyingSpots;
             
             return (
               <tr 
@@ -141,12 +146,12 @@ export default function Standings() {
                 onClick={() => handleTeamClick(team.id)}
               >
                 <td className="col-position">
-                  <span className={`position-badge position-${position}`}>
+                  <span className="standings-rank">
                     {position}
                   </span>
                 </td>
                 <td className="col-team-full">
-                  <div className="team-cell-full">
+                  <div className="team-cell-full" title={team.name}>
                     <div className="team-logo-standings">
                       {team.crest_url ? (
                         <SmartImg
@@ -174,12 +179,16 @@ export default function Standings() {
                     {team.goal_difference >= 0 ? '+' : ''}{team.goal_difference || 0}
                   </span>
                 </td>
-                <td className="col-stat hide-mobile">
-                  <span className="card-stat yellow">{team.yellow_cards || 0}</span>
-                </td>
-                <td className="col-stat hide-mobile">
-                  <span className="card-stat red">{team.red_cards || 0}</span>
-                </td>
+                {!isGroupView && (
+                  <td className="col-stat hide-mobile">
+                    <span className="card-stat yellow">{team.yellow_cards || 0}</span>
+                  </td>
+                )}
+                {!isGroupView && (
+                  <td className="col-stat hide-mobile">
+                    <span className="card-stat red">{team.red_cards || 0}</span>
+                  </td>
+                )}
                 <td className="col-points">
                   <span className={`points-value ${isTeamFlashing(team.id) ? 'value-flash' : ''}`}>{team.points || 0}</span>
                 </td>
@@ -225,20 +234,28 @@ export default function Standings() {
           </div>
 
           {hasGroups && (
-            <div className="standings-controls">
-              <div className="view-toggle">
+            <div className="standings-tabs-container">
+              <div className="standings-tabs">
                 <button 
-                  className={`toggle-btn ${viewMode === 'groups' ? 'active' : ''}`}
+                  className={`standings-tab ${viewMode === 'groups' ? 'active' : ''}`}
                   onClick={() => setViewMode('groups')}
                 >
-                  <i className="fas fa-th-large"></i> Groups
+                  <i className="fas fa-th-large"></i>
+                  <span>Groups</span>
                 </button>
                 <button 
-                  className={`toggle-btn ${viewMode === 'overall' ? 'active' : ''}`}
+                  className={`standings-tab ${viewMode === 'overall' ? 'active' : ''}`}
                   onClick={() => setViewMode('overall')}
                 >
-                  <i className="fas fa-list"></i> Overall
+                  <i className="fas fa-list"></i>
+                  <span>Overall</span>
                 </button>
+                <span 
+                  className="standings-tab-slider" 
+                  style={{ 
+                    transform: `translateX(${viewMode === 'overall' ? '100%' : '0%'})` 
+                  }}
+                />
               </div>
             </div>
           )}
@@ -248,17 +265,17 @@ export default function Standings() {
             <div className="groups-container">
               {groups.map(group => (
                 <div key={group} className="group-standings">
-                  {renderTable(groupedTeams[group], group)}
+                  {renderTable(groupedTeams[group], group, true)}
                 </div>
               ))}
               {ungroupedTeams.length > 0 && (
                 <div className="group-standings">
-                  {renderTable(ungroupedTeams, 'Ungrouped')}
+                  {renderTable(ungroupedTeams, 'Ungrouped', true)}
                 </div>
               )}
             </div>
           ) : (
-            renderTable(getAllTeamsSorted())
+            renderTable(getAllTeamsSorted(), null, false)
           )}
 
           {!hasGroups && ungroupedTeams.length === 0 && Object.keys(groupedTeams).length === 0 && (
@@ -267,6 +284,7 @@ export default function Standings() {
               <p>No standings available yet</p>
             </div>
           )}
+
         </div>
       </div>
       <Footer edition="2026" />
@@ -276,6 +294,10 @@ export default function Standings() {
           margin-bottom: 32px;
         }
 
+        .standings-page-title {
+          text-align: left;
+        }
+
         .standings-divider {
           border: none;
           height: 1px;
@@ -283,96 +305,218 @@ export default function Standings() {
           margin: 0;
         }
 
-        .standings-controls {
+        /* Capsule Tab Navigation */
+        .standings-tabs-container {
           display: flex;
           justify-content: center;
-          margin-bottom: 24px;
+          margin-bottom: 32px;
         }
 
-        .view-toggle {
-          display: flex;
-          gap: 8px;
+        .standings-tabs {
+          position: relative;
+          display: inline-flex;
           background: rgba(255, 255, 255, 0.05);
-          padding: 4px;
-          border-radius: 8px;
+          border-radius: 50px;
+          padding: 6px;
+          gap: 0;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(79, 140, 255, 0.15);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .toggle-btn {
-          padding: 8px 16px;
-          background: transparent;
-          border: none;
-          color: rgba(255, 255, 255, 0.6);
-          cursor: pointer;
-          border-radius: 6px;
-          font-size: 13px;
+        .standings-tab {
           display: flex;
           align-items: center;
-          gap: 6px;
-          transition: all 0.2s;
+          justify-content: center;
+          gap: 8px;
+          font-family: 'Oswald', sans-serif;
+          font-size: 0.9rem;
+          font-weight: 600;
+          padding: 14px 32px;
+          background: transparent;
+          border: none;
+          color: rgba(255, 255, 255, 0.55);
+          cursor: pointer;
+          transition: all 0.3s ease;
+          position: relative;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          z-index: 2;
+          white-space: nowrap;
+          border-radius: 50px;
         }
 
-        .toggle-btn:hover {
+        .standings-tab i {
+          font-size: 0.9rem;
+        }
+
+        .standings-tab:hover {
+          color: rgba(255, 255, 255, 0.85);
+        }
+
+        .standings-tab.active {
           color: #fff;
         }
 
-        .toggle-btn.active {
-          background: #4f8cff;
-          color: #fff;
+        .standings-tab-slider {
+          position: absolute;
+          top: 6px;
+          left: 6px;
+          width: calc(50% - 6px);
+          height: calc(100% - 12px);
+          background: linear-gradient(135deg, #4f8cff, #6ecdee);
+          border-radius: 50px;
+          transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          z-index: 1;
+          box-shadow: 0 4px 12px rgba(79, 140, 255, 0.4);
         }
 
         .groups-container {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
-          gap: 24px;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 28px;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1100px) {
           .groups-container {
             grid-template-columns: 1fr;
+            gap: 24px;
           }
         }
 
+        .group-standings {
+          animation: fadeSlideUp 0.4s ease-out backwards;
+        }
+        .group-standings:nth-child(1) { animation-delay: 0s; }
+        .group-standings:nth-child(2) { animation-delay: 0.08s; }
+        .group-standings:nth-child(3) { animation-delay: 0.16s; }
+        .group-standings:nth-child(4) { animation-delay: 0.24s; }
+
+        @keyframes fadeSlideUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .standings-table-wrapper.group-card {
+          background: linear-gradient(180deg, rgba(20, 30, 50, 0.95) 0%, rgba(15, 22, 40, 0.9) 100%);
+          border: 1px solid rgba(79, 140, 255, 0.15);
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .standings-table-wrapper.group-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(79, 140, 255, 0.1);
+        }
+
         .group-header {
-          padding: 12px 16px;
-          background: linear-gradient(135deg, rgba(79, 140, 255, 0.2), rgba(79, 140, 255, 0.05));
-          border-radius: 8px 8px 0 0;
-          border-bottom: 2px solid #4f8cff;
+          padding: 16px 20px;
+          background: linear-gradient(135deg, rgba(79, 140, 255, 0.18), rgba(79, 140, 255, 0.05));
+          border-bottom: 1px solid rgba(79, 140, 255, 0.25);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .group-header::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(79, 140, 255, 0.5), transparent);
         }
 
         .group-header.ungrouped {
-          background: linear-gradient(135deg, rgba(255, 152, 0, 0.2), rgba(255, 152, 0, 0.05));
-          border-bottom-color: #ff9800;
+          background: linear-gradient(135deg, rgba(255, 152, 0, 0.18), rgba(255, 152, 0, 0.05));
+          border-bottom-color: rgba(255, 152, 0, 0.25);
+        }
+
+        .group-header.ungrouped::before {
+          background: linear-gradient(90deg, transparent, rgba(255, 152, 0, 0.5), transparent);
         }
 
         .group-badge {
           font-family: 'Oswald', sans-serif;
-          font-size: 1rem;
+          font-size: 1.1rem;
           font-weight: 700;
           text-transform: uppercase;
-          color: #4f8cff;
-          letter-spacing: 1px;
+          color: #6fb1fc;
+          letter-spacing: 2px;
+          text-shadow: 0 0 20px rgba(79, 140, 255, 0.3);
         }
 
         .group-header.ungrouped .group-badge {
-          color: #ff9800;
+          color: #ffb74d;
+          text-shadow: 0 0 20px rgba(255, 152, 0, 0.3);
         }
 
         .standings-table-row.qualification-line {
           border-bottom: 2px solid #4f8cff !important;
+          position: relative;
+        }
+
+        .standings-table-row.qualification-line::after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: linear-gradient(90deg, transparent 5%, #4f8cff 30%, #6fb1fc 50%, #4f8cff 70%, transparent 95%);
+          box-shadow: 0 0 10px rgba(79, 140, 255, 0.5);
         }
 
         .card-stat {
           font-size: 0.85rem;
-          font-weight: 500;
+          font-weight: 600;
         }
 
         .card-stat.yellow {
           color: #ffc107;
+          text-shadow: 0 0 8px rgba(255, 193, 7, 0.3);
         }
 
         .card-stat.red {
           color: #f44336;
+          text-shadow: 0 0 8px rgba(244, 67, 54, 0.3);
         }
+
+        /* Points highlight for group view */
+        .group-card .points-value {
+          background: linear-gradient(135deg, #4f8cff, #6fb1fc);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          font-size: 1rem;
+        }
+
+        /* GD styling */
+        .gd-positive {
+          color: #4ade80 !important;
+        }
+
+        .gd-negative {
+          color: #f87171 !important;
+        }
+
+        /* Wins/Draws/Losses subtle colors */
+        .stat-wins {
+          color: #4ade80 !important;
+        }
+
+        .stat-losses {
+          color: #f87171 !important;
+        }
+
       `}</style>
     </>
   );

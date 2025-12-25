@@ -31,6 +31,7 @@
 .standings-table-full {
   width: 100%;
   border-collapse: collapse;
+  table-layout: auto;
 }
 
 .standings-table-full thead {
@@ -45,13 +46,14 @@
   text-transform: uppercase;
   letter-spacing: 1.5px;
   color: rgba(255, 255, 255, 0.4);
-  padding: 16px 12px;
+  padding: 14px 8px;
   text-align: center;
+  white-space: nowrap;
 }
 
 .standings-table-full th.col-team-full {
   text-align: left;
-  padding-left: 60px;
+  padding-left: 12px;
 }
 
 .standings-table-row {
@@ -70,45 +72,36 @@
 }
 
 .standings-table-full td {
-  padding: 18px 12px;
+  padding: 14px 8px;
   text-align: center;
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.9);
   font-weight: 500;
 }
 
-/* Position Badge */
+/* Position Column */
 .col-position {
-  width: 50px;
+  width: 36px;
 }
 
-.position-badge {
+.standings-rank {
   font-family: 'Oswald', sans-serif;
   font-size: 0.95rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.position-badge.position-1,
-.position-badge.position-2,
-.position-badge.position-3 {
-  background: linear-gradient(135deg, #4f8cff 0%, #6fb1fc 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* Team Cell */
 .col-team-full {
   text-align: left;
-  padding-left: 60px !important;
+  padding-left: 12px !important;
+  width: auto;
 }
 
 .team-cell-full {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
 }
 
 .team-logo-standings {
@@ -142,11 +135,30 @@
   font-size: 0.95rem;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.95);
+  /* Truncate long names with ellipsis */
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Show full name on hover */
+.team-cell-full:hover .team-name-full {
+  overflow: visible;
+  white-space: normal;
+  word-break: break-word;
+  position: relative;
+  z-index: 10;
+  background: rgba(15, 22, 40, 0.95);
+  padding: 2px 6px;
+  margin: -2px -6px;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 /* Stats */
 .col-stat {
-  width: 55px;
+  width: 40px;
   color: rgba(255, 255, 255, 0.8);
   font-weight: 500;
 }
@@ -173,7 +185,7 @@
 
 /* Points */
 .col-points {
-  width: 70px;
+  width: 50px;
 }
 
 .points-value {
@@ -317,7 +329,7 @@
     font-size: 0.75rem;
   }
 
-  .position-badge {
+  .standings-rank {
     font-size: 0.8rem;
   }
 
@@ -377,7 +389,7 @@
     font-size: 0.7rem;
   }
 
-  .position-badge {
+  .standings-rank {
     font-size: 0.75rem;
   }
 

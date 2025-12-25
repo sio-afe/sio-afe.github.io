@@ -208,23 +208,31 @@ export default function Fixtures({ onMatchClick }) {
 
           {/* View Toggle & Search */}
           <div className="fixtures-controls">
-            <div className="view-toggle-fixtures">
-              <button 
-                className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
-                onClick={() => setViewMode('list')}
-                title="List View"
-              >
-                <i className="fas fa-list"></i>
-                <span>Matchday</span>
-              </button>
-              <button 
-                className={`view-btn ${viewMode === 'all' ? 'active' : ''}`}
-                onClick={() => setViewMode('all')}
-                title="All Matches"
-              >
-                <i className="fas fa-th-list"></i>
-                <span>All</span>
-              </button>
+            <div className="fixtures-tabs-container">
+              <div className="fixtures-tabs">
+                <button 
+                  className={`fixtures-tab ${viewMode === 'list' ? 'active' : ''}`}
+                  onClick={() => setViewMode('list')}
+                  title="List View"
+                >
+                  <i className="fas fa-list"></i>
+                  <span>Matchday</span>
+                </button>
+                <button 
+                  className={`fixtures-tab ${viewMode === 'all' ? 'active' : ''}`}
+                  onClick={() => setViewMode('all')}
+                  title="All Matches"
+                >
+                  <i className="fas fa-th-list"></i>
+                  <span>All</span>
+                </button>
+                <span 
+                  className="fixtures-tab-slider" 
+                  style={{ 
+                    transform: `translateX(${viewMode === 'all' ? '100%' : '0%'})` 
+                  }}
+                />
+              </div>
             </div>
 
             {/* Search Box */}
@@ -378,50 +386,81 @@ export default function Fixtures({ onMatchClick }) {
       <Footer edition="2026" />
 
       <style>{`
+        .fixtures-header-v2 h1 {
+          text-align: left;
+        }
+
         .fixtures-controls {
           display: flex;
-          justify-content: space-between;
+          flex-direction: column;
           align-items: center;
           gap: 16px;
           margin-bottom: 24px;
-          flex-wrap: wrap;
         }
 
-        .view-toggle-fixtures {
+        /* Capsule Tab Navigation */
+        .fixtures-tabs-container {
           display: flex;
-          gap: 4px;
-          background: rgba(255, 255, 255, 0.05);
-          padding: 4px;
-          border-radius: 10px;
+          justify-content: center;
         }
 
-        .view-btn {
+        .fixtures-tabs {
+          position: relative;
+          display: inline-flex;
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 50px;
+          padding: 6px;
+          gap: 0;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(79, 140, 255, 0.15);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .fixtures-tab {
           display: flex;
           align-items: center;
+          justify-content: center;
           gap: 8px;
-          padding: 10px 16px;
+          font-family: 'Oswald', sans-serif;
+          font-size: 0.9rem;
+          font-weight: 600;
+          padding: 14px 28px;
           background: transparent;
           border: none;
-          color: rgba(255, 255, 255, 0.5);
+          color: rgba(255, 255, 255, 0.55);
           cursor: pointer;
-          border-radius: 8px;
-          font-size: 13px;
-          font-weight: 500;
-          transition: all 0.2s;
+          transition: all 0.3s ease;
+          position: relative;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          z-index: 2;
+          white-space: nowrap;
+          border-radius: 50px;
         }
 
-        .view-btn:hover {
-          color: rgba(255, 255, 255, 0.8);
-          background: rgba(255, 255, 255, 0.05);
+        .fixtures-tab i {
+          font-size: 0.9rem;
         }
 
-        .view-btn.active {
-          background: linear-gradient(135deg, #4f8cff, #6fb1fc);
+        .fixtures-tab:hover {
+          color: rgba(255, 255, 255, 0.85);
+        }
+
+        .fixtures-tab.active {
           color: #fff;
         }
 
-        .view-btn i {
-          font-size: 14px;
+        .fixtures-tab-slider {
+          position: absolute;
+          top: 6px;
+          left: 6px;
+          width: calc(50% - 6px);
+          height: calc(100% - 12px);
+          background: linear-gradient(135deg, #4f8cff, #6ecdee);
+          border-radius: 50px;
+          transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          z-index: 1;
+          box-shadow: 0 4px 12px rgba(79, 140, 255, 0.4);
         }
 
         .fixtures-search {
@@ -477,23 +516,30 @@ export default function Fixtures({ onMatchClick }) {
         @media (max-width: 768px) {
           .fixtures-controls {
             flex-direction: column;
-            align-items: stretch;
+            align-items: center;
           }
 
-          .view-toggle-fixtures {
+          .fixtures-tabs-container {
+            width: 100%;
             justify-content: center;
           }
 
           .fixtures-search {
+            width: 100%;
             min-width: 100%;
           }
 
-          .view-btn span {
+          .fixtures-tab {
+            padding: 12px 20px;
+            font-size: 0.85rem;
+          }
+
+          .fixtures-tab span {
             display: none;
           }
 
-          .view-btn {
-            padding: 10px 14px;
+          .fixtures-tab i {
+            font-size: 1rem;
           }
         }
       `}</style>
