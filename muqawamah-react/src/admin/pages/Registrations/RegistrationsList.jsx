@@ -1048,6 +1048,24 @@ export default function RegistrationsList() {
                     <SmartImg src={editingPlayer.player_image} preset="playerCard" alt="Current photo" loading="lazy" decoding="async" />
                   </div>
                 )}
+                {editingPlayer.player_image && (
+                  <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' }}>
+                    <a
+                      className="btn-secondary"
+                      href={editingPlayer.player_image}
+                      download={`player-${(editingPlayer.player_name || 'photo').toString().trim().replace(/\s+/g, '-').toLowerCase()}.jpg`}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{ textDecoration: 'none' }}
+                      title="Download current player photo"
+                    >
+                      <i className="fas fa-download" /> Download Image
+                    </a>
+                    <small style={{ color: '#6b7280' }}>
+                      Tip: if download is blocked by the browser, it will open in a new tab—use “Save image as…”.
+                    </small>
+                  </div>
+                )}
                 <input
                   type="file"
                   accept="image/*"

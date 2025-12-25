@@ -1,6 +1,7 @@
 /**
  * Players Management Page
- * View, edit, delete player information
+ * Tournament Players Management Page
+ * View, edit, delete tournament player information (public.players)
  */
 
 import React, { useEffect, useState } from 'react';
@@ -15,6 +16,7 @@ export default function PlayersList() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [positionFilter, setPositionFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -28,9 +30,9 @@ export default function PlayersList() {
     try {
       setLoading(true);
       const { data, error } = await supabaseClient
-        .from('team_players')
-        .select('*, team_registrations(team_name, category, status)')
-        .order('player_name');
+        .from('players')
+        .select('*, team:teams(id, name, category, crest_url)')
+        .order('name');
 
       if (error) throw error;
       setPlayers(data || []);
@@ -45,7 +47,7 @@ export default function PlayersList() {
   const updatePlayer = async (playerId, updates) => {
     try {
       const { error } = await supabaseClient
-        .from('team_players')
+        .from('players')
         .update(updates)
         .eq('id', playerId);
 
@@ -57,7 +59,7 @@ export default function PlayersList() {
       setEditing(false);
     } catch (error) {
       console.error('Error updating player:', error);
-      alert('Failed to update player');
+      alert('Failed to update player' + (error?.message ? `: ${error.message}` : ''));
     }
   };
 
@@ -66,7 +68,7 @@ export default function PlayersList() {
     try {
       setUploadingImage(true);
       const { originalUrl } = await uploadImageVariants({
-        entityType: 'team_players',
+        entityType: 'players',
         entityId: selectedPlayer.id,
         file,
         withCard: true
@@ -89,7 +91,7 @@ export default function PlayersList() {
 
     try {
       const { error } = await supabaseClient
-        .from('team_players')
+        .from('players')
         .delete()
         .eq('id', playerId);
 
@@ -104,18 +106,23 @@ export default function PlayersList() {
     }
   };
 
+  const availableCategories = Array.from(
+    new Set((players || []).map(p => p?.team?.category).filter(Boolean))
+  ).sort((a, b) => String(a).localeCompare(String(b)));
+
   const filteredPlayers = players.filter(player => {
     const matchesSearch = 
-      player.player_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      player.team_registrations?.team_name?.toLowerCase().includes(searchTerm.toLowerCase());
+      player.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      player.team?.name?.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesPosition = positionFilter === 'all' || player.position === positionFilter;
+    const matchesCategory = categoryFilter === 'all' || player.team?.category === categoryFilter;
     
-    return matchesSearch && matchesPosition;
+    return matchesSearch && matchesPosition && matchesCategory;
   });
 
   return (
-    <AdminLayout title="Players Management">
+    <AdminLayout title="Tournament Players">
       <div className="admin-page-header">
         <div className="page-header-left">
           <button className="refresh-btn" onClick={fetchPlayers}>
@@ -123,6 +130,17 @@ export default function PlayersList() {
           </button>
         </div>
         <div className="page-header-right">
+          <select
+            className="filter-select"
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            title="Filter by category"
+          >
+            <option value="all">All Categories</option>
+            {availableCategories.map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
           <select 
             className="filter-select"
             value={positionFilter}
@@ -160,7 +178,7 @@ export default function PlayersList() {
               <tr>
                 <th>Player</th>
                 <th>Position</th>
-                <th>Age</th>
+                <th>No.</th>
                 <th>Team</th>
                 <th>Category</th>
                 <th>Type</th>
@@ -190,16 +208,16 @@ export default function PlayersList() {
                             decoding="async"
                           />
                         )}
-                        <strong>{player.player_name}</strong>
+                        <strong>{player.name}</strong>
                       </div>
                     </td>
                     <td>
                       <span className="position-badge">{player.position}</span>
                     </td>
-                    <td>{player.player_age || 'N/A'}</td>
-                    <td>{player.team_registrations?.team_name || 'N/A'}</td>
+                    <td>{player.number ?? '—'}</td>
+                    <td>{player.team?.name || 'N/A'}</td>
                     <td>
-                      <span className="category-badge">{player.team_registrations?.category}</span>
+                      <span className="category-badge">{player.team?.category}</span>
                     </td>
                     <td>
                       {player.is_substitute ? (
@@ -254,7 +272,7 @@ export default function PlayersList() {
                   <SmartImg
                     src={selectedPlayer.player_image}
                     preset="playerCard"
-                    alt={selectedPlayer.player_name}
+                    alt={selectedPlayer.name}
                     loading="lazy"
                     decoding="async"
                   />
@@ -267,10 +285,21 @@ export default function PlayersList() {
                     <label>Player Name</label>
                     <input
                       type="text"
-                      value={selectedPlayer.player_name || ''}
+                      value={selectedPlayer.name || ''}
                       onChange={(e) => setSelectedPlayer({
                         ...selectedPlayer,
-                        player_name: e.target.value
+                        name: e.target.value
+                      })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Jersey Number (optional)</label>
+                    <input
+                      type="number"
+                      value={selectedPlayer.number ?? ''}
+                      onChange={(e) => setSelectedPlayer({
+                        ...selectedPlayer,
+                        number: e.target.value === '' ? null : parseInt(e.target.value, 10)
                       })}
                     />
                   </div>
@@ -289,18 +318,25 @@ export default function PlayersList() {
                     </select>
                   </div>
                   <div className="form-group">
-                    <label>Age</label>
-                    <input
-                      type="number"
-                      value={selectedPlayer.player_age || ''}
-                      onChange={(e) => setSelectedPlayer({
-                        ...selectedPlayer,
-                        player_age: parseInt(e.target.value)
-                      })}
-                    />
-                  </div>
-                  <div className="form-group">
                     <label>Player Photo</label>
+                    {selectedPlayer.player_image && (
+                      <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' }}>
+                        <a
+                          className="btn-secondary"
+                          href={selectedPlayer.player_image}
+                          download={`player-${(selectedPlayer.name || 'photo').toString().trim().replace(/\s+/g, '-').toLowerCase()}.jpg`}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{ textDecoration: 'none' }}
+                          title="Download current player photo"
+                        >
+                          <i className="fas fa-download" /> Download Image
+                        </a>
+                        <small style={{ color: '#6b7280' }}>
+                          Tip: if download is blocked by the browser, it will open in a new tab—use “Save image as…”.
+                        </small>
+                      </div>
+                    )}
                     <input
                       type="file"
                       accept="image/*"
@@ -341,9 +377,9 @@ export default function PlayersList() {
                     <button 
                       className="btn-primary"
                       onClick={() => updatePlayer(selectedPlayer.id, {
-                        player_name: selectedPlayer.player_name,
+                        name: selectedPlayer.name,
+                        number: selectedPlayer.number ?? null,
                         position: selectedPlayer.position,
-                        player_age: selectedPlayer.player_age,
                         is_substitute: selectedPlayer.is_substitute,
                         player_image: selectedPlayer.player_image || null
                       })}
@@ -358,19 +394,19 @@ export default function PlayersList() {
                   <div className="detail-grid">
                     <div className="detail-item">
                       <label>Player Name:</label>
-                      <span>{selectedPlayer.player_name}</span>
+                      <span>{selectedPlayer.name}</span>
                     </div>
                     <div className="detail-item">
                       <label>Position:</label>
                       <span className="position-badge">{selectedPlayer.position}</span>
                     </div>
                     <div className="detail-item">
-                      <label>Age:</label>
-                      <span>{selectedPlayer.player_age || 'N/A'}</span>
+                      <label>Jersey No.:</label>
+                      <span>{selectedPlayer.number ?? '—'}</span>
                     </div>
                     <div className="detail-item">
                       <label>Team:</label>
-                      <span>{selectedPlayer.team_registrations?.team_name}</span>
+                      <span>{selectedPlayer.team?.name}</span>
                     </div>
                     <div className="detail-item">
                       <label>Type:</label>
@@ -379,10 +415,6 @@ export default function PlayersList() {
                       ) : (
                         <span className="type-badge starter">Starter</span>
                       )}
-                    </div>
-                    <div className="detail-item">
-                      <label>Aadhar Number:</label>
-                      <span>{selectedPlayer.aadhar_no || 'Not provided'}</span>
                     </div>
                   </div>
                   <div className="modal-actions">
