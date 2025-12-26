@@ -13,6 +13,7 @@ import { uploadImageVariants } from '../../utils/uploadImageVariants';
 
 export default function PlayersList() {
   const [players, setPlayers] = useState([]);
+  const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [positionFilter, setPositionFilter] = useState('all');
@@ -21,9 +22,21 @@ export default function PlayersList() {
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  
+  // Add player state
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newPlayer, setNewPlayer] = useState({
+    name: '',
+    team_id: '',
+    position: 'Forward',
+    number: '',
+    is_substitute: false
+  });
+  const [addingPlayer, setAddingPlayer] = useState(false);
 
   useEffect(() => {
     fetchPlayers();
+    fetchTeams();
   }, []);
 
   const fetchPlayers = async () => {
@@ -41,6 +54,62 @@ export default function PlayersList() {
       alert('Failed to load players');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchTeams = async () => {
+    try {
+      const { data, error } = await supabaseClient
+        .from('teams')
+        .select('id, name, category')
+        .order('name');
+
+      if (error) throw error;
+      setTeams(data || []);
+    } catch (error) {
+      console.error('Error fetching teams:', error);
+    }
+  };
+
+  const addPlayer = async () => {
+    if (!newPlayer.name.trim()) {
+      alert('Please enter a player name');
+      return;
+    }
+    if (!newPlayer.team_id) {
+      alert('Please select a team');
+      return;
+    }
+
+    try {
+      setAddingPlayer(true);
+      const { error } = await supabaseClient
+        .from('players')
+        .insert({
+          name: newPlayer.name.trim(),
+          team_id: newPlayer.team_id,
+          position: newPlayer.position,
+          number: newPlayer.number ? parseInt(newPlayer.number, 10) : null,
+          is_substitute: newPlayer.is_substitute
+        });
+
+      if (error) throw error;
+
+      alert('Player added successfully!');
+      setShowAddModal(false);
+      setNewPlayer({
+        name: '',
+        team_id: '',
+        position: 'Forward',
+        number: '',
+        is_substitute: false
+      });
+      fetchPlayers();
+    } catch (error) {
+      console.error('Error adding player:', error);
+      alert('Failed to add player: ' + (error.message || error));
+    } finally {
+      setAddingPlayer(false);
     }
   };
 
@@ -127,6 +196,13 @@ export default function PlayersList() {
         <div className="page-header-left">
           <button className="refresh-btn" onClick={fetchPlayers}>
             <i className="fas fa-sync-alt"></i> Refresh
+          </button>
+          <button 
+            className="btn-primary"
+            onClick={() => setShowAddModal(true)}
+            style={{ marginLeft: 10 }}
+          >
+            <i className="fas fa-plus"></i> Add Player
           </button>
         </div>
         <div className="page-header-right">
@@ -427,6 +503,107 @@ export default function PlayersList() {
                   </div>
                 </>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Player Modal */}
+      {showAddModal && (
+        <div className="modal-overlay" onClick={() => setShowAddModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Add New Player</h2>
+              <button className="modal-close" onClick={() => setShowAddModal(false)}>
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            
+            <div className="modal-body">
+              <div className="edit-form">
+                <div className="form-group">
+                  <label>Player Name *</label>
+                  <input
+                    type="text"
+                    placeholder="Enter player name"
+                    value={newPlayer.name}
+                    onChange={(e) => setNewPlayer({ ...newPlayer, name: e.target.value })}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Team *</label>
+                  <select
+                    value={newPlayer.team_id}
+                    onChange={(e) => setNewPlayer({ ...newPlayer, team_id: e.target.value })}
+                  >
+                    <option value="">Select a team...</option>
+                    {teams.map(team => (
+                      <option key={team.id} value={team.id}>
+                        {team.name} ({team.category})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Position</label>
+                  <select
+                    value={newPlayer.position}
+                    onChange={(e) => setNewPlayer({ ...newPlayer, position: e.target.value })}
+                  >
+                    {POSITIONS.map(pos => (
+                      <option key={pos} value={pos}>{pos}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Jersey Number (optional)</label>
+                  <input
+                    type="number"
+                    placeholder="e.g. 10"
+                    value={newPlayer.number}
+                    onChange={(e) => setNewPlayer({ ...newPlayer, number: e.target.value })}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Player Type</label>
+                  <select
+                    value={newPlayer.is_substitute ? 'substitute' : 'starter'}
+                    onChange={(e) => setNewPlayer({ ...newPlayer, is_substitute: e.target.value === 'substitute' })}
+                  >
+                    <option value="starter">Starter</option>
+                    <option value="substitute">Substitute</option>
+                  </select>
+                </div>
+
+                <div className="form-actions">
+                  <button 
+                    className="btn-secondary"
+                    onClick={() => setShowAddModal(false)}
+                    disabled={addingPlayer}
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    className="btn-primary"
+                    onClick={addPlayer}
+                    disabled={addingPlayer}
+                  >
+                    {addingPlayer ? (
+                      <><i className="fas fa-spinner fa-spin"></i> Adding...</>
+                    ) : (
+                      <><i className="fas fa-plus"></i> Add Player</>
+                    )}
+                  </button>
+                </div>
+
+                <p style={{ marginTop: 15, fontSize: '0.85rem', color: '#6b7280' }}>
+                  <i className="fas fa-info-circle"></i> After adding the player, you can edit them to upload a photo.
+                </p>
+              </div>
             </div>
           </div>
         </div>
