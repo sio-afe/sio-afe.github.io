@@ -46,8 +46,8 @@ const editions = [
     stats: [
       { number: 'January 14, 15 2026', label: '' }
     ],
-    status: 'registrations-open',
-    statusLabel: 'Registrations Open'
+    status: 'coming-soon',
+    statusLabel: 'Coming Soon'
   }
 ];
 
@@ -113,12 +113,6 @@ function Hero({ selectedEdition, setSelectedEdition }) {
                 </div>
               )}
               
-              {currentEdition.status === 'coming-soon' && (
-                <div className="status-badge-hero coming-soon">
-                  <i className="fas fa-clock"></i> {currentEdition.statusLabel}
-                </div>
-              )}
-
               {currentEdition.status === 'registrations-open' && (
                 <div className="status-badge-hero registrations-open">
                   <i className="fas fa-clipboard-list"></i> {currentEdition.statusLabel}

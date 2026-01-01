@@ -70,36 +70,37 @@ function AboutSection({ edition }) {
 
         {is2026 ? (
           <>
-            <motion.div
-              className="registration-section-card"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="registration-title">Muqawama 2026 Registration</h3>
-              <p className="registration-description">
-                Captains can now reserve their slots for Open Age or U17. Submit your roster, logo and preferred formation.
-              </p>
-              <div className="action-buttons-2026">
-                <button
-                  className="register-btn"
-                  type="button"
-                  onClick={() => (window.location.href = '/muqawamah/2026/register/')}
-                >
-                  Register Your Team
-                </button>
-                <button
-                  className="tournament-btn"
-                  type="button"
-                  onClick={() => setShowCategoryModal(true)}
-                  disabled
-                  style={{ opacity: 0.5, cursor: 'not-allowed' }}
-                >
-                  View Tournament
-                </button>
-              </div>
-            </motion.div>
+          <motion.div
+            className="registration-section-card"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <h3 className="registration-title">Muqawama 2026 Registration</h3>
+            <p className="registration-description">
+              Captains can now reserve their slots for Open Age or U17. Submit your roster, logo and preferred formation.
+            </p>
+            <div className="action-buttons-2026">
+              <button
+                className="register-btn"
+                type="button"
+                disabled
+                style={{ opacity: 0.6, cursor: 'not-allowed', background: '#444' }}
+              >
+                Registration Closed
+              </button>
+              <button
+                className="tournament-btn"
+                type="button"
+                onClick={() => setShowCategoryModal(true)}
+                disabled
+                style={{ opacity: 0.5, cursor: 'not-allowed' }}
+              >
+                View Tournament
+              </button>
+            </div>
+          </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 30 }}

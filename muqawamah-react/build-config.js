@@ -47,7 +47,7 @@ try {
     'fixtures.html',
     'standings.html',
     'statistics.html',
-    'registration.html',
+    'private-reg.html',
     'admin.html',
   ];
   htmlEntrypoints.forEach((name) => {
@@ -159,8 +159,8 @@ ${mainJsLinks}
   console.log('✅ Updated muqawamah/2026.md (permalink: /muqawamah/2026/)');
 
   // Process registration.html
-  console.log('\n📄 Processing registration app (registration.html)...');
-  const registrationHtml = readFileSync(join(distDir, 'registration.html'), 'utf-8');
+  console.log('\n📄 Processing registration app (private-reg.html)...');
+  const registrationHtml = readFileSync(join(distDir, 'private-reg.html'), 'utf-8');
   const registrationCssMatches = registrationHtml.match(/<link[^>]*href="([^"]*\.css)"[^>]*>/g) || [];
   const registrationJsMatches = registrationHtml.match(/<script[^>]*src="([^"]*\.js)"[^>]*>/g) || [];
 

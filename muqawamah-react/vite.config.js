@@ -25,7 +25,7 @@ export default defineConfig({
       input: {
         main: resolve(process.cwd(), 'index.html'),
         tournament: resolve(process.cwd(), 'tournament.html'),
-        registration: resolve(process.cwd(), 'registration.html'),
+        registration: resolve(process.cwd(), 'private-reg.html'),
         players: resolve(process.cwd(), 'players.html'),
         teams: resolve(process.cwd(), 'teams.html'),
         fixtures: resolve(process.cwd(), 'fixtures.html'),
