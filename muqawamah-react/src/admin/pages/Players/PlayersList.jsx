@@ -16,6 +16,7 @@ export default function PlayersList() {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [teamFilter, setTeamFilter] = useState('all');
   const [positionFilter, setPositionFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [selectedPlayer, setSelectedPlayer] = useState(null);
@@ -154,7 +155,18 @@ export default function PlayersList() {
   };
 
   const deletePlayer = async (playerId) => {
-    if (!confirm('Are you sure you want to delete this player?')) {
+    const playerToDelete = players.find(p => p.id === playerId);
+    if (!playerToDelete) return;
+
+    const confirmMsg = `⚠️ WARNING: This will permanently delete player "${playerToDelete.name}".\n\n` +
+      `Type the player name to confirm: "${playerToDelete.name}"`;
+
+    const userInput = prompt(confirmMsg);
+
+    if (userInput !== playerToDelete.name) {
+      if (userInput !== null) {
+        alert('Player name did not match. Deletion cancelled.');
+      }
       return;
     }
 
@@ -179,6 +191,11 @@ export default function PlayersList() {
     new Set((players || []).map(p => p?.team?.category).filter(Boolean))
   ).sort((a, b) => String(a).localeCompare(String(b)));
 
+  // Filter teams based on selected category (for the team filter dropdown)
+  const availableTeams = teams.filter(team => 
+    categoryFilter === 'all' || team.category === categoryFilter
+  );
+
   const filteredPlayers = players.filter(player => {
     const matchesSearch = 
       player.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -186,8 +203,9 @@ export default function PlayersList() {
     
     const matchesPosition = positionFilter === 'all' || player.position === positionFilter;
     const matchesCategory = categoryFilter === 'all' || player.team?.category === categoryFilter;
+    const matchesTeam = teamFilter === 'all' || player.team?.id === teamFilter;
     
-    return matchesSearch && matchesPosition && matchesCategory;
+    return matchesSearch && matchesPosition && matchesCategory && matchesTeam;
   });
 
   return (
@@ -209,7 +227,10 @@ export default function PlayersList() {
           <select
             className="filter-select"
             value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
+            onChange={(e) => {
+              setCategoryFilter(e.target.value);
+              setTeamFilter('all'); // Reset team filter when category changes
+            }}
             title="Filter by category"
           >
             <option value="all">All Categories</option>
@@ -217,6 +238,21 @@ export default function PlayersList() {
               <option key={cat} value={cat}>{cat}</option>
             ))}
           </select>
+
+          <select
+            className="filter-select"
+            value={teamFilter}
+            onChange={(e) => setTeamFilter(e.target.value)}
+            title="Filter by team"
+          >
+            <option value="all">All Teams</option>
+            {availableTeams.map(team => (
+              <option key={team.id} value={team.id}>
+                {team.name} {categoryFilter === 'all' ? `(${team.category})` : ''}
+              </option>
+            ))}
+          </select>
+
           <select 
             className="filter-select"
             value={positionFilter}

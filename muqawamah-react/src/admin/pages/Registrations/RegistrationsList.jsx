@@ -183,6 +183,148 @@ export default function RegistrationsList() {
     }
   };
 
+  const syncPlayers = async (registration) => {
+    try {
+      // 1. Get the tournament team
+      const { data: tournamentTeam, error: teamError } = await supabaseClient
+        .from('teams')
+        .select('id, name')
+        .eq('registration_id', registration.id)
+        .single();
+
+      if (teamError || !tournamentTeam) {
+        alert('Could not find this team in the tournament to sync.');
+        return;
+      }
+
+      // 2. Get Source Players (Registration)
+      const { data: sourcePlayers, error: sourceError } = await supabaseClient
+        .from('team_players')
+        .select('*')
+        .eq('team_id', registration.id);
+
+      if (sourceError) throw sourceError;
+
+      // 3. Get Destination Players (Tournament)
+      const { data: destPlayers, error: destError } = await supabaseClient
+        .from('players')
+        .select('*')
+        .eq('team_id', tournamentTeam.id);
+
+      if (destError) throw destError;
+
+      // 4. Calculate Diffs
+      const toAdd = [];
+      const toUpdate = [];
+      const toRemove = [];
+
+      // Map dest players by registration_player_id for easy lookup
+      // Only map those that HAVE a registration_player_id (linked players)
+      const destMap = {};
+      destPlayers.forEach(p => {
+        if (p.registration_player_id) {
+          destMap[p.registration_player_id] = p;
+        }
+      });
+
+      // Check Source against Dest (Additions & Updates)
+      sourcePlayers.forEach(src => {
+        const dest = destMap[src.id];
+        if (!dest) {
+          // Not in destination -> ADD
+          toAdd.push(src);
+        } else {
+          // In destination -> Check for updates
+          // Compare fields relevant to tournament
+          const needsUpdate = 
+            dest.name !== src.player_name ||
+            dest.position !== src.position ||
+            dest.is_substitute !== src.is_substitute ||
+            (src.player_image && dest.player_image !== src.player_image); // Update image only if source has one (optional policy)
+            // Note: We perform a simple check. If strict, check all.
+
+          if (needsUpdate) {
+            toUpdate.push({ src, dest });
+          }
+        }
+      });
+
+      // Check Dest against Source (Removals)
+      // Only remove players that are linked to a registration (have registration_player_id)
+      // but are no longer in the source list. 
+      // Manually added tournament players (null registration_player_id) are IGNORED (kept).
+      const sourceIds = new Set(sourcePlayers.map(s => s.id));
+      destPlayers.forEach(dest => {
+        if (dest.registration_player_id && !sourceIds.has(dest.registration_player_id)) {
+          toRemove.push(dest);
+        }
+      });
+
+      if (toAdd.length === 0 && toUpdate.length === 0 && toRemove.length === 0) {
+        alert('All synced! No changes detected.');
+        return;
+      }
+
+      // 5. Confirmation
+      const confirmMsg = `Sync "${registration.team_name}" players?\n\n` +
+        `(+) Add: ${toAdd.length} players\n` +
+        `(@) Update: ${toUpdate.length} players\n` +
+        `(-) Remove: ${toRemove.length} players\n\n` +
+        `Proceed with these changes?`;
+
+      if (!confirm(confirmMsg)) return;
+
+      // 6. Execute Changes
+      // A. Additions
+      if (toAdd.length > 0) {
+        const { error: insertError } = await supabaseClient
+          .from('players')
+          .insert(toAdd.map(p => ({
+            team_id: tournamentTeam.id,
+            name: p.player_name,
+            position: p.position,
+            is_substitute: p.is_substitute,
+            player_image: p.player_image,
+            registration_player_id: p.id
+          })));
+        if (insertError) throw insertError;
+      }
+
+      // B. Updates
+      if (toUpdate.length > 0) {
+        // Supabase doesn't support bulk update with different values easily in one call without upsert/case complication.
+        // For simplicity and safety with small team sizes, we loop. Performance is negligible for <30 players.
+        for (const { src, dest } of toUpdate) {
+          const { error: updateError } = await supabaseClient
+            .from('players')
+            .update({
+              name: src.player_name,
+              position: src.position,
+              is_substitute: src.is_substitute,
+              player_image: src.player_image // Sync image
+            })
+            .eq('id', dest.id);
+          if (updateError) throw updateError;
+        }
+      }
+
+      // C. Removals
+      if (toRemove.length > 0) {
+        const { error: deleteError } = await supabaseClient
+          .from('players')
+          .delete()
+          .in('id', toRemove.map(p => p.id));
+        if (deleteError) throw deleteError;
+      }
+
+      alert('Sync completed successfully!');
+      
+    } catch (error) {
+      console.error('Sync failed:', error);
+      alert('Sync failed: ' + error.message);
+    }
+  };
+
   const deleteRegistration = async (id) => {
     const reg = registrations.find(r => r.id === id);
     if (!reg) return;
@@ -658,13 +800,27 @@ export default function RegistrationsList() {
                         </button>
                         {reg.status === 'confirmed' && (
                           inTournament[reg.id] ? (
-                            <button 
-                              className="btn-icon btn-tournament-added"
-                              disabled
-                              title="Already in Tournament"
-                            >
-                              <i className="fas fa-check-circle"></i>
-                            </button>
+                            <>
+                              <button 
+                                className="btn-icon btn-tournament-added"
+                                disabled
+                                title="Already in Tournament"
+                                style={{ opacity: 0.6, cursor: 'default' }}
+                              >
+                                <i className="fas fa-check-circle"></i>
+                              </button>
+                              <button 
+                                className="btn-icon btn-sync"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  syncPlayers(reg);
+                                }}
+                                title="Sync Players to Tournament"
+                                style={{ color: '#0ea5e9', marginLeft: 5 }}
+                              >
+                                <i className="fas fa-sync"></i>
+                              </button>
+                            </>
                           ) : (
                             <button 
                               className="btn-icon btn-tournament"
