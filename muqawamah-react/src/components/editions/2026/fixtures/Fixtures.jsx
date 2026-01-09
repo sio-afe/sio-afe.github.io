@@ -285,10 +285,18 @@ export default function Fixtures({ onMatchClick }) {
                     onClick={() => onMatchClick && onMatchClick(match.id)}
                     style={{ cursor: onMatchClick ? 'pointer' : 'default' }}
                   >
-                    {/* Status Badge - Mobile */}
-                    <div className="match-status-mobile">
+                    {/* Time & Date Header Row */}
+                    <div className="match-header-row">
+                      <span className="match-time-left">
+                        <i className="fas fa-clock"></i>
+                        {formatTime(match.scheduled_time)}
+                      </span>
                       <span className={`status-badge ${matchStatus.className}`}>
                         {matchStatus.label}
+                      </span>
+                      <span className="match-date-right">
+                        <i className="fas fa-calendar"></i>
+                        {match.match_date ? new Date(match.match_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'TBD'}
                       </span>
                     </div>
 
