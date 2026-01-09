@@ -287,10 +287,6 @@ export default function Fixtures({ onMatchClick }) {
                   >
                     {/* Time & Date Header Row */}
                     <div className="match-header-row">
-                      <span className="match-time-left">
-                        <i className="fas fa-clock"></i>
-                        {formatTime(match.scheduled_time)}
-                      </span>
                       <span className={`status-badge ${matchStatus.className}`}>
                         {matchStatus.label}
                       </span>
