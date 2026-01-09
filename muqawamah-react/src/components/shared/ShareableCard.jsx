@@ -163,13 +163,9 @@ const waitForCardAssets = async (node, { timeoutMs = isTestEnv ? 25 : 2500 } = {
 };
 
 const getDefaultPixelRatio = () => {
-  try {
-    const dpr = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
-    // 2 is a sweet spot: sharp enough for sharing, much faster than 3.
-    return Math.min(2, Math.max(1, dpr));
-  } catch {
-    return 2;
-  }
+  // Use high pixel ratio for crisp, high-quality downloads
+  // 5x gives ultra-high resolution output (e.g., 800px base = 4000px output)
+  return 5;
 };
 
 const makeCacheKey = (type, payload) => {

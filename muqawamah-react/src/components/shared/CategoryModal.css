@@ -1,12 +1,13 @@
-/* Category Modal Styles */
+/* Category Modal Styles - Light Glassmorphic */
 .category-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,36 +16,41 @@
 }
 
 .category-modal {
-  background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
-  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 28px;
   padding: 40px;
-  max-width: 600px;
+  max-width: 550px;
   width: 100%;
   position: relative;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .modal-close-btn {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  width: 36px;
-  height: 36px;
+  top: 16px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #fff;
-  font-size: 1.1rem;
+  color: #333;
+  font-size: 1rem;
   transition: all 0.3s ease;
 }
 
 .modal-close-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.1);
   transform: rotate(90deg);
 }
 
@@ -63,14 +69,14 @@
 .modal-header h2 {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #fff;
+  color: #1a1a2e;
   margin: 0 0 8px 0;
   text-transform: uppercase;
   letter-spacing: 0.02em;
 }
 
 .modal-header p {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(0, 0, 0, 0.6);
   font-size: 0.95rem;
   margin: 0;
 }
@@ -82,9 +88,11 @@
 }
 
 .category-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
   padding: 28px 20px;
   text-align: center;
   text-decoration: none;
@@ -92,6 +100,9 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .category-card::before {
@@ -101,7 +112,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(79, 140, 255, 0.1), rgba(110, 205, 238, 0.1));
+  background: linear-gradient(135deg, rgba(79, 140, 255, 0.15), rgba(110, 205, 238, 0.15));
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -111,20 +122,26 @@
 }
 
 .category-card:hover {
-  border-color: rgba(79, 140, 255, 0.5);
-  box-shadow: 0 8px 32px rgba(79, 140, 255, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(79, 140, 255, 0.4);
+  box-shadow: 
+    0 12px 40px rgba(79, 140, 255, 0.2),
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transform: translateY(-4px);
 }
 
 .category-icon {
-  width: 70px;
-  height: 70px;
+  width: 72px;
+  height: 72px;
   margin: 0 auto 16px;
-  border-radius: 16px;
+  border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2rem;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .category-card:hover .category-icon {
@@ -132,16 +149,16 @@
 }
 
 .category-card h3 {
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  color: #fff;
+  color: #1a1a2e;
   margin: 0 0 8px 0;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
 }
 
 .category-card p {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(0, 0, 0, 0.6);
   font-size: 0.9rem;
   margin: 0 0 16px 0;
   line-height: 1.4;
@@ -152,6 +169,7 @@
   opacity: 0;
   transform: translateX(-10px);
   transition: all 0.3s ease;
+  color: #4f8cff;
 }
 
 .category-card:hover .category-arrow {

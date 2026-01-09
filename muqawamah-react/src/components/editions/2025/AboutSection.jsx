@@ -77,25 +77,15 @@ function AboutSection({ edition }) {
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h3 className="registration-title">Muqawama 2026 Registration</h3>
+            <h3 className="registration-title">Tournament Details</h3>
             <p className="registration-description">
-              Captains can now reserve their slots for Open Age or U17. Submit your roster, logo and preferred formation.
+              The tournament is underway! View fixtures, standings, team rosters, and player statistics for Open Age and U17 categories.
             </p>
             <div className="action-buttons-2026">
               <button
-                className="register-btn"
-                type="button"
-                disabled
-                style={{ opacity: 0.6, cursor: 'not-allowed', background: '#444' }}
-              >
-                Registration Closed
-              </button>
-              <button
-                className="tournament-btn"
+                className="tournament-btn primary"
                 type="button"
                 onClick={() => setShowCategoryModal(true)}
-                disabled
-                style={{ opacity: 0.5, cursor: 'not-allowed' }}
               >
                 View Tournament
               </button>

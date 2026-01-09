@@ -133,46 +133,6 @@ function CategoryModal({ isOpen, onClose }) {
             exit="exit"
             onClick={(e) => e.stopPropagation()}
           >
-            <motion.button 
-              className="modal-close-btn" 
-              onClick={onClose}
-              whileHover={{ scale: 1.1, rotate: 90 }}
-              whileTap={{ scale: 0.9 }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-            >
-              <i className="fas fa-times"></i>
-            </motion.button>
-
-            <motion.div 
-              className="modal-header"
-              variants={headerVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <motion.i 
-                className="fas fa-trophy modal-icon"
-                variants={iconVariants}
-                initial="hidden"
-                animate="visible"
-              />
-              <motion.h2
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.35 }}
-              >
-                Select Tournament Category
-              </motion.h2>
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-              >
-                Choose which category you want to view
-              </motion.p>
-            </motion.div>
-
             <motion.div 
               className="category-cards"
               variants={cardsContainerVariants}
