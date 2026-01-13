@@ -46,7 +46,7 @@ permalink: /muqawamah/about/
         <ul>
           <li>Guaranteed minimum two matches (group + knockout)</li>
           <li>Proper referees, medical desk, and live statistics</li>
-          <li>Individual honors: Top Goal Scorer, Top Goalkeeper, Best Player</li>
+          <li>Individual honors: Top Goal Scorer, Best Player</li>
           <li>Branded photo wall, highlight reels, and social coverage</li>
           <li>On-ground refreshments</li>
         </ul>

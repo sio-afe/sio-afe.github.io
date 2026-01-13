@@ -25,6 +25,7 @@ permalink: /muqawamah/terms-and-conditions/
           <li>Only amateur footballers may participate. Professional club-affiliated players are prohibited. Violations lead to disqualification without refund.</li>
           <li>Teams must register 7–11 players (7 starters + up to 4 substitutes) before the published deadline.</li>
           <li>Players must match the category (Open/U-17) they select during registration and carry valid photo ID at the venue.</li>
+          <li>For the Under-17 category, participants must be born in 2009 or later.</li>
           <li>Squads are locked once fixtures are released. No inter-team transfers or additions between matches.</li>
         </ul>
       </section>
@@ -61,8 +62,7 @@ permalink: /muqawamah/terms-and-conditions/
       <section id="awards-media" class="privacy-section">
         <h2>5. Awards & Media</h2>
         <p>
-          Champions and runners-up receive awards. Individual awards include Top Goal Scorer, Top Goalkeeper,
-          and Best Player. By entering, participants grant us the right to capture and share photos/videos for recap content,
+          Champions and runners-up receive awards. Individual awards include Top Goal Scorer, and Best Player. By entering, participants grant us the right to capture and share photos/videos for recap content,
           highlights, and sponsor deliverables. Contact us if you need a specific asset removed.
         </p>
       </section>

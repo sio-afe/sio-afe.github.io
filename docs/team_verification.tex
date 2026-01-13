@@ -1,0 +1,892 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[top=3cm, bottom=2cm, left=1cm, right=1cm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{tikz}
+\usepackage{anyfontsize}
+\usepackage{multicol}
+\usepackage{tcolorbox}
+\usepackage{amssymb} % Added for \square
+
+\usepackage[hidelinks]{hyperref} % Clickable TOC
+
+% Colors
+\definecolor{headerblue}{RGB}{26,35,126}
+\definecolor{cardbg}{RGB}{248,249,250}
+\definecolor{cardborder}{RGB}{222,226,230}
+
+% Header and Footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textbf{MUQAWAMA 2026} | Team Verification}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{\footnotesize Official Verification Document}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\setlength{\headheight}{14pt}
+
+% Player Card Command
+\newcommand{\playercard}[3]{
+    \begin{tcolorbox}[colback=cardbg,colframe=cardborder,width=\linewidth,arc=2mm,boxrule=0.5pt,left=1mm,right=1mm,top=1mm,bottom=1mm]
+        \begin{minipage}[c]{0.3\linewidth}
+            \includegraphics[width=\linewidth,height=2.5cm,keepaspectratio]{#3}
+        \end{minipage}
+        \hspace{0.2cm}
+        \begin{minipage}[c]{0.65\linewidth}
+            \textbf{\small Name:} #1 \\ \vspace{0.3em}
+            \textbf{\small Aadhar:} #2 \\ \vspace{0.3em}
+            \textbf{\small Verified:} $\square$ ID \hspace{0.1cm} $\square$ Photo
+        \end{minipage}
+    \end{tcolorbox}
+    \vspace{0.2cm}
+}
+
+\begin{document}
+
+% Title Page
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+    \includegraphics[width=0.4\textwidth]{../assets/img/MuqawamaLogo.png} \\[1cm]
+    {\Huge\bfseries MUQAWAMA 2026\par}
+    \vspace{1cm}
+    {\Large Team Verification Register\par}
+    \vfill
+    {\large Generated on: 1/13/2026\par}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+\section*{\textcolor{headerblue}{OPEN AGE TEAMS}}
+\addcontentsline{toc}{section}{OPEN AGE TEAMS}
+\newpage
+
+% Team Page: Adg
+\phantomsection
+\addcontentsline{toc}{subsection}{Adg}
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries Adg} \\
+    \textbf{Captain:} Himanshu Gusain \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{abdul rahman}{N/A}{assets/player_images/211b2695-9c13-421f-abbf-e9955470a674_7e262474-e12d-49ef-812b-206119f7ff75.orig.jpg}
+\playercard{Aditya Mehra }{N/A}{assets/player_images/211b2695-9c13-421f-abbf-e9955470a674_b4a48ead-fa51-41a4-a5a0-40e6f5ea0c86.orig.jpg}
+\playercard{ayush chauhan}{N/A}{assets/player_images/211b2695-9c13-421f-abbf-e9955470a674_e237c8be-1fe1-4fd7-a88d-6233572717e9.orig.jpg}
+\playercard{diptanshu rai}{N/A}{assets/player_images/211b2695-9c13-421f-abbf-e9955470a674_f2931175-b01b-4b5f-92ee-0f52639d249f.orig.jpg}
+\playercard{Himanshu Gusain}{N/A}{assets/player_images/211b2695-9c13-421f-abbf-e9955470a674_db991401-38df-4de6-91b2-ba71fcc6b84d.orig.jpg}
+\playercard{madhur gautam}{N/A}{assets/player_images/211b2695-9c13-421f-abbf-e9955470a674_ccf0604b-c0fb-46a5-a930-68d65ae92795.orig.jpg}
+\playercard{mayank joshi }{N/A}{example-image-a}
+\playercard{Pranav joshi }{N/A}{assets/player_images/211b2695-9c13-421f-abbf-e9955470a674_9c08e59a-3239-4a37-92f0-5416574c82bd.orig.jpg}
+\playercard{prateek   }{N/A}{assets/player_images/211b2695-9c13-421f-abbf-e9955470a674_043e8880-5fb8-4f40-97c1-a7ba378c970c.orig.jpg}
+\playercard{Sachin}{N/A}{assets/player_images/211b2695-9c13-421f-abbf-e9955470a674_81e7525a-3714-436c-b200-61fba6c31737.orig.jpg}
+\playercard{Shivek}{N/A}{assets/player_images/211b2695-9c13-421f-abbf-e9955470a674_6719d82d-c725-4cd3-8aca-c76116cbe4d1.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: CAPO FC 
+\phantomsection
+\addcontentsline{toc}{subsection}{CAPO FC }
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries CAPO FC } \\
+    \textbf{Captain:} Mohd Rehan Raza  \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Abdullah }{N/A}{assets/player_images/057e3a30-8846-4653-a0ad-ff5f1dc1f898_a1a22d56-dbe0-48a8-8909-3f9a7bb09aec.orig.jpg}
+\playercard{Arsh}{N/A}{assets/player_images/057e3a30-8846-4653-a0ad-ff5f1dc1f898_a2001bb8-5948-40bb-8e00-39bea4019bed.orig.jpg}
+\playercard{Mohd Rehan Raza }{N/A}{assets/player_images/057e3a30-8846-4653-a0ad-ff5f1dc1f898_1da89a7b-93cf-4f26-a32a-6551bf0ab641.orig.jpg}
+\playercard{Mujtaba Hayat}{N/A}{assets/player_images/057e3a30-8846-4653-a0ad-ff5f1dc1f898_d4217ae8-09a9-4e3c-a5b5-104d7a49af87.orig.jpg}
+\playercard{Nasar Jameel}{N/A}{assets/player_images/057e3a30-8846-4653-a0ad-ff5f1dc1f898_4008232a-c673-4a7a-bd68-2b515591e8c8.orig.jpg}
+\playercard{Rehan }{N/A}{assets/player_images/057e3a30-8846-4653-a0ad-ff5f1dc1f898_e4566419-eae1-46a6-94ac-d1585bbfb702.orig.jpg}
+\playercard{Rehan Ahmed }{N/A}{assets/player_images/057e3a30-8846-4653-a0ad-ff5f1dc1f898_d0073ecf-5574-43cc-8566-53a40ad34347.orig.jpg}
+\playercard{Rehan perwez }{N/A}{assets/player_images/057e3a30-8846-4653-a0ad-ff5f1dc1f898_07119e70-f033-4893-9b8e-f095e438ae18.orig.jpg}
+\playercard{Rehan Shahid }{N/A}{assets/player_images/057e3a30-8846-4653-a0ad-ff5f1dc1f898_bd7ad45a-89af-4bbe-a6a1-ffed780ec12b.orig.jpg}
+\playercard{Shuraim }{N/A}{assets/player_images/057e3a30-8846-4653-a0ad-ff5f1dc1f898_b81a9d8d-0182-411c-85f9-18d0a0c9c859.orig.jpg}
+\playercard{Tahamee }{N/A}{assets/player_images/057e3a30-8846-4653-a0ad-ff5f1dc1f898_488954d1-8a51-4511-a335-aac2324382d8.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: Jamia boys
+\phantomsection
+\addcontentsline{toc}{subsection}{Jamia boys}
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries Jamia boys} \\
+    \textbf{Captain:} Shahmeer \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Unknown}{N/A}{example-image-a}
+\playercard{Abbas}{N/A}{assets/player_images/fb7830d1-ffd9-4cf9-bab7-74ae237c2535_ab35cc95-6c86-4565-8aac-d1729e55e47d.orig.jpg}
+\playercard{Abdur rehman}{N/A}{assets/player_images/fb7830d1-ffd9-4cf9-bab7-74ae237c2535_3dbc24c2-b1f2-4ea2-a091-5ae7e4bf79ea.orig.jpg}
+\playercard{Ali}{N/A}{assets/player_images/fb7830d1-ffd9-4cf9-bab7-74ae237c2535_ede7f531-d3c1-4d73-8585-629d5e5d317b.orig.jpg}
+\playercard{Faizan naemi}{N/A}{assets/player_images/fb7830d1-ffd9-4cf9-bab7-74ae237c2535_afa36e22-a8bb-43ed-a29f-0c12a1e352be.orig.jpg}
+\playercard{Jiyad}{N/A}{assets/player_images/fb7830d1-ffd9-4cf9-bab7-74ae237c2535_89af4216-792e-4c89-b90f-ec89ecd52651.orig.jpg}
+\playercard{Karan }{N/A}{assets/player_images/fb7830d1-ffd9-4cf9-bab7-74ae237c2535_e8a79639-1bcc-4027-9a69-c6b2886ee6fa.orig.jpg}
+\playercard{Muhammad saad}{N/A}{assets/player_images/fb7830d1-ffd9-4cf9-bab7-74ae237c2535_6fa8794f-c68b-458c-8cc8-79169895e553.orig.jpg}
+\playercard{Sarwar }{N/A}{assets/player_images/fb7830d1-ffd9-4cf9-bab7-74ae237c2535_e930389e-e1b4-4525-babd-6b37bcab60bc.orig.jpg}
+\playercard{Shahmeer Mirza}{N/A}{assets/player_images/fb7830d1-ffd9-4cf9-bab7-74ae237c2535_561ae4e5-3f4c-494e-8253-b642fd202fa6.orig.jpg}
+\playercard{Toushif}{N/A}{assets/player_images/fb7830d1-ffd9-4cf9-bab7-74ae237c2535_8d052c9c-aed4-4b2e-9158-ede351bb076f.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: JOLLOF FC
+\phantomsection
+\addcontentsline{toc}{subsection}{JOLLOF FC}
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries JOLLOF FC} \\
+    \textbf{Captain:} MOHD AREEB \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Abdoulaye Ballo}{N/A}{assets/player_images/8b1d6b27-9c39-4a35-bb41-6e951deaf923_be78a2cd-c6f3-472c-b925-fd9235b947de.orig.jpg}
+\playercard{ABDUL}{N/A}{assets/player_images/8b1d6b27-9c39-4a35-bb41-6e951deaf923_ed51c109-1314-44a8-a420-1ee8026e1883.orig.jpg}
+\playercard{Adama Niangaly}{N/A}{assets/player_images/8b1d6b27-9c39-4a35-bb41-6e951deaf923_bff29700-4334-4d16-95c7-c51cdacc9d24.orig.jpg}
+\playercard{AMMAR}{N/A}{assets/player_images/8b1d6b27-9c39-4a35-bb41-6e951deaf923_108d33d9-a472-45d8-a787-731af7cd90d6.orig.jpg}
+\playercard{Keith}{N/A}{assets/player_images/8b1d6b27-9c39-4a35-bb41-6e951deaf923_73ed7fc7-2dfd-49aa-9a55-d624a3311d24.orig.jpg}
+\playercard{KHALID BASHIR ABDURRAHMAN}{N/A}{assets/player_images/8b1d6b27-9c39-4a35-bb41-6e951deaf923_bceb5e02-3e5c-42ea-b236-a60c7cf7c34c.orig.jpg}
+\playercard{MOHD AREEB}{N/A}{assets/player_images/8b1d6b27-9c39-4a35-bb41-6e951deaf923_1b75bb54-8c23-483c-b052-f87fd7782cb0.orig.jpg}
+\playercard{MUZAMMIL}{N/A}{assets/player_images/8b1d6b27-9c39-4a35-bb41-6e951deaf923_434b8273-4031-4231-8555-29ddcd723bed.orig.jpg}
+\playercard{Tamanda}{N/A}{assets/player_images/8b1d6b27-9c39-4a35-bb41-6e951deaf923_e9a79502-1b7a-4bb9-9dec-3f21f1954fe0.orig.jpg}
+\playercard{Youssouf Mohamed Maïga}{N/A}{assets/player_images/8b1d6b27-9c39-4a35-bb41-6e951deaf923_7e613a26-bafb-4f33-acc4-bffbf4120c93.orig.jpg}
+\playercard{YUSUF UMARU KAMFUT}{N/A}{assets/player_images/8b1d6b27-9c39-4a35-bb41-6e951deaf923_e3a06725-aa8a-47e1-81b8-cc2ff2de9017.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: Legends FC
+\phantomsection
+\addcontentsline{toc}{subsection}{Legends FC}
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries Legends FC} \\
+    \textbf{Captain:} Adnan Shakeel \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Aditya}{N/A}{assets/player_images/51d3ab22-8014-429a-8aab-cfbe90498bf3_7e02fdc1-3991-4e50-95a0-97365c7fc127.orig.jpg}
+\playercard{Adnan Shakeel}{N/A}{assets/player_images/51d3ab22-8014-429a-8aab-cfbe90498bf3_66e3e082-51d7-4019-8b5b-ae9fdc60271d.orig.jpg}
+\playercard{Ahmed Yasin}{N/A}{assets/player_images/51d3ab22-8014-429a-8aab-cfbe90498bf3_7a82514b-5b34-4c20-a15e-dc9b15c4eae6.orig.jpg}
+\playercard{Asjad}{N/A}{assets/player_images/51d3ab22-8014-429a-8aab-cfbe90498bf3_0d783b06-f42b-41f2-8077-1e7693097542.orig.jpg}
+\playercard{Danish}{N/A}{assets/player_images/51d3ab22-8014-429a-8aab-cfbe90498bf3_24d17e85-5c3b-42e9-8116-1bb68213ed2d.orig.jpg}
+\playercard{Nashar}{N/A}{assets/player_images/51d3ab22-8014-429a-8aab-cfbe90498bf3_961b549d-df24-4506-b102-247a2e25c6e3.orig.jpg}
+\playercard{Rehan}{N/A}{assets/player_images/51d3ab22-8014-429a-8aab-cfbe90498bf3_b8feb75a-933a-4680-bb88-946429e7da04.orig.jpg}
+\playercard{Riyaz}{N/A}{assets/player_images/51d3ab22-8014-429a-8aab-cfbe90498bf3_d80cd495-4454-4732-8a2f-a6aa1ab1afbf.orig.jpg}
+\playercard{Shehnawaz}{N/A}{assets/player_images/51d3ab22-8014-429a-8aab-cfbe90498bf3_4b01a023-fe0f-4a4e-9073-c7786a8112ab.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: OKHLA GLADIATORS
+\phantomsection
+\addcontentsline{toc}{subsection}{OKHLA GLADIATORS}
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries OKHLA GLADIATORS} \\
+    \textbf{Captain:} ADNAN \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{ADNAN}{N/A}{assets/player_images/0cbc793b-52f4-4b87-b678-356d9573f4d4_6a8ebbb6-6de9-4005-8554-7c698db88086.orig.jpg}
+\playercard{ANAS}{N/A}{assets/player_images/0cbc793b-52f4-4b87-b678-356d9573f4d4_78ed6612-55ad-414d-afc9-485cfb65e9e8.orig.jpg}
+\playercard{Ehteram Khan}{N/A}{assets/player_images/0cbc793b-52f4-4b87-b678-356d9573f4d4_9b6c4225-b75c-40f0-a963-19481a31ef74.orig.jpg}
+\playercard{HARRY}{N/A}{assets/player_images/0cbc793b-52f4-4b87-b678-356d9573f4d4_7dfa5e1b-0462-49e1-914a-78400e4dfdc9.orig.jpg}
+\playercard{Hassan}{XXXX 9777}{assets/player_images/0cbc793b-52f4-4b87-b678-356d9573f4d4_7e9e8d40-c96c-446b-b149-7d1d91892522.orig.jpg}
+\playercard{Ranveer}{N/A}{assets/player_images/0cbc793b-52f4-4b87-b678-356d9573f4d4_c7d0e5ad-6857-4e46-b428-4a8fc75afe8b.orig.jpg}
+\playercard{ROHIT}{N/A}{assets/player_images/0cbc793b-52f4-4b87-b678-356d9573f4d4_d1be8cb4-80b6-46a5-92f6-e81aa32d81d2.orig.jpg}
+\playercard{Sagar}{N/A}{assets/player_images/0cbc793b-52f4-4b87-b678-356d9573f4d4_46242628-d691-41d8-bdf8-2b2d1c2cc8ca.orig.jpg}
+\playercard{SAMAD}{N/A}{assets/player_images/0cbc793b-52f4-4b87-b678-356d9573f4d4_fdb953fa-85b9-4ff6-9434-2e87fb9ec582.orig.jpg}
+\playercard{SHARIQ}{N/A}{assets/player_images/0cbc793b-52f4-4b87-b678-356d9573f4d4_8f3927da-6544-404e-b397-4cafdff3b6c4.orig.jpg}
+\playercard{ZEEDAN}{N/A}{assets/player_images/0cbc793b-52f4-4b87-b678-356d9573f4d4_32eeecaa-4646-4781-8afd-60ec2df17fd9.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: Royal Falcons FC
+\phantomsection
+\addcontentsline{toc}{subsection}{Royal Falcons FC}
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries Royal Falcons FC} \\
+    \textbf{Captain:} Rafay \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Arnav Gaur}{XXXX 5447}{assets/player_images/5620effd-7bcc-4a80-b0cd-75bf7de789c9_f9c692e1-0bb7-42e1-890e-fae90a0208bd.orig.jpg}
+\playercard{Misbah Saeed Farooqi}{XXXX 9012}{assets/player_images/5620effd-7bcc-4a80-b0cd-75bf7de789c9_c169dd0b-3dbb-4b48-83be-a834a22582d9.orig.jpg}
+\playercard{Mohammed Anas}{XXXX 6622}{assets/player_images/5620effd-7bcc-4a80-b0cd-75bf7de789c9_6abb0b07-6e55-4ee6-a4f8-29bfacc1e4dd.orig.jpg}
+\playercard{Mohd. Abaan Qureshi}{XXXX 1730}{assets/player_images/5620effd-7bcc-4a80-b0cd-75bf7de789c9_dd12abb1-ee18-4c56-88f6-971b5c45ee8f.orig.jpg}
+\playercard{Muhammad Rafay Aziz}{XXXX 0166}{assets/player_images/5620effd-7bcc-4a80-b0cd-75bf7de789c9_7fed0a07-58b3-4f89-bcb2-077eac508b15.orig.jpg}
+\playercard{Syed Afnan Ali}{XXXX 9866}{assets/player_images/5620effd-7bcc-4a80-b0cd-75bf7de789c9_576ca9e7-4e79-4872-ba1d-d65671fce90c.orig.jpg}
+\playercard{Syed Khizer Ali}{XXXX 9777}{assets/player_images/5620effd-7bcc-4a80-b0cd-75bf7de789c9_89535773-8137-4608-897f-4fe09380decb.orig.jpg}
+\playercard{Syed Saifullah Hasan}{XXXX 5545}{assets/player_images/5620effd-7bcc-4a80-b0cd-75bf7de789c9_374c0c84-1f5c-4a1b-a5e8-2ae91f5209cb.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: Shine Star FC
+\phantomsection
+\addcontentsline{toc}{subsection}{Shine Star FC}
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries Shine Star FC} \\
+    \textbf{Captain:} Hamidul Rahman \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Aziz Khan}{N/A}{assets/player_images/baa82eaa-30bc-4b06-81fb-40d2637d2c94_66db0bc3-ee56-4d59-848c-0a247ab858a2.orig.jpg}
+\playercard{Hamidul Rahman}{N/A}{assets/player_images/baa82eaa-30bc-4b06-81fb-40d2637d2c94_73aaa0f6-f1c1-41f7-be9f-8f654f4bd8d8.orig.jpg}
+\playercard{Mansoor}{N/A}{assets/player_images/baa82eaa-30bc-4b06-81fb-40d2637d2c94_c619e52a-41e4-49af-8b48-9970a600a461.orig.jpg}
+\playercard{MD Fayaz}{N/A}{assets/player_images/baa82eaa-30bc-4b06-81fb-40d2637d2c94_06f23212-dbfb-485e-bb66-198cf7d00b00.orig.jpg}
+\playercard{MD Hasan}{N/A}{assets/player_images/baa82eaa-30bc-4b06-81fb-40d2637d2c94_7e4d574a-d4a2-438c-9808-b2a6d29513a8.orig.jpg}
+\playercard{MD Khan}{N/A}{assets/player_images/baa82eaa-30bc-4b06-81fb-40d2637d2c94_3f3e6fbe-aaad-4f10-a9f2-da0bd0fe6e7b.orig.jpg}
+\playercard{MD Tahir}{N/A}{assets/player_images/baa82eaa-30bc-4b06-81fb-40d2637d2c94_1922155d-dffd-49c2-a54e-21be6875afeb.orig.jpg}
+\playercard{MD Toyub}{N/A}{assets/player_images/baa82eaa-30bc-4b06-81fb-40d2637d2c94_f315e766-1b6e-440e-a0a2-cf13cf24a9da.orig.jpg}
+\playercard{MD Yunus}{N/A}{assets/player_images/baa82eaa-30bc-4b06-81fb-40d2637d2c94_2f186ea7-da76-4f81-a6d7-d09cd3233419.orig.jpg}
+\playercard{MD Zubair}{N/A}{assets/player_images/baa82eaa-30bc-4b06-81fb-40d2637d2c94_5f266ad5-424f-4dd2-b95e-971d353c95ae.orig.jpg}
+\playercard{Mohd Salim}{N/A}{assets/player_images/baa82eaa-30bc-4b06-81fb-40d2637d2c94_65b91b06-261a-4cea-bbc7-814bd5c11ef2.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: Tehreeki Titans 
+\phantomsection
+\addcontentsline{toc}{subsection}{Tehreeki Titans }
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries Tehreeki Titans } \\
+    \textbf{Captain:} Raiyan Shamim \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Abdullah }{N/A}{assets/player_images/b3d03660-fbde-4f68-a510-1c35b2c8488e_195310be-45f7-4ede-963b-e5bd41f861d5.orig.jpg}
+\playercard{Adeel}{N/A}{assets/player_images/b3d03660-fbde-4f68-a510-1c35b2c8488e_68a37123-9a4d-4774-8cc7-c665db2bc328.orig.jpg}
+\playercard{Almas}{N/A}{assets/player_images/b3d03660-fbde-4f68-a510-1c35b2c8488e_e6fbf631-bc6f-4343-b52c-1447e7115348.orig.jpg}
+\playercard{Ashban }{N/A}{assets/player_images/b3d03660-fbde-4f68-a510-1c35b2c8488e_aea46088-c614-49ab-bb2d-aad8d0ca4893.orig.jpg}
+\playercard{Bilal}{N/A}{assets/player_images/b3d03660-fbde-4f68-a510-1c35b2c8488e_a5aaf001-c60a-42c8-b302-687668ef766a.orig.jpg}
+\playercard{Danish}{N/A}{assets/player_images/b3d03660-fbde-4f68-a510-1c35b2c8488e_44d7bb0c-7197-472a-bd49-5fb4c82f797c.orig.jpg}
+\playercard{Miqdad }{N/A}{assets/player_images/b3d03660-fbde-4f68-a510-1c35b2c8488e_26b85f18-9684-451c-8d94-52ede99886cd.orig.jpg}
+\playercard{Raiyan Shamim }{N/A}{assets/player_images/b3d03660-fbde-4f68-a510-1c35b2c8488e_fcd71053-b28f-45f4-951d-7d18fcd6ce9c.orig.jpg}
+\playercard{Shumail}{N/A}{assets/player_images/b3d03660-fbde-4f68-a510-1c35b2c8488e_fc6fef07-d9e2-4820-a093-0bf95ec709c1.orig.jpg}
+\playercard{Tehseen}{N/A}{assets/player_images/b3d03660-fbde-4f68-a510-1c35b2c8488e_ce699210-2c64-42a0-86bb-0241f9ced294.orig.jpg}
+\playercard{Yusuf}{N/A}{assets/player_images/b3d03660-fbde-4f68-a510-1c35b2c8488e_b52f847d-87d7-4602-be1f-21e2bd0194a0.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: TIKONA FC
+\phantomsection
+\addcontentsline{toc}{subsection}{TIKONA FC}
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries TIKONA FC} \\
+    \textbf{Captain:} JANI  \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Alen jomy}{N/A}{assets/player_images/7d055657-fcd0-4ab0-9415-2cd6d1812e7b_102dd7b4-6939-4bfc-9fcd-348f8f5b264c.orig.jpg}
+\playercard{Anwar}{N/A}{assets/player_images/7d055657-fcd0-4ab0-9415-2cd6d1812e7b_8def38fb-1f56-4238-9982-8254290b9cfd.orig.jpg}
+\playercard{Ayaz}{N/A}{assets/player_images/7d055657-fcd0-4ab0-9415-2cd6d1812e7b_adf2c544-03d2-4214-b78b-1ce2f3daafff.orig.jpg}
+\playercard{Deepak }{N/A}{assets/player_images/7d055657-fcd0-4ab0-9415-2cd6d1812e7b_d6af02da-30f5-4a0a-80eb-ecd6200b24aa.orig.jpg}
+\playercard{Jani}{N/A}{assets/player_images/7d055657-fcd0-4ab0-9415-2cd6d1812e7b_6c8839d7-d76a-4f6b-8d0f-2ecf408fdaa3.orig.jpg}
+\playercard{Krishanu}{N/A}{assets/player_images/7d055657-fcd0-4ab0-9415-2cd6d1812e7b_c83d544f-bcd4-4cae-81ba-1862e3d8fe24.orig.jpg}
+\playercard{Manish}{N/A}{assets/player_images/7d055657-fcd0-4ab0-9415-2cd6d1812e7b_411ffcd4-8d66-4f60-ab83-98fe543f659b.orig.jpg}
+\playercard{Nafees }{N/A}{assets/player_images/7d055657-fcd0-4ab0-9415-2cd6d1812e7b_02af2ae3-04ef-4909-b236-4130e92b1998.orig.jpg}
+\playercard{Rahul}{N/A}{assets/player_images/7d055657-fcd0-4ab0-9415-2cd6d1812e7b_031f3b2b-883a-4f37-a1d2-e05bbe60ee63.orig.jpg}
+\playercard{Shanu}{N/A}{assets/player_images/7d055657-fcd0-4ab0-9415-2cd6d1812e7b_09c6a7bb-beb5-4678-9c9d-adde2559fce0.orig.jpg}
+\playercard{Viku}{N/A}{assets/player_images/7d055657-fcd0-4ab0-9415-2cd6d1812e7b_0fc944c4-2284-419f-a17e-d7051ab42437.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: TIKONA UNITED F.C
+\phantomsection
+\addcontentsline{toc}{subsection}{TIKONA UNITED F.C}
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries TIKONA UNITED F.C} \\
+    \textbf{Captain:} Minhal  \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Ahad}{N/A}{example-image-a}
+\playercard{Ayaan}{N/A}{assets/player_images/d9e3c0ed-0c9b-420f-94b8-5d8cf4ef5c64_e4de0d32-d398-4dc4-a713-26ff48f2d4a3.orig.jpg}
+\playercard{Daim}{N/A}{assets/player_images/d9e3c0ed-0c9b-420f-94b8-5d8cf4ef5c64_1229a291-5c8b-405d-9a06-3fbcf8815ef6.orig.jpg}
+\playercard{Hashir}{N/A}{assets/player_images/d9e3c0ed-0c9b-420f-94b8-5d8cf4ef5c64_01c87899-e964-4c8d-b60a-06a3b1d8917a.orig.jpg}
+\playercard{Hussain}{N/A}{assets/player_images/d9e3c0ed-0c9b-420f-94b8-5d8cf4ef5c64_0e31bee0-aaee-469f-86c8-7af23244b34f.orig.jpg}
+\playercard{Minhal }{N/A}{assets/player_images/d9e3c0ed-0c9b-420f-94b8-5d8cf4ef5c64_7d00caed-9634-480d-9700-08db9d36ede7.orig.jpg}
+\playercard{Noor}{N/A}{assets/player_images/d9e3c0ed-0c9b-420f-94b8-5d8cf4ef5c64_217163f9-3101-4e3e-a53a-897ee7bf3fb2.orig.jpg}
+\playercard{Rayyan}{N/A}{assets/player_images/d9e3c0ed-0c9b-420f-94b8-5d8cf4ef5c64_d278b30a-5f64-4f64-bcbe-a7de0b35588c.orig.jpg}
+\playercard{Sami}{N/A}{assets/player_images/d9e3c0ed-0c9b-420f-94b8-5d8cf4ef5c64_71274912-aa7c-44ee-acb4-fa28eb3dcf32.orig.jpg}
+\playercard{Talha}{N/A}{assets/player_images/d9e3c0ed-0c9b-420f-94b8-5d8cf4ef5c64_b1041a13-61f7-4fdd-ad57-1aa3803ed03f.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: Vipers
+\phantomsection
+\addcontentsline{toc}{subsection}{Vipers}
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries Vipers} \\
+    \textbf{Captain:} Tauhid \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Abdur Rahaman }{N/A}{assets/player_images/8c7d7bba-1e47-495b-9d24-c494fd3fba5d_70e1fedd-242c-4b6f-87c7-1f1391f22991.orig.jpg}
+\playercard{Altamash}{N/A}{assets/player_images/8c7d7bba-1e47-495b-9d24-c494fd3fba5d_9fce610c-8910-4295-a6fd-8b9ad2ea7989.orig.jpg}
+\playercard{Ghazi Sikandar }{N/A}{assets/player_images/8c7d7bba-1e47-495b-9d24-c494fd3fba5d_6143b140-e0cb-4ff8-b037-1eadcf220d06.orig.jpg}
+\playercard{Mahad}{N/A}{assets/player_images/8c7d7bba-1e47-495b-9d24-c494fd3fba5d_b64ec6b6-7851-4083-a0ce-ad6abc29d79a.orig.jpg}
+\playercard{Shahab}{N/A}{assets/player_images/8c7d7bba-1e47-495b-9d24-c494fd3fba5d_27d13bca-be54-458e-9c67-1ee20ab3ff65.orig.jpg}
+\playercard{Shanul}{N/A}{assets/player_images/8c7d7bba-1e47-495b-9d24-c494fd3fba5d_243d6589-7f57-43b2-9506-0997cdf1fff6.orig.jpg}
+\playercard{Sohail}{N/A}{assets/player_images/8c7d7bba-1e47-495b-9d24-c494fd3fba5d_31146444-0272-4492-bda3-5de3f62f77e0.orig.jpg}
+\playercard{Tauheed }{N/A}{assets/player_images/8c7d7bba-1e47-495b-9d24-c494fd3fba5d_c8846aac-4109-4195-b4b6-1858f972c166.orig.jpg}
+\playercard{Umair}{N/A}{assets/player_images/8c7d7bba-1e47-495b-9d24-c494fd3fba5d_aa9055f9-3b24-4ff8-b2a1-c42fde788203.orig.jpg}
+\playercard{Zubair }{N/A}{assets/player_images/8c7d7bba-1e47-495b-9d24-c494fd3fba5d_d38fcc48-c317-4fe1-b8fe-59979469e542.orig.jpg}
+\end{multicols}
+\newpage
+\section*{\textcolor{headerblue}{UNDER-17 TEAMS}}
+\addcontentsline{toc}{section}{UNDER-17 TEAMS}
+\newpage
+
+% Team Page: AL HADEED FC
+\phantomsection
+\addcontentsline{toc}{subsection}{AL HADEED FC}
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries AL HADEED FC} \\
+    \textbf{Captain:} SHAKEB \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Abdullah }{XXXX 2162}{assets/player_images/62498c59-da66-41f6-bfd6-526fe1ce672a_44e34ab0-3c6f-4bb2-82b2-3099ab1483c1.orig.jpg}
+\playercard{Ali zuhaib}{XXXX 7058}{assets/player_images/62498c59-da66-41f6-bfd6-526fe1ce672a_99d12d5e-f9d1-444c-9bb5-3377ddf414b7.orig.jpg}
+\playercard{Amanullah}{XXXX 0648}{assets/player_images/62498c59-da66-41f6-bfd6-526fe1ce672a_2c3bf356-aedb-4eff-8f72-ec50faf98683.orig.jpg}
+\playercard{Maaz }{XXXX 9858}{assets/player_images/62498c59-da66-41f6-bfd6-526fe1ce672a_1a2dc0a0-6e95-410a-9c87-97ced2a1a85b.orig.jpg}
+\playercard{Mohd Aqib}{XXXX 5542}{assets/player_images/62498c59-da66-41f6-bfd6-526fe1ce672a_c3862f12-1c86-471c-a2dc-84d9e857a00e.orig.jpg}
+\playercard{Moulek}{XXXX 8446}{assets/player_images/62498c59-da66-41f6-bfd6-526fe1ce672a_94028cb2-fd01-4d6d-bc03-ee476f510ff5.orig.jpg}
+\playercard{Nabeel rehman}{XXXX 8094}{assets/player_images/62498c59-da66-41f6-bfd6-526fe1ce672a_3b31fccf-b0b3-4a60-a693-fa0a756e59c8.orig.jpg}
+\playercard{Rehan }{XXXX 4530}{assets/player_images/62498c59-da66-41f6-bfd6-526fe1ce672a_c37d31ad-422f-470b-afbe-ee9202ef4398.orig.jpg}
+\playercard{SHAKEB}{XXXX 8660}{assets/player_images/62498c59-da66-41f6-bfd6-526fe1ce672a_aef4b22b-fbc4-4a8c-ae7c-14008bb88c88.orig.jpg}
+\playercard{Shayan}{XXXX 2675}{assets/player_images/62498c59-da66-41f6-bfd6-526fe1ce672a_8f58058b-99b1-4dc1-82c8-176f5bb20154.orig.jpg}
+\playercard{Zayan}{XXXX 9906}{assets/player_images/62498c59-da66-41f6-bfd6-526fe1ce672a_d1e22b80-c87f-409f-9606-64af5311aa9e.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: Al-Suqoor FC
+\phantomsection
+\addcontentsline{toc}{subsection}{Al-Suqoor FC}
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries Al-Suqoor FC} \\
+    \textbf{Captain:} Umair Shahzad Ansari  \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Ashaz manzoor}{XXXX 6183}{assets/player_images/e86e3b59-533c-48a1-a10e-90e889eccc5f_24305846-b965-40ff-b03a-9083e485ff4b.orig.jpg}
+\playercard{Faizan}{XXXX 6491}{assets/player_images/e86e3b59-533c-48a1-a10e-90e889eccc5f_15b0a2b3-f458-4eae-93f1-2906e588d4fb.orig.jpg}
+\playercard{Jatin }{XXXX 5364}{assets/player_images/e86e3b59-533c-48a1-a10e-90e889eccc5f_254be39e-dcca-48c3-ad70-55dcdf8b67e4.orig.jpg}
+\playercard{Mohammad Arquam  }{XXXX 4056}{assets/player_images/e86e3b59-533c-48a1-a10e-90e889eccc5f_985b32f4-9452-4f1d-961c-524a40f3f622.orig.jpg}
+\playercard{Mohammad Kaab }{XXXX 9694}{assets/player_images/e86e3b59-533c-48a1-a10e-90e889eccc5f_05bbe073-e2fa-48fb-a3c7-6c0b3cfdc5dc.orig.jpg}
+\playercard{Mohammad Kamran Ashraf }{XXXX 5160}{assets/player_images/e86e3b59-533c-48a1-a10e-90e889eccc5f_2c89372a-b6db-46c0-b26f-16cf47fc61ad.orig.jpg}
+\playercard{Mohammad Musab }{XXXX 4834}{assets/player_images/e86e3b59-533c-48a1-a10e-90e889eccc5f_7aa68e80-3062-49a7-838c-08dbc7470fc6.orig.jpg}
+\playercard{Sharjil Ahmad }{XXXX 3847}{assets/player_images/e86e3b59-533c-48a1-a10e-90e889eccc5f_9df3710e-8983-4ecc-b261-65d9d4329660.orig.jpg}
+\playercard{Taha Mudassir }{XXXX 0971}{assets/player_images/e86e3b59-533c-48a1-a10e-90e889eccc5f_bf44c962-d81a-41b1-a00f-b7319f6f5068.orig.jpg}
+\playercard{Umair Shahzad Ansari }{XXXX 9494}{assets/player_images/e86e3b59-533c-48a1-a10e-90e889eccc5f_18496dc1-d796-42b1-b348-8c32f602b4bc.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: Eagle Gang 
+\phantomsection
+\addcontentsline{toc}{subsection}{Eagle Gang }
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries Eagle Gang } \\
+    \textbf{Captain:} Faizan \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Afraaz}{XXXX 7987}{assets/player_images/e7b0ecbe-7836-4170-b9f1-7de2d8c8ae5b_ec91857b-57b9-4643-a241-8c62a61e52b7.orig.jpg}
+\playercard{Aman }{XXXX 7613}{assets/player_images/e7b0ecbe-7836-4170-b9f1-7de2d8c8ae5b_301e8b66-357d-4ed1-93f9-0b31ba0639e2.orig.jpg}
+\playercard{Arbaaz}{XXXX 1456}{assets/player_images/e7b0ecbe-7836-4170-b9f1-7de2d8c8ae5b_a16e5bd9-3591-41c5-b29f-aea8a03962c4.orig.jpg}
+\playercard{Ayaan Aleem}{XXXX 2920}{assets/player_images/e7b0ecbe-7836-4170-b9f1-7de2d8c8ae5b_d45a6295-7ee1-47cc-8f69-d35e6bc72a3b.orig.jpg}
+\playercard{Ayan Ansari }{XXXX 9633}{assets/player_images/e7b0ecbe-7836-4170-b9f1-7de2d8c8ae5b_888b9200-b957-479e-8e9b-ebb211b38f4e.orig.jpg}
+\playercard{Faizan}{XXXX 6702}{assets/player_images/e7b0ecbe-7836-4170-b9f1-7de2d8c8ae5b_3bdc6a40-f1b5-47a5-af2c-56db0f331ae2.orig.jpg}
+\playercard{Hasan }{XXXX 5823}{assets/player_images/e7b0ecbe-7836-4170-b9f1-7de2d8c8ae5b_4a9debd8-2a31-4a1a-8fc0-423a052c1fcc.orig.jpg}
+\playercard{Tarheem}{XXXX 6733}{assets/player_images/e7b0ecbe-7836-4170-b9f1-7de2d8c8ae5b_d366a050-d43f-45f9-b24b-807af8c6e48c.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: EKKA FC 
+\phantomsection
+\addcontentsline{toc}{subsection}{EKKA FC }
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries EKKA FC } \\
+    \textbf{Captain:} Anmol  \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Amar}{XXXX 8012}{assets/player_images/dceadfe5-ac9f-4c84-9f86-aa5ea90fa848_2865611a-2dc6-4870-84ec-604275e03a0c.orig.jpg}
+\playercard{Aniket }{XXXX 5160}{assets/player_images/dceadfe5-ac9f-4c84-9f86-aa5ea90fa848_639f4017-b5be-4883-a7c1-24848c78f992.orig.jpg}
+\playercard{Cyprian }{XXXX 1980}{assets/player_images/dceadfe5-ac9f-4c84-9f86-aa5ea90fa848_9d5be9d4-4b49-403b-b537-a0054f69c446.orig.jpg}
+\playercard{Dilip }{XXXX 5227}{assets/player_images/dceadfe5-ac9f-4c84-9f86-aa5ea90fa848_9a26e290-16e5-4be2-a480-dea6e4ccd708.orig.jpg}
+\playercard{Himanshu }{XXXX 8984}{assets/player_images/dceadfe5-ac9f-4c84-9f86-aa5ea90fa848_83901181-032d-416d-ae42-35140ac5469e.orig.jpg}
+\playercard{Nirmal }{XXXX 8859}{assets/player_images/dceadfe5-ac9f-4c84-9f86-aa5ea90fa848_6b0fe20c-b4f6-410d-9089-cfb1caabc090.orig.jpg}
+\playercard{Pradeep }{XXXX 4496}{assets/player_images/dceadfe5-ac9f-4c84-9f86-aa5ea90fa848_729cb689-9dc9-4b8f-b5cb-cbc3eb61f343.orig.jpg}
+\playercard{Ritik }{XXXX 1498}{assets/player_images/dceadfe5-ac9f-4c84-9f86-aa5ea90fa848_a166c84a-f4de-4236-80ff-3fad3d8bc4ad.orig.jpg}
+\playercard{Rounak }{XXXX 6600}{assets/player_images/dceadfe5-ac9f-4c84-9f86-aa5ea90fa848_78ef3c39-0b81-4fb5-b882-669f089d1c85.orig.jpg}
+\playercard{Sheru }{XXXX 4045}{assets/player_images/dceadfe5-ac9f-4c84-9f86-aa5ea90fa848_9cb841c9-02ed-41a5-8b90-7333c75d7c01.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: Fc Iconica 
+\phantomsection
+\addcontentsline{toc}{subsection}{Fc Iconica }
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries Fc Iconica } \\
+    \textbf{Captain:} Abdullah  \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Abdullah }{XXXX 6479}{assets/player_images/21f4c3e0-4cab-47b8-b500-db99ea5f177f_d2e71ee5-7e77-4665-b58d-cee16471084d.orig.jpg}
+\playercard{Aram }{XXXX 9272}{assets/player_images/21f4c3e0-4cab-47b8-b500-db99ea5f177f_33d4d367-e5e0-4161-a792-64f9f80e34b9.orig.jpg}
+\playercard{Ariz }{XXXX 9876}{assets/player_images/21f4c3e0-4cab-47b8-b500-db99ea5f177f_25232626-1e6d-4610-a483-4a7f736489aa.orig.jpg}
+\playercard{Faiz }{XXXX 6025}{assets/player_images/21f4c3e0-4cab-47b8-b500-db99ea5f177f_86f7cce6-7672-443b-948d-f14f200ca664.orig.jpg}
+\playercard{Hamza}{XXXX 4517}{assets/player_images/21f4c3e0-4cab-47b8-b500-db99ea5f177f_3eb0879c-d7a7-4cf0-a199-34a7259477e3.orig.jpg}
+\playercard{Hari}{XXXX 2443}{assets/player_images/21f4c3e0-4cab-47b8-b500-db99ea5f177f_27d2f7c5-263a-4e83-b5ae-ea7c3c50adfa.orig.jpg}
+\playercard{Haris }{XXXX 1704}{assets/player_images/21f4c3e0-4cab-47b8-b500-db99ea5f177f_69514492-9901-4c0e-8876-000e24f319f2.orig.jpg}
+\playercard{Shamoon }{XXXX 9210}{assets/player_images/21f4c3e0-4cab-47b8-b500-db99ea5f177f_646067bc-2978-406e-9457-8daaaef71104.orig.jpg}
+\playercard{Umar }{XXXX 5380}{assets/player_images/21f4c3e0-4cab-47b8-b500-db99ea5f177f_ef72b331-dbb4-4274-abf0-fc40fc8efbef.orig.jpg}
+\playercard{Zubair }{XXXX 9754}{assets/player_images/21f4c3e0-4cab-47b8-b500-db99ea5f177f_ba917051-9eb1-4125-9aad-7edb58e9b3d7.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: Metro United FC
+\phantomsection
+\addcontentsline{toc}{subsection}{Metro United FC}
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries Metro United FC} \\
+    \textbf{Captain:} Abdullah  \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Abdulla}{XXXX 5755}{assets/player_images/4d053e18-e2c1-4426-9d90-b5720b577f66_02324142-8218-42e6-a089-f2987f0283ff.orig.jpg}
+\playercard{Arham}{XXXX 8748}{assets/player_images/4d053e18-e2c1-4426-9d90-b5720b577f66_05e00bf5-9304-42c9-9a94-5061bc0a4887.orig.jpg}
+\playercard{Ferdous}{XXXX 6662}{assets/player_images/4d053e18-e2c1-4426-9d90-b5720b577f66_ef103407-85c5-49c8-b4cb-1b818b24f027.orig.jpg}
+\playercard{Mohd anas}{XXXX 9734}{assets/player_images/4d053e18-e2c1-4426-9d90-b5720b577f66_956b4c87-303e-46d7-ae9d-c43dbb02a178.orig.jpg}
+\playercard{Mohd bilal}{XXXX 9783}{assets/player_images/4d053e18-e2c1-4426-9d90-b5720b577f66_5571ac7a-6b13-4883-8d72-1505efa6fc3b.orig.jpg}
+\playercard{Mohd farhan}{XXXX 3265}{assets/player_images/4d053e18-e2c1-4426-9d90-b5720b577f66_93118832-3f1b-4d74-afda-e5c4ecb183d7.orig.jpg}
+\playercard{Mohd sharim}{XXXX 4143}{assets/player_images/4d053e18-e2c1-4426-9d90-b5720b577f66_8c0b56be-a137-4004-9efa-fa4c71b9ca47.orig.jpg}
+\playercard{Mohd tamim}{XXXX 4434}{assets/player_images/4d053e18-e2c1-4426-9d90-b5720b577f66_5b508c06-1b64-47b2-89ca-ac174323469c.orig.jpg}
+\playercard{Mohd Zaid }{XXXX 0810}{assets/player_images/4d053e18-e2c1-4426-9d90-b5720b577f66_01d98f8f-39b4-4d4a-81ec-4ba9e8e3a17a.orig.jpg}
+\playercard{Syed}{XXXX 1970}{assets/player_images/4d053e18-e2c1-4426-9d90-b5720b577f66_c74a40f9-9ce2-4441-be43-ba48c7ee913a.orig.jpg}
+\playercard{Tanveer}{XXXX 0648}{assets/player_images/4d053e18-e2c1-4426-9d90-b5720b577f66_9d1377b3-ca3d-482d-aee5-941a84a7a8d6.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: Phantom FC
+\phantomsection
+\addcontentsline{toc}{subsection}{Phantom FC}
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries Phantom FC} \\
+    \textbf{Captain:} Tameem Dewan \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Abu Sayeed}{XXXX 3329}{assets/player_images/423d7e83-490a-4ce8-8deb-ab5cc1a596f2_0a8cb535-fca3-47c5-85cc-c40007355a60.orig.jpg}
+\playercard{Affan Ahmad Usmani}{XXXX 4726}{assets/player_images/423d7e83-490a-4ce8-8deb-ab5cc1a596f2_0b557d6c-bb36-44df-ae6f-4e11866294c8.orig.jpg}
+\playercard{Ariz Imteyaz }{XXXX 4790}{assets/player_images/423d7e83-490a-4ce8-8deb-ab5cc1a596f2_b2b37f9b-fde6-49f6-84be-e97229b918c5.orig.jpg}
+\playercard{Emad Husain}{XXXX 0002}{assets/player_images/423d7e83-490a-4ce8-8deb-ab5cc1a596f2_e8de2d1e-dacc-44c0-a234-fc354c642f9a.orig.jpg}
+\playercard{Mohammad Umair}{XXXX 4271}{assets/player_images/423d7e83-490a-4ce8-8deb-ab5cc1a596f2_1a82b46f-b7ca-49a6-9f6b-27c6f45deeef.orig.jpg}
+\playercard{Raiyan Sayeed}{XXXX 9257}{assets/player_images/423d7e83-490a-4ce8-8deb-ab5cc1a596f2_0abc580f-cc6d-47f5-bfd8-77acc442fbf1.orig.jpg}
+\playercard{Rayyan Rashid}{XXXX 6402}{assets/player_images/423d7e83-490a-4ce8-8deb-ab5cc1a596f2_25b85006-685a-4107-814f-6d3a559056b6.orig.jpg}
+\playercard{Safwan Azam}{XXXX 9275}{assets/player_images/423d7e83-490a-4ce8-8deb-ab5cc1a596f2_6e8cf647-39ce-4adf-a9fa-281b4fbb9405.orig.jpg}
+\playercard{Suhaan}{XXXX 8199}{assets/player_images/423d7e83-490a-4ce8-8deb-ab5cc1a596f2_0df59e6f-c08c-481a-9e0a-7b81dbe54e98.orig.jpg}
+\playercard{Tameem Dewan}{XXXX 7878}{assets/player_images/423d7e83-490a-4ce8-8deb-ab5cc1a596f2_749a045c-46c7-4c9f-94c3-18be5bd461ec.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: Seven United 
+\phantomsection
+\addcontentsline{toc}{subsection}{Seven United }
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries Seven United } \\
+    \textbf{Captain:} Rashid Azhar  \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Abdul Wahid Khan }{XXXX 8595}{assets/player_images/d667d49f-3377-4b51-99e2-f0142b007d8c_28b231b7-3b07-4bd5-877f-62a1c9c64d4c.orig.jpg}
+\playercard{Arsh }{XXXX 9977}{assets/player_images/d667d49f-3377-4b51-99e2-f0142b007d8c_75419c23-4443-4f43-bf24-27b85f7bf6d5.orig.jpg}
+\playercard{Ayan Ansari }{XXXX 7103}{assets/player_images/d667d49f-3377-4b51-99e2-f0142b007d8c_ccc21ce7-b108-4b8c-a2e7-682ce421beee.orig.jpg}
+\playercard{Ayan Khan }{XXXX 3066}{assets/player_images/d667d49f-3377-4b51-99e2-f0142b007d8c_06566b74-d87b-4080-8eaf-334605f7d3ed.orig.jpg}
+\playercard{Mohd Albas }{XXXX 8185}{assets/player_images/d667d49f-3377-4b51-99e2-f0142b007d8c_05f242b5-bc56-43a7-b869-0703e07e5dff.orig.jpg}
+\playercard{Mohd Ammar }{XXXX 9626}{assets/player_images/d667d49f-3377-4b51-99e2-f0142b007d8c_c0b3e73d-e513-4f3c-b73b-60bb9925cacb.orig.jpg}
+\playercard{Mohd Faizan }{XXXX 0050}{assets/player_images/d667d49f-3377-4b51-99e2-f0142b007d8c_52cee0fe-0b6b-4361-b66e-694a69297b4e.orig.jpg}
+\playercard{Mohd Zaid Tyagi }{XXXX 7390}{assets/player_images/d667d49f-3377-4b51-99e2-f0142b007d8c_b10f3acb-b539-4e3c-8b83-50aae5a55308.orig.jpg}
+\playercard{Rashid Azhar }{XXXX 8913}{assets/player_images/d667d49f-3377-4b51-99e2-f0142b007d8c_8254cd9c-7a30-449b-b270-9e09dfe7ea0a.orig.jpg}
+\playercard{Vaibhav }{XXXX 3666}{assets/player_images/d667d49f-3377-4b51-99e2-f0142b007d8c_b3f036f8-3284-4d6a-825e-2a32a0c6ea48.orig.jpg}
+\playercard{Yasir Arafat }{XXXX 9869}{assets/player_images/d667d49f-3377-4b51-99e2-f0142b007d8c_8317730d-4b5a-4ac1-a683-628322744a26.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: Shadow Strikers 
+\phantomsection
+\addcontentsline{toc}{subsection}{Shadow Strikers }
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries Shadow Strikers } \\
+    \textbf{Captain:} Umman \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Affan}{XXXX 7597}{assets/player_images/2ed669c8-8018-4d53-bff4-5969fbfe18ac_402e287b-215b-4b0f-8662-8ed604cd39c0.orig.jpg}
+\playercard{Arham}{XXXX 7462}{assets/player_images/2ed669c8-8018-4d53-bff4-5969fbfe18ac_4c601a6e-af24-4251-a00b-375dcb76e97b.orig.jpg}
+\playercard{Asad}{XXXX 6175}{assets/player_images/2ed669c8-8018-4d53-bff4-5969fbfe18ac_06a916a4-a59b-43ea-b7aa-d0cfb6229728.orig.jpg}
+\playercard{Emad}{XXXX 5288}{assets/player_images/2ed669c8-8018-4d53-bff4-5969fbfe18ac_7cd980da-7ab1-444a-b05b-892f1d2ad126.orig.jpg}
+\playercard{Fahad }{XXXX 6038}{assets/player_images/2ed669c8-8018-4d53-bff4-5969fbfe18ac_522822b8-047b-4f4c-a89e-8cbca50518e3.orig.jpg}
+\playercard{Humam}{XXXX 4575}{assets/player_images/2ed669c8-8018-4d53-bff4-5969fbfe18ac_04eaab0c-2e42-41eb-a4ad-45d3e7f833c4.orig.jpg}
+\playercard{Ikrash}{XXXX 7049}{assets/player_images/2ed669c8-8018-4d53-bff4-5969fbfe18ac_c71e7eb5-778f-4eb8-bf1e-faa218888dc1.orig.jpg}
+\playercard{Umman}{XXXX 1553}{assets/player_images/2ed669c8-8018-4d53-bff4-5969fbfe18ac_39b4e893-6461-41ff-a26b-24e33c7e482d.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: Tehreeki Titans 
+\phantomsection
+\addcontentsline{toc}{subsection}{Tehreeki Titans }
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries Tehreeki Titans } \\
+    \textbf{Captain:} Ashban \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Abdullah }{N/A}{assets/player_images/2c8a031a-b76b-42c1-8aa1-4f3f5fe3ecff_195310be-45f7-4ede-963b-e5bd41f861d5.orig.jpg}
+\playercard{Adeel}{N/A}{assets/player_images/2c8a031a-b76b-42c1-8aa1-4f3f5fe3ecff_68a37123-9a4d-4774-8cc7-c665db2bc328.orig.jpg}
+\playercard{Almas}{N/A}{assets/player_images/2c8a031a-b76b-42c1-8aa1-4f3f5fe3ecff_e6fbf631-bc6f-4343-b52c-1447e7115348.orig.jpg}
+\playercard{Ashban }{N/A}{assets/player_images/2c8a031a-b76b-42c1-8aa1-4f3f5fe3ecff_aea46088-c614-49ab-bb2d-aad8d0ca4893.orig.jpg}
+\playercard{Bilal}{N/A}{assets/player_images/2c8a031a-b76b-42c1-8aa1-4f3f5fe3ecff_a5aaf001-c60a-42c8-b302-687668ef766a.orig.jpg}
+\playercard{Danish}{N/A}{assets/player_images/2c8a031a-b76b-42c1-8aa1-4f3f5fe3ecff_44d7bb0c-7197-472a-bd49-5fb4c82f797c.orig.jpg}
+\playercard{Miqdad }{N/A}{assets/player_images/2c8a031a-b76b-42c1-8aa1-4f3f5fe3ecff_26b85f18-9684-451c-8d94-52ede99886cd.orig.jpg}
+\playercard{Raiyan Shamim }{N/A}{assets/player_images/2c8a031a-b76b-42c1-8aa1-4f3f5fe3ecff_fcd71053-b28f-45f4-951d-7d18fcd6ce9c.orig.jpg}
+\playercard{Shumail}{N/A}{assets/player_images/2c8a031a-b76b-42c1-8aa1-4f3f5fe3ecff_fc6fef07-d9e2-4820-a093-0bf95ec709c1.orig.jpg}
+\playercard{Tehseen}{N/A}{assets/player_images/2c8a031a-b76b-42c1-8aa1-4f3f5fe3ecff_ce699210-2c64-42a0-86bb-0241f9ced294.orig.jpg}
+\playercard{Yusuf}{N/A}{assets/player_images/2c8a031a-b76b-42c1-8aa1-4f3f5fe3ecff_b52f847d-87d7-4602-be1f-21e2bd0194a0.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: Tikona titans
+\phantomsection
+\addcontentsline{toc}{subsection}{Tikona titans}
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries Tikona titans} \\
+    \textbf{Captain:} Talha \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Unknown}{N/A}{example-image-a}
+\playercard{Unknown}{N/A}{example-image-a}
+\playercard{Anas}{XXXX 3674}{assets/player_images/fb415e31-bd6f-4612-86c7-296f3f00d48a_53601443-1dcd-4248-a561-ce51520d0e5e.orig.jpg}
+\playercard{Basit}{XXXX 8785}{assets/player_images/fb415e31-bd6f-4612-86c7-296f3f00d48a_64de2d87-6248-4acb-a79d-afc9baf9cc0c.orig.jpg}
+\playercard{Hamza}{XXXX 3522}{assets/player_images/fb415e31-bd6f-4612-86c7-296f3f00d48a_ea9c17aa-e44f-4e47-871e-c81a101421db.orig.jpg}
+\playercard{Hqshir}{XXXX 3650}{assets/player_images/fb415e31-bd6f-4612-86c7-296f3f00d48a_1f78df5b-bd3a-42f2-893a-bfa9a4823bc5.orig.jpg}
+\playercard{Huzaif}{XXXX 2515}{assets/player_images/fb415e31-bd6f-4612-86c7-296f3f00d48a_b8c7f762-0122-4e0b-9046-dde30b530aab.orig.jpg}
+\playercard{Imad}{XXXX 4966}{assets/player_images/fb415e31-bd6f-4612-86c7-296f3f00d48a_67c4a747-59b3-43e3-b734-99c8afd8d41e.orig.jpg}
+\playercard{Prajol}{XXXX 3680}{assets/player_images/fb415e31-bd6f-4612-86c7-296f3f00d48a_7b29ca1a-9bd2-4bdb-87d1-e3d1b446e3dc.orig.jpg}
+\playercard{Sameer}{XXXX 8821}{assets/player_images/fb415e31-bd6f-4612-86c7-296f3f00d48a_c255ef4b-7b65-4c90-8447-57c1c004a884.orig.jpg}
+\playercard{Talha}{XXXX 0174}{assets/player_images/fb415e31-bd6f-4612-86c7-296f3f00d48a_8290e16f-546f-4c90-98a2-550f0634776b.orig.jpg}
+\end{multicols}
+\newpage
+
+% Team Page: Void FC
+\phantomsection
+\addcontentsline{toc}{subsection}{Void FC}
+\noindent
+\begin{minipage}{0.7\textwidth}
+    {\Large\bfseries Void FC} \\
+    \textbf{Captain:} Aamash Waseem \\
+    \textbf{Group:} TBD
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+    \raggedleft
+    Official Check: \\ \vspace{0.2cm}
+    $\square$ Team Verified \\
+    $\square$ Refreshment Given
+\end{minipage}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{multicols}{2}
+\playercard{Aamash}{XXXX 0923}{assets/player_images/afe78dd2-b96e-4dcf-9409-16a965938420_966a3330-79d7-449b-a226-26efe8da2cd9.orig.jpg}
+\playercard{Aehsaan}{XXXX 3278}{assets/player_images/afe78dd2-b96e-4dcf-9409-16a965938420_a77b06ba-a9f1-496e-a391-744fb205f096.orig.jpg}
+\playercard{Ansh}{XXXX 5493}{assets/player_images/afe78dd2-b96e-4dcf-9409-16a965938420_ff7e8d44-fc00-4471-a137-9888e531ed86.orig.jpg}
+\playercard{Arhan}{XXXX 1942}{assets/player_images/afe78dd2-b96e-4dcf-9409-16a965938420_9588bbd4-03e9-4dde-a4b8-69e9c1e8c908.orig.jpg}
+\playercard{Ayush}{XXXX 1313}{assets/player_images/afe78dd2-b96e-4dcf-9409-16a965938420_9a579c5c-30a5-4161-94e6-843685e56a45.orig.jpg}
+\playercard{Harmanjot}{XXXX 2125}{assets/player_images/afe78dd2-b96e-4dcf-9409-16a965938420_f39ba106-20b6-44b0-a714-6c9454d01f96.orig.jpg}
+\playercard{Intesar}{XXXX 7369}{assets/player_images/afe78dd2-b96e-4dcf-9409-16a965938420_614ed1d7-ac78-4333-bbe0-9ee19520d0ea.orig.jpg}
+\playercard{Rishang}{XXXX 9050}{assets/player_images/afe78dd2-b96e-4dcf-9409-16a965938420_241e0e2b-3de8-4e04-ae5e-bc9c86239ace.orig.jpg}
+\playercard{Shayan}{XXXX 4063}{example-image-a}
+\playercard{Zyan}{XXXX 0310}{assets/player_images/afe78dd2-b96e-4dcf-9409-16a965938420_88116b8f-de22-4dfa-b880-d1490aab1b33.orig.jpg}
+\end{multicols}
+\newpage
+\end{document}
