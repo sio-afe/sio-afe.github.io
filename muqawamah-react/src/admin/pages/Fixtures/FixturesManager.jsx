@@ -115,25 +115,45 @@ export default function FixturesManager() {
     // Ensure we have string values suitable for form inputs
     setEditFixture({
       id: fixture.id,
+      category: fixture.category || 'open-age',
+      home_team_id: fixture.home_team_id || '',
+      away_team_id: fixture.away_team_id || '',
       match_date: fixture.match_date ? fixture.match_date.slice(0, 10) : '',
       scheduled_time: fixture.scheduled_time || '',
       venue: fixture.venue || '',
-      match_number: fixture.match_number || 1
+      match_number: fixture.match_number || 1,
+      match_type: fixture.match_type || 'group',
+      status: fixture.status || 'scheduled'
     });
     setShowEditModal(true);
   };
 
-  const updateFixtureTime = async () => {
+  const updateFixtureDetails = async () => {
     if (!editFixture) return;
+
+    if (!editFixture.home_team_id || !editFixture.away_team_id) {
+      alert('Please select both teams');
+      return;
+    }
+
+    if (editFixture.home_team_id === editFixture.away_team_id) {
+      alert('Home and away teams must be different');
+      return;
+    }
 
     try {
       const { error } = await supabaseClient
         .from('matches')
         .update({
+          category: editFixture.category || 'open-age',
+          home_team_id: editFixture.home_team_id,
+          away_team_id: editFixture.away_team_id,
           match_date: editFixture.match_date || null,
           scheduled_time: editFixture.scheduled_time || null,
           venue: editFixture.venue || null,
-          match_number: editFixture.match_number || 1
+          match_number: editFixture.match_number || 1,
+          match_type: editFixture.match_type || 'group',
+          status: editFixture.status || 'scheduled'
         })
         .eq('id', editFixture.id);
 
@@ -171,6 +191,9 @@ export default function FixturesManager() {
   };
 
   const categoryTeams = teams.filter(t => t.category === newFixture.category);
+  const editCategoryTeams = editFixture
+    ? teams.filter(t => t.category === editFixture.category)
+    : [];
 
   return (
     <AdminLayout title="Fixtures Management">
@@ -273,7 +296,7 @@ export default function FixturesManager() {
                         <button
                           className="btn-icon btn-edit"
                           onClick={() => openEditModal(fixture)}
-                          title="Edit date & time"
+                          title="Edit fixture"
                         >
                           <i className="fas fa-edit"></i>
                         </button>
@@ -423,13 +446,52 @@ export default function FixturesManager() {
         <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>Edit Fixture Time</h2>
+              <h2>Edit Fixture</h2>
               <button className="modal-close" onClick={() => setShowEditModal(false)}>
                 <i className="fas fa-times"></i>
               </button>
             </div>
 
             <div className="modal-body">
+              <div className="form-group">
+                <label>Category</label>
+                <select
+                  value={editFixture.category}
+                  onChange={(e) => setEditFixture({ ...editFixture, category: e.target.value })}
+                >
+                  <option value="open-age">Open Age</option>
+                  <option value="u17">Under 17</option>
+                </select>
+              </div>
+
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Home Team</label>
+                  <select
+                    value={editFixture.home_team_id}
+                    onChange={(e) => setEditFixture({ ...editFixture, home_team_id: e.target.value })}
+                  >
+                    <option value="">Select Home Team</option>
+                    {editCategoryTeams.map(team => (
+                      <option key={team.id} value={team.id}>{team.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Away Team</label>
+                  <select
+                    value={editFixture.away_team_id}
+                    onChange={(e) => setEditFixture({ ...editFixture, away_team_id: e.target.value })}
+                  >
+                    <option value="">Select Away Team</option>
+                    {editCategoryTeams.map(team => (
+                      <option key={team.id} value={team.id}>{team.name}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
               <div className="form-grid">
                 <div className="form-group">
                   <label>Match Date</label>
@@ -475,6 +537,33 @@ export default function FixturesManager() {
                 </div>
               </div>
 
+              <div className="form-group">
+                <label>Match Type</label>
+                <select
+                  value={editFixture.match_type}
+                  onChange={(e) => setEditFixture({ ...editFixture, match_type: e.target.value })}
+                >
+                  <option value="group">Group Stage</option>
+                  <option value="quarter-final">Quarter Final</option>
+                  <option value="semi-final">Semi Final</option>
+                  <option value="final">Final</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Status</label>
+                <select
+                  value={editFixture.status}
+                  onChange={(e) => setEditFixture({ ...editFixture, status: e.target.value })}
+                >
+                  <option value="scheduled">Scheduled</option>
+                  <option value="live">Live</option>
+                  <option value="completed">Completed</option>
+                  <option value="postponed">Postponed</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
+
               <div className="form-actions">
                 <button
                   className="btn-secondary"
@@ -484,7 +573,7 @@ export default function FixturesManager() {
                 </button>
                 <button
                   className="btn-primary"
-                  onClick={updateFixtureTime}
+                  onClick={updateFixtureDetails}
                 >
                   <i className="fas fa-save"></i> Save Changes
                 </button>
