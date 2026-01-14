@@ -3,7 +3,7 @@
  * Record and update match results, goals, assists
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { supabaseClient } from '../../../lib/supabaseClient';
 import AdminLayout from '../../components/AdminLayout';
 import { imgUrl } from '../../../lib/imagePresets';
@@ -13,11 +13,6 @@ export default function MatchRecorder() {
   const [loading, setLoading] = useState(true);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [showInfoModal, setShowInfoModal] = useState(false);
-  const [infoMatch, setInfoMatch] = useState(null);
-  const [infoLoading, setInfoLoading] = useState(false);
-  const [infoError, setInfoError] = useState(null);
-  const [matchInsightsById, setMatchInsightsById] = useState({});
   const [matchResult, setMatchResult] = useState({
     home_score: 0,
     away_score: 0,
@@ -45,30 +40,6 @@ export default function MatchRecorder() {
     fetchMatches();
   }, []);
 
-  const applyScoreToLocalState = (matchId, home_score, away_score) => {
-    setMatches((prev) =>
-      (prev || []).map((m) => (m.id === matchId ? { ...m, home_score, away_score } : m))
-    );
-    setSelectedMatch((prev) => (prev?.id === matchId ? { ...prev, home_score, away_score } : prev));
-  };
-
-  const updateMatchScoreInDb = async (matchId, home_score, away_score) => {
-    const { error } = await supabaseClient
-      .from('matches')
-      .update({ home_score, away_score })
-      .eq('id', matchId);
-    if (error) throw error;
-  };
-
-  const formatDate = (d) => {
-    try {
-      if (!d) return 'TBD';
-      return new Date(d).toLocaleDateString();
-    } catch {
-      return 'TBD';
-    }
-  };
-
   const fetchMatches = async () => {
     try {
       setLoading(true);
@@ -90,64 +61,6 @@ export default function MatchRecorder() {
       setLoading(false);
     }
   };
-
-  const openMatchInfo = async (match) => {
-    if (!match?.id) return;
-    setInfoMatch(match);
-    setShowInfoModal(true);
-    setInfoError(null);
-
-    // Cache hit: show immediately without refetch
-    if (matchInsightsById[match.id]) return;
-
-    setInfoLoading(true);
-    try {
-      // Likes count: use head=true so we don't download rows
-      const { count: likesCount, error: likesErr } = await supabaseClient
-        .from('match_likes')
-        .select('id', { count: 'exact', head: true })
-        .eq('match_id', match.id);
-
-      // Predictions: one request, count locally
-      const { data: predictions, error: predErr } = await supabaseClient
-        .from('match_predictions')
-        .select('prediction')
-        .eq('match_id', match.id);
-
-      // If tables don't exist in your DB yet, surface a friendly message
-      const safeLikes = likesErr ? null : (likesCount ?? 0);
-      const counts = { home: 0, draw: 0, away: 0 };
-      if (!predErr && Array.isArray(predictions)) {
-        predictions.forEach((p) => {
-          if (p?.prediction === 'home') counts.home += 1;
-          else if (p?.prediction === 'draw') counts.draw += 1;
-          else if (p?.prediction === 'away') counts.away += 1;
-        });
-      }
-
-      setMatchInsightsById((prev) => ({
-        ...prev,
-        [match.id]: {
-          likes: safeLikes,
-          predictions: predErr ? null : counts,
-          totalPredictions: predErr ? null : (counts.home + counts.draw + counts.away),
-          errors: {
-            likes: likesErr?.message || null,
-            predictions: predErr?.message || null
-          }
-        }
-      }));
-    } catch (e) {
-      setInfoError(e?.message || 'Failed to load match info');
-    } finally {
-      setInfoLoading(false);
-    }
-  };
-
-  const infoStats = useMemo(() => {
-    if (!infoMatch?.id) return null;
-    return matchInsightsById[infoMatch.id] || null;
-  }, [infoMatch?.id, matchInsightsById]);
 
   const recordResult = async () => {
     if (!selectedMatch) return;
@@ -439,15 +352,6 @@ export default function MatchRecorder() {
       }
       setMatchResult(newMatchResult);
 
-      // Keep DB match score in sync immediately (no need to click "Save Result")
-      applyScoreToLocalState(selectedMatch.id, newMatchResult.home_score, newMatchResult.away_score);
-      try {
-        await updateMatchScoreInDb(selectedMatch.id, newMatchResult.home_score, newMatchResult.away_score);
-      } catch (e) {
-        console.error('Error updating match score:', e);
-        alert(`Goal saved, but failed to update match score: ${e?.message || e}`);
-      }
-
       // Reset goal form
       setNewGoal({
         scorer_id: '',
@@ -486,15 +390,6 @@ export default function MatchRecorder() {
         newMatchResult.away_score = Math.max((matchResult.away_score || 0) - 1, 0);
       }
       setMatchResult(newMatchResult);
-
-      // Keep DB match score in sync immediately
-      applyScoreToLocalState(selectedMatch.id, newMatchResult.home_score, newMatchResult.away_score);
-      try {
-        await updateMatchScoreInDb(selectedMatch.id, newMatchResult.home_score, newMatchResult.away_score);
-      } catch (e) {
-        console.error('Error updating match score:', e);
-        alert(`Goal deleted, but failed to update match score: ${e?.message || e}`);
-      }
 
       await fetchMatchGoals(selectedMatch.id);
       alert('Goal deleted! Score updated automatically.');
@@ -599,7 +494,7 @@ export default function MatchRecorder() {
               ) : (
                 matches.map((match) => (
                   <tr key={match.id}>
-                    <td>{formatDate(match.match_date)}</td>
+                    <td>{new Date(match.match_date).toLocaleDateString()}</td>
                     <td>
                       <div className="team-cell">
                         {match.home_team?.crest_url && (
@@ -643,22 +538,13 @@ export default function MatchRecorder() {
                       </span>
                     </td>
                     <td>
-                      <div className="action-buttons">
-                        <button 
-                          className="btn-icon btn-edit"
-                          onClick={() => openMatchModal(match)}
-                          title="Record/Edit Result"
-                        >
-                          <i className="fas fa-edit"></i>
-                        </button>
-                        <button
-                          className="btn-icon btn-view"
-                          onClick={() => openMatchInfo(match)}
-                          title="Match info (likes / votes)"
-                        >
-                          <i className="fas fa-circle-info"></i>
-                        </button>
-                      </div>
+                      <button 
+                        className="btn-icon btn-edit"
+                        onClick={() => openMatchModal(match)}
+                        title="Record/Edit Result"
+                      >
+                        <i className="fas fa-edit"></i>
+                      </button>
                     </td>
                   </tr>
                 ))
@@ -996,99 +882,6 @@ export default function MatchRecorder() {
                   onClick={recordResult}
                 >
                   <i className="fas fa-save"></i> Save Result
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showInfoModal && infoMatch && (
-        <div className="modal-overlay" onClick={() => setShowInfoModal(false)}>
-          <div className="modal-content modal-small" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2>Match Info</h2>
-              <button className="modal-close" onClick={() => setShowInfoModal(false)}>
-                <i className="fas fa-times"></i>
-              </button>
-            </div>
-
-            <div className="modal-body">
-              <div className="detail-grid">
-                <div className="detail-item">
-                  <label>Date:</label>
-                  <span>{formatDate(infoMatch.match_date)}</span>
-                </div>
-                <div className="detail-item">
-                  <label>Status:</label>
-                  <span className={`status-badge status-${infoMatch.status}`}>{infoMatch.status}</span>
-                </div>
-                <div className="detail-item">
-                  <label>Score:</label>
-                  <span>{infoMatch.home_score ?? 0} - {infoMatch.away_score ?? 0}</span>
-                </div>
-                <div className="detail-item">
-                  <label>Teams:</label>
-                  <span>{infoMatch.home_team?.name || 'TBD'} vs {infoMatch.away_team?.name || 'TBD'}</span>
-                </div>
-              </div>
-
-              {infoLoading && (
-                <div style={{ marginTop: 14, color: '#6b7280' }}>
-                  <i className="fas fa-spinner fa-spin" /> Loading match insights…
-                </div>
-              )}
-              {infoError && (
-                <div style={{ marginTop: 14, color: '#b91c1c' }}>
-                  {infoError}
-                </div>
-              )}
-
-              {!infoLoading && !infoError && (
-                <div style={{ marginTop: 16 }}>
-                  <h3 style={{ margin: '0 0 10px', fontSize: 14 }}>Engagement</h3>
-                  <div className="detail-grid">
-                    <div className="detail-item">
-                      <label>Total Likes:</label>
-                      <span>
-                        {infoStats?.likes != null ? infoStats.likes : '—'}
-                      </span>
-                      {infoStats?.errors?.likes && (
-                        <small style={{ color: '#6b7280' }}>Likes table not available</small>
-                      )}
-                    </div>
-                    <div className="detail-item">
-                      <label>Total Predictions:</label>
-                      <span>
-                        {infoStats?.totalPredictions != null ? infoStats.totalPredictions : '—'}
-                      </span>
-                      {infoStats?.errors?.predictions && (
-                        <small style={{ color: '#6b7280' }}>Predictions table not available</small>
-                      )}
-                    </div>
-                    <div className="detail-item">
-                      <label>
-                        Votes ({infoMatch?.home_team?.name || 'Home'}):
-                      </label>
-                      <span>{infoStats?.predictions ? infoStats.predictions.home : '—'}</span>
-                    </div>
-                    <div className="detail-item">
-                      <label>Votes (Draw):</label>
-                      <span>{infoStats?.predictions ? infoStats.predictions.draw : '—'}</span>
-                    </div>
-                    <div className="detail-item">
-                      <label>
-                        Votes ({infoMatch?.away_team?.name || 'Away'}):
-                      </label>
-                      <span>{infoStats?.predictions ? infoStats.predictions.away : '—'}</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div className="modal-actions">
-                <button className="btn-secondary" onClick={() => setShowInfoModal(false)}>
-                  Close
                 </button>
               </div>
             </div>

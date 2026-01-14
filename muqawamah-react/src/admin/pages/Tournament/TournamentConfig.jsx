@@ -3,7 +3,7 @@
  * Manage groups, knockout bracket, and auto-configure matches
  */
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabaseClient } from '../../../lib/supabaseClient';
 import AdminLayout from '../../components/AdminLayout';
 import { imgUrl } from '../../../lib/imagePresets';
@@ -24,9 +24,6 @@ export default function TournamentConfig() {
   const [groupStageStatus, setGroupStageStatus] = useState({ total: 0, completed: 0, isComplete: false });
   const [loading, setLoading] = useState(true);
   const [configuring, setConfiguring] = useState(false);
-  const [groupFixtures, setGroupFixtures] = useState([]);
-  const [generatingFixtures, setGeneratingFixtures] = useState(false);
-  const [fixturePreview, setFixturePreview] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -56,31 +53,6 @@ export default function TournamentConfig() {
       // Check group stage status
       const status = await isGroupStageComplete(category);
       setGroupStageStatus(status);
-
-      // Fetch existing group fixtures for this category
-      const { data: fixturesData, error: fixturesError } = await supabaseClient
-        .from('matches')
-        .select(`
-          id,
-          match_number,
-          match_date,
-          scheduled_time,
-          venue,
-          status,
-          match_type,
-          category,
-          home_team_id,
-          away_team_id,
-          home_team:teams!matches_home_team_id_fkey(id, name, crest_url, tournament_group),
-          away_team:teams!matches_away_team_id_fkey(id, name, crest_url, tournament_group)
-        `)
-        .eq('category', category)
-        .eq('match_type', 'group')
-        .order('match_number', { ascending: true })
-        .order('scheduled_time', { ascending: true });
-
-      if (fixturesError) throw fixturesError;
-      setGroupFixtures(fixturesData || []);
 
       // Get knockout bracket
       const bracketData = await getKnockoutBracket(category);
@@ -298,119 +270,6 @@ export default function TournamentConfig() {
     return teams.filter(t => !t.tournament_group);
   };
 
-  const groups = useMemo(() => ['A', 'B', 'C', 'D'], []);
-
-  const allAssigned = useMemo(() => getUnassignedTeams().length === 0, [teams]);
-
-  const roundRobinSchedule = (teamIds) => {
-    // Circle method. Returns rounds: [ [ [homeId, awayId], ...], ... ]
-    const ids = [...(teamIds || [])].filter(Boolean);
-    if (ids.length < 2) return [];
-
-    const list = ids.length % 2 === 0 ? ids : [...ids, null]; // bye
-    const n = list.length;
-    const rounds = n - 1;
-    const half = n / 2;
-
-    let arr = [...list];
-    const out = [];
-    for (let r = 0; r < rounds; r++) {
-      const pairs = [];
-      for (let i = 0; i < half; i++) {
-        const a = arr[i];
-        const b = arr[n - 1 - i];
-        if (!a || !b) continue;
-        // Alternate home/away each round for balance
-        const home = (r + i) % 2 === 0 ? a : b;
-        const away = (r + i) % 2 === 0 ? b : a;
-        pairs.push([home, away]);
-      }
-      out.push(pairs);
-      // rotate all except first
-      const fixed = arr[0];
-      const rest = arr.slice(1);
-      rest.unshift(rest.pop());
-      arr = [fixed, ...rest];
-    }
-    return out;
-  };
-
-  const buildGroupFixturePreview = () => {
-    const byGroup = {};
-    let maxRounds = 0;
-    groups.forEach((g) => {
-      const ids = getTeamsByGroup(g).map((t) => t.id);
-      const rounds = roundRobinSchedule(ids);
-      byGroup[g] = rounds;
-      maxRounds = Math.max(maxRounds, rounds.length);
-    });
-
-    const preview = [];
-    // match_number: 1..maxRounds (shared matchday across all groups)
-    for (let r = 0; r < maxRounds; r++) {
-      groups.forEach((g) => {
-        const pairs = byGroup[g][r] || [];
-        pairs.forEach(([home, away]) => {
-          preview.push({
-            category,
-            match_type: 'group',
-            status: 'scheduled',
-            match_number: r + 1,
-            venue: 'Milli Model Ground',
-            home_team_id: home,
-            away_team_id: away
-          });
-        });
-      });
-    }
-    return preview;
-  };
-
-  const previewAutoGenerateFixtures = () => {
-    if (!allAssigned) {
-      alert('Please assign all teams to groups first.');
-      return;
-    }
-    const preview = buildGroupFixturePreview();
-    if (!preview.length) {
-      alert('Not enough teams assigned to generate fixtures.');
-      return;
-    }
-    setFixturePreview(preview);
-  };
-
-  const createGroupStageFixtures = async () => {
-    if (!fixturePreview?.length) return;
-    const existingCount = groupFixtures.length;
-    if (existingCount > 0) {
-      alert(
-        `You already have ${existingCount} group fixtures in this category.\n\n` +
-        `For safety, this generator will NOT delete existing fixtures.\n` +
-        `Please delete/clear them first if you want to regenerate.`
-      );
-      return;
-    }
-
-    if (!confirm(`Create ${fixturePreview.length} group-stage fixtures now?`)) return;
-
-    setGeneratingFixtures(true);
-    try {
-      const { error } = await supabaseClient
-        .from('matches')
-        .insert(fixturePreview);
-      if (error) throw error;
-
-      alert('Group stage fixtures created! You can edit dates/times/venues in Fixtures Manager.');
-      setFixturePreview(null);
-      fetchData();
-    } catch (error) {
-      console.error('Error creating fixtures:', error);
-      alert('Failed to create fixtures: ' + (error?.message || 'Unknown error'));
-    } finally {
-      setGeneratingFixtures(false);
-    }
-  };
-
   if (loading) {
     return (
       <AdminLayout title="Tournament Configuration">
@@ -455,7 +314,7 @@ export default function TournamentConfig() {
           </div>
 
           <div className="groups-grid">
-            {groups.map(group => (
+            {['A', 'B', 'C', 'D'].map(group => (
               <div key={group} className="group-card">
                 <h3 className="group-title">Group {group}</h3>
                 <div className="group-teams">
@@ -536,66 +395,6 @@ export default function TournamentConfig() {
                     </select>
                   </div>
                 ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Group Stage Fixtures */}
-        <div className="config-section">
-          <div className="section-header">
-            <h2><i className="fas fa-calendar-alt"></i> Group Stage Fixtures</h2>
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-              <a className="btn-secondary" href="/muqawamah/admin/fixtures/" style={{ textDecoration: 'none' }}>
-                <i className="fas fa-external-link-alt"></i> Open Fixtures Manager
-              </a>
-              <button className="btn-primary" onClick={previewAutoGenerateFixtures} disabled={!allAssigned || generatingFixtures}>
-                <i className="fas fa-magic"></i> Auto-Generate Fixtures
-              </button>
-            </div>
-          </div>
-
-          {!allAssigned && (
-            <div className="callout warning">
-              <i className="fas fa-exclamation-triangle"></i>
-              Assign all teams to groups to enable auto-generation.
-            </div>
-          )}
-
-          <div className="fixtures-summary">
-            <span className="stat-badge">
-              <i className="fas fa-futbol"></i> {groupFixtures.length} group fixtures
-            </span>
-          </div>
-
-          {fixturePreview && (
-            <div className="fixture-preview">
-              <div className="fixture-preview-header">
-                <h3>Preview ({fixturePreview.length} matches)</h3>
-                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                  <button className="btn-secondary" onClick={() => setFixturePreview(null)} disabled={generatingFixtures}>
-                    Cancel
-                  </button>
-                  <button className="btn-primary" onClick={createGroupStageFixtures} disabled={generatingFixtures}>
-                    {generatingFixtures ? 'Creating...' : 'Create Fixtures'}
-                  </button>
-                </div>
-              </div>
-
-              <div className="fixture-preview-grid">
-                {fixturePreview.slice(0, 20).map((m, idx) => (
-                  <div key={`${m.home_team_id}-${m.away_team_id}-${idx}`} className="fixture-preview-row">
-                    <span className="fixture-md">MD {m.match_number}</span>
-                    <span className="fixture-teams">
-                      {teams.find(t => t.id === m.home_team_id)?.name || 'TBD'} vs {teams.find(t => t.id === m.away_team_id)?.name || 'TBD'}
-                    </span>
-                  </div>
-                ))}
-                {fixturePreview.length > 20 && (
-                  <div className="fixture-preview-row muted">
-                    …and {fixturePreview.length - 20} more
-                  </div>
-                )}
               </div>
             </div>
           )}
@@ -757,9 +556,8 @@ export default function TournamentConfig() {
           align-items: center;
           margin-bottom: 24px;
           padding: 16px;
-          background: #ffffff;
+          background: #1e2a38;
           border-radius: 8px;
-          border: 1px solid #e5e7eb;
         }
 
         .category-selector {
@@ -770,15 +568,15 @@ export default function TournamentConfig() {
 
         .category-selector label {
           font-weight: 600;
-          color: #374151;
+          color: #8b9caf;
         }
 
         .category-selector select {
           padding: 8px 16px;
           border-radius: 6px;
-          border: 1px solid #d1d5db;
-          background: #ffffff;
-          color: #111827;
+          border: 1px solid #2a3a4a;
+          background: #0d1117;
+          color: #fff;
           font-size: 14px;
         }
 
@@ -789,10 +587,10 @@ export default function TournamentConfig() {
 
         .stat-badge {
           padding: 8px 16px;
-          background: #f3f4f6;
+          background: #2a3a4a;
           border-radius: 20px;
           font-size: 13px;
-          color: #374151;
+          color: #8b9caf;
         }
 
         .stat-badge i {
@@ -800,21 +598,20 @@ export default function TournamentConfig() {
         }
 
         .stat-badge.complete {
-          background: rgba(16, 185, 129, 0.12);
-          color: #047857;
+          background: rgba(76, 175, 80, 0.2);
+          color: #4caf50;
         }
 
         .stat-badge.pending {
-          background: rgba(245, 158, 11, 0.12);
-          color: #92400e;
+          background: rgba(255, 152, 0, 0.2);
+          color: #ff9800;
         }
 
         .config-section {
-          background: #ffffff;
+          background: #1e2a38;
           border-radius: 12px;
           padding: 24px;
           margin-bottom: 24px;
-          border: 1px solid #e5e7eb;
         }
 
         .section-header {
@@ -827,7 +624,7 @@ export default function TournamentConfig() {
         .section-header h2 {
           font-size: 18px;
           font-weight: 600;
-          color: #111827;
+          color: #fff;
           display: flex;
           align-items: center;
           gap: 10px;
@@ -840,19 +637,19 @@ export default function TournamentConfig() {
         }
 
         .group-card {
-          background: #ffffff;
+          background: #0d1117;
           border-radius: 10px;
           padding: 16px;
-          border: 1px solid #e5e7eb;
+          border: 1px solid #2a3a4a;
         }
 
         .group-title {
           font-size: 16px;
           font-weight: 700;
-          color: #2563eb;
+          color: #4f8cff;
           margin-bottom: 12px;
           padding-bottom: 8px;
-          border-bottom: 2px solid #2563eb;
+          border-bottom: 2px solid #4f8cff;
         }
 
         .group-teams {
@@ -865,9 +662,8 @@ export default function TournamentConfig() {
           gap: 10px;
           padding: 8px;
           margin-bottom: 4px;
-          background: #f9fafb;
+          background: #1e2a38;
           border-radius: 6px;
-          border: 1px solid #eef2f7;
         }
 
         .team-position {
@@ -876,7 +672,7 @@ export default function TournamentConfig() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: #2563eb;
+          background: #4f8cff;
           color: #fff;
           border-radius: 50%;
           font-size: 11px;
@@ -893,13 +689,13 @@ export default function TournamentConfig() {
         .team-name {
           flex: 1;
           font-weight: 500;
-          color: #111827;
+          color: #fff;
           font-size: 13px;
         }
 
         .team-stats {
           font-size: 11px;
-          color: #6b7280;
+          color: #8b9caf;
         }
 
         .btn-icon {
@@ -925,7 +721,7 @@ export default function TournamentConfig() {
         .empty-group {
           text-align: center;
           padding: 20px;
-          color: #6b7280;
+          color: #5a6a7a;
           font-style: italic;
         }
 
@@ -934,9 +730,9 @@ export default function TournamentConfig() {
           margin-top: 12px;
           padding: 8px;
           border-radius: 6px;
-          border: 1px dashed #d1d5db;
-          background: #ffffff;
-          color: #374151;
+          border: 1px dashed #2a3a4a;
+          background: transparent;
+          color: #8b9caf;
           font-size: 13px;
           cursor: pointer;
         }
@@ -948,13 +744,13 @@ export default function TournamentConfig() {
         .unassigned-teams {
           margin-top: 24px;
           padding: 16px;
-          background: rgba(245, 158, 11, 0.10);
+          background: rgba(255, 152, 0, 0.1);
           border-radius: 8px;
-          border: 1px solid rgba(245, 158, 11, 0.25);
+          border: 1px solid rgba(255, 152, 0, 0.3);
         }
 
         .unassigned-teams h4 {
-          color: #92400e;
+          color: #ff9800;
           margin-bottom: 12px;
         }
 
@@ -969,17 +765,16 @@ export default function TournamentConfig() {
           align-items: center;
           gap: 8px;
           padding: 8px 12px;
-          background: #ffffff;
+          background: #1e2a38;
           border-radius: 6px;
-          border: 1px solid #e5e7eb;
         }
 
         .unassigned-team select {
           padding: 4px 8px;
           border-radius: 4px;
-          border: 1px solid #d1d5db;
-          background: #ffffff;
-          color: #111827;
+          border: 1px solid #2a3a4a;
+          background: #0d1117;
+          color: #fff;
           font-size: 12px;
         }
 
@@ -989,7 +784,7 @@ export default function TournamentConfig() {
 
         .btn-primary {
           padding: 12px 24px;
-          background: linear-gradient(135deg, #2563eb, #60a5fa);
+          background: linear-gradient(135deg, #4f8cff, #6fb1fc);
           border: none;
           border-radius: 8px;
           color: #fff;
@@ -1007,10 +802,10 @@ export default function TournamentConfig() {
 
         .btn-secondary {
           padding: 10px 20px;
-          background: #f3f4f6;
+          background: #2a3a4a;
           border: none;
           border-radius: 8px;
-          color: #111827;
+          color: #fff;
           font-weight: 500;
           cursor: pointer;
           display: inline-flex;
@@ -1019,7 +814,7 @@ export default function TournamentConfig() {
         }
 
         .btn-secondary:hover {
-          background: #e5e7eb;
+          background: #3a4a5a;
         }
 
         .bracket-preview {
@@ -1028,7 +823,7 @@ export default function TournamentConfig() {
 
         .bracket-preview h3 {
           margin-bottom: 16px;
-          color: #111827;
+          color: #fff;
         }
 
         .bracket-rounds {
@@ -1043,7 +838,7 @@ export default function TournamentConfig() {
         }
 
         .bracket-round h4 {
-          color: #6b7280;
+          color: #8b9caf;
           font-size: 13px;
           text-transform: uppercase;
           margin-bottom: 12px;
@@ -1054,11 +849,11 @@ export default function TournamentConfig() {
         }
 
         .bracket-match {
-          background: #ffffff;
+          background: #0d1117;
           border-radius: 8px;
           overflow: hidden;
           margin-bottom: 12px;
-          border: 1px solid #e5e7eb;
+          border: 1px solid #2a3a4a;
         }
 
         .bracket-team {
@@ -1069,7 +864,7 @@ export default function TournamentConfig() {
         }
 
         .bracket-team.home {
-          border-bottom: 1px solid #e5e7eb;
+          border-bottom: 1px solid #2a3a4a;
         }
 
         .bracket-team img {
@@ -1084,119 +879,36 @@ export default function TournamentConfig() {
         }
 
         .bracket-team .tbd {
-          color: #6b7280;
+          color: #5a6a7a;
           font-style: italic;
         }
 
         .bracket-team .score {
           font-weight: 700;
-          color: #2563eb;
+          color: #4f8cff;
         }
 
         .tiebreaker-info {
           margin-top: 24px;
           padding: 16px;
-          background: rgba(37, 99, 235, 0.08);
+          background: rgba(79, 140, 255, 0.1);
           border-radius: 8px;
-          border: 1px solid rgba(37, 99, 235, 0.18);
+          border: 1px solid rgba(79, 140, 255, 0.2);
         }
 
         .tiebreaker-info h4 {
-          color: #2563eb;
+          color: #4f8cff;
           margin-bottom: 12px;
         }
 
         .tiebreaker-info ol {
           margin: 0;
           padding-left: 20px;
-          color: #374151;
+          color: #8b9caf;
         }
 
         .tiebreaker-info li {
           margin-bottom: 4px;
-        }
-
-        .fixtures-summary {
-          display: flex;
-          gap: 12px;
-          margin-bottom: 12px;
-          align-items: center;
-          flex-wrap: wrap;
-        }
-
-        .fixture-preview {
-          margin-top: 14px;
-          border: 1px solid #e5e7eb;
-          border-radius: 10px;
-          padding: 16px;
-          background: #f9fafb;
-        }
-
-        .fixture-preview-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 12px;
-          margin-bottom: 12px;
-          flex-wrap: wrap;
-        }
-
-        .fixture-preview-header h3 {
-          margin: 0;
-          color: #111827;
-          font-size: 16px;
-          font-weight: 700;
-        }
-
-        .fixture-preview-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-          gap: 8px;
-        }
-
-        .fixture-preview-row {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 10px 12px;
-          background: #ffffff;
-          border: 1px solid #eef2f7;
-          border-radius: 8px;
-        }
-
-        .fixture-preview-row.muted {
-          color: #6b7280;
-          font-style: italic;
-          justify-content: center;
-        }
-
-        .fixture-md {
-          font-weight: 700;
-          color: #2563eb;
-          min-width: 60px;
-        }
-
-        .fixture-teams {
-          color: #111827;
-          font-weight: 500;
-        }
-
-        .callout {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 12px 14px;
-          border-radius: 10px;
-          border: 1px solid #e5e7eb;
-          background: #f9fafb;
-          color: #374151;
-          margin-bottom: 12px;
-        }
-
-        .callout.warning {
-          border-color: rgba(245, 158, 11, 0.35);
-          background: rgba(245, 158, 11, 0.10);
-          color: #92400e;
         }
       `}</style>
     </AdminLayout>
